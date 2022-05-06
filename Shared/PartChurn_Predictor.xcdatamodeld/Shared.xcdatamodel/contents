@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="false" userDefinedModelVersionIdentifier="">
-    <entity name="Item" representedClassName="Item" syncable="YES" codeGenerationType="class">
-        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21E258" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Columns" representedClassName="Columns" syncable="YES" codeGenerationType="class">
+        <attribute name="isincluded" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="istarget" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="columns2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2columns" inverseEntity="Models"/>
+        <relationship name="columns2values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Values" inverseName="value2column" inverseEntity="Values"/>
+    </entity>
+    <entity name="Models" representedClassName="Models" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="model2columns" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Columns" inverseName="columns2model" inverseEntity="Columns"/>
+    </entity>
+    <entity name="Values" representedClassName="Values" syncable="YES" codeGenerationType="class">
+        <attribute name="predictedvalue" optional="YES" attributeType="Transformable"/>
+        <attribute name="value" optional="YES" attributeType="Transformable"/>
+        <relationship name="value2column" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Columns" inverseName="columns2values" inverseEntity="Columns"/>
     </entity>
     <elements>
-        <element name="Item" positionX="-63" positionY="-18" width="128" height="44"/>
+        <element name="Models" positionX="164.75" positionY="144.109375" width="128" height="73"/>
+        <element name="Columns" positionX="-54" positionY="0" width="128" height="118"/>
+        <element name="Values" positionX="-114.3515625" positionY="197.5546875" width="128" height="88"/>
     </elements>
 </model>
