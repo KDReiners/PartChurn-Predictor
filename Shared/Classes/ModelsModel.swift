@@ -33,66 +33,7 @@ public class ModelsModel: Model<Models> {
             }
         }
     }
-    public struct predictionRows {
-        var model: Models? = nil
-        var file: Files? = nil
-        var columns: [Columns]? = nil
-        var values: [Values]
-        var recordCount: Int = 0
-        var valueRows: Dictionary<Int16, [Values]>
-        var keys: [Int16]
-        var valuesGrouped: [[Values]]
-        init(model: Models, file: Files) {
-            self.model = model
-            self.file = file
-            self.columns = ModelsModel.getColumnsForItem(model: model)
-            self.values = ValuesModel().items.filter( {
-                return $0.value2model == model }).sorted(by:   {$0.rowno < $1.rowno},
-                      { $0.value2column!.orderno < $1.value2column!.orderno }
-            )
-            self.recordCount = ValuesModel().recordCount(model: model)
-            self.valueRows = Dictionary(grouping: self.values) { (value) -> Int16 in
-                return value.rowno}
-            self.keys = self.valueRows.sorted(by: { $0.key < $1.key}).map{$0.key}
-            self.valuesGrouped = self.valueRows.sorted(by: { $0.key < $1.key}).map {$0.value}
-        }
-        func getPrediction() {
-            var Kundennummer = ""
-            var Kunde_seit: Double = 0
-            var Account_Manager: String = ""
-            var Anzahl_Arbeitsplaetze: Double = 0
-            var Addison: Double = 0
-            var Akte: Double = 0
-            var SBS: Double = 0
-            var Anzahl_UHD: Double = 0
-            var davon_geloest: Double = 0
-            var Jahresfaktura: Double = 0
-            var Anzahl_OPPS: Double = 0
-            var Digitalisierungsgrad: Double = 0
-            for rowIndex in 0..<self.keys.indices.count {
-                for colIndex in 0..<self.valuesGrouped[rowIndex].count-1 {
-                    switch colIndex {
-                    case 0: Kundennummer = valuesGrouped[rowIndex][colIndex].value!
-                    case 1: Kunde_seit = Double(valuesGrouped[rowIndex][colIndex].value!)!
-                    case 2: Account_Manager = valuesGrouped[rowIndex][colIndex].value!
-                    case 3: Anzahl_Arbeitsplaetze = Double(valuesGrouped[rowIndex][colIndex].value!)!
-                    case 4: Addison = Double(valuesGrouped[rowIndex][colIndex].value!)!
-                    case 5: Akte = Double(valuesGrouped[rowIndex][colIndex].value!)!
-                    case 6: SBS = Double(valuesGrouped[rowIndex][colIndex].value!)!
-                    case 7: Anzahl_UHD = Double(valuesGrouped[rowIndex][colIndex].value!)!
-                    case 8: davon_geloest = Double(valuesGrouped[rowIndex][colIndex].value!)!
-                    case 9: Jahresfaktura = Double(valuesGrouped[rowIndex][colIndex].value!)!
-                    case 10: Anzahl_OPPS = Double(valuesGrouped[rowIndex][colIndex].value!)!
-                    case 11: Digitalisierungsgrad = Double(valuesGrouped[rowIndex][colIndex].value!)!
-                    default:
-                        fatalError("Unexpected runtime error.")
-                    }
-                }
-                predict(Kunde_seit: Kunde_seit, Account_Manager: Account_Manager, Anzahl_Arbeitsplaetze: Anzahl_Arbeitsplaetze, ADDISON: Addison, AKTE: Akte, SBS: SBS, Anzahl_UHD: Anzahl_UHD, davon_geloest: davon_geloest, Jahresfaktura: Jahresfaktura, Anzahl_OPPs: Anzahl_OPPS, Digitalisierungsgrad: Digitalisierungsgrad)
-            }
-          
-        }
-    }
+   
     public struct ValueRow: View {
         var model: Models? = nil
         var file: Files? = nil
@@ -123,13 +64,18 @@ public class ModelsModel: Model<Models> {
                     ForEach(0..<valuesGrouped[index].count, id: \.self) { col in
                         Text(valuesGrouped[index][col].value!)
                             .font(.body)
+                            .frame(width: 80)
+                            .padding(.trailing, 5)
                     }
                     Text( "\(predict(valuesGrouped: valuesGrouped[index]))")
+                        .font(.body)
+                        .frame(width: 80)
+                        .padding(.trailing, 5)
 
                 }
             }
         }
-        func predict(valuesGrouped: [Values]) -> Int {
+        func predict(valuesGrouped: [Values]) -> Double {
             var Kundennummer = ""
             var Kunde_seit: Double = 0
             var Account_Manager: String = ""
@@ -181,11 +127,11 @@ public class ModelsModel: Model<Models> {
         }
     }
 
-    public static func predict( Kunde_seit: Double, Account_Manager: String, Anzahl_Arbeitsplaetze: Double, ADDISON: Double, AKTE: Double, SBS: Double, Anzahl_UHD: Double, davon_geloest: Double, Jahresfaktura: Double, Anzahl_OPPs: Double, Digitalisierungsgrad: Double) -> Int {
+    public static func predict( Kunde_seit: Double, Account_Manager: String, Anzahl_Arbeitsplaetze: Double, ADDISON: Double, AKTE: Double, SBS: Double, Anzahl_UHD: Double, davon_geloest: Double, Jahresfaktura: Double, Anzahl_OPPs: Double, Digitalisierungsgrad: Double) -> Double {
         let model = MarsHabitatPricer()
         guard let ChurnPredicter = try? model.prediction(Kunde_seit: Kunde_seit, Account_Manager: Account_Manager, Anzahl_Arbeitsplaetze: Anzahl_Arbeitsplaetze, ADDISON: ADDISON, AKTE: AKTE, SBS: SBS, Anzahl_UHD: Anzahl_UHD, davon_geloest: davon_geloest, Jahresfaktura: Jahresfaktura, Anzahl_OPPs: Anzahl_OPPs, Digitalisierungsgrad: Digitalisierungsgrad) else {
             fatalError("Unexpected runtime error.")
         }
-        return ChurnPredicter.Kuendigt > 0.5 ? 1:0
+        return ChurnPredicter.Kuendigt
     }
 }
