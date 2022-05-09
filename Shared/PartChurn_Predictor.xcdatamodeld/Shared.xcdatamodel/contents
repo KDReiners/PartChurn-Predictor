@@ -4,21 +4,32 @@
         <attribute name="isincluded" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="istarget" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="columns2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2columns" inverseEntity="Models"/>
-        <relationship name="columns2values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Values" inverseName="value2column" inverseEntity="Values"/>
+        <attribute name="orderno" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="column2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2columns" inverseEntity="Models"/>
+        <relationship name="column2values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Values" inverseName="value2column" inverseEntity="Values"/>
+    </entity>
+    <entity name="Files" representedClassName="Files" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="files2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2files" inverseEntity="Models"/>
     </entity>
     <entity name="Models" representedClassName="Models" syncable="YES" codeGenerationType="class">
+        <attribute name="filepattern" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="model2columns" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Columns" inverseName="columns2model" inverseEntity="Columns"/>
+        <relationship name="model2columns" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Columns" inverseName="column2model" inverseEntity="Columns"/>
+        <relationship name="model2files" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Files" inverseName="files2model" inverseEntity="Files"/>
+        <relationship name="model2values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Values" inverseName="value2model" inverseEntity="Values"/>
     </entity>
     <entity name="Values" representedClassName="Values" syncable="YES" codeGenerationType="class">
-        <attribute name="predictedvalue" optional="YES" attributeType="Transformable"/>
-        <attribute name="value" optional="YES" attributeType="Transformable"/>
-        <relationship name="value2column" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Columns" inverseName="columns2values" inverseEntity="Columns"/>
+        <attribute name="predictedvalue" optional="YES" attributeType="String"/>
+        <attribute name="rowno" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="value" optional="YES" attributeType="String"/>
+        <relationship name="value2column" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Columns" inverseName="column2values" inverseEntity="Columns"/>
+        <relationship name="value2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2values" inverseEntity="Models"/>
     </entity>
     <elements>
-        <element name="Models" positionX="164.75" positionY="144.109375" width="128" height="73"/>
-        <element name="Columns" positionX="-54" positionY="0" width="128" height="118"/>
-        <element name="Values" positionX="-114.3515625" positionY="197.5546875" width="128" height="88"/>
+        <element name="Models" positionX="164.75" positionY="144.109375" width="128" height="118"/>
+        <element name="Columns" positionX="-54" positionY="0" width="128" height="133"/>
+        <element name="Values" positionX="-114.3515625" positionY="197.5546875" width="128" height="118"/>
+        <element name="Files" positionX="54" positionY="153" width="128" height="59"/>
     </elements>
 </model>

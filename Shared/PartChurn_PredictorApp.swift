@@ -13,7 +13,7 @@ struct PartChurn_PredictorApp: App {
 
     var body: some Scene {
         WindowGroup {
-            directoryView()
+            DirectoryView()
         }
     }
 }

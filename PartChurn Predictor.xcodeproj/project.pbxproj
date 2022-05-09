@@ -15,8 +15,36 @@
 		2D0B856E282565BF00856BCB /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B8558282565BD00856BCB /* Persistence.swift */; };
 		2D0B856F282565BF00856BCB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D0B8559282565BF00856BCB /* Assets.xcassets */; };
 		2D0B8570282565BF00856BCB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D0B8559282565BF00856BCB /* Assets.xcassets */; };
-		2DA77EBE282569DC007EC3E5 /* directoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EBD282569DC007EC3E5 /* directoryView.swift */; };
-		2DA77EBF282569DC007EC3E5 /* directoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EBD282569DC007EC3E5 /* directoryView.swift */; };
+		2DA77EBE282569DC007EC3E5 /* DirectoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EBD282569DC007EC3E5 /* DirectoryView.swift */; };
+		2DA77EBF282569DC007EC3E5 /* DirectoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EBD282569DC007EC3E5 /* DirectoryView.swift */; };
+		2DA77ED328256E8A007EC3E5 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77ED228256E89007EC3E5 /* Model.swift */; };
+		2DA77ED428256E8A007EC3E5 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77ED228256E89007EC3E5 /* Model.swift */; };
+		2DA77ED628256E9D007EC3E5 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77ED528256E9D007EC3E5 /* Storage.swift */; };
+		2DA77ED728256E9D007EC3E5 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77ED528256E9D007EC3E5 /* Storage.swift */; };
+		2DA77EDA28256EE5007EC3E5 /* GenericViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77ED928256EE5007EC3E5 /* GenericViewModel.swift */; };
+		2DA77EDB28256EE5007EC3E5 /* GenericViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77ED928256EE5007EC3E5 /* GenericViewModel.swift */; };
+		2DA77EDE28256F09007EC3E5 /* EntityAttributeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EDD28256F09007EC3E5 /* EntityAttributeInfo.swift */; };
+		2DA77EDF28256F09007EC3E5 /* EntityAttributeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EDD28256F09007EC3E5 /* EntityAttributeInfo.swift */; };
+		2DA77EE128256F16007EC3E5 /* BaseServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EE028256F16007EC3E5 /* BaseServices.swift */; };
+		2DA77EE228256F16007EC3E5 /* BaseServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EE028256F16007EC3E5 /* BaseServices.swift */; };
+		2DA77EE528256F52007EC3E5 /* ColumnsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EE428256F52007EC3E5 /* ColumnsModel.swift */; };
+		2DA77EE628256F52007EC3E5 /* ColumnsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EE428256F52007EC3E5 /* ColumnsModel.swift */; };
+		2DA77EE82825716A007EC3E5 /* ModelsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EE72825716A007EC3E5 /* ModelsModel.swift */; };
+		2DA77EE92825716A007EC3E5 /* ModelsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EE72825716A007EC3E5 /* ModelsModel.swift */; };
+		2DA77EEB2825721B007EC3E5 /* ValuesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EEA2825721B007EC3E5 /* ValuesModel.swift */; };
+		2DA77EEC2825721B007EC3E5 /* ValuesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EEA2825721B007EC3E5 /* ValuesModel.swift */; };
+		2DA77EEF282576AA007EC3E5 /* ImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EEE282576AA007EC3E5 /* ImportView.swift */; };
+		2DA77EF0282576AA007EC3E5 /* ImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EEE282576AA007EC3E5 /* ImportView.swift */; };
+		2DA77EF328257710007EC3E5 /* CSV in Frameworks */ = {isa = PBXBuildFile; productRef = 2DA77EF228257710007EC3E5 /* CSV */; };
+		2DA77EF628257732007EC3E5 /* CSV in Frameworks */ = {isa = PBXBuildFile; productRef = 2DA77EF528257732007EC3E5 /* CSV */; };
+		2DA77EF828257B97007EC3E5 /* CSV_Importer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EF728257B97007EC3E5 /* CSV_Importer.swift */; };
+		2DA77EF928257B97007EC3E5 /* CSV_Importer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EF728257B97007EC3E5 /* CSV_Importer.swift */; };
+		2DA77EFC28258384007EC3E5 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EFB28258384007EC3E5 /* Extensions.swift */; };
+		2DA77EFD28258384007EC3E5 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EFB28258384007EC3E5 /* Extensions.swift */; };
+		2DA77EFF28266B32007EC3E5 /* FilesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EFE28266B32007EC3E5 /* FilesModel.swift */; };
+		2DA77F0028266B32007EC3E5 /* FilesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EFE28266B32007EC3E5 /* FilesModel.swift */; };
+		2DA77F022827E1DD007EC3E5 /* ModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77F012827E1DD007EC3E5 /* ModelsView.swift */; };
+		2DA77F032827E1DD007EC3E5 /* ModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77F012827E1DD007EC3E5 /* ModelsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +55,20 @@
 		2D0B855E282565BF00856BCB /* PartChurn Predictor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PartChurn Predictor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D0B8564282565BF00856BCB /* PartChurn Predictor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PartChurn Predictor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D0B8566282565BF00856BCB /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
-		2DA77EBD282569DC007EC3E5 /* directoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = directoryView.swift; sourceTree = "<group>"; };
+		2DA77EBD282569DC007EC3E5 /* DirectoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryView.swift; sourceTree = "<group>"; };
+		2DA77ED228256E89007EC3E5 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		2DA77ED528256E9D007EC3E5 /* Storage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
+		2DA77ED928256EE5007EC3E5 /* GenericViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericViewModel.swift; sourceTree = "<group>"; };
+		2DA77EDD28256F09007EC3E5 /* EntityAttributeInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityAttributeInfo.swift; sourceTree = "<group>"; };
+		2DA77EE028256F16007EC3E5 /* BaseServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseServices.swift; sourceTree = "<group>"; };
+		2DA77EE428256F52007EC3E5 /* ColumnsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColumnsModel.swift; sourceTree = "<group>"; };
+		2DA77EE72825716A007EC3E5 /* ModelsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelsModel.swift; sourceTree = "<group>"; };
+		2DA77EEA2825721B007EC3E5 /* ValuesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValuesModel.swift; sourceTree = "<group>"; };
+		2DA77EEE282576AA007EC3E5 /* ImportView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportView.swift; sourceTree = "<group>"; };
+		2DA77EF728257B97007EC3E5 /* CSV_Importer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSV_Importer.swift; sourceTree = "<group>"; };
+		2DA77EFB28258384007EC3E5 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		2DA77EFE28266B32007EC3E5 /* FilesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesModel.swift; sourceTree = "<group>"; };
+		2DA77F012827E1DD007EC3E5 /* ModelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2DA77EF328257710007EC3E5 /* CSV in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2DA77EF628257732007EC3E5 /* CSV in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,8 +103,13 @@
 		2D0B8553282565BD00856BCB /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				2DA77EFA28258370007EC3E5 /* Extensions */,
+				2DA77EED28257693007EC3E5 /* Views */,
+				2DA77EE328256F34007EC3E5 /* Classes */,
+				2DA77EDC28256EFA007EC3E5 /* Structs */,
+				2DA77ED828256EC8007EC3E5 /* Protocols */,
+				2DA77ED128256E6A007EC3E5 /* GenericClasses */,
 				2D0B8556282565BD00856BCB /* PartChurn_PredictorApp.swift */,
-				2DA77EBD282569DC007EC3E5 /* directoryView.swift */,
 				2D0B8558282565BD00856BCB /* Persistence.swift */,
 				2D0B8559282565BF00856BCB /* Assets.xcassets */,
 				2D0B8554282565BD00856BCB /* PartChurn_Predictor.xcdatamodeld */,
@@ -86,6 +134,62 @@
 			path = macOS;
 			sourceTree = "<group>";
 		};
+		2DA77ED128256E6A007EC3E5 /* GenericClasses */ = {
+			isa = PBXGroup;
+			children = (
+				2DA77ED228256E89007EC3E5 /* Model.swift */,
+				2DA77ED528256E9D007EC3E5 /* Storage.swift */,
+			);
+			path = GenericClasses;
+			sourceTree = "<group>";
+		};
+		2DA77ED828256EC8007EC3E5 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				2DA77ED928256EE5007EC3E5 /* GenericViewModel.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		2DA77EDC28256EFA007EC3E5 /* Structs */ = {
+			isa = PBXGroup;
+			children = (
+				2DA77EF728257B97007EC3E5 /* CSV_Importer.swift */,
+				2DA77EE028256F16007EC3E5 /* BaseServices.swift */,
+				2DA77EDD28256F09007EC3E5 /* EntityAttributeInfo.swift */,
+			);
+			path = Structs;
+			sourceTree = "<group>";
+		};
+		2DA77EE328256F34007EC3E5 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				2DA77EE428256F52007EC3E5 /* ColumnsModel.swift */,
+				2DA77EE72825716A007EC3E5 /* ModelsModel.swift */,
+				2DA77EEA2825721B007EC3E5 /* ValuesModel.swift */,
+				2DA77EFE28266B32007EC3E5 /* FilesModel.swift */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		2DA77EED28257693007EC3E5 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2DA77EEE282576AA007EC3E5 /* ImportView.swift */,
+				2DA77EBD282569DC007EC3E5 /* DirectoryView.swift */,
+				2DA77F012827E1DD007EC3E5 /* ModelsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2DA77EFA28258370007EC3E5 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				2DA77EFB28258384007EC3E5 /* Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -102,6 +206,9 @@
 			dependencies = (
 			);
 			name = "PartChurn Predictor (iOS)";
+			packageProductDependencies = (
+				2DA77EF228257710007EC3E5 /* CSV */,
+			);
 			productName = "PartChurn Predictor (iOS)";
 			productReference = 2D0B855E282565BF00856BCB /* PartChurn Predictor.app */;
 			productType = "com.apple.product-type.application";
@@ -119,6 +226,9 @@
 			dependencies = (
 			);
 			name = "PartChurn Predictor (macOS)";
+			packageProductDependencies = (
+				2DA77EF528257732007EC3E5 /* CSV */,
+			);
 			productName = "PartChurn Predictor (macOS)";
 			productReference = 2D0B8564282565BF00856BCB /* PartChurn Predictor.app */;
 			productType = "com.apple.product-type.application";
@@ -150,6 +260,10 @@
 				Base,
 			);
 			mainGroup = 2D0B854E282565BD00856BCB;
+			packageReferences = (
+				2DA77EF128257710007EC3E5 /* XCRemoteSwiftPackageReference "CSV.swift" */,
+				2DA77EF428257732007EC3E5 /* XCRemoteSwiftPackageReference "CSV.swift" */,
+			);
 			productRefGroup = 2D0B855F282565BF00856BCB /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -184,10 +298,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DA77EBE282569DC007EC3E5 /* directoryView.swift in Sources */,
+				2DA77EE82825716A007EC3E5 /* ModelsModel.swift in Sources */,
+				2DA77ED328256E8A007EC3E5 /* Model.swift in Sources */,
+				2DA77EF828257B97007EC3E5 /* CSV_Importer.swift in Sources */,
+				2DA77EDE28256F09007EC3E5 /* EntityAttributeInfo.swift in Sources */,
+				2DA77EE128256F16007EC3E5 /* BaseServices.swift in Sources */,
+				2DA77EBE282569DC007EC3E5 /* DirectoryView.swift in Sources */,
 				2D0B8569282565BF00856BCB /* PartChurn_PredictorApp.swift in Sources */,
+				2DA77EE528256F52007EC3E5 /* ColumnsModel.swift in Sources */,
 				2D0B856D282565BF00856BCB /* Persistence.swift in Sources */,
 				2D0B8567282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */,
+				2DA77EFC28258384007EC3E5 /* Extensions.swift in Sources */,
+				2DA77EEF282576AA007EC3E5 /* ImportView.swift in Sources */,
+				2DA77EEB2825721B007EC3E5 /* ValuesModel.swift in Sources */,
+				2DA77F022827E1DD007EC3E5 /* ModelsView.swift in Sources */,
+				2DA77EDA28256EE5007EC3E5 /* GenericViewModel.swift in Sources */,
+				2DA77ED628256E9D007EC3E5 /* Storage.swift in Sources */,
+				2DA77EFF28266B32007EC3E5 /* FilesModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,10 +322,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DA77EBF282569DC007EC3E5 /* directoryView.swift in Sources */,
+				2DA77EE92825716A007EC3E5 /* ModelsModel.swift in Sources */,
+				2DA77ED428256E8A007EC3E5 /* Model.swift in Sources */,
+				2DA77EF928257B97007EC3E5 /* CSV_Importer.swift in Sources */,
+				2DA77EDF28256F09007EC3E5 /* EntityAttributeInfo.swift in Sources */,
+				2DA77EE228256F16007EC3E5 /* BaseServices.swift in Sources */,
+				2DA77EBF282569DC007EC3E5 /* DirectoryView.swift in Sources */,
 				2D0B856A282565BF00856BCB /* PartChurn_PredictorApp.swift in Sources */,
+				2DA77EE628256F52007EC3E5 /* ColumnsModel.swift in Sources */,
 				2D0B856E282565BF00856BCB /* Persistence.swift in Sources */,
 				2D0B8568282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */,
+				2DA77EFD28258384007EC3E5 /* Extensions.swift in Sources */,
+				2DA77EF0282576AA007EC3E5 /* ImportView.swift in Sources */,
+				2DA77EEC2825721B007EC3E5 /* ValuesModel.swift in Sources */,
+				2DA77F032827E1DD007EC3E5 /* ModelsView.swift in Sources */,
+				2DA77EDB28256EE5007EC3E5 /* GenericViewModel.swift in Sources */,
+				2DA77ED728256E9D007EC3E5 /* Storage.swift in Sources */,
+				2DA77F0028266B32007EC3E5 /* FilesModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -462,6 +602,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2DA77EF128257710007EC3E5 /* XCRemoteSwiftPackageReference "CSV.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/yaslab/CSV.swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+		2DA77EF428257732007EC3E5 /* XCRemoteSwiftPackageReference "CSV.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/yaslab/CSV.swift.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2DA77EF228257710007EC3E5 /* CSV */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2DA77EF128257710007EC3E5 /* XCRemoteSwiftPackageReference "CSV.swift" */;
+			productName = CSV;
+		};
+		2DA77EF528257732007EC3E5 /* CSV */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2DA77EF428257732007EC3E5 /* XCRemoteSwiftPackageReference "CSV.swift" */;
+			productName = CSV;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		2D0B8554282565BD00856BCB /* PartChurn_Predictor.xcdatamodeld */ = {
