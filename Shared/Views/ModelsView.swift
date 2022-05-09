@@ -18,10 +18,22 @@ struct ModelsView: View {
             Text("Files")
                 .font(.title)
                 .padding()
-            
-            List(ModelsModel.getFilesForItem(model: model), id: \.self, selection: $selection) { file in
-                Text(file.name!)
-            }.padding()
+            HStack {
+                List(ModelsModel.getFilesForItem(model: model), id: \.self, selection: $selection) { file in
+                    Text(file.name!)
+                }
+                .frame(width: 350, height: 200)
+                .padding()
+                VStack() {
+                    Button("Lerne..") {
+                        predict(model: model, file: selection!)
+                    }.padding()
+                    Button("Trage Vorhersagen ein") {
+                    }.padding()
+                }
+                
+            }
+            .frame(height: 200)
             HStack {
                 ForEach(ModelsModel.getColumnsForItem(model: model), id: \.self) { col in Text(col.name!).font(.body).padding()
                 }.padding()
@@ -34,7 +46,10 @@ struct ModelsView: View {
         }
     }
 }
-
+private func predict(model: Models, file: Files) {
+    var rows = ModelsModel.predictionRows(model: model, file: file)
+    rows.getPrediction()
+}
 struct ModelsView_Previews: PreviewProvider {
     static var previews: some View {
         ModelsView(model: ModelsModel().items[0])

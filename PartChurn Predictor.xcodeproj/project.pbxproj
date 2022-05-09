@@ -15,6 +15,10 @@
 		2D0B856E282565BF00856BCB /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B8558282565BD00856BCB /* Persistence.swift */; };
 		2D0B856F282565BF00856BCB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D0B8559282565BF00856BCB /* Assets.xcassets */; };
 		2D0B8570282565BF00856BCB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D0B8559282565BF00856BCB /* Assets.xcassets */; };
+		2D1A9EF728295D5B00639143 /* LinearMarsHabitatPricer.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 2D1A9EF628295D5B00639143 /* LinearMarsHabitatPricer.mlmodel */; };
+		2D1A9EF828295D5B00639143 /* LinearMarsHabitatPricer.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 2D1A9EF628295D5B00639143 /* LinearMarsHabitatPricer.mlmodel */; };
+		2D1A9EFA28295DEA00639143 /* MarsHabitatPricer.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 2D1A9EF928295DEA00639143 /* MarsHabitatPricer.mlmodel */; };
+		2D1A9EFB28295DEA00639143 /* MarsHabitatPricer.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 2D1A9EF928295DEA00639143 /* MarsHabitatPricer.mlmodel */; };
 		2DA77EBE282569DC007EC3E5 /* DirectoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EBD282569DC007EC3E5 /* DirectoryView.swift */; };
 		2DA77EBF282569DC007EC3E5 /* DirectoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EBD282569DC007EC3E5 /* DirectoryView.swift */; };
 		2DA77ED328256E8A007EC3E5 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77ED228256E89007EC3E5 /* Model.swift */; };
@@ -55,6 +59,8 @@
 		2D0B855E282565BF00856BCB /* PartChurn Predictor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PartChurn Predictor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D0B8564282565BF00856BCB /* PartChurn Predictor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PartChurn Predictor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D0B8566282565BF00856BCB /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
+		2D1A9EF628295D5B00639143 /* LinearMarsHabitatPricer.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = LinearMarsHabitatPricer.mlmodel; path = ../../../../../../Desktop/LinearMarsHabitatPricer.mlmodel; sourceTree = "<group>"; };
+		2D1A9EF928295DEA00639143 /* MarsHabitatPricer.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = MarsHabitatPricer.mlmodel; sourceTree = "<group>"; };
 		2DA77EBD282569DC007EC3E5 /* DirectoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryView.swift; sourceTree = "<group>"; };
 		2DA77ED228256E89007EC3E5 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		2DA77ED528256E9D007EC3E5 /* Storage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
@@ -103,6 +109,7 @@
 		2D0B8553282565BD00856BCB /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				2D1C929A282916EE0013585F /* MLModels */,
 				2DA77EFA28258370007EC3E5 /* Extensions */,
 				2DA77EED28257693007EC3E5 /* Views */,
 				2DA77EE328256F34007EC3E5 /* Classes */,
@@ -132,6 +139,15 @@
 				2D0B8566282565BF00856BCB /* macOS.entitlements */,
 			);
 			path = macOS;
+			sourceTree = "<group>";
+		};
+		2D1C929A282916EE0013585F /* MLModels */ = {
+			isa = PBXGroup;
+			children = (
+				2D1A9EF928295DEA00639143 /* MarsHabitatPricer.mlmodel */,
+				2D1A9EF628295D5B00639143 /* LinearMarsHabitatPricer.mlmodel */,
+			);
+			path = MLModels;
 			sourceTree = "<group>";
 		};
 		2DA77ED128256E6A007EC3E5 /* GenericClasses */ = {
@@ -310,6 +326,8 @@
 				2D0B8567282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */,
 				2DA77EFC28258384007EC3E5 /* Extensions.swift in Sources */,
 				2DA77EEF282576AA007EC3E5 /* ImportView.swift in Sources */,
+				2D1A9EF728295D5B00639143 /* LinearMarsHabitatPricer.mlmodel in Sources */,
+				2D1A9EFA28295DEA00639143 /* MarsHabitatPricer.mlmodel in Sources */,
 				2DA77EEB2825721B007EC3E5 /* ValuesModel.swift in Sources */,
 				2DA77F022827E1DD007EC3E5 /* ModelsView.swift in Sources */,
 				2DA77EDA28256EE5007EC3E5 /* GenericViewModel.swift in Sources */,
@@ -334,6 +352,8 @@
 				2D0B8568282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */,
 				2DA77EFD28258384007EC3E5 /* Extensions.swift in Sources */,
 				2DA77EF0282576AA007EC3E5 /* ImportView.swift in Sources */,
+				2D1A9EF828295D5B00639143 /* LinearMarsHabitatPricer.mlmodel in Sources */,
+				2D1A9EFB28295DEA00639143 /* MarsHabitatPricer.mlmodel in Sources */,
 				2DA77EEC2825721B007EC3E5 /* ValuesModel.swift in Sources */,
 				2DA77F032827E1DD007EC3E5 /* ModelsView.swift in Sources */,
 				2DA77EDB28256EE5007EC3E5 /* GenericViewModel.swift in Sources */,
