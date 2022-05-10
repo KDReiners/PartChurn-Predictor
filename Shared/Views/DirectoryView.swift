@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import CoreData
 struct DirectoryView: View {
     var modelsDataModel = ModelsModel()
     @State var select: NSManagedObject?

@@ -42,7 +42,7 @@ struct ModelsView: View {
                     }
                     List(mlAlgorithms, id: \.self, selection: $mlSelection) { algorithm in
                         Text(algorithm)
-                    }.frame(width: 150)
+                    }.frame(width: 250)
                     
                 }.padding(.trailing, 5)
                 .frame(height: 100)

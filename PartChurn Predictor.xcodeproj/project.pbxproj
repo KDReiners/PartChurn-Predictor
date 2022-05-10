@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A522685282A43B8007A696E /* ChurnPrediction_POC.csv in Resources */ = {isa = PBXBuildFile; fileRef = 0A522684282A43B8007A696E /* ChurnPrediction_POC.csv */; };
+		0A522686282A43B8007A696E /* ChurnPrediction_POC.csv in Resources */ = {isa = PBXBuildFile; fileRef = 0A522684282A43B8007A696E /* ChurnPrediction_POC.csv */; };
+		0A52268C282A690A007A696E /* LinearPredictor.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 0A52268B282A690A007A696E /* LinearPredictor.mlmodel */; };
+		0A52268D282A690A007A696E /* LinearPredictor.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 0A52268B282A690A007A696E /* LinearPredictor.mlmodel */; };
 		2D0B8567282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B8554282565BD00856BCB /* PartChurn_Predictor.xcdatamodeld */; };
 		2D0B8568282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B8554282565BD00856BCB /* PartChurn_Predictor.xcdatamodeld */; };
 		2D0B8569282565BF00856BCB /* PartChurn_PredictorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B8556282565BD00856BCB /* PartChurn_PredictorApp.swift */; };
@@ -15,8 +19,6 @@
 		2D0B856E282565BF00856BCB /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B8558282565BD00856BCB /* Persistence.swift */; };
 		2D0B856F282565BF00856BCB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D0B8559282565BF00856BCB /* Assets.xcassets */; };
 		2D0B8570282565BF00856BCB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D0B8559282565BF00856BCB /* Assets.xcassets */; };
-		2D1A9EF728295D5B00639143 /* LinearMarsHabitatPricer.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 2D1A9EF628295D5B00639143 /* LinearMarsHabitatPricer.mlmodel */; };
-		2D1A9EF828295D5B00639143 /* LinearMarsHabitatPricer.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 2D1A9EF628295D5B00639143 /* LinearMarsHabitatPricer.mlmodel */; };
 		2D1A9EFA28295DEA00639143 /* MarsHabitatPricer.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 2D1A9EF928295DEA00639143 /* MarsHabitatPricer.mlmodel */; };
 		2D1A9EFB28295DEA00639143 /* MarsHabitatPricer.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 2D1A9EF928295DEA00639143 /* MarsHabitatPricer.mlmodel */; };
 		2D288AC12829793B0078647E /* Trainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D288AC02829793B0078647E /* Trainer.swift */; };
@@ -54,6 +56,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A522684282A43B8007A696E /* ChurnPrediction_POC.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ChurnPrediction_POC.csv; path = ../../ChurnPrediction_POC.csv; sourceTree = "<group>"; };
+		0A522687282A43D2007A696E /* ChurnPrediction_POC.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = ChurnPrediction_POC.csv; sourceTree = "<group>"; };
+		0A52268B282A690A007A696E /* LinearPredictor.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = LinearPredictor.mlmodel; sourceTree = "<group>"; };
 		2D0B8555282565BD00856BCB /* Shared.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Shared.xcdatamodel; sourceTree = "<group>"; };
 		2D0B8556282565BD00856BCB /* PartChurn_PredictorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartChurn_PredictorApp.swift; sourceTree = "<group>"; };
 		2D0B8558282565BD00856BCB /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -61,7 +66,6 @@
 		2D0B855E282565BF00856BCB /* PartChurn Predictor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PartChurn Predictor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D0B8564282565BF00856BCB /* PartChurn Predictor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PartChurn Predictor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D0B8566282565BF00856BCB /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
-		2D1A9EF628295D5B00639143 /* LinearMarsHabitatPricer.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = LinearMarsHabitatPricer.mlmodel; path = ../../../../../../Desktop/LinearMarsHabitatPricer.mlmodel; sourceTree = "<group>"; };
 		2D1A9EF928295DEA00639143 /* MarsHabitatPricer.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = MarsHabitatPricer.mlmodel; sourceTree = "<group>"; };
 		2D288AC02829793B0078647E /* Trainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trainer.swift; sourceTree = "<group>"; };
 		2DA77EBD282569DC007EC3E5 /* DirectoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryView.swift; sourceTree = "<group>"; };
@@ -122,6 +126,7 @@
 				2D0B8556282565BD00856BCB /* PartChurn_PredictorApp.swift */,
 				2D0B8558282565BD00856BCB /* Persistence.swift */,
 				2D0B8559282565BF00856BCB /* Assets.xcassets */,
+				0A522684282A43B8007A696E /* ChurnPrediction_POC.csv */,
 				2D0B8554282565BD00856BCB /* PartChurn_Predictor.xcdatamodeld */,
 			);
 			path = Shared;
@@ -140,6 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				2D0B8566282565BF00856BCB /* macOS.entitlements */,
+				0A522687282A43D2007A696E /* ChurnPrediction_POC.csv */,
 			);
 			path = macOS;
 			sourceTree = "<group>";
@@ -148,7 +154,7 @@
 			isa = PBXGroup;
 			children = (
 				2D1A9EF928295DEA00639143 /* MarsHabitatPricer.mlmodel */,
-				2D1A9EF628295D5B00639143 /* LinearMarsHabitatPricer.mlmodel */,
+				0A52268B282A690A007A696E /* LinearPredictor.mlmodel */,
 				2D288AC02829793B0078647E /* Trainer.swift */,
 			);
 			path = MLModels;
@@ -300,6 +306,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D0B856F282565BF00856BCB /* Assets.xcassets in Resources */,
+				0A522685282A43B8007A696E /* ChurnPrediction_POC.csv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,6 +315,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D0B8570282565BF00856BCB /* Assets.xcassets in Resources */,
+				0A522686282A43B8007A696E /* ChurnPrediction_POC.csv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,9 +336,9 @@
 				2DA77EE528256F52007EC3E5 /* ColumnsModel.swift in Sources */,
 				2D0B856D282565BF00856BCB /* Persistence.swift in Sources */,
 				2D0B8567282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */,
+				0A52268C282A690A007A696E /* LinearPredictor.mlmodel in Sources */,
 				2DA77EFC28258384007EC3E5 /* Extensions.swift in Sources */,
 				2DA77EEF282576AA007EC3E5 /* ImportView.swift in Sources */,
-				2D1A9EF728295D5B00639143 /* LinearMarsHabitatPricer.mlmodel in Sources */,
 				2D1A9EFA28295DEA00639143 /* MarsHabitatPricer.mlmodel in Sources */,
 				2D288AC12829793B0078647E /* Trainer.swift in Sources */,
 				2DA77EEB2825721B007EC3E5 /* ValuesModel.swift in Sources */,
@@ -355,9 +363,9 @@
 				2DA77EE628256F52007EC3E5 /* ColumnsModel.swift in Sources */,
 				2D0B856E282565BF00856BCB /* Persistence.swift in Sources */,
 				2D0B8568282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */,
+				0A52268D282A690A007A696E /* LinearPredictor.mlmodel in Sources */,
 				2DA77EFD28258384007EC3E5 /* Extensions.swift in Sources */,
 				2DA77EF0282576AA007EC3E5 /* ImportView.swift in Sources */,
-				2D1A9EF828295D5B00639143 /* LinearMarsHabitatPricer.mlmodel in Sources */,
 				2D1A9EFB28295DEA00639143 /* MarsHabitatPricer.mlmodel in Sources */,
 				2D288AC22829793B0078647E /* Trainer.swift in Sources */,
 				2DA77EEC2825721B007EC3E5 /* ValuesModel.swift in Sources */,
