@@ -65,12 +65,10 @@ public class ModelsModel: Model<Models> {
                         Text(valuesGrouped[index][col].value!)
                             .font(.body)
                             .frame(width: 80)
-                            .padding(.trailing, 5)
                     }
                     Text( "\(predict(valuesGrouped: valuesGrouped[index]))")
                         .font(.body)
                         .frame(width: 80)
-                        .padding(.trailing, 5)
 
                 }
             }

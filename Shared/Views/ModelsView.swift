@@ -13,60 +13,61 @@ struct ModelsView: View {
     @State var mlSelection: String?
     var mlAlgorithms = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor"]
     var body: some View {
-        VStack(alignment: .leading) {
-            Text(model.name ?? "unbekanntes Model")
-                .font(.title)
-                .padding()
-            HStack {
-            Text("Files")
-                .font(.title)
-                .padding()
-            Text("Algorithmus")
-                    .font(.title)
-                    .padding(.leading, 405)
-            Text("Algorithmus KPI")
-                    .font(.title)
-                    .padding(.leading, 200)
-            }
+        HStack(spacing: 50) {
             VStack(alignment: .leading) {
-                HStack {
-                    List(ModelsModel.getFilesForItem(model: model), id: \.self, selection: $fileSelection) { file in
-                        Text(file.name!)
-                    }
-                    .frame(width: 350, height: 100)
+                Text(model.name ?? "unbekanntes Model")
+                    .font(.title)
                     .padding()
-                    VStack() {
-                        Button("Lerne..") {
-                            train(regressorName: mlSelection!)
-                        }.padding()
-                    }
-                    List(mlAlgorithms, id: \.self, selection: $mlSelection) { algorithm in
-                        Text(algorithm)
-                    }.frame(width: 250)
-                    
-                }.padding(.trailing, 5)
-                .frame(height: 100)
-                if fileSelection != nil {
-                    
-                    HStack {
-                        ForEach(ModelsModel.getColumnsForItem(model: model), id: \.self) { col in Text(col.name!)
+                Spacer()
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("Files")
+                            .font(.title)
+                        List(ModelsModel.getFilesForItem(model: model), id: \.self, selection: $fileSelection) { file in
+                            Text(file.name!)
                                 .font(.body)
-                                .frame(width: 80)
-                                .padding(.trailing, 5)
                         }
-                        Text("Prognose")
-                            .font(.body)
-                            .frame(width: 80)
-                            .padding(.trailing, 5)
-                        .frame(height: 50)
-                    }.padding(.leading, 25)
+                    }.padding()
+                    VStack(alignment: .leading) {
+                        Text("Algorithmus")
+                            .font(.title)
+                        HStack {
+                            List(mlAlgorithms, id: \.self, selection: $mlSelection) { algorithm in Spacer()
+                                Text(algorithm)
+                            }.frame(width: 250)
+                            Button("Lerne..") {
+                                train(regressorName: mlSelection!)
+                            }.frame(width: 60)
+                        }
+                    }.padding()
+                    VStack(alignment: .leading) {
+                        Text("Algorithmus KPI")
+                            .font(.title)
+                        Spacer()
+                    }.padding()
                     
-                    List {
-                        ModelsModel.ValueRow(model: model, file: fileSelection!)
+                }
+                Divider()
+                if fileSelection != nil {
+                    VStack(alignment: .leading) {
+                        HStack {
+                            ForEach(ModelsModel.getColumnsForItem(model: model), id: \.self) { col in Text(col.name!)
+                                    .font(.body)
+                                    .frame(width: 80)
+                            }
+                            Text("Prognose")
+                                .font(.body)
+                        }
+                        
+                        List {
+                            ModelsModel.ValueRow(model: model, file: fileSelection!)
+                        }
                     }.padding()
                 }
             }
+            Spacer()
         }
+        Spacer()
     }
 }
 private func train(regressorName: String) {
