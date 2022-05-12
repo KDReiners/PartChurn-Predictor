@@ -48,6 +48,7 @@ public struct Trainer {
     private func trainMLLinearRegressor(regressorEvaluationTable: MLDataTable, regressorTrainingTable: MLDataTable) {
         var regressor: MLLinearRegressor
         do {
+            var regressorKPI = Ml_MetricKPI()
             regressor = try MLLinearRegressor(trainingData: regressorTrainingTable,
                                               targetColumn: "Kuendigt")
             let worstTrainingError = regressor.trainingMetrics.maximumError

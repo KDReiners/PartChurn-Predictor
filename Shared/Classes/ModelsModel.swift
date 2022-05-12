@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import CoreML
 public class ModelsModel: Model<Models> {
     @Published var result: [Models]!
     public init() {
@@ -126,7 +127,15 @@ public class ModelsModel: Model<Models> {
     }
 
     public static func predict( Kunde_seit: Double, Account_Manager: String, Anzahl_Arbeitsplaetze: Double, ADDISON: Double, AKTE: Double, SBS: Double, Anzahl_UHD: Double, davon_geloest: Double, Jahresfaktura: Double, Anzahl_OPPs: Double, Digitalisierungsgrad: Double) -> Double {
-        let model = MarsHabitatPricer()
+        let model: MLBoostedTreePredictor = {
+        do {
+            let config = MLModelConfiguration()
+            return try MLBoostedTreePredictor(configuration: config)
+        } catch {
+            print(error)
+            fatalError("Couldn't create MlBoostedTreePredictor")
+        }
+        }()
         guard let ChurnPredicter = try? model.prediction(Kunde_seit: Kunde_seit, Account_Manager: Account_Manager, Anzahl_Arbeitsplaetze: Anzahl_Arbeitsplaetze, ADDISON: ADDISON, AKTE: AKTE, SBS: SBS, Anzahl_UHD: Anzahl_UHD, davon_geloest: davon_geloest, Jahresfaktura: Jahresfaktura, Anzahl_OPPs: Anzahl_OPPs, Digitalisierungsgrad: Digitalisierungsgrad) else {
             fatalError("Unexpected runtime error.")
         }
