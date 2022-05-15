@@ -32,7 +32,7 @@ struct ModelsView: View {
                         Text("Algorithmus")
                             .font(.title)
                         HStack {
-                            List(mlAlgorithms, id: \.self, selection: $mlSelection) { algorithm in Spacer()
+                            List(mlAlgorithms, id: \.self, selection: $mlSelection) { algorithm in 
                                 Text(algorithm)
                             }.frame(width: 250)
                             Button("Lerne..") {
