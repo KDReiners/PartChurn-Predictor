@@ -33,6 +33,18 @@ public struct Trainer {
             return $0.name == csvFile.lastPathComponent
         })
         model = file?.files2model
+        guard dataTable != nil else {
+            return
+        }
+        guard file != nil else {
+            return
+        }
+        guard model != nil else {
+            return
+        }
+
+
+
         
     }
     public func createModel(regressorName: String) -> Void {
@@ -52,27 +64,26 @@ public struct Trainer {
         guard let metric = metric else {
             return
         }
-        postMetric(metric: metric)
     }
     private func trainMLLinearRegressor(regressorEvaluationTable: MLDataTable, regressorTrainingTable: MLDataTable) -> Ml_MetricKPI {
         var regressorKPI = Ml_MetricKPI()
         var regressor: MLLinearRegressor
         do {
             
+            /// Training and Validation
             regressor = try MLLinearRegressor(trainingData: regressorTrainingTable,
                                               targetColumn: "Kuendigt")
-            regressorKPI.worstTrainingError = regressor.trainingMetrics.maximumError
-            regressorKPI.trainingRootMeanSquaredError = regressor.trainingMetrics.rootMeanSquaredError
-            
-            regressorKPI.worstValidationError = regressor.validationMetrics.maximumError
-            regressorKPI.validatitionRootMeanSquaredError = regressor.validationMetrics.rootMeanSquaredError
-            
-            let regressorEvalutation = regressor.evaluation(on: regressorEvaluationTable)
+            regressorKPI.dictOfMetrics["trainingMetrics.maximumError"]? = regressor.trainingMetrics.maximumError
+            regressorKPI.dictOfMetrics["trainingMetrics.rootMeanSquaredError"]? = regressor.trainingMetrics.rootMeanSquaredError
+            regressorKPI.dictOfMetrics["validatonMetrics.maximumError"]? = regressor.validationMetrics.maximumError
+            regressorKPI.dictOfMetrics["validatonMetrics.rootMeanSquaredError"]? = regressor.validationMetrics.rootMeanSquaredError
 
-            /// Die größte Distanz zwichen Vorhersage und Wert
-            regressorKPI.worstEvalutationError = regressorEvalutation.maximumError
-            regressorKPI.evaluationRootMeanSquaredError = regressorEvalutation.rootMeanSquaredError
-            
+            /// Evaluation
+            let regressorEvalutation = regressor.evaluation(on: regressorEvaluationTable)
+            regressorKPI.dictOfMetrics["evaluationMetrics.maximumError"]? = regressorEvalutation.maximumError
+            regressorKPI.dictOfMetrics["evaluationMetrics.rootMeanSquaredError"]? = regressorEvalutation.rootMeanSquaredError
+            /// Schreibe in CoreData
+            regressorKPI.postMetric(model: model!, file: file!)
             /// Pfad zum Schreibtisch
             let homePath = FileManager.default.homeDirectoryForCurrentUser
             let desktopPath = homePath //.appendingPathComponent("Desktop")
@@ -90,36 +101,5 @@ public struct Trainer {
        
         return regressorKPI
 
-    }
-    private func postMetric(metric: Ml_MetricKPI) {
-        let metricsvaluesModel = MetricvaluesModel()
-        let datasetTypeModel = DatasettypesModel()
-        let metricsModel = MetricsModel()
-        
-        // Training
-        let datasetType = datasetTypeModel.items.first(where: {
-            return $0.name == "training"
-        })
-        let metricType = metricsModel.items.first(where: {
-            return $0.name == "worstError"
-        })
-        guard let datasetType = datasetType else {
-            return
-        }
-        guard let metricType = metricType else {
-            return
-        }
-
-        
-        let newMetric = metricsvaluesModel.insertRecord()
-        newMetric.metricvalue2model = model
-        newMetric.metricvalue2file = file
-        newMetric.value = metric.worstTrainingError
-        newMetric.metricvalue2metric?.metric2datasettypes?.addingObjects(from: NSSet(array:[datasetType]) as! Set<AnyHashable>)
-        metricsvaluesModel.saveChanges()
-        metricType.metric2metricvalues = metricType.metric2metricvalues?.addingObjects(from: [newMetric]) as NSSet?
-        datasetTypeModel.saveChanges()
-        metricsModel.saveChanges()
-        
     }
 }

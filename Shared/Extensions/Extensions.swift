@@ -31,3 +31,9 @@ extension Sequence {
     }
   }
 }
+extension NSObject {
+    func propertyNames() -> [String] {
+        let mirror = Mirror(reflecting: self)
+        return mirror.children.compactMap{ $0.label }
+    }
+}
