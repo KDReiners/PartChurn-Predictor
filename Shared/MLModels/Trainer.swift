@@ -48,10 +48,9 @@ public struct Trainer {
         
     }
     public func createModel(regressorName: String) -> Void {
-        var metric: Ml_MetricKPI?
         let (regressorEvaluationTable, regressorTrainingTable) = regressorTable!.randomSplit(by: 0.20, seed: 5)
         switch regressorName {
-        case "MLLinearRegressor": metric = trainMLLinearRegressor(regressorEvaluationTable: regressorEvaluationTable, regressorTrainingTable: regressorTrainingTable)
+        case "MLLinearRegressor": trainMLLinearRegressor(regressorEvaluationTable: regressorEvaluationTable, regressorTrainingTable: regressorTrainingTable)
         case "MLDecisionTreeRegressor":
             return
         case "MLRandomForestRegressor":
@@ -61,11 +60,8 @@ public struct Trainer {
         default:
             fatalError()
         }
-        guard let metric = metric else {
-            return
-        }
     }
-    private func trainMLLinearRegressor(regressorEvaluationTable: MLDataTable, regressorTrainingTable: MLDataTable) -> Ml_MetricKPI {
+    private func trainMLLinearRegressor(regressorEvaluationTable: MLDataTable, regressorTrainingTable: MLDataTable) -> Void {
         var regressorKPI = Ml_MetricKPI()
         var regressor: MLLinearRegressor
         do {
@@ -75,8 +71,8 @@ public struct Trainer {
                                               targetColumn: "Kuendigt")
             regressorKPI.dictOfMetrics["trainingMetrics.maximumError"]? = regressor.trainingMetrics.maximumError
             regressorKPI.dictOfMetrics["trainingMetrics.rootMeanSquaredError"]? = regressor.trainingMetrics.rootMeanSquaredError
-            regressorKPI.dictOfMetrics["validatonMetrics.maximumError"]? = regressor.validationMetrics.maximumError
-            regressorKPI.dictOfMetrics["validatonMetrics.rootMeanSquaredError"]? = regressor.validationMetrics.rootMeanSquaredError
+            regressorKPI.dictOfMetrics["validationMetrics.maximumError"]? = regressor.validationMetrics.maximumError
+            regressorKPI.dictOfMetrics["validationMetrics.rootMeanSquaredError"]? = regressor.validationMetrics.rootMeanSquaredError
 
             /// Evaluation
             let regressorEvalutation = regressor.evaluation(on: regressorEvaluationTable)
@@ -98,8 +94,5 @@ public struct Trainer {
         } catch {
             print(error)
         }
-       
-        return regressorKPI
-
     }
 }
