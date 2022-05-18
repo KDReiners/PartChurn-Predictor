@@ -49,12 +49,15 @@ struct Ml_MetricKPI {
                 return
             }
             let newMetric = metricsvaluesModel.insertRecord()
+            /// Set relations
             newMetric.metricvalue2model = model
             newMetric.metricvalue2file = file
-            newMetric.value = item.value
-            newMetric.metricvalue2metric?.metric2datasettypes =
-            newMetric.metricvalue2metric?.metric2datasettypes?.addingObjects(from: [datasetType]) as NSSet?
+            newMetric.metricvalue2datasettype = datasetType
+            metricType.metric2datasettypes = metricType.metric2datasettypes?.addingObjects(from: [datasetType]) as NSSet?
             metricType.metric2metricvalues = metricType.metric2metricvalues?.addingObjects(from: [newMetric]) as NSSet?
+            /// Set value
+            newMetric.value = item.value
+            /// Save changes
             metricsvaluesModel.saveChanges()
             datasetTypeModel.saveChanges()
             metricsModel.saveChanges()
