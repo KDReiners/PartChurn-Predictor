@@ -9,6 +9,11 @@ import Foundation
 import CreateML
 import SwiftUI
 internal class Ml_MetricKPI: ObservableObject {
+    struct section {
+        var dataSetType: String?
+        var metricType: [String]?
+    }
+    var currentDataSetType = ""
     var worstTrainingError: Double  = 0
     var worstValidationError: Double = 0
     var worstEvalutationError: Double = 0
@@ -16,7 +21,7 @@ internal class Ml_MetricKPI: ObservableObject {
     var validatitionRootMeanSquaredError: Double = 0
     var evaluationRootMeanSquaredError: Double = 0
     var dictOfMetrics = Dictionary<String, Double>()
-    var sections = Dictionary<String, [Dictionary<String, Double>.Element]>()
+    var sections = [section]()
     init() {
         dictOfMetrics["trainingMetrics.maximumError"] = 0
         dictOfMetrics["trainingMetrics.rootMeanSquaredError"] = 0
@@ -24,8 +29,20 @@ internal class Ml_MetricKPI: ObservableObject {
         dictOfMetrics["validationMetrics.rootMeanSquaredError"] = 0
         dictOfMetrics["evaluationMetrics.maximumError"] = 0
         dictOfMetrics["evaluationMetrics.rootMeanSquaredError"] = 0
-        sections = Dictionary(grouping: dictOfMetrics) { (dictionary) -> String
-            in return resolveDictOfMetrics(key: dictionary.key).datasetType
+        for key in dictOfMetrics.keys {
+            var newSection: section
+            let dataSetType = resolveDictOfMetrics(key: key).datasetType
+            let metricType = resolveDictOfMetrics(key: key).metricType
+            if currentDataSetType != dataSetType {
+                newSection = section()
+                newSection.dataSetType = dataSetType
+                newSection.metricType = Array<String>()
+                newSection.metricType?.append(metricType)
+                sections.append(newSection)
+            } else {
+                var currentSection = sections.first(where: { return $0.dataSetType == metricType})
+                currentSection?.metricType?.append(metricType)
+            }
         }
                                                         
     }
@@ -73,7 +90,6 @@ internal class Ml_MetricKPI: ObservableObject {
             metricsModel.saveChanges()
             algorithmsModel.saveChanges()
         }
-        AlgorithmsModel.showKpis(model: model, file: file, algorithmName: algorithmName)
     }
     func resolveDictOfMetrics(key: String) -> (datasetType: String, metricType: String) {
         let subTypes = key.split(separator: ".", maxSplits: 1)
