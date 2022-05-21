@@ -16,7 +16,7 @@ struct DirectoryView: View {
             {
                 DisclosureGroup("Modelle") {
                     ForEach(modelsDataModel.items, id: \.self) { item in
-                        NavigationLink(item.name ?? "unbenanntes Modell", destination: ModelsView(model: item), tag: item, selection: $select)
+                        NavigationLink(item.name ?? "unbenanntes Modell", destination: ModelsView(model: item, metric: Ml_MetricKPI()), tag: item, selection: $select)
                     }
                     
                 }

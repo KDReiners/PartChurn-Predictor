@@ -20,7 +20,6 @@ public class MetricsModel: Model<Metrics> {
             result = newValue.sorted(by: { $1.name ?? "" > $0.name ?? ""})
         }
     }
-    
 }
 
 

@@ -8,11 +8,7 @@
 import Foundation
 import CreateML
 import SwiftUI
-struct Ml_MetricKPI {
-    struct metricDetail {
-        var datasetType: String
-        var metricType: String
-    }
+internal class Ml_MetricKPI: ObservableObject {
     var worstTrainingError: Double  = 0
     var worstValidationError: Double = 0
     var worstEvalutationError: Double = 0
@@ -20,6 +16,7 @@ struct Ml_MetricKPI {
     var validatitionRootMeanSquaredError: Double = 0
     var evaluationRootMeanSquaredError: Double = 0
     var dictOfMetrics = Dictionary<String, Double>()
+    var sections = Dictionary<String, [Dictionary<String, Double>.Element]>()
     init() {
         dictOfMetrics["trainingMetrics.maximumError"] = 0
         dictOfMetrics["trainingMetrics.rootMeanSquaredError"] = 0
@@ -27,13 +24,18 @@ struct Ml_MetricKPI {
         dictOfMetrics["validationMetrics.rootMeanSquaredError"] = 0
         dictOfMetrics["evaluationMetrics.maximumError"] = 0
         dictOfMetrics["evaluationMetrics.rootMeanSquaredError"] = 0
-                                                          
+        sections = Dictionary(grouping: dictOfMetrics) { (dictionary) -> String
+            in return resolveDictOfMetrics(key: dictionary.key).datasetType
+        }
+                                                        
     }
-    internal func postMetric(model: Models, file: Files) {
+    
+    internal func postMetric(model: Models, file: Files, algorithmName: String) {
         
         let metricsvaluesModel = MetricvaluesModel()
         let datasetTypeModel = DatasettypesModel()
         let metricsModel = MetricsModel()
+        let algorithmsModel = AlgorithmsModel()
         for item in dictOfMetrics {
             let resolvedKey = resolveDictOfMetrics(key: item.key)
             let datasetType = datasetTypeModel.items.first(where: {
@@ -48,11 +50,19 @@ struct Ml_MetricKPI {
             guard let metricType = metricType else {
                 return
             }
+           var algorithmType = algorithmsModel.items.first(where: {
+               return $0.name == algorithmName } )
+            if algorithmType == nil {
+                algorithmType = algorithmsModel.insertRecord()
+                algorithmType?.name = algorithmName
+            }
+        
             let newMetric = metricsvaluesModel.insertRecord()
             /// Set relations
             newMetric.metricvalue2model = model
             newMetric.metricvalue2file = file
             newMetric.metricvalue2datasettype = datasetType
+            newMetric.metricvalue2algorithm = algorithmType
             metricType.metric2datasettypes = metricType.metric2datasettypes?.addingObjects(from: [datasetType]) as NSSet?
             metricType.metric2metricvalues = metricType.metric2metricvalues?.addingObjects(from: [newMetric]) as NSSet?
             /// Set value
@@ -61,7 +71,9 @@ struct Ml_MetricKPI {
             metricsvaluesModel.saveChanges()
             datasetTypeModel.saveChanges()
             metricsModel.saveChanges()
+            algorithmsModel.saveChanges()
         }
+        AlgorithmsModel.showKpis(model: model, file: file, algorithmName: algorithmName)
     }
     func resolveDictOfMetrics(key: String) -> (datasetType: String, metricType: String) {
         let subTypes = key.split(separator: ".", maxSplits: 1)

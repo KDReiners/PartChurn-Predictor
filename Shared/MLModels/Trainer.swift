@@ -79,7 +79,7 @@ public struct Trainer {
             regressorKPI.dictOfMetrics["evaluationMetrics.maximumError"]? = regressorEvalutation.maximumError
             regressorKPI.dictOfMetrics["evaluationMetrics.rootMeanSquaredError"]? = regressorEvalutation.rootMeanSquaredError
             /// Schreibe in CoreData
-            regressorKPI.postMetric(model: model!, file: file!)
+            regressorKPI.postMetric(model: model!, file: file!, algorithmName: "MLLinearRegressor")
             /// Pfad zum Schreibtisch
             let homePath = FileManager.default.homeDirectoryForCurrentUser
             let desktopPath = homePath //.appendingPathComponent("Desktop")

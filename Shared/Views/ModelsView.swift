@@ -9,9 +9,11 @@ import SwiftUI
 
 struct ModelsView: View {
     @ObservedObject var model: Models
+    @ObservedObject var metric: Ml_MetricKPI
     @State var fileSelection: Files? = nil
-    @State var mlSelection: String?
+    @State var mlSelection: String? = nil
     var mlAlgorithms = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor"]
+    
     var body: some View {
         HStack(spacing: 50) {
             VStack(alignment: .leading) {
@@ -44,7 +46,8 @@ struct ModelsView: View {
                         Text("Algorithmus KPI")
                             .font(.title)
                         Spacer()
-                    }.padding()
+                        AlgorithmsModel.valueList(model: model, file: fileSelection, algorithmName: mlSelection ?? "unbekannt")
+                    }
                     
                 }
                 Divider()
@@ -76,6 +79,6 @@ private func train(regressorName: String) {
 }
 struct ModelsView_Previews: PreviewProvider {
     static var previews: some View {
-        ModelsView(model: ModelsModel().items[0])
+        ModelsView(model: ModelsModel().items[0], metric: Ml_MetricKPI())
     }
 }

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21E258" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Algorithms" representedClassName="Algorithms" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="orderno" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="algorithm2metricValues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2algorithm" inverseEntity="Metricvalues"/>
+    </entity>
     <entity name="Columns" representedClassName="Columns" syncable="YES" codeGenerationType="class">
         <attribute name="isincluded" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="istarget" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO"/>
@@ -20,11 +25,13 @@
     </entity>
     <entity name="Metrics" representedClassName="Metrics" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="orderno" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="metric2datasettypes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Datasettypes" inverseName="datasettype2metrics" inverseEntity="Datasettypes"/>
         <relationship name="metric2metricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2metric" inverseEntity="Metricvalues"/>
     </entity>
     <entity name="Metricvalues" representedClassName="Metricvalues" syncable="YES" codeGenerationType="class">
         <attribute name="value" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="metricvalue2algorithm" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Algorithms" inverseName="algorithm2metricValues" inverseEntity="Algorithms"/>
         <relationship name="metricvalue2datasettype" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Datasettypes" inverseName="datasettype2metricvalues" inverseEntity="Datasettypes"/>
         <relationship name="metricvalue2file" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Files" inverseName="file2metricvalues" inverseEntity="Files"/>
         <relationship name="metricvalue2metric" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Metrics" inverseName="metric2metricvalues" inverseEntity="Metrics"/>
@@ -49,9 +56,10 @@
         <element name="Columns" positionX="-54" positionY="0" width="128" height="133"/>
         <element name="Datasettypes" positionX="258" positionY="365" width="128" height="74"/>
         <element name="Files" positionX="54" positionY="153" width="128" height="88"/>
-        <element name="Metrics" positionX="-115" positionY="333" width="128" height="88"/>
-        <element name="Metricvalues" positionX="72" positionY="162" width="128" height="104"/>
+        <element name="Metrics" positionX="-115" positionY="333" width="128" height="89"/>
+        <element name="Metricvalues" positionX="72" positionY="162" width="128" height="119"/>
         <element name="Models" positionX="164.75" positionY="144.109375" width="128" height="133"/>
         <element name="Values" positionX="-114.3515625" positionY="197.5546875" width="128" height="118"/>
+        <element name="Algorithms" positionX="72" positionY="162" width="128" height="74"/>
     </elements>
 </model>
