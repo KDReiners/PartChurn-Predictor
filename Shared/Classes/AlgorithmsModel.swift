@@ -23,7 +23,7 @@ public class AlgorithmsModel: Model<Algorithms> {
         }
     }
     internal static func showKpis(model: Models, file: Files?, algorithmName: String?) -> Ml_MetricKPI {
-        var result = Ml_MetricKPI()
+        let result = Ml_MetricKPI()
         let algorithmsModel = AlgorithmsModel()
         let metricValuesModel = MetricvaluesModel()
         guard let algorithm = algorithmsModel.items.first(where: { return  $0.name == algorithmName }) else {
@@ -37,16 +37,16 @@ public class AlgorithmsModel: Model<Algorithms> {
             result.dictOfMetrics[key]? = metricValue.value
             print("Key: \(key) metric: \(metricValue.value)")
         }
+        result.updateMetrics()
         return result
         
     }
     public struct valueList: View {
-        @State var model: Models?
-        @State var fileName: String?
-        @State var file: Files? = nil
-        @State var algorithmName: String?
-        @State var oldSection: String?
-        internal var metricStructure: Ml_MetricKPI?
+        @ObservedObject var metricStructure = Ml_MetricKPI()
+        var model: Models?
+        var fileName: String?
+        var file: Files? = nil
+        var algorithmName: String?
         public init(model: Models, file: Files?, algorithmName: String) {
             self.model = model
             self.file = FilesModel().items.first(where: { return $0.name == fileName })
@@ -55,13 +55,16 @@ public class AlgorithmsModel: Model<Algorithms> {
         }
         public var body: some View {
             List {
-                ForEach(metricStructure?.dictOfMetrics.sorted(by: >) ?? Ml_MetricKPI().dictOfMetrics.sorted(by: >), id: \.key) { key, value in
-                    let resolvedKey = metricStructure?.resolveDictOfMetrics(key: key)
-                    Section(header: Text(resolvedKey!.datasetType).font(.subheadline)) {
-                        HStack {
-                            Text("\(resolvedKey!.metricType)")
-                            Spacer()
-                            Text("\(value)")
+                Section(header: Text(algorithmName ?? "Unbekannt")) {
+                    ForEach(metricStructure.sections, id: \.id) { header in
+                        Section(header: Text(header.dataSetType ?? "Unbekannt")) {
+                            ForEach(header.metricTypes!, id: \.metricType) { metric in
+                                HStack {
+                                    Text(metric.metricType!)
+                                    Spacer()
+                                    Text("\(metric.metricValue)")
+                                }
+                            }
                         }
                     }
                 }

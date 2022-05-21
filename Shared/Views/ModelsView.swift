@@ -47,7 +47,7 @@ struct ModelsView: View {
                             .font(.title)
                         Spacer()
                         AlgorithmsModel.valueList(model: model, file: fileSelection, algorithmName: mlSelection ?? "unbekannt")
-                    }
+                    }.padding()
                     
                 }
                 Divider()

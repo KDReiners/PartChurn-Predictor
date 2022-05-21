@@ -9,11 +9,16 @@ import Foundation
 import CreateML
 import SwiftUI
 internal class Ml_MetricKPI: ObservableObject {
-    struct section {
+    internal struct section {
+        var id = UUID()
         var dataSetType: String?
-        var metricType: [String]?
+        var metricTypes: [metric]?
     }
-    var currentDataSetType = ""
+    internal struct metric {
+        var id = UUID()
+        var metricType: String?
+        var metricValue: Double = 0
+    }
     var worstTrainingError: Double  = 0
     var worstValidationError: Double = 0
     var worstEvalutationError: Double = 0
@@ -21,7 +26,34 @@ internal class Ml_MetricKPI: ObservableObject {
     var validatitionRootMeanSquaredError: Double = 0
     var evaluationRootMeanSquaredError: Double = 0
     var dictOfMetrics = Dictionary<String, Double>()
-    var sections = [section]()
+    internal var sections = [section]()
+    internal func updateMetrics() {
+        var newSection: section
+        for key in dictOfMetrics.keys.sorted(by: >) {
+            let value = dictOfMetrics[key]
+            var newMectric = metric()
+            let dataSetType = resolveDictOfMetrics(key: key).datasetType
+            let metricType = resolveDictOfMetrics(key: key).metricType
+            newMectric.metricValue = value!
+            var currentSection = sections.first(where: { return $0.dataSetType == dataSetType})
+            if currentSection == nil {
+                newSection = section()
+                newSection.dataSetType = dataSetType
+                newMectric.metricType = metricType
+                newSection.metricTypes = Array<metric>()
+                newSection.metricTypes?.append(newMectric)
+                sections.append(newSection)
+            } else {
+                newMectric.metricType = metricType
+                newMectric.metricValue = value!
+                currentSection?.metricTypes?.append(newMectric)
+                if let section = sections.firstIndex(where: { return $0.dataSetType == dataSetType}) {
+                    sections[section] = currentSection!
+                }
+            }
+        }
+    }
+    
     init() {
         dictOfMetrics["trainingMetrics.maximumError"] = 0
         dictOfMetrics["trainingMetrics.rootMeanSquaredError"] = 0
@@ -29,22 +61,6 @@ internal class Ml_MetricKPI: ObservableObject {
         dictOfMetrics["validationMetrics.rootMeanSquaredError"] = 0
         dictOfMetrics["evaluationMetrics.maximumError"] = 0
         dictOfMetrics["evaluationMetrics.rootMeanSquaredError"] = 0
-        for key in dictOfMetrics.keys {
-            var newSection: section
-            let dataSetType = resolveDictOfMetrics(key: key).datasetType
-            let metricType = resolveDictOfMetrics(key: key).metricType
-            if currentDataSetType != dataSetType {
-                newSection = section()
-                newSection.dataSetType = dataSetType
-                newSection.metricType = Array<String>()
-                newSection.metricType?.append(metricType)
-                sections.append(newSection)
-            } else {
-                var currentSection = sections.first(where: { return $0.dataSetType == metricType})
-                currentSection?.metricType?.append(metricType)
-            }
-        }
-                                                        
     }
     
     internal func postMetric(model: Models, file: Files, algorithmName: String) {

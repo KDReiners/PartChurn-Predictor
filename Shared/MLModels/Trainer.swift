@@ -62,7 +62,7 @@ public struct Trainer {
         }
     }
     private func trainMLLinearRegressor(regressorEvaluationTable: MLDataTable, regressorTrainingTable: MLDataTable) -> Void {
-        var regressorKPI = Ml_MetricKPI()
+        let regressorKPI = Ml_MetricKPI()
         var regressor: MLLinearRegressor
         do {
             
