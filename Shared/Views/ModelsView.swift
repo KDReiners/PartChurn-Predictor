@@ -16,11 +16,12 @@ struct ModelsView: View {
     
     var body: some View {
         HStack(spacing: 50) {
-            VStack(alignment: .leading) {
+            VStack(alignment: .center) {
                 Text(model.name ?? "unbekanntes Model")
                     .font(.title)
-                    .padding()
-                Spacer()
+                    .padding(.top, 10)
+                    .padding(.bottom, 5)
+                Divider()
                 HStack {
                     VStack(alignment: .leading) {
                         Text("Files")
@@ -45,15 +46,13 @@ struct ModelsView: View {
                     VStack(alignment: .leading) {
                         Text("Algorithmus KPI")
                             .font(.title)
-                        Spacer()
                         AlgorithmsModel.valueList(model: model, file: fileSelection, algorithmName: mlSelection ?? "unbekannt")
                     }.padding()
-                    
                 }
                 Divider()
                 if fileSelection != nil {
                     VStack(alignment: .leading) {
-                        HStack {
+                        HStack(alignment: .top) {
                             ForEach(ModelsModel.getColumnsForItem(model: model), id: \.self) { col in Text(col.name!)
                                     .font(.body)
                                     .frame(width: 80)
@@ -61,11 +60,12 @@ struct ModelsView: View {
                             Text("Prognose")
                                 .font(.body)
                         }
-                        
+                        Divider()
                         List {
                             ModelsModel.ValueRow(model: model, file: fileSelection!)
                         }
-                    }.padding()
+                        Divider()
+                    }
                 }
             }
             Spacer()

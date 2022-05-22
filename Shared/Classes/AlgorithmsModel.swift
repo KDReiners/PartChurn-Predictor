@@ -37,12 +37,11 @@ public class AlgorithmsModel: Model<Algorithms> {
             result.dictOfMetrics[key]? = metricValue.value
             print("Key: \(key) metric: \(metricValue.value)")
         }
-        result.updateMetrics()
         return result
         
     }
     public struct valueList: View {
-        @ObservedObject var metricStructure = Ml_MetricKPI()
+        var metricStructure: Ml_MetricKPI!
         var model: Models?
         var fileName: String?
         var file: Files? = nil
@@ -52,12 +51,13 @@ public class AlgorithmsModel: Model<Algorithms> {
             self.file = FilesModel().items.first(where: { return $0.name == fileName })
             self.algorithmName = algorithmName
             metricStructure = AlgorithmsModel.showKpis(model: model, file: file, algorithmName: algorithmName)
+            metricStructure.updateMetrics()
         }
         public var body: some View {
             List {
-                Section(header: Text(algorithmName ?? "Unbekannt")) {
+                Section(header: Text(algorithmName ?? "Unbekannt").font(.title2)){
                     ForEach(metricStructure.sections, id: \.id) { header in
-                        Section(header: Text(header.dataSetType ?? "Unbekannt")) {
+                        Section(header: Text(header.dataSetType ?? "Unbekannt").font(.title3)) {
                             ForEach(header.metricTypes!, id: \.metricType) { metric in
                                 HStack {
                                     Text(metric.metricType!)

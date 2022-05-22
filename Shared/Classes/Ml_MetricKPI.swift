@@ -25,7 +25,7 @@ internal class Ml_MetricKPI: ObservableObject {
     var trainingRootMeanSquaredError: Double = 0
     var validatitionRootMeanSquaredError: Double = 0
     var evaluationRootMeanSquaredError: Double = 0
-    var dictOfMetrics = Dictionary<String, Double>()
+    @Published var dictOfMetrics = Dictionary<String, Double>()
     internal var sections = [section]()
     internal func updateMetrics() {
         var newSection: section
