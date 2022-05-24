@@ -26,9 +26,14 @@ public struct Trainer {
     var regressorTable: MLDataTable?
     var file: Files?
     var model: Models?
-    init() {
-        dataTable = try? MLDataTable(contentsOf: csvFile)
-        regressorTable = dataTable![regressorColumns]
+    init(baseTable: MLDataTable? = nil) {
+        dataTable = try! MLDataTable(contentsOf: csvFile)
+        if baseTable == nil {
+            regressorTable = dataTable![regressorColumns]
+        } else {
+            regressorTable = baseTable![regressorColumns]
+        }
+        
         file = FilesModel().items.first(where: {
             return $0.name == csvFile.lastPathComponent
         })
@@ -82,7 +87,7 @@ public struct Trainer {
             regressorKPI.postMetric(model: model!, file: file!, algorithmName: "MLLinearRegressor")
             /// Pfad zum Schreibtisch
             let homePath = FileManager.default.homeDirectoryForCurrentUser
-            let desktopPath = homePath //.appendingPathComponent("Desktop")
+            let desktopPath = homePath.appendingPathComponent("Desktop")
 
             let regressorMetadata = MLModelMetadata(author: "Steps.IT",
                                                     shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden",

@@ -1,0 +1,45 @@
+{
+  "Outputs" : {
+    "Kuendigt" : {
+      "MLFeatureShortDescription" : ""
+    }
+  },
+  "Inputs" : {
+    "AKTE" : {
+      "MLFeatureShortDescription" : ""
+    },
+    "davon geloest" : {
+      "MLFeatureShortDescription" : ""
+    },
+    "Anzahl_OPPs" : {
+      "MLFeatureShortDescription" : ""
+    },
+    "Anzahl_UHD" : {
+      "MLFeatureShortDescription" : ""
+    },
+    "Anzahl_Arbeitsplaetze" : {
+      "MLFeatureShortDescription" : ""
+    },
+    "SBS" : {
+      "MLFeatureShortDescription" : ""
+    },
+    "ADDISON" : {
+      "MLFeatureShortDescription" : ""
+    },
+    "Kunde_seit" : {
+      "MLFeatureShortDescription" : ""
+    },
+    "Jahresfaktura" : {
+      "MLFeatureShortDescription" : ""
+    },
+    "Digitalisierungsgrad" : {
+      "MLFeatureShortDescription" : ""
+    },
+    "Account_Manager" : {
+      "MLFeatureShortDescription" : ""
+    }
+  },
+  "TrainingInputs" : {
+
+  }
+}

@@ -6,6 +6,7 @@
         <relationship name="algorithm2metricValues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2algorithm" inverseEntity="Metricvalues"/>
     </entity>
     <entity name="Columns" representedClassName="Columns" syncable="YES" codeGenerationType="class">
+        <attribute name="datatype" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="isincluded" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="istarget" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
@@ -53,13 +54,13 @@
         <relationship name="value2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2values" inverseEntity="Models"/>
     </entity>
     <elements>
-        <element name="Columns" positionX="-54" positionY="0" width="128" height="133"/>
+        <element name="Algorithms" positionX="72" positionY="162" width="128" height="74"/>
+        <element name="Columns" positionX="-54" positionY="0" width="128" height="134"/>
         <element name="Datasettypes" positionX="258" positionY="365" width="128" height="74"/>
         <element name="Files" positionX="54" positionY="153" width="128" height="88"/>
         <element name="Metrics" positionX="-115" positionY="333" width="128" height="89"/>
         <element name="Metricvalues" positionX="72" positionY="162" width="128" height="119"/>
         <element name="Models" positionX="164.75" positionY="144.109375" width="128" height="133"/>
         <element name="Values" positionX="-114.3515625" positionY="197.5546875" width="128" height="118"/>
-        <element name="Algorithms" positionX="72" positionY="162" width="128" height="74"/>
     </elements>
 </model>

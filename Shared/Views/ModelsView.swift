@@ -38,9 +38,14 @@ struct ModelsView: View {
                             List(mlAlgorithms, id: \.self, selection: $mlSelection) { algorithm in 
                                 Text(algorithm)
                             }.frame(width: 250)
+                            VStack{
                             Button("Lerne..") {
                                 train(regressorName: mlSelection!)
-                            }.frame(width: 60)
+                            }.frame(width: 90)
+                            Button("Core Data...") {
+                                fillFromCoreData()
+                            }.frame(width: 90 )
+                        }
                         }
                     }.padding()
                     VStack(alignment: .leading) {
@@ -72,13 +77,24 @@ struct ModelsView: View {
         }
         Spacer()
     }
+    private func fillFromCoreData() -> Void {
+        let test = coreDataDictionary(model: model).baseData!
+        ModelsModel.test(dataTable: test)
+//        let trainer = Trainer(baseTable: coreDataDictionary(model: model).baseData)
+//        guard let mlSelection = mlSelection else {
+//            return
+//        }
+//        trainer.createModel(regressorName: mlSelection)
+    }
 }
 private func train(regressorName: String) {
     let trainer = Trainer()
     trainer.createModel(regressorName: regressorName)
 }
+
 struct ModelsView_Previews: PreviewProvider {
     static var previews: some View {
         ModelsView(model: ModelsModel().items[0], metric: Ml_MetricKPI())
     }
 }
+
