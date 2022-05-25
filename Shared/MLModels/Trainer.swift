@@ -87,13 +87,13 @@ public struct Trainer {
             regressorKPI.postMetric(model: model!, file: file!, algorithmName: "MLLinearRegressor")
             /// Pfad zum Schreibtisch
             let homePath = FileManager.default.homeDirectoryForCurrentUser
-            let desktopPath = homePath.appendingPathComponent("Desktop")
+//            let desktopPath = homePath.appendingPathComponent("Desktop")
 
             let regressorMetadata = MLModelMetadata(author: "Steps.IT",
                                                     shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden",
                                                     version: "1.0")
             /// Speichern des trainierten Modells auf dem Schreibtisch
-            try? regressor.write(to: desktopPath.appendingPathComponent("LinearPredictor.mlmodel"),
+            try? regressor.write(to: homePath.appendingPathComponent("LinearPredictor.mlmodel"),
                                 metadata: regressorMetadata)
             
         } catch {

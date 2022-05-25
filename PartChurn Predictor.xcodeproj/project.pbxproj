@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A7D02F3283E608B0046B928 /* GenericFeatureProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D02F2283E608B0046B928 /* GenericFeatureProvider.swift */; };
+		0A7D02F4283E608B0046B928 /* GenericFeatureProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D02F2283E608B0046B928 /* GenericFeatureProvider.swift */; };
 		2D0B8567282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B8554282565BD00856BCB /* PartChurn_Predictor.xcdatamodeld */; };
 		2D0B8568282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B8554282565BD00856BCB /* PartChurn_Predictor.xcdatamodeld */; };
 		2D0B8569282565BF00856BCB /* PartChurn_PredictorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B8556282565BD00856BCB /* PartChurn_PredictorApp.swift */; };
@@ -68,6 +70,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A7D02F2283E608B0046B928 /* GenericFeatureProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericFeatureProvider.swift; sourceTree = "<group>"; };
 		2D0B8555282565BD00856BCB /* Shared.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Shared.xcdatamodel; sourceTree = "<group>"; };
 		2D0B8556282565BD00856BCB /* PartChurn_PredictorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartChurn_PredictorApp.swift; sourceTree = "<group>"; };
 		2D0B8558282565BD00856BCB /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -172,6 +175,7 @@
 				2D1EB364283BD4AB00F86B6D /* MLBoostedTreePredictor.mlpackage */,
 				2D1EB367283BE24900F86B6D /* LinearPredictor.mlpackage */,
 				2D288AC02829793B0078647E /* Trainer.swift */,
+				0A7D02F2283E608B0046B928 /* GenericFeatureProvider.swift */,
 			);
 			path = MLModels;
 			sourceTree = "<group>";
@@ -390,6 +394,7 @@
 				2DA77ED628256E9D007EC3E5 /* Storage.swift in Sources */,
 				2D989591282EE47F0070F475 /* MetricsModel.swift in Sources */,
 				2DA77EFF28266B32007EC3E5 /* FilesModel.swift in Sources */,
+				0A7D02F3283E608B0046B928 /* GenericFeatureProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -423,6 +428,7 @@
 				2DA77ED728256E9D007EC3E5 /* Storage.swift in Sources */,
 				2D989592282EE47F0070F475 /* MetricsModel.swift in Sources */,
 				2DA77F0028266B32007EC3E5 /* FilesModel.swift in Sources */,
+				0A7D02F4283E608B0046B928 /* GenericFeatureProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

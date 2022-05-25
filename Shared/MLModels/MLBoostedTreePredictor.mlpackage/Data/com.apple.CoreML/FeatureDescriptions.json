@@ -1,42 +1,42 @@
 {
   "Outputs" : {
     "Kuendigt" : {
-      "MLFeatureShortDescription" : "--"
+      "MLFeatureShortDescription" : ""
     }
   },
   "Inputs" : {
     "AKTE" : {
-      "MLFeatureShortDescription" : "--"
+      "MLFeatureShortDescription" : ""
     },
     "davon geloest" : {
-      "MLFeatureShortDescription" : "--"
+      "MLFeatureShortDescription" : ""
     },
     "Anzahl_OPPs" : {
-      "MLFeatureShortDescription" : "--"
+      "MLFeatureShortDescription" : ""
     },
     "Anzahl_UHD" : {
-      "MLFeatureShortDescription" : "--"
+      "MLFeatureShortDescription" : ""
     },
     "Anzahl_Arbeitsplaetze" : {
-      "MLFeatureShortDescription" : "--"
+      "MLFeatureShortDescription" : ""
     },
     "SBS" : {
-      "MLFeatureShortDescription" : "--"
+      "MLFeatureShortDescription" : ""
     },
     "ADDISON" : {
-      "MLFeatureShortDescription" : "--"
+      "MLFeatureShortDescription" : ""
     },
     "Kunde_seit" : {
-      "MLFeatureShortDescription" : "--"
+      "MLFeatureShortDescription" : ""
     },
     "Jahresfaktura" : {
-      "MLFeatureShortDescription" : "--"
+      "MLFeatureShortDescription" : ""
     },
     "Digitalisierungsgrad" : {
-      "MLFeatureShortDescription" : "--"
+      "MLFeatureShortDescription" : ""
     },
     "Account_Manager" : {
-      "MLFeatureShortDescription" : "--"
+      "MLFeatureShortDescription" : ""
     }
   },
   "TrainingInputs" : {

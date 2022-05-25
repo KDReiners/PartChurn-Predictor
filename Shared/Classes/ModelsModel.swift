@@ -129,11 +129,10 @@ public class ModelsModel: Model<Models> {
         }
     }
     public static func test(dataTable: Dictionary<String, Any>) {
-        let movieData: [String: MLDataValueConvertible] = [
-        "Title": ["Titanic", "Shutter Island", "Warriors"],
-        "Director": ["James Cameron", "Martin Scorsese", "Gavin O'Connor"]
-        ]
+//        = {'text': {'test': 1}}()
+//        let t = {'test': 1}
         var provider = try? MLDictionaryFeatureProvider(dictionary: dataTable)
+       
         let model: MLBoostedTreePredictor = {
         do {
             let config = MLModelConfiguration()
@@ -143,8 +142,12 @@ public class ModelsModel: Model<Models> {
             fatalError("Couldn't create MlBoostedTreePredictor")
         }
         }()
-        let t = try? MLModel.init(contentsOf: URL.init(fileURLWithPath:"/Users/kdreiners/Documents/Swift Projekte/PartChurn Analysis/PartChurn Predictor/Shared/MLModels"))
-        let test = try? MLModel().prediction(from: provider!)
+        var myFeatureProvider = featureProviderGenerator(model: model.model)
+        do {
+            let test = try model.model.prediction(from: provider!)
+        } catch {
+            print(error)
+        }
     }
     public static func predict( Kunde_seit: Double, Account_Manager: String, Anzahl_Arbeitsplaetze: Double, ADDISON: Double, AKTE: Double, SBS: Double, Anzahl_UHD: Double, davon_geloest: Double, Jahresfaktura: Double, Anzahl_OPPs: Double, Digitalisierungsgrad: Double) -> Double {
         let model: MLBoostedTreePredictor = {

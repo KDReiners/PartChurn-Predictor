@@ -24,32 +24,25 @@ public class coreDataDictionary: ObservableObject {
             $0.orderno < $1.orderno
         })
         var baseData = [String: MLDataValueConvertible]()
-        for column in referredColumns {
+        for column in referredColumns.filter( { return $0.isincluded == true}) {
             let sortDescriptor = NSSortDescriptor(key: "rowno", ascending: true)
             let orderedValues = column.column2values?.sortedArray(using: [sortDescriptor]).compactMap({ ($0 as! Values).value })//.map{ Double($0)}
             let typedValues = returnBestType(untypedValues: orderedValues!)
-            baseData[column.name ?? "test"] = orderedValues
+            baseData[column.name!] = typedValues
         }
         result = try! MLDataTable(dictionary: baseData)
         return baseData
     }
-    private func returnBestType(untypedValues: [String])  -> [Any] {
+    private func returnBestType(untypedValues: [String])  -> MLDataValueConvertible {
         let count: Int = untypedValues.count
         let intTemp = untypedValues.map{Int($0)}.filter( { return $0 != nil } )
         if intTemp.count == count {
-           return untypedValues.map{Int($0) as Any}
+            return untypedValues.map{Int($0)! as Int}
         }
         let doubleTemp = untypedValues.map{ Double($0)}.filter( { return $0 != nil})
         if doubleTemp.count ==  count {
-            return untypedValues.map { Double($0) as Any}
+            return untypedValues.map { Double($0)! as Double}
         }
         return untypedValues
     }
 }
-/*
-let movieData: [String: MLDataValueConvertible] = [
-"Title": ["Titanic", "Shutter Island", "Warriors"],
-"Director": ["James Cameron", "Martin Scorsese", "Gavin O'Connor"]
-]
-var movieTable = try? MLDataTable(dictionary: movieData)
-*/
