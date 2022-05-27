@@ -12,25 +12,38 @@ import SwiftUI
 public class coreDataDictionary: ObservableObject {
     var model: Models
     var files: [Files]
-    var baseData: Dictionary<String, Any>?
+    internal var baseData: MLDataTable {
+        get {
+            return  getBaseData()
+        }
+    }
     init( model: Models, files: [Files] =  [Files]()) {
         self.model = model
         self.files = files
-        self.baseData = transform2Dictionary() as Dictionary<String, Any>
+//        self.baseData = transform2Dictionary() as Dictionary<String, [String]>
     }
-    private func transform2Dictionary() -> Dictionary<String, Any?> {
-        var result: MLDataTable
+    private func getBaseData() -> MLDataTable {
+        var result = MLDataTable
+        let includedColumns = ColumnsModel().items.filter { return $0.isincluded == true}.sorted(by: {
+            $0.orderno < $1.orderno
+        })
+        let dict = ValuesModel().getValuesForColumns(columns: Set(includedColumns))
+        result.init(dictionary: dict)
+    
+        return result
+    }
+    private func transform2Dictionary() -> Dictionary<String, [String]> {
+
         let referredColumns = ColumnsModel().items.filter( { return $0.column2model == model }).sorted(by: {
             $0.orderno < $1.orderno
         })
-        var baseData = [String: MLDataValueConvertible]()
+        var baseData =  Dictionary<String, [String]>()
         for column in referredColumns.filter( { return $0.isincluded == true}) {
             let sortDescriptor = NSSortDescriptor(key: "rowno", ascending: true)
             let orderedValues = column.column2values?.sortedArray(using: [sortDescriptor]).compactMap({ ($0 as! Values).value })//.map{ Double($0)}
             let typedValues = returnBestType(untypedValues: orderedValues!)
-            baseData[column.name!] = typedValues
+            baseData[column.name!] = orderedValues
         }
-        result = try! MLDataTable(dictionary: baseData)
         return baseData
     }
     private func returnBestType(untypedValues: [String])  -> MLDataValueConvertible {

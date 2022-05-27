@@ -128,9 +128,7 @@ public class ModelsModel: Model<Models> {
             result = newValue.sorted(by: { $1.name ?? "" > $0.name ?? ""})
         }
     }
-    public static func test(dataTable: Dictionary<String, Any>) {
-//        = {'text': {'test': 1}}()
-//        let t = {'test': 1}
+    public static func test(dataTable: Dictionary<String, [String]>) {
         var provider = try? MLDictionaryFeatureProvider(dictionary: dataTable)
        
         let model: MLBoostedTreePredictor = {
@@ -142,12 +140,12 @@ public class ModelsModel: Model<Models> {
             fatalError("Couldn't create MlBoostedTreePredictor")
         }
         }()
-        var myFeatureProvider = featureProviderGenerator(model: model.model)
-        do {
-            let test = try model.model.prediction(from: provider!)
-        } catch {
-            print(error)
-        }
+        var myFeatureProvider = featureProviderGenerator(model: model.model, modelDictionary: dataTable)
+//        do {
+//            let test = try model.model.prediction(from: provider!)
+//        } catch {
+//            print(error)
+//        }
     }
     public static func predict( Kunde_seit: Double, Account_Manager: String, Anzahl_Arbeitsplaetze: Double, ADDISON: Double, AKTE: Double, SBS: Double, Anzahl_UHD: Double, davon_geloest: Double, Jahresfaktura: Double, Anzahl_OPPs: Double, Digitalisierungsgrad: Double) -> Double {
         let model: MLBoostedTreePredictor = {

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreData
 public class ValuesModel: Model<Values> {
     @Published var result: [Values]!
     public init() {
@@ -30,6 +31,22 @@ public class ValuesModel: Model<Values> {
         }
         return Int(lastValue.rowno)
     }
-    
+    public func getValuesForColumns(columns: Set<Columns>) -> Dictionary<String, [colValTuple]> {
+        var subEntries = Array<colValTuple>()
+        for column in columns {
+            for value in column.column2values! {
+                let newTuple = colValTuple(column: column, value: value as! Values)
+                subEntries.append(newTuple)
+            }
+        }
+        let result = Dictionary(grouping: subEntries, by: { (tuple) -> String in
+            return tuple.column.name!
+        })
+        return result
+    }
+    public struct colValTuple {
+        var column: Columns
+        var value: Values
+    }
 }
 
