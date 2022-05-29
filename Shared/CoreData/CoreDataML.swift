@@ -23,13 +23,12 @@ public class coreDataDictionary: ObservableObject {
 //        self.baseData = transform2Dictionary() as Dictionary<String, [String]>
     }
     private func getBaseData() -> MLDataTable {
-        var result = MLDataTable
+        var result = MLDataTable()
         let includedColumns = ColumnsModel().items.filter { return $0.isincluded == true}.sorted(by: {
             $0.orderno < $1.orderno
         })
-        let dict = ValuesModel().getValuesForColumns(columns: Set(includedColumns))
-        result.init(dictionary: dict)
-    
+        result = ValuesModel().getValuesForColumns(columns: Set(includedColumns))
+        let test = try! MLRegressor(trainingData: result, targetColumn: "Kuendigt")
         return result
     }
     private func transform2Dictionary() -> Dictionary<String, [String]> {
@@ -46,7 +45,7 @@ public class coreDataDictionary: ObservableObject {
         }
         return baseData
     }
-    private func returnBestType(untypedValues: [String])  -> MLDataValueConvertible {
+    internal func returnBestType(untypedValues: [String])  -> MLDataValueConvertible {
         let count: Int = untypedValues.count
         let intTemp = untypedValues.map{Int($0)}.filter( { return $0 != nil } )
         if intTemp.count == count {

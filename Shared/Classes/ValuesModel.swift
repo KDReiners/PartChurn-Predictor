@@ -7,6 +7,8 @@
 
 import Foundation
 import CoreData
+import CoreML
+import CreateML
 public class ValuesModel: Model<Values> {
     @Published var result: [Values]!
     public init() {
@@ -31,7 +33,7 @@ public class ValuesModel: Model<Values> {
         }
         return Int(lastValue.rowno)
     }
-    public func getValuesForColumns(columns: Set<Columns>) -> Dictionary<String, [colValTuple]> {
+    internal func getValuesForColumns(columns: Set<Columns>) -> MLDataTable {
         var subEntries = Array<colValTuple>()
         for column in columns {
             for value in column.column2values! {
@@ -39,12 +41,22 @@ public class ValuesModel: Model<Values> {
                 subEntries.append(newTuple)
             }
         }
-        let result = Dictionary(grouping: subEntries, by: { (tuple) -> String in
-            return tuple.column.name!
+        let groupedDictionary = Dictionary(grouping: subEntries, by: { (tuple) -> Columns in
+            return tuple.column
         })
-        return result
+        var inputDictionary = [String: MLDataValueConvertible]()
+        for (key, values) in groupedDictionary.sorted(by: { $0.key.orderno < $1.key.orderno }){
+            var inputArray = [String]()
+            for value in values.sorted(by: { $0.value.rowno < $1.value.rowno }) {
+                print("Spalte: \(value.column.orderno), Zeile: \(value.value.rowno)")
+                inputArray.append(value.value.value! as String)
+            }
+            inputDictionary[key.name!] = inputArray
+            
+        }
+        return try! MLDataTable(dictionary: inputDictionary)
     }
-    public struct colValTuple {
+    internal struct colValTuple {
         var column: Columns
         var value: Values
     }
