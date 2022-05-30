@@ -49,23 +49,14 @@ public class CoreDataML: ObservableObject {
         for (key, values) in groupedDictionary.sorted(by: { $0.key.orderno < $1.key.orderno }){
             let arrayType = returnBestType(untypedValues: values)
             var inputArrayOfStrings = [String]()
-            var inputArrayOfInts = [Int]()
-            var inputArrayOfDoubles = [Double]()
             for value in values.sorted(by: { $0.value.rowno < $1.value.rowno }) {
-                switch arrayType {
-                case 0:
-                    inputArrayOfInts.append(Int(value.value.value!)!)
-                case 1:
-                    inputArrayOfDoubles.append(Double(value.value.value!)!)
-                default:
-                    inputArrayOfStrings.append(value.value.value!)
-                }
+                inputArrayOfStrings.append(value.value.value!)
             }
             switch arrayType {
             case 0:
-                inputDictionary[key.name!] = inputArrayOfInts
+                inputDictionary[key.name!] = inputArrayOfStrings.map { Int($0)! }
             case 1:
-                inputDictionary[key.name!] = inputArrayOfDoubles
+                inputDictionary[key.name!] = inputArrayOfStrings.map { Double($0)! }
             default:
                 inputDictionary[key.name!] = inputArrayOfStrings
             }
