@@ -9,7 +9,7 @@ import Foundation
 import CoreML
 import CreateML
 import SwiftUI
-public class coreDataDictionary: ObservableObject {
+public class CoreDataML: ObservableObject {
     var model: Models
     var files: [Files]
     internal var baseData: MLDataTable {
@@ -20,41 +20,73 @@ public class coreDataDictionary: ObservableObject {
     init( model: Models, files: [Files] =  [Files]()) {
         self.model = model
         self.files = files
-//        self.baseData = transform2Dictionary() as Dictionary<String, [String]>
     }
     private func getBaseData() -> MLDataTable {
         var result = MLDataTable()
         let includedColumns = ColumnsModel().items.filter { return $0.isincluded == true}.sorted(by: {
             $0.orderno < $1.orderno
         })
-        result = ValuesModel().getValuesForColumns(columns: Set(includedColumns))
-        let test = try! MLRegressor(trainingData: result, targetColumn: "Kuendigt")
+        result = getValuesForColumns(columns: Set(includedColumns))
+        do {
+            var test = try? MLRegressor(trainingData: result, targetColumn: "Kuendigt")
+        } catch {
+            print(error)
+        }
         return result
     }
-    private func transform2Dictionary() -> Dictionary<String, [String]> {
-
-        let referredColumns = ColumnsModel().items.filter( { return $0.column2model == model }).sorted(by: {
-            $0.orderno < $1.orderno
+    internal func getValuesForColumns(columns: Set<Columns>) -> MLDataTable {
+        var subEntries = Array<colValTuple>()
+        for column in columns {
+            for value in column.column2values! {
+                let newTuple = colValTuple(column: column, value: value as! Values)
+                subEntries.append(newTuple)
+            }
+        }
+        let groupedDictionary = Dictionary(grouping: subEntries, by: { (tuple) -> Columns in
+            return tuple.column
         })
-        var baseData =  Dictionary<String, [String]>()
-        for column in referredColumns.filter( { return $0.isincluded == true}) {
-            let sortDescriptor = NSSortDescriptor(key: "rowno", ascending: true)
-            let orderedValues = column.column2values?.sortedArray(using: [sortDescriptor]).compactMap({ ($0 as! Values).value })//.map{ Double($0)}
-            let typedValues = returnBestType(untypedValues: orderedValues!)
-            baseData[column.name!] = orderedValues
+        var inputDictionary = [String: MLDataValueConvertible]()
+        for (key, values) in groupedDictionary.sorted(by: { $0.key.orderno < $1.key.orderno }){
+            let arrayType = returnBestType(untypedValues: values)
+            var inputArrayOfStrings = [String]()
+            var inputArrayOfInts = [Int]()
+            var inputArrayOfDoubles = [Double]()
+            for value in values.sorted(by: { $0.value.rowno < $1.value.rowno }) {
+                switch arrayType {
+                case 0:
+                    inputArrayOfInts.append(Int(value.value.value!)!)
+                case 1:
+                    inputArrayOfDoubles.append(Double(value.value.value!)!)
+                default:
+                    inputArrayOfStrings.append(value.value.value!)
+                }
+            }
+            switch arrayType {
+            case 0:
+                inputDictionary[key.name!] = inputArrayOfInts
+            case 1:
+                inputDictionary[key.name!] = inputArrayOfDoubles
+            default:
+                inputDictionary[key.name!] = inputArrayOfStrings
+            }
+            
         }
-        return baseData
+        return try! MLDataTable(dictionary: inputDictionary)
     }
-    internal func returnBestType(untypedValues: [String])  -> MLDataValueConvertible {
+    internal struct colValTuple {
+        var column: Columns
+        var value: Values
+    }
+    internal func returnBestType(untypedValues: [colValTuple])  ->  Int {
         let count: Int = untypedValues.count
-        let intTemp = untypedValues.map{Int($0)}.filter( { return $0 != nil } )
+        let intTemp = untypedValues.map{Int($0.value.value!)}.filter( { return $0 != nil } )
         if intTemp.count == count {
-            return untypedValues.map{Int($0)! as Int}
+            return 0
         }
-        let doubleTemp = untypedValues.map{ Double($0)}.filter( { return $0 != nil})
+        let doubleTemp = untypedValues.map{ Double($0.value.value!)}.filter( { return $0 != nil})
         if doubleTemp.count ==  count {
-            return untypedValues.map { Double($0)! as Double}
+            return 1
         }
-        return untypedValues
+        return 2
     }
 }
