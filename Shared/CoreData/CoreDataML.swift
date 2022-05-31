@@ -27,6 +27,7 @@ public class CoreDataML: ObservableObject {
             $0.orderno < $1.orderno
         })
         result = getValuesForColumns(columns: Set(includedColumns))
+        print(result)
         do {
             var test = try? MLRegressor(trainingData: result, targetColumn: "Kuendigt")
         } catch {
@@ -47,18 +48,18 @@ public class CoreDataML: ObservableObject {
         })
         var inputDictionary = [String: MLDataValueConvertible]()
         for (key, values) in groupedDictionary.sorted(by: { $0.key.orderno < $1.key.orderno }){
-            let arrayType = returnBestType(untypedValues: values)
-            var inputArrayOfStrings = [String]()
+            let typeOfValues = returnBestType(untypedValues: values)
+            var inputArray = [String]()
             for value in values.sorted(by: { $0.value.rowno < $1.value.rowno }) {
-                inputArrayOfStrings.append(value.value.value!)
+                inputArray.append(value.value.value!)
             }
-            switch arrayType {
-            case 0:
-                inputDictionary[key.name!] = inputArrayOfStrings.map { Int($0)! }
-            case 1:
-                inputDictionary[key.name!] = inputArrayOfStrings.map { Double($0)! }
+            switch typeOfValues.self {
+            case is Int.Type:
+                inputDictionary[key.name!] = inputArray.map { Int($0)! }
+            case is Double.Type:
+                inputDictionary[key.name!] = inputArray.map { Double($0)! }
             default:
-                inputDictionary[key.name!] = inputArrayOfStrings
+                inputDictionary[key.name!] = inputArray
             }
             
         }
@@ -68,16 +69,16 @@ public class CoreDataML: ObservableObject {
         var column: Columns
         var value: Values
     }
-    internal func returnBestType(untypedValues: [colValTuple])  ->  Int {
+    internal func returnBestType(untypedValues: [colValTuple])  ->  Any {
         let count: Int = untypedValues.count
         let intTemp = untypedValues.map{Int($0.value.value!)}.filter( { return $0 != nil } )
         if intTemp.count == count {
-            return 0
+            return Int.self
         }
         let doubleTemp = untypedValues.map{ Double($0.value.value!)}.filter( { return $0 != nil})
         if doubleTemp.count ==  count {
-            return 1
+            return Double.self
         }
-        return 2
+        return String.self
     }
 }
