@@ -38,36 +38,47 @@ public class ValuesModel: Model<Values> {
         var coreDataML: CoreDataML
         var mlTable: MLDataTable
         var orderedColumns: [Columns]
+        var mlDataRows = [MLDataRow]()
         init(coreDataML: CoreDataML) {
             self.mlTable = coreDataML.baseData
             self.orderedColumns = coreDataML.orderedColumns
             self.coreDataML = coreDataML
+            mlDataRows = resolve()
         }
         public var body: some View {
             VStack {
-                ForEach(0..<mlTable.rows.count, id: \.self) { rowIndex in
+                ForEach(0..<mlDataRows.count, id: \.self) { rowIndex in
                     HStack {
-                        ForEach(0..<orderedColumns.count, id: \.self) { nameIndex in
-                            Text(resolve(rowIndex:rowIndex, nameIndex:nameIndex)).padding()
+                        ForEach(0..<mlDataRows[rowIndex].columns.count, id: \.self) { colIndex in
+                            Text(mlDataRows[rowIndex].columns[colIndex])
                         }
                     }
                 }
             }
         }
-        func resolve(rowIndex: Int, nameIndex: Int) ->String {
-            guard let columnName = self.orderedColumns[nameIndex].name else {
-                fatalError()
+        func resolve() -> [MLDataRow] {
+            var result = [MLDataRow]()
+            print("Löse auf")
+            for (index, row) in mlTable.rows.enumerated() {
+                var rowWithColumns = MLDataRow(rowIndex: index)
+                for column in orderedColumns {
+                    if let intValue = row[column.name!]?.intValue {
+                        rowWithColumns.columns.append("\(intValue)")
+                    }
+                    if let doubleValue = row[column.name!]?.doubleValue {
+                        rowWithColumns.columns.append("\(doubleValue)")
+                    }
+                    if let  stringValue = row[column.name!]?.stringValue {
+                        rowWithColumns.columns.append(stringValue)
+                    }
+                }
+                result.append(rowWithColumns)
             }
-            if let intValue = mlTable.rows[rowIndex][columnName]?.intValue {
-                return "\(intValue)"
-            }
-            if let doubleValue = mlTable.rows[rowIndex][columnName]?.doubleValue {
-                return "\(doubleValue)"
-            }
-            if let  stringValue = mlTable.rows[rowIndex][columnName]?.stringValue {
-                return stringValue
-            }
-            return "Error"
+            return result
+        }
+        struct MLDataRow {
+            var rowIndex: Int
+            var columns = [String]()
         }
     }
 }

@@ -74,6 +74,7 @@ struct ModelsView: View {
                         List {
                             ValuesModel.mlTableView(coreDataML: CoreDataML(model: model))
                         }
+                       
                         Divider()
                     }
                 }
