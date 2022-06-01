@@ -17,22 +17,26 @@ public class CoreDataML: ObservableObject {
             return  getBaseData()
         }
     }
+    internal var orderedColumns: [Columns] {
+        get {
+            return ColumnsModel().items.filter { return $0.isincluded == true && $0.column2model == self.model}.sorted(by: {
+                $0.orderno < $1.orderno
+            })
+        }
+    }
     init( model: Models, files: [Files] =  [Files]()) {
         self.model = model
         self.files = files
     }
     private func getBaseData() -> MLDataTable {
         var result = MLDataTable()
-        let includedColumns = ColumnsModel().items.filter { return $0.isincluded == true}.sorted(by: {
-            $0.orderno < $1.orderno
-        })
-        result = getValuesForColumns(columns: Set(includedColumns))
-        print(result)
-        do {
-            var test = try? MLRegressor(trainingData: result, targetColumn: "Kuendigt")
-        } catch {
-            print(error)
-        }
+        result = getValuesForColumns(columns: Set(orderedColumns))
+//        print(result)
+//        do {
+//            var test = try? MLRegressor(trainingData: result, targetColumn: "Kuendigt")
+//        } catch {
+//            print(error)
+//        }
         return result
     }
     internal func getValuesForColumns(columns: Set<Columns>) -> MLDataTable {

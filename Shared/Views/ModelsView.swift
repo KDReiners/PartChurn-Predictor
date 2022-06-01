@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CreateML
 
 struct ModelsView: View {
     @ObservedObject var model: Models
@@ -13,6 +14,7 @@ struct ModelsView: View {
     @State var fileSelection: Files? = nil
     @State var mlSelection: String? = nil
     var mlAlgorithms = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor"]
+    let mlTable: MLDataTable
     
     var body: some View {
         HStack(spacing: 50) {
@@ -69,6 +71,9 @@ struct ModelsView: View {
                         List {
                             ModelsModel.ValueRow(model: model, file: fileSelection!)
                         }
+                        List {
+                            ValuesModel.mlTableView(coreDataML: CoreDataML(model: model))
+                        }
                         Divider()
                     }
                 }
@@ -79,6 +84,7 @@ struct ModelsView: View {
     }
     private func fillFromCoreData() -> Void {
         let test = CoreDataML(model: model).baseData
+        
 //        let test = coreDataDictionary(model: model).baseData!
 //        ModelsModel.test(dataTable: test)
 //        let trainer = Trainer(baseTable: coreDataDictionary(model: model).baseData)
@@ -95,7 +101,7 @@ private func train(regressorName: String) {
 
 struct ModelsView_Previews: PreviewProvider {
     static var previews: some View {
-        ModelsView(model: ModelsModel().items[0], metric: Ml_MetricKPI())
+        ModelsView(model: ModelsModel().items[0], metric: Ml_MetricKPI(), mlTable: CoreDataML(model: ModelsModel().items[0]).baseData)
     }
 }
 
