@@ -55,11 +55,11 @@ public class CoreDataML: ObservableObject {
             }
             switch typeOfValues.self {
             case is Int.Type:
-                inputDictionary[key.name!] = inputArray.map { Int($0)! }
+                inputDictionary[key.name!] = typedArray<Int>(untypedValues: values).result
             case is Double.Type:
-                inputDictionary[key.name!] = inputArray.map { Double($0)! }
+                inputDictionary[key.name!] = typedArray<Double>(untypedValues: values).result
             default:
-                inputDictionary[key.name!] = inputArray
+                inputDictionary[key.name!] = typedArray<String>(untypedValues: values).result
             }
             
         }
@@ -80,5 +80,28 @@ public class CoreDataML: ObservableObject {
             return Double.self
         }
         return String.self
+    }
+    internal struct typedArray<T> {
+        var result: [T]
+        var untypedValues: [colValTuple]
+        init(untypedValues: [colValTuple]) {
+            self.untypedValues = untypedValues
+            let orderedValues = untypedValues.sorted(by: { return $0.value.rowno < $1.value.rowno })
+            switch T.self {
+            case is Int.Type:
+                result = orderedValues.map {Int($0.value.value!) as! T}
+            case is Double.Type:
+                result = orderedValues.map {Double($0.value.value!) as! T}
+            default:
+                result = orderedValues.map { String($0.value.value!) as! T}
+            }
+        }
+
+    }
+    internal func returnTypedArray<T>(untypedValues: [colValTuple]) ->[T] {
+        var result: [T]
+        let orderedValues = untypedValues.sorted(by: { return $0.value.rowno < $1.value.rowno })
+        result = orderedValues.map { $0.value as! T}
+        return result
     }
 }
