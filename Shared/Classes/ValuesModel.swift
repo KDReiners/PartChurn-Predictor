@@ -86,14 +86,12 @@ public class ValuesModel: Model<Values> {
                     ForEach(cells) { cellIndex in
                         let column = columns[cellIndex.colIndex]
                         HStack {
-//                            Text("\(cellIndex.colIndex)")
                             Text("\(column.rows[cellIndex.rowIndex])")
                             Spacer()
                         }
                     }
                 }
                 .padding(.bottom)
-//                .padding(.bottom, 44*4)
             }
         }
     }
@@ -103,82 +101,5 @@ public class ValuesModel: Model<Values> {
             return mlTableView(coreDataML: nil)
         }
     }
-    /*
-    public struct mlTableView: View {
-        var coreDataML: CoreDataML
-        var mlTable: MLDataTable
-        var orderedColumns: [Columns]
-        var mlDataRows = [MLDataRow]()
-        var columns = [GridItem]()
-        var rows = [GridItem]()
-        var cells = [CellIndex]()
-        init(coreDataML: CoreDataML) {
-            self.mlTable = coreDataML.baseData
-            self.orderedColumns = coreDataML.orderedColumns
-            self.coreDataML = coreDataML
-            mlDataRows = resolve()
-            for orderedColumn in orderedColumns {
-                columns.append(GridItem(.flexible(minimum: 10, maximum: 200), spacing: 16))
-            }
-            for row in mlDataRows {
-                rows.append(GridItem(.flexible(minimum: 10, maximum: 200)))
-            }
-            cells = (0..<mlDataRows.count).flatMap{j in columns.enumerated().map{(i,c) in CellIndex(id:j + i*mlDataRows.count, colIndex:i, rowIndex:j)}}
-        }
-        public var body: some View {
-            ScrollView {
-                LazyVGrid(columns:columns) {
-                                ForEach(cells) { cellIndex in
-                                    let column = orderedColumns[cellIndex.colIndex]
-                                    HStack {
-                                        Spacer()
-                                        Text("Hallo")
-                                        Text("\(column.name) \(cellIndex.rowIndex) \(column.rows[cellIndex.rowIndex])")
-                                        Spacer()
-                                    }
-                                }
-                            }
-                            .padding()
-                            .padding(.bottom, 44*4)
-            }
-        }
-        func resolve() -> [MLDataRow] {
-            var result = [MLDataRow]()
-            print("Löse auf")
-            for (index, row) in mlTable.rows.enumerated() {
-                var rowWithColumns = MLDataRow(rowIndex: index)
-                for column in orderedColumns {
-                    if let intValue = row[column.name!]?.intValue {
-                        rowWithColumns.columns.append("\(intValue)")
-                    }
-                    if let doubleValue = row[column.name!]?.doubleValue {
-                        rowWithColumns.columns.append("\(doubleValue)")
-                    }
-                    if let  stringValue = row[column.name!]?.stringValue {
-                        rowWithColumns.columns.append(stringValue)
-                    }
-                }
-                result.append(rowWithColumns)
-            }
-            return result
-        }
-        struct Column: Identifiable {
-            let id = UUID()
-            var title: String
-            var enabled: Bool = true
-            var rows: [String] = (0..<512).map{x in "Row\(x)"}
-        }
-        
-        struct MLDataRow: Hashable {
-            var rowIndex: Int
-            var columns = [String]()
-        }
-        struct CellIndex: Identifiable {
-             let id: Int
-             let colIndex: Int
-             let rowIndex: Int
-         }
-    }
-     */
 }
 
