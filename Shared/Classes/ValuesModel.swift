@@ -34,51 +34,77 @@ public class ValuesModel: Model<Values> {
         }
         return Int(lastValue.rowno)
     }
-    public struct mlTableView: View {
+    struct Column: Identifiable {
+        let id = UUID()
+        var title: String
+        var enabled: Bool = true
+        var rows: [String] = []
+    }
+    
+    struct mlTableView: View {
         var coreDataML: CoreDataML
         var mlTable: MLDataTable
-        var orderedColumns: [Columns]
-        var mlDataRows = [MLDataRow]()
-        init(coreDataML: CoreDataML) {
-            self.mlTable = coreDataML.baseData
-            self.orderedColumns = coreDataML.orderedColumns
-            self.coreDataML = coreDataML
-            mlDataRows = resolve()
+        
+        var columns = [Column]()
+        var maxRows: Int = 0
+        
+        struct CellIndex: Identifiable {
+            let id: Int
+            let colIndex: Int
+            let rowIndex: Int
         }
-        public var body: some View {
-            VStack {
-                ForEach(0..<mlDataRows.count, id: \.self) { rowIndex in
-                    HStack {
-                        ForEach(0..<mlDataRows[rowIndex].columns.count, id: \.self) { colIndex in
-                            Text(mlDataRows[rowIndex].columns[colIndex])
-                        }
-                    }
-                }
-            }
+        init( coreDataML: CoreDataML?) {
+            self.coreDataML = coreDataML!
+            mlTable = self.coreDataML.baseData
+            resolve()
         }
-        func resolve() -> [MLDataRow] {
-            var result = [MLDataRow]()
-            print("Löse auf")
-            for (index, row) in mlTable.rows.enumerated() {
-                var rowWithColumns = MLDataRow(rowIndex: index)
-                for column in orderedColumns {
+        mutating func resolve() -> Void {
+            for column in self.coreDataML.orderedColumns {
+                var newColumn = Column(title: column.name ?? "Unbekannt")
+                for row in mlTable.rows {
                     if let intValue = row[column.name!]?.intValue {
-                        rowWithColumns.columns.append("\(intValue)")
+                        newColumn.rows.append("\(intValue)")
                     }
                     if let doubleValue = row[column.name!]?.doubleValue {
-                        rowWithColumns.columns.append("\(doubleValue)")
+                        newColumn.rows.append("\(doubleValue)")
                     }
                     if let  stringValue = row[column.name!]?.stringValue {
-                        rowWithColumns.columns.append(stringValue)
+                        newColumn.rows.append(stringValue)
                     }
                 }
-                result.append(rowWithColumns)
+                self.columns.append(newColumn)
             }
-            return result
+            
         }
-        struct MLDataRow {
-            var rowIndex: Int
-            var columns = [String]()
+        var body: some View {
+            let numCols = columns.count
+            let numRows = columns[0].rows.count
+            let columnItems: [GridItem] = Array(repeating: .init(.flexible()), count: numCols)
+            let cells = (0..<numRows).flatMap{j in columns.enumerated().map{(i,c) in CellIndex(id:j + i*numRows, colIndex:i, rowIndex:j)}}
+            return ScrollView {
+                LazyHGrid(rows: columnItems) {
+                    Text("Header")
+                }
+                    LazyVGrid(columns:columnItems) {
+                        ForEach(cells) { cellIndex in
+                            let column = columns[cellIndex.colIndex]
+                            HStack {
+                                //                            Text("\(cellIndex.colIndex)")
+                                Text("\(column.rows[cellIndex.rowIndex])")
+                                Spacer()
+                            }
+                        }
+                    }
+                    .padding(.bottom)
+                    //                .padding(.bottom, 44*4)
+                
+            }
+        }
+    }
+    
+    struct DataGridView_Previews: PreviewProvider {
+        static var previews: some View {
+            return mlTableView(coreDataML: nil)
         }
     }
 }
