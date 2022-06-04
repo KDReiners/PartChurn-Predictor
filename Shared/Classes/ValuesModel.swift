@@ -39,9 +39,38 @@ public class ValuesModel: Model<Values> {
         var title: String
         var enabled: Bool = true
         var rows: [String] = []
+        var alignment: Alignment
     }
-
+    struct ContentView: View {
+        let gridItems = [
+            GridItem(spacing: 50, alignment: .leading),
+            GridItem(),
+            GridItem(alignment: .trailing)
+        ]
+        
+        var body: some View {
+            var rows: [GridItem] =
+                    Array(repeating: .init(.fixed(20)), count: 3)
+            ScrollView(.horizontal) {
+                LazyHGrid(rows: rows, alignment: .top) {
+                    ForEach((0...79), id: \.self) {
+                        let codepoint = $0 + 0x1f600
+                        let codepointString = String(format: "%02X", codepoint)
+                        Text("\(codepointString)")
+                            .font(.footnote)
+                        let emoji = String(Character(UnicodeScalar(codepoint)!))
+                        Text("\(emoji)")
+                            .font(.largeTitle)
+                    }
+                }
+            }
+        }
+    }
+    
     struct mlTableView: View {
+        var numCols: Int = 0
+        var numRows : Int = 0
+        var columnItems = [GridItem]()
         var coreDataML: CoreDataML
         var mlTable: MLDataTable
         
@@ -57,45 +86,70 @@ public class ValuesModel: Model<Values> {
             self.coreDataML = coreDataML!
             mlTable = self.coreDataML.baseData
             resolve()
+            numCols = columns.count
+            numRows = columns[0].rows.count
+            //            columnItems = Array(repeating: .init(.flexible()), count: numCols)
+            
         }
         mutating func resolve() -> Void {
             for column in self.coreDataML.orderedColumns {
-                var newColumn = Column(title: column.name ?? "Unbekannt")
+                var newColumn = Column(title: column.name ?? "Unbekannt", alignment: .trailing)
+                var newGridItem: GridItem?
                 for row in mlTable.rows {
                     if let intValue = row[column.name!]?.intValue {
                         newColumn.rows.append("\(intValue)")
+                        newColumn.alignment = .trailing
+                        newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
                     }
                     if let doubleValue = row[column.name!]?.doubleValue {
                         newColumn.rows.append("\(doubleValue)")
+                        newColumn.alignment = .trailing
+                        newGridItem = GridItem(.flexible(),spacing: 10, alignment: .trailing)
                     }
                     if let  stringValue = row[column.name!]?.stringValue {
                         newColumn.rows.append(stringValue)
+                        newColumn.alignment = .leading
+                        newGridItem = GridItem(.flexible(),spacing: 10, alignment: .leading)
                     }
                 }
                 self.columns.append(newColumn)
+                self.columnItems.append(newGridItem!)
             }
-    
+            
         }
         var body: some View {
-            let numCols = columns.count
-            let numRows = columns[0].rows.count
-            let columnItems: [GridItem] = Array(repeating: .init(.flexible()), count: numCols)
+            
             let cells = (0..<numRows).flatMap{j in columns.enumerated().map{(i,c) in CellIndex(id:j + i*numRows, colIndex:i, rowIndex:j)}}
-            return ScrollView {
-                LazyVGrid(columns:columnItems) {
-                    ForEach(cells) { cellIndex in
-                        let column = columns[cellIndex.colIndex]
-                        HStack {
-                            Text("\(column.rows[cellIndex.rowIndex])")
-                            Spacer()
+            ScrollView([.vertical], showsIndicators: true) {
+                LazyVGrid(columns:columnItems, pinnedViews: [.sectionHeaders], content: {
+                    Section(header: stickyHeaderView) {
+                        ForEach(cells) { cellIndex in
+                            let column = columns[cellIndex.colIndex]
+                            Text(column.rows[cellIndex.rowIndex])
+
                         }
                     }
-                }
-                .padding(.bottom)
-            }
+                })
+            }.background(.white)
+            
+        }
+        var stickyHeaderView: some View {
+            Rectangle()
+                .fill(Color.gray)
+                .frame(maxWidth: .infinity)
+                .frame(minHeight: 40, maxHeight: .infinity)
+                .overlay(
+                    LazyVGrid(columns: columnItems) {
+                        ForEach(columns) { col in
+                            Text(col.title)
+                                .foregroundColor(Color.white)
+                                .font(.body)
+                        }
+                    }
+                )
         }
     }
-
+    
     struct DataGridView_Previews: PreviewProvider {
         static var previews: some View {
             return mlTableView(coreDataML: nil)

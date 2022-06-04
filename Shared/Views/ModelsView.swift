@@ -37,17 +37,17 @@ struct ModelsView: View {
                         Text("Algorithmus")
                             .font(.title)
                         HStack {
-                            List(mlAlgorithms, id: \.self, selection: $mlSelection) { algorithm in 
+                            List(mlAlgorithms, id: \.self, selection: $mlSelection) { algorithm in
                                 Text(algorithm)
                             }.frame(width: 250)
                             VStack{
-                            Button("Lerne..") {
-                                train(regressorName: mlSelection!)
-                            }.frame(width: 90)
-                            Button("Core Data...") {
-                                fillFromCoreData()
-                            }.frame(width: 90 )
-                        }
+                                Button("Lerne..") {
+                                    train(regressorName: mlSelection!)
+                                }.frame(width: 90)
+                                Button("Core Data...") {
+                                    fillFromCoreData()
+                                }.frame(width: 90 )
+                            }
                         }
                     }.padding()
                     VStack(alignment: .leading) {
@@ -58,25 +58,9 @@ struct ModelsView: View {
                 }
                 Divider()
                 if fileSelection != nil {
-                    VStack(alignment: .leading) {
-                        HStack(alignment: .top) {
-                            ForEach(ModelsModel.getColumnsForItem(model: model), id: \.self) { col in Text(col.name!)
-                                    .font(.body)
-                                    .frame(width: 80)
-                            }
-                            Text("Prognose")
-                                .font(.body)
-                        }
-                        Divider()
-                        List {
-                            ModelsModel.ValueRow(model: model, file: fileSelection!)
-                        }
-                        List {
-                            ValuesModel.mlTableView(coreDataML: CoreDataML(model: model))
-                        }
-                       
-                        Divider()
-                    }
+                    ValuesModel.mlTableView(coreDataML: CoreDataML(model: model))
+//                    ValuesModel.ContentView()
+                    Divider()
                 }
             }
             Spacer()
@@ -86,13 +70,13 @@ struct ModelsView: View {
     private func fillFromCoreData() -> Void {
         let test = CoreDataML(model: model).baseData
         
-//        let test = coreDataDictionary(model: model).baseData!
-//        ModelsModel.test(dataTable: test)
-//        let trainer = Trainer(baseTable: coreDataDictionary(model: model).baseData)
-//        guard let mlSelection = mlSelection else {
-//            return
-//        }
-//        trainer.createModel(regressorName: mlSelection)
+        //        let test = coreDataDictionary(model: model).baseData!
+        //        ModelsModel.test(dataTable: test)
+        //        let trainer = Trainer(baseTable: coreDataDictionary(model: model).baseData)
+        //        guard let mlSelection = mlSelection else {
+        //            return
+        //        }
+        //        trainer.createModel(regressorName: mlSelection)
     }
 }
 private func train(regressorName: String) {
