@@ -68,15 +68,6 @@ struct ModelsView: View {
         Spacer()
     }
     private func fillFromCoreData() -> Void {
-        let test = CoreDataML(model: model).baseData
-        
-        //        let test = coreDataDictionary(model: model).baseData!
-        //        ModelsModel.test(dataTable: test)
-        //        let trainer = Trainer(baseTable: coreDataDictionary(model: model).baseData)
-        //        guard let mlSelection = mlSelection else {
-        //            return
-        //        }
-        //        trainer.createModel(regressorName: mlSelection)
     }
 }
 private func train(regressorName: String) {

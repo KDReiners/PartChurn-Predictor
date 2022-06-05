@@ -41,31 +41,6 @@ public class ValuesModel: Model<Values> {
         var rows: [String] = []
         var alignment: Alignment
     }
-    struct ContentView: View {
-        let gridItems = [
-            GridItem(spacing: 50, alignment: .leading),
-            GridItem(),
-            GridItem(alignment: .trailing)
-        ]
-        
-        var body: some View {
-            var rows: [GridItem] =
-                    Array(repeating: .init(.fixed(20)), count: 3)
-            ScrollView(.horizontal) {
-                LazyHGrid(rows: rows, alignment: .top) {
-                    ForEach((0...79), id: \.self) {
-                        let codepoint = $0 + 0x1f600
-                        let codepointString = String(format: "%02X", codepoint)
-                        Text("\(codepointString)")
-                            .font(.footnote)
-                        let emoji = String(Character(UnicodeScalar(codepoint)!))
-                        Text("\(emoji)")
-                            .font(.largeTitle)
-                    }
-                }
-            }
-        }
-    }
     
     struct mlTableView: View {
         var numCols: Int = 0
@@ -92,10 +67,18 @@ public class ValuesModel: Model<Values> {
             
         }
         mutating func resolve() -> Void {
-            var valueFormatter: NumberFormatter = {
+            let intFormatter: NumberFormatter = {
                 let formatter = NumberFormatter()
                 formatter.numberStyle = .decimal
-                formatter.maximumFractionDigits = 2
+                formatter.maximumFractionDigits = 0
+                formatter.minimumFractionDigits = 0
+                return formatter
+            }()
+            let doubleFormatter: NumberFormatter = {
+                let formatter = NumberFormatter()
+                formatter.numberStyle = .decimal
+                formatter.maximumFractionDigits = 6
+                formatter.minimumFractionDigits = 2
                 return formatter
             }()
             for column in self.coreDataML.orderedColumns {
@@ -103,13 +86,12 @@ public class ValuesModel: Model<Values> {
                 var newGridItem: GridItem?
                 for row in mlTable.rows {
                     if let intValue = row[column.name!]?.intValue {
-                        newColumn.rows.append(valueFormatter.string(from: intValue as NSNumber)!)
-//                        newColumn.rows.append("\(intValue)")
+                        newColumn.rows.append(intFormatter.string(from: intValue as NSNumber)!)
                         newColumn.alignment = .trailing
                         newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
                     }
                     if let doubleValue = row[column.name!]?.doubleValue {
-                        newColumn.rows.append("\(doubleValue)")
+                        newColumn.rows.append(doubleFormatter.string(from: doubleValue as NSNumber)!)
                         newColumn.alignment = .trailing
                         newGridItem = GridItem(.flexible(),spacing: 10, alignment: .trailing)
                     }

@@ -78,7 +78,7 @@ public class ModelsModel: Model<Models> {
             }
         }
         func predict(valuesGrouped: [Values]) -> Double {
-            var Kundennummer = ""
+            var Kundennummer: String?
             var Kunde_seit: Double = 0
             var Account_Manager: String = ""
             var Anzahl_Arbeitsplaetze: Double = 0
@@ -127,25 +127,6 @@ public class ModelsModel: Model<Models> {
         {
             result = newValue.sorted(by: { $1.name ?? "" > $0.name ?? ""})
         }
-    }
-    public static func test(dataTable: Dictionary<String, [String]>) {
-        var provider = try? MLDictionaryFeatureProvider(dictionary: dataTable)
-       
-        let model: MLBoostedTreePredictor = {
-        do {
-            let config = MLModelConfiguration()
-            return try MLBoostedTreePredictor(configuration: config)
-        } catch {
-            print(error)
-            fatalError("Couldn't create MlBoostedTreePredictor")
-        }
-        }()
-        var myFeatureProvider = featureProviderGenerator(model: model.model, modelDictionary: dataTable)
-//        do {
-//            let test = try model.model.prediction(from: provider!)
-//        } catch {
-//            print(error)
-//        }
     }
     public static func predict( Kunde_seit: Double, Account_Manager: String, Anzahl_Arbeitsplaetze: Double, ADDISON: Double, AKTE: Double, SBS: Double, Anzahl_UHD: Double, davon_geloest: Double, Jahresfaktura: Double, Anzahl_OPPs: Double, Digitalisierungsgrad: Double) -> Double {
         let model: MLBoostedTreePredictor = {
