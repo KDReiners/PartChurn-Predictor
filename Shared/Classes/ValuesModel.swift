@@ -92,12 +92,19 @@ public class ValuesModel: Model<Values> {
             
         }
         mutating func resolve() -> Void {
+            var valueFormatter: NumberFormatter = {
+                let formatter = NumberFormatter()
+                formatter.numberStyle = .decimal
+                formatter.maximumFractionDigits = 2
+                return formatter
+            }()
             for column in self.coreDataML.orderedColumns {
                 var newColumn = Column(title: column.name ?? "Unbekannt", alignment: .trailing)
                 var newGridItem: GridItem?
                 for row in mlTable.rows {
                     if let intValue = row[column.name!]?.intValue {
-                        newColumn.rows.append("\(intValue)")
+                        newColumn.rows.append(valueFormatter.string(from: intValue as NSNumber)!)
+//                        newColumn.rows.append("\(intValue)")
                         newColumn.alignment = .trailing
                         newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
                     }
@@ -126,6 +133,8 @@ public class ValuesModel: Model<Values> {
                         ForEach(cells) { cellIndex in
                             let column = columns[cellIndex.colIndex]
                             Text(column.rows[cellIndex.rowIndex])
+                                .font(.body).monospacedDigit()
+                                .scaledToFit()
 
                         }
                     }
