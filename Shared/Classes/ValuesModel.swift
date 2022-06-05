@@ -63,8 +63,6 @@ public class ValuesModel: Model<Values> {
             resolve()
             numCols = columns.count
             numRows = columns[0].rows.count
-            //            columnItems = Array(repeating: .init(.flexible()), count: numCols)
-            
         }
         mutating func resolve() -> Void {
             let intFormatter: NumberFormatter = {
