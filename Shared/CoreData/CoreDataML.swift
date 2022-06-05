@@ -12,7 +12,7 @@ import SwiftUI
 public class CoreDataML: ObservableObject {
     var model: Models
     var files: [Files]
-    internal var baseData: MLDataTable {
+    internal var baseData: coreDataResults {
         get {
             return  getBaseData()
         }
@@ -28,18 +28,18 @@ public class CoreDataML: ObservableObject {
         self.model = model
         self.files = files
     }
-    private func getBaseData() -> MLDataTable {
-        var result = MLDataTable()
-        result = getValuesForColumns(columns: Set(orderedColumns))
+    private func getBaseData() -> coreDataResults {
+
 //        print(result)
 //        do {
 //            var test = try? MLRegressor(trainingData: result, targetColumn: "Kuendigt")
 //        } catch {
 //            print(error)
 //        }
-        return result
+        return getValuesForColumns(columns: Set(orderedColumns))
     }
-    internal func getValuesForColumns(columns: Set<Columns>) -> MLDataTable {
+    internal func getValuesForColumns(columns: Set<Columns>) ->coreDataResults {
+        var mlcoreDataResults = coreDataResults()
         var subEntries = Array<colValTuple>()
         for column in columns {
             for value in column.column2values! {
@@ -67,11 +67,9 @@ public class CoreDataML: ObservableObject {
             }
             
         }
-        return try! MLDataTable(dictionary: inputDictionary)
-    }
-    internal struct colValTuple {
-        var column: Columns
-        var value: Values
+        mlcoreDataResults.mlDataTable = try! MLDataTable(dictionary: inputDictionary)
+        mlcoreDataResults.mlDictionary = inputDictionary
+        return mlcoreDataResults
     }
     internal func returnBestType(untypedValues: [colValTuple])  ->  Any {
         let count: Int = untypedValues.count
@@ -85,6 +83,14 @@ public class CoreDataML: ObservableObject {
         }
         return String.self
     }
+    
+    /// Structs
+    /// Tuple for column and associated value, Important for ordering
+    internal struct colValTuple {
+        var column: Columns
+        var value: Values
+    }
+    /// typed array holds the typed columns for mlDataTable
     internal struct typedArray<T> {
         var result: [T]
         var untypedValues: [colValTuple]
@@ -102,10 +108,8 @@ public class CoreDataML: ObservableObject {
         }
 
     }
-    internal func returnTypedArray<T>(untypedValues: [colValTuple]) ->[T] {
-        var result: [T]
-        let orderedValues = untypedValues.sorted(by: { return $0.value.rowno < $1.value.rowno })
-        result = orderedValues.map { $0.value as! T}
-        return result
+    internal struct coreDataResults {
+        var mlDataTable: MLDataTable?
+        var mlDictionary: Dictionary<String, MLDataValueConvertible>?
     }
 }

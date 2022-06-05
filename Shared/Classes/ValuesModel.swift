@@ -59,7 +59,7 @@ public class ValuesModel: Model<Values> {
         }
         init( coreDataML: CoreDataML?) {
             self.coreDataML = coreDataML!
-            mlTable = self.coreDataML.baseData
+            mlTable = self.coreDataML.baseData.mlDataTable!
             resolve()
             numCols = columns.count
             numRows = columns[0].rows.count
@@ -135,6 +135,7 @@ public class ValuesModel: Model<Values> {
                             Text(col.title)
                                 .foregroundColor(Color.white)
                                 .font(.body)
+                                .scaledToFit()
                         }
                     }
                 )
@@ -146,5 +147,6 @@ public class ValuesModel: Model<Values> {
             return mlTableView(coreDataML: nil)
         }
     }
+    
 }
 

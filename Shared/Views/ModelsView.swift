@@ -77,7 +77,7 @@ private func train(regressorName: String) {
 
 struct ModelsView_Previews: PreviewProvider {
     static var previews: some View {
-        ModelsView(model: ModelsModel().items[0], metric: Ml_MetricKPI(), mlTable: CoreDataML(model: ModelsModel().items[0]).baseData)
+        ModelsView(model: ModelsModel().items[0], metric: Ml_MetricKPI(), mlTable: CoreDataML(model: ModelsModel().items[0]).baseData.mlDataTable!)
     }
 }
 
