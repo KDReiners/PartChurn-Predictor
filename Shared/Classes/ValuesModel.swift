@@ -140,23 +140,7 @@ public class ValuesModel: Model<Values> {
                     }
                 )
         }
-        public func test2(datatable: MLDataTable) {
-            
-            var result = [String: MLDataValueConvertible]()
-            for row in datatable.rows {
-                for i in 0..<row.keys.count {
-                    if row.keys[i] != "Kuendigt" {
-                        result[row.keys[i]] = row.values[i].intValue
-                        if  result[row.keys[i]] == nil {
-                            result[row.keys[i]] = row.values[i].doubleValue
-                        }
-                        if  result[row.keys[i]] == nil {
-                            result[row.keys[i]] = row.values[i].stringValue
-                        }
-                    }
-                }
-            }
-            
+        fileprivate func predict(_ result: [String : MLDataValueConvertible]) {
             let provider: MLDictionaryFeatureProvider = {
                 do {
                     return try MLDictionaryFeatureProvider(dictionary: result)
@@ -174,7 +158,7 @@ public class ValuesModel: Model<Values> {
                     fatalError("Couldn't create MlBoostedTreePredictor")
                 }
             }()
-            let predictions: MLFeatureProvider = {
+            let prediction: MLFeatureProvider = {
                 do {
                     return try model.model.prediction(from: provider)
                 } catch {
@@ -182,7 +166,25 @@ public class ValuesModel: Model<Values> {
                     fatalError()
                 }
             }()
-            
+            print("\(prediction.featureValue(for: "Kuendigt")!)")
+        }
+        
+        public func test2(datatable: MLDataTable) {
+            var result = [String: MLDataValueConvertible]()
+            for row in datatable.rows {
+                for i in 0..<row.keys.count {
+                    if row.keys[i] != "Kuendigt" {
+                        result[row.keys[i]] = row.values[i].intValue
+                        if  result[row.keys[i]] == nil {
+                            result[row.keys[i]] = row.values[i].doubleValue
+                        }
+                        if  result[row.keys[i]] == nil {
+                            result[row.keys[i]] = row.values[i].stringValue
+                        }
+                    }
+                }
+                predict(result)
+            }
         }
     }
     
