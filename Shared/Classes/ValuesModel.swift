@@ -49,6 +49,7 @@ public class ValuesModel: Model<Values> {
         var coreDataML: CoreDataML
         var mlTable: MLDataTable
         
+        
         var columns = [Column]()
         var maxRows: Int = 0
         
@@ -63,6 +64,7 @@ public class ValuesModel: Model<Values> {
             resolve()
             numCols = columns.count
             numRows = columns[0].rows.count
+            test2(datatable: (coreDataML?.baseData.mlDataTable)!)
         }
         mutating func resolve() -> Void {
             let intFormatter: NumberFormatter = {
@@ -115,7 +117,7 @@ public class ValuesModel: Model<Values> {
                             Text(column.rows[cellIndex.rowIndex])
                                 .font(.body).monospacedDigit()
                                 .scaledToFit()
-
+                            
                         }
                     }
                 })
@@ -137,6 +139,50 @@ public class ValuesModel: Model<Values> {
                         }
                     }
                 )
+        }
+        public func test2(datatable: MLDataTable) {
+            
+            var result = [String: MLDataValueConvertible]()
+            for row in datatable.rows {
+                for i in 0..<row.keys.count {
+                    if row.keys[i] != "Kuendigt" {
+                        result[row.keys[i]] = row.values[i].intValue
+                        if  result[row.keys[i]] == nil {
+                            result[row.keys[i]] = row.values[i].doubleValue
+                        }
+                        if  result[row.keys[i]] == nil {
+                            result[row.keys[i]] = row.values[i].stringValue
+                        }
+                    }
+                }
+            }
+            
+            let provider: MLDictionaryFeatureProvider = {
+                do {
+                    return try MLDictionaryFeatureProvider(dictionary: result)
+                } catch {
+                    print(error)
+                    fatalError()
+                }
+            }()
+            let model: MLBoostedTreePredictor = {
+                do {
+                    let config = MLModelConfiguration()
+                    return try MLBoostedTreePredictor(configuration: config)
+                } catch {
+                    print(error)
+                    fatalError("Couldn't create MlBoostedTreePredictor")
+                }
+            }()
+            let predictions: MLFeatureProvider = {
+                do {
+                    return try model.model.prediction(from: provider)
+                } catch {
+                    print(error)
+                    fatalError()
+                }
+            }()
+            
         }
     }
     
