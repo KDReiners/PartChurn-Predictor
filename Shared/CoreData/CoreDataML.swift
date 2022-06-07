@@ -51,7 +51,7 @@ public class CoreDataML: ObservableObject {
             return tuple.column
         })
         var inputDictionary = [String: MLDataValueConvertible]()
-        for (key, values) in groupedDictionary.sorted(by: { $0.key.orderno < $1.key.orderno }){
+        for (key, values) in groupedDictionary.sorted(by: { $0.key.orderno < $1.key.orderno }) {
             let typeOfValues = returnBestType(untypedValues: values)
             var inputArray = [String]()
             for value in values.sorted(by: { $0.value.rowno < $1.value.rowno }) {
@@ -60,12 +60,20 @@ public class CoreDataML: ObservableObject {
             switch typeOfValues.self {
             case is Int.Type:
                 inputDictionary[key.name!] = typedArray<Int>(untypedValues: values).result
+                if key.istarget == true {
+                    inputDictionary[key.name!+"_predicted"] = typedArray<Int>(untypedValues: values).result
+                }
             case is Double.Type:
                 inputDictionary[key.name!] = typedArray<Double>(untypedValues: values).result
+                if key.istarget == true {
+                    inputDictionary[key.name!+"_predicted"] = typedArray<Double>(untypedValues: values).result
+                }
             default:
                 inputDictionary[key.name!] = typedArray<String>(untypedValues: values).result
+                if key.istarget == true {
+                    inputDictionary[key.name!+"_predicted"] = typedArray<String>(untypedValues: values).result
+                }
             }
-            
         }
         mlcoreDataResults.mlDataTable = try! MLDataTable(dictionary: inputDictionary)
         mlcoreDataResults.mlDictionary = inputDictionary

@@ -64,7 +64,6 @@ public class ValuesModel: Model<Values> {
             resolve()
             numCols = columns.count
             numRows = columns[0].rows.count
-            test2(datatable: (coreDataML?.baseData.mlDataTable)!)
         }
         mutating func resolve() -> Void {
             let intFormatter: NumberFormatter = {
@@ -77,13 +76,20 @@ public class ValuesModel: Model<Values> {
             let doubleFormatter: NumberFormatter = {
                 let formatter = NumberFormatter()
                 formatter.numberStyle = .decimal
-                formatter.maximumFractionDigits = 6
+                formatter.maximumFractionDigits = 4
                 formatter.minimumFractionDigits = 2
                 return formatter
             }()
             for column in self.coreDataML.orderedColumns {
                 var newColumn = Column(title: column.name ?? "Unbekannt", alignment: .trailing)
                 var newGridItem: GridItem?
+                var newTargetColumn: Column?
+                var newTargetGridItem: GridItem?
+                if column.istarget == true {
+                    newTargetColumn = Column(title: column.name ?? "Unbekannt" + "_predicted", alignment: .trailing)
+                    newTargetGridItem = GridItem(.flexible(),spacing: 10, alignment: .leading)
+                }
+                var predictedValue: MLFeatureValue?
                 for row in mlTable.rows {
                     if let intValue = row[column.name!]?.intValue {
                         newColumn.rows.append(intFormatter.string(from: intValue as NSNumber)!)
@@ -100,14 +106,23 @@ public class ValuesModel: Model<Values> {
                         newColumn.alignment = .leading
                         newGridItem = GridItem(.flexible(),spacing: 10, alignment: .leading)
                     }
+                    if column.istarget == true {
+                        predictedValue = predictFromRow(mlRow: row).featureValue(for: column.name!)
+                        newTargetColumn?.rows.append(doubleFormatter.string(from: predictedValue!.doubleValue as NSNumber)!)
+                        newTargetColumn?.alignment = .trailing
+                        newTargetColumn?.title = "Predict"
+                        newTargetGridItem?.alignment = .trailing
+                    }
                 }
                 self.columns.append(newColumn)
                 self.columnItems.append(newGridItem!)
+                if newTargetColumn != nil {
+                    self.columns.append(newTargetColumn!)
+                    self.columnItems.append(newTargetGridItem!)
+                }
             }
-            
         }
         var body: some View {
-            
             let cells = (0..<numRows).flatMap{j in columns.enumerated().map{(i,c) in CellIndex(id:j + i*numRows, colIndex:i, rowIndex:j)}}
             ScrollView([.vertical], showsIndicators: true) {
                 LazyVGrid(columns:columnItems, pinnedViews: [.sectionHeaders], content: {
@@ -140,7 +155,7 @@ public class ValuesModel: Model<Values> {
                     }
                 )
         }
-        fileprivate func predict(_ result: [String : MLDataValueConvertible]) {
+        fileprivate func predict(_ result: [String : MLDataValueConvertible]) -> MLFeatureProvider {
             let provider: MLDictionaryFeatureProvider = {
                 do {
                     return try MLDictionaryFeatureProvider(dictionary: result)
@@ -166,25 +181,22 @@ public class ValuesModel: Model<Values> {
                     fatalError()
                 }
             }()
-            print("\(prediction.featureValue(for: "Kuendigt")!)")
+            return prediction
         }
-        
-        public func test2(datatable: MLDataTable) {
+        public func predictFromRow(mlRow: MLDataTable.Row) -> MLFeatureProvider {
             var result = [String: MLDataValueConvertible]()
-            for row in datatable.rows {
-                for i in 0..<row.keys.count {
-                    if row.keys[i] != "Kuendigt" {
-                        result[row.keys[i]] = row.values[i].intValue
-                        if  result[row.keys[i]] == nil {
-                            result[row.keys[i]] = row.values[i].doubleValue
-                        }
-                        if  result[row.keys[i]] == nil {
-                            result[row.keys[i]] = row.values[i].stringValue
-                        }
+            for i in 0..<mlRow.keys.count {
+                if mlRow.keys[i] != "Kuendigt" {
+                    result[mlRow.keys[i]] = mlRow.values[i].intValue
+                    if  result[mlRow.keys[i]] == nil {
+                        result[mlRow.keys[i]] = mlRow.values[i].doubleValue
+                    }
+                    if  result[mlRow.keys[i]] == nil {
+                        result[mlRow.keys[i]] = mlRow.values[i].stringValue
                     }
                 }
-                predict(result)
             }
+            return predict(result)
         }
     }
     
