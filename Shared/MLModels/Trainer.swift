@@ -97,7 +97,7 @@ public struct Trainer {
                                 metadata: regressorMetadata)
             
         } catch {
-            print(error)
+            fatalError(error.localizedDescription)
         }
     }
 }

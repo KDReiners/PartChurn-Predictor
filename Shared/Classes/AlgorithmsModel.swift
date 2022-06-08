@@ -35,7 +35,6 @@ public class AlgorithmsModel: Model<Algorithms> {
         for metricValue in  metricValues {
             let key = (metricValue.metricvalue2datasettype?.name!)! + "Metrics." + (metricValue.metricvalue2metric?.name!)!
             result.dictOfMetrics[key]? = metricValue.value
-            print("Key: \(key) metric: \(metricValue.value)")
         }
         return result
         

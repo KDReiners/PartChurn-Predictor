@@ -33,9 +33,6 @@ class Storage<T>: NSObject, ObservableObject, NSFetchedResultsControllerDelegate
             NSLog("Error could not fetch log objects")
         }
     }
-    public func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        print("will change")
-    }
     public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
             let items = controller.fetchedObjects as! [T]
             self.items.value = items
