@@ -58,8 +58,7 @@ struct ModelsView: View {
                 }
                 Divider()
                 if fileSelection != nil {
-                    ValuesModel.mlTableView(coreDataML: CoreDataML(model: model))
-//                    ValuesModel.ContentView()
+                    ValuesView(coreDataML: CoreDataML(model: model))
                     Divider()
                 }
             }
@@ -77,7 +76,27 @@ private func train(regressorName: String) {
 
 struct ModelsView_Previews: PreviewProvider {
     static var previews: some View {
-        ModelsView(model: ModelsModel().items[0], metric: Ml_MetricKPI(), mlTable: CoreDataML(model: ModelsModel().items[0]).baseData.mlDataTable!)
+        ModelsView(model: ModelsModel().items[0], metric: Ml_MetricKPI(), mlTable: CoreDataML(model: ModelsModel().items[0]).mlDataTable)
     }
 }
-
+/// auxiliary views
+public struct ModelListRow: View {
+    public var selectedModel: Models
+    public var editedModel: Binding<Models>?
+    public var body: some View {
+        Text("\(self.selectedModel.name ?? "(no name given)")")
+    }
+}
+public struct EditableModelListRow: View {
+    public var editedModel: Binding<Models>
+    @State var name: String
+    init(editedModel: Binding<Models>) {
+        self.editedModel = editedModel
+        self.name = editedModel.name.wrappedValue!
+    }
+    public var body: some View {
+        TextField("Model Name", text: $name).onChange(of: name) { newValue in
+            self.editedModel.name.wrappedValue = newValue
+        }
+    }
+}

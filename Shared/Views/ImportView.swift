@@ -22,12 +22,12 @@ struct ImportView: View {
                 List($modelsView.items, id: \.self, selection: $selection) { model in
                     switch editingMode {
                     case true:
-                        ModelsModel.EditableModelListRow(editedModel: model).onSubmit {
+                        EditableModelListRow(editedModel: model).onSubmit {
                             modelsView.saveChanges()
                             editingMode = false
                         }
                     case false:
-                        ModelsModel.ModelListRow(selectedModel: model.wrappedValue).onTapGesture(count: 2) {
+                        ModelListRow(selectedModel: model.wrappedValue).onTapGesture(count: 2) {
                             editingMode = true
                         }
                     }

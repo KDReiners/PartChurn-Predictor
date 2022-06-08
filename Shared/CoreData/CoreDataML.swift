@@ -12,7 +12,7 @@ import SwiftUI
 public class CoreDataML: ObservableObject {
     var model: Models
     var files: [Files]
-    internal var baseData: coreDataResults {
+    internal var mlDataTable: MLDataTable {
         get {
             return  getBaseData()
         }
@@ -28,7 +28,7 @@ public class CoreDataML: ObservableObject {
         self.model = model
         self.files = files
     }
-    private func getBaseData() -> coreDataResults {
+    private func getBaseData() -> MLDataTable {
 
 //        print(result)
 //        do {
@@ -38,8 +38,7 @@ public class CoreDataML: ObservableObject {
 //        }
         return getValuesForColumns(columns: Set(orderedColumns))
     }
-    internal func getValuesForColumns(columns: Set<Columns>) ->coreDataResults {
-        var mlcoreDataResults = coreDataResults()
+    internal func getValuesForColumns(columns: Set<Columns>) -> MLDataTable {
         var subEntries = Array<colValTuple>()
         for column in columns {
             for value in column.column2values! {
@@ -75,9 +74,7 @@ public class CoreDataML: ObservableObject {
                 }
             }
         }
-        mlcoreDataResults.mlDataTable = try! MLDataTable(dictionary: inputDictionary)
-        mlcoreDataResults.mlDictionary = inputDictionary
-        return mlcoreDataResults
+        return try! MLDataTable(dictionary: inputDictionary)
     }
     internal func returnBestType(untypedValues: [colValTuple])  ->  Any {
         let count: Int = untypedValues.count
@@ -116,8 +113,5 @@ public class CoreDataML: ObservableObject {
         }
 
     }
-    internal struct coreDataResults {
-        var mlDataTable: MLDataTable?
-        var mlDictionary: Dictionary<String, MLDataValueConvertible>?
-    }
+    
 }

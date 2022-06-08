@@ -10,6 +10,7 @@ import OSLog
 import CoreData
 public struct BaseServices
 {
+    /// let constructors
     public static let logger = {
         return Logger()
     }()
@@ -19,6 +20,21 @@ public struct BaseServices
         formatter.timeStyle = .medium
         return formatter
     }()
+    public static let intFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 0
+        formatter.minimumFractionDigits = 0
+        return formatter
+    }()
+    public static let doubleFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 4
+        formatter.minimumFractionDigits = 2
+        return formatter
+    }()
+    /// functions
     public static func getAttributesForEntity(entity: NSEntityDescription) -> Array<EntityAttributeInfo> {
         var result = Array<EntityAttributeInfo>()
         let attributes = entity.attributesByName

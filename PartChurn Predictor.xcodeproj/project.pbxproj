@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0A7D02F3283E608B0046B928 /* GenericFeatureProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D02F2283E608B0046B928 /* GenericFeatureProvider.swift */; };
 		0A7D02F4283E608B0046B928 /* GenericFeatureProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7D02F2283E608B0046B928 /* GenericFeatureProvider.swift */; };
+		0AFCB7042850A5FA00676AF6 /* ValuesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFCB7032850A5FA00676AF6 /* ValuesView.swift */; };
+		0AFCB7052850A5FA00676AF6 /* ValuesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFCB7032850A5FA00676AF6 /* ValuesView.swift */; };
 		2D0B8567282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B8554282565BD00856BCB /* PartChurn_Predictor.xcdatamodeld */; };
 		2D0B8568282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B8554282565BD00856BCB /* PartChurn_Predictor.xcdatamodeld */; };
 		2D0B8569282565BF00856BCB /* PartChurn_PredictorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B8556282565BD00856BCB /* PartChurn_PredictorApp.swift */; };
@@ -71,6 +73,7 @@
 
 /* Begin PBXFileReference section */
 		0A7D02F2283E608B0046B928 /* GenericFeatureProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericFeatureProvider.swift; sourceTree = "<group>"; };
+		0AFCB7032850A5FA00676AF6 /* ValuesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValuesView.swift; sourceTree = "<group>"; };
 		2D0B8555282565BD00856BCB /* Shared.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Shared.xcdatamodel; sourceTree = "<group>"; };
 		2D0B8556282565BD00856BCB /* PartChurn_PredictorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartChurn_PredictorApp.swift; sourceTree = "<group>"; };
 		2D0B8558282565BD00856BCB /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -238,6 +241,7 @@
 				2DA77EEE282576AA007EC3E5 /* ImportView.swift */,
 				2DA77EBD282569DC007EC3E5 /* DirectoryView.swift */,
 				2DA77F012827E1DD007EC3E5 /* ModelsView.swift */,
+				0AFCB7032850A5FA00676AF6 /* ValuesView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -370,6 +374,7 @@
 			files = (
 				2DA77EE82825716A007EC3E5 /* ModelsModel.swift in Sources */,
 				2DA77ED328256E8A007EC3E5 /* Model.swift in Sources */,
+				0AFCB7042850A5FA00676AF6 /* ValuesView.swift in Sources */,
 				2DA77EF828257B97007EC3E5 /* CSV_Importer.swift in Sources */,
 				2DA77EDE28256F09007EC3E5 /* EntityAttributeInfo.swift in Sources */,
 				2DA77EE128256F16007EC3E5 /* BaseServices.swift in Sources */,
@@ -404,6 +409,7 @@
 			files = (
 				2DA77EE92825716A007EC3E5 /* ModelsModel.swift in Sources */,
 				2DA77ED428256E8A007EC3E5 /* Model.swift in Sources */,
+				0AFCB7052850A5FA00676AF6 /* ValuesView.swift in Sources */,
 				2DA77EF928257B97007EC3E5 /* CSV_Importer.swift in Sources */,
 				2DA77EDF28256F09007EC3E5 /* EntityAttributeInfo.swift in Sources */,
 				2DA77EE228256F16007EC3E5 /* BaseServices.swift in Sources */,
