@@ -16,16 +16,19 @@ struct Column: Identifiable {
     var rows: [String] = []
     var alignment: Alignment
 }
-
+struct model: Identifiable {
+    let id = UUID()
+    var model: MLModel
+    var path: String
+}
 struct ValuesView: View {
     var numCols: Int = 0
     var numRows : Int = 0
     var columnItems = [GridItem]()
     var coreDataML: CoreDataML
     var mlTable: MLDataTable
-    
-    
     var columns = [Column]()
+    var models = [model]()
     var maxRows: Int = 0
     
     struct CellIndex: Identifiable {
@@ -117,7 +120,7 @@ struct ValuesView: View {
                 }
             )
     }
-    fileprivate func predict(_ result: [String : MLDataValueConvertible]) -> MLFeatureProvider {
+    fileprivate mutating func predict(_ result: [String : MLDataValueConvertible]) -> MLFeatureProvider {
         let provider: MLDictionaryFeatureProvider = {
             do {
                 return try MLDictionaryFeatureProvider(dictionary: result)
@@ -125,10 +128,23 @@ struct ValuesView: View {
                 fatalError(error.localizedDescription)
             }
         }()
-        let path = "/Users/klaus.reiners/Documents/WK/Swift/PartChurn Analysis/PartChurn Predictor/Shared/MLModels/LinearPredictor.mlmodel"
-        var isDir:ObjCBool = true
-        let url = URL.init(fileURLWithPath: path)
-        if FileManager.default.fileExists(atPath: path, isDirectory: &isDir) {
+        let path = "/Users/kdreiners/Library/Containers/peas.com.PartChurn-Predictor/Data/LinearPredictor.mlmodel"
+        let model = getModel(path: path)
+        let prediction: MLFeatureProvider = {
+            do {
+                return try model.prediction(from: provider)
+            } catch {
+                fatalError(error.localizedDescription)
+            }
+        }()
+        return prediction
+    }
+    private mutating func getModel(path: String) ->MLModel {
+        var result: MLModel?
+        if let result = models.filter({ $0.path == path}).first?.model {
+            return result
+        } else {
+            let url = URL.init(fileURLWithPath: path)
             let compiledUrl:URL = {
             do {
                 return try MLModel.compileModel(at: url)
@@ -136,26 +152,20 @@ struct ValuesView: View {
                     fatalError(error.localizedDescription)
             }
             }()
-            let test = try? MLModel(contentsOf: compiledUrl)
+            result = {
+                do {
+                    return try MLModel(contentsOf: compiledUrl)
+                } catch {
+                    fatalError(error.localizedDescription)
+                }
+            }()
+            
         }
-        let model: MLBoostedTreePredictor = {
-            do {
-                let config = MLModelConfiguration()
-                return try MLBoostedTreePredictor(configuration: config)
-            } catch {
-                fatalError(error.localizedDescription)
-            }
-        }()
-        let prediction: MLFeatureProvider = {
-            do {
-                return try model.model.prediction(from: provider)
-            } catch {
-                fatalError(error.localizedDescription)
-            }
-        }()
-        return prediction
+        let newModel = model(model: result!, path: path)
+        models.append(newModel)
+        return result!
     }
-    public func predictFromRow(mlRow: MLDataTable.Row) -> MLFeatureProvider {
+    public mutating func predictFromRow(mlRow: MLDataTable.Row) -> MLFeatureProvider {
         var result = [String: MLDataValueConvertible]()
         for i in 0..<mlRow.keys.count {
             if mlRow.keys[i] != "Kuendigt" {
