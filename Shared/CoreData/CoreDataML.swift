@@ -29,13 +29,6 @@ public class CoreDataML: ObservableObject {
         self.files = files
     }
     private func getBaseData() -> MLDataTable {
-
-//        print(result)
-//        do {
-//            var test = try? MLRegressor(trainingData: result, targetColumn: "Kuendigt")
-//        } catch {
-//            print(error)
-//        }
         return getValuesForColumns(columns: Set(orderedColumns))
     }
     internal func getValuesForColumns(columns: Set<Columns>) -> MLDataTable {

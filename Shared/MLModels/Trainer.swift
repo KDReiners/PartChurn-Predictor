@@ -7,67 +7,43 @@
 
 import Foundation
 import CreateML
+import CoreML
 public struct Trainer {
-    let csvFile = Bundle.main.url(forResource: "ChurnPrediction_POC", withExtension: "csv")!
-    let regressorColumns = ["Kunde_seit",
-                            "Account_Manager",
-                            "Anzahl_Arbeitsplaetze",
-                            "ADDISON",
-                            "AKTE",
-                            "SBS",
-                            "Anzahl_UHD",
-                            "davon geloest",
-                            "Jahresfaktura",
-                            "Anzahl_OPPs",
-                            "Digitalisierungsgrad",
-                            "Kuendigt"]
-    
-    var dataTable: MLDataTable?
     var regressorTable: MLDataTable?
+    var coreDataML: CoreDataML!
     var file: Files?
     var model: Models?
-    init(baseTable: MLDataTable? = nil) {
-        dataTable = try! MLDataTable(contentsOf: csvFile)
-        if baseTable == nil {
-            regressorTable = dataTable![regressorColumns]
-        } else {
-            regressorTable = baseTable![regressorColumns]
-        }
-        
-        file = FilesModel().items.first(where: {
-            return $0.name == csvFile.lastPathComponent
-        })
-        model = file?.files2model
-        guard dataTable != nil else {
+    init(model: Models) {
+        self.model = model
+        coreDataML = CoreDataML(model: model)
+        regressorTable = CoreDataML(model: model).mlDataTable
+        guard regressorTable != nil else {
             return
         }
-        guard file != nil else {
-            return
-        }
-        guard model != nil else {
-            return
-        }
-
-
-
-        
     }
     public func createModel(regressorName: String) -> Void {
         let (regressorEvaluationTable, regressorTrainingTable) = regressorTable!.randomSplit(by: 0.20, seed: 5)
         switch regressorName {
-        case "MLLinearRegressor": trainMLLinearRegressor(regressorEvaluationTable: regressorEvaluationTable, regressorTrainingTable: regressorTrainingTable)
+        case "MLLinearRegressor":
+            trainRegressor(regressorName: regressorName, regressorEvaluationTable: regressorEvaluationTable, regressorTrainingTable: regressorTrainingTable, modelParameter: "none")
         case "MLDecisionTreeRegressor":
             return
         case "MLRandomForestRegressor":
             return
         case "MLBoostedTreeRegressor":
+            let params = MLBoostedTreeRegressor.ModelParameters(maxIterations: 5000)
+            trainRegressor(regressorName: regressorName, regressorEvaluationTable: regressorEvaluationTable, regressorTrainingTable: regressorTrainingTable, modelParameter: params)
             return
         default:
             fatalError()
         }
     }
-    private func trainMLLinearRegressor(regressorEvaluationTable: MLDataTable, regressorTrainingTable: MLDataTable) -> Void {
+    
+    private func trainRegressor(regressorName: String, regressorEvaluationTable: MLDataTable, regressorTrainingTable: MLDataTable, modelParameter: Any) -> Void {
         let regressorKPI = Ml_MetricKPI()
+        
+        var method = try? MLRegressor.boostedTree(MLBoostedTreeRegressor(trainingData: regressorTrainingTable,
+                                                                         targetColumn: "Kuendigt", parameters: modelParameter as! MLBoostedTreeRegressor.ModelParameters))
         var regressor: MLLinearRegressor
         do {
             
@@ -87,7 +63,6 @@ public struct Trainer {
             regressorKPI.postMetric(model: model!, file: file!, algorithmName: "MLLinearRegressor")
             /// Pfad zum Schreibtisch
             let homePath = FileManager.default.homeDirectoryForCurrentUser
-//            let desktopPath = homePath.appendingPathComponent("Desktop")
 
             let regressorMetadata = MLModelMetadata(author: "Steps.IT",
                                                     shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden",

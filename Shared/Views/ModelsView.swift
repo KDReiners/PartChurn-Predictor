@@ -68,11 +68,12 @@ struct ModelsView: View {
     }
     private func fillFromCoreData() -> Void {
     }
+    private func train(regressorName: String) {
+        let trainer = Trainer(model: model)
+        trainer.createModel(regressorName: regressorName)
+    }
 }
-private func train(regressorName: String) {
-    let trainer = Trainer()
-    trainer.createModel(regressorName: regressorName)
-}
+
 
 struct ModelsView_Previews: PreviewProvider {
     static var previews: some View {
