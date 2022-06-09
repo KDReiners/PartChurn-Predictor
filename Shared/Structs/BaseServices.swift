@@ -10,7 +10,14 @@ import OSLog
 import CoreData
 public struct BaseServices
 {
+    /// Properties
+    public static var homePath: URL {
+        get {
+            return FileManager.default.homeDirectoryForCurrentUser
+        }
+    }
     /// let constructors
+    
     public static let logger = {
         return Logger()
     }()

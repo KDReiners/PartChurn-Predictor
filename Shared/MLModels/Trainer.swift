@@ -13,10 +13,15 @@ public struct Trainer {
     var coreDataML: CoreDataML!
     var file: Files?
     var model: Models?
+    var targetColumnName: String!
     init(model: Models) {
         self.model = model
         coreDataML = CoreDataML(model: model)
         regressorTable = CoreDataML(model: model).mlDataTable
+        self.targetColumnName = coreDataML.targetColumns.first?.name
+        guard self.targetColumnName != nil else {
+            return
+        }
         guard regressorTable != nil else {
             return
         }
@@ -25,54 +30,46 @@ public struct Trainer {
         let (regressorEvaluationTable, regressorTrainingTable) = regressorTable!.randomSplit(by: 0.20, seed: 5)
         switch regressorName {
         case "MLLinearRegressor":
-            trainRegressor(regressorName: regressorName, regressorEvaluationTable: regressorEvaluationTable, regressorTrainingTable: regressorTrainingTable, modelParameter: "none")
+            guard let regressor = try? MLRegressor.linear(MLLinearRegressor(trainingData: regressorTrainingTable,
+                                                                            targetColumn: self.targetColumnName)) else { return }
+            writeMetrics(regressor: regressor, regressorName: regressorName, regressorEvaluationTable: regressorEvaluationTable)
         case "MLDecisionTreeRegressor":
-            return
+            let params = MLDecisionTreeRegressor.ModelParameters(maxDepth: 100, minLossReduction: 0.01, minChildWeight: 0.01, randomSeed: 10)
+            guard let regressor = try? MLRegressor.decisionTree(MLDecisionTreeRegressor(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: params)) else { return }
+            writeMetrics(regressor: regressor, regressorName: regressorName, regressorEvaluationTable: regressorEvaluationTable)
         case "MLRandomForestRegressor":
-            return
+            let params = MLRandomForestRegressor.ModelParameters(maxIterations: 5000)
+            guard let regressor = try? MLRegressor.randomForest(MLRandomForestRegressor(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: params)) else { return }
+            writeMetrics(regressor: regressor, regressorName: regressorName, regressorEvaluationTable: regressorEvaluationTable)
         case "MLBoostedTreeRegressor":
             let params = MLBoostedTreeRegressor.ModelParameters(maxIterations: 5000)
-            trainRegressor(regressorName: regressorName, regressorEvaluationTable: regressorEvaluationTable, regressorTrainingTable: regressorTrainingTable, modelParameter: params)
-            return
+            guard let regressor = try? MLRegressor.boostedTree(MLBoostedTreeRegressor(trainingData: regressorTrainingTable,
+                                                                             targetColumn: targetColumnName, parameters: params as! MLBoostedTreeRegressor.ModelParameters)) else { return}
+            writeMetrics(regressor: regressor, regressorName: regressorName, regressorEvaluationTable: regressorEvaluationTable)
         default:
             fatalError()
         }
+        
     }
     
-    private func trainRegressor(regressorName: String, regressorEvaluationTable: MLDataTable, regressorTrainingTable: MLDataTable, modelParameter: Any) -> Void {
+    private func writeMetrics (regressor: MLRegressor, regressorName: String, regressorEvaluationTable: MLDataTable) -> Void {
         let regressorKPI = Ml_MetricKPI()
-        
-        var method = try? MLRegressor.boostedTree(MLBoostedTreeRegressor(trainingData: regressorTrainingTable,
-                                                                         targetColumn: "Kuendigt", parameters: modelParameter as! MLBoostedTreeRegressor.ModelParameters))
-        var regressor: MLLinearRegressor
-        do {
-            
-            /// Training and Validation
-            regressor = try MLLinearRegressor(trainingData: regressorTrainingTable,
-                                              targetColumn: "Kuendigt")
-            regressorKPI.dictOfMetrics["trainingMetrics.maximumError"]? = regressor.trainingMetrics.maximumError
-            regressorKPI.dictOfMetrics["trainingMetrics.rootMeanSquaredError"]? = regressor.trainingMetrics.rootMeanSquaredError
-            regressorKPI.dictOfMetrics["validationMetrics.maximumError"]? = regressor.validationMetrics.maximumError
-            regressorKPI.dictOfMetrics["validationMetrics.rootMeanSquaredError"]? = regressor.validationMetrics.rootMeanSquaredError
+        regressorKPI.dictOfMetrics["trainingMetrics.maximumError"]? = regressor.trainingMetrics.maximumError
+        regressorKPI.dictOfMetrics["trainingMetrics.rootMeanSquaredError"]? = regressor.trainingMetrics.rootMeanSquaredError
+        regressorKPI.dictOfMetrics["validationMetrics.maximumError"]? = regressor.validationMetrics.maximumError
+        regressorKPI.dictOfMetrics["validationMetrics.rootMeanSquaredError"]? = regressor.validationMetrics.rootMeanSquaredError
 
-            /// Evaluation
-            let regressorEvalutation = regressor.evaluation(on: regressorEvaluationTable)
-            regressorKPI.dictOfMetrics["evaluationMetrics.maximumError"]? = regressorEvalutation.maximumError
-            regressorKPI.dictOfMetrics["evaluationMetrics.rootMeanSquaredError"]? = regressorEvalutation.rootMeanSquaredError
-            /// Schreibe in CoreData
-            regressorKPI.postMetric(model: model!, file: file!, algorithmName: "MLLinearRegressor")
-            /// Pfad zum Schreibtisch
-            let homePath = FileManager.default.homeDirectoryForCurrentUser
-
-            let regressorMetadata = MLModelMetadata(author: "Steps.IT",
-                                                    shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden",
-                                                    version: "1.0")
-            /// Speichern des trainierten Modells auf dem Schreibtisch
-            try? regressor.write(to: homePath.appendingPathComponent("LinearPredictor.mlmodel"),
-                                metadata: regressorMetadata)
-            
-        } catch {
-            fatalError(error.localizedDescription)
-        }
+        /// Evaluation
+        let regressorEvalutation = regressor.evaluation(on: regressorEvaluationTable)
+        regressorKPI.dictOfMetrics["evaluationMetrics.maximumError"]? = regressorEvalutation.maximumError
+        regressorKPI.dictOfMetrics["evaluationMetrics.rootMeanSquaredError"]? = regressorEvalutation.rootMeanSquaredError
+        /// Schreibe in CoreData
+        regressorKPI.postMetric(model: model!, file: file, algorithmName: regressorName)
+        let regressorMetadata = MLModelMetadata(author: "Steps.IT",
+                                                shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden",
+                                                version: "1.0")
+        /// Speichern des trainierten Modells auf dem Schreibtisch
+        try? regressor.write(to: BaseServices.homePath.appendingPathComponent(regressorName+".mlmodel"),
+                            metadata: regressorMetadata)
     }
 }

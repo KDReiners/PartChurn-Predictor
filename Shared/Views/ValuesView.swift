@@ -30,14 +30,16 @@ struct ValuesView: View {
     var columns = [Column]()
     var models = [model]()
     var maxRows: Int = 0
+    var regressorName: String
     
     struct CellIndex: Identifiable {
         let id: Int
         let colIndex: Int
         let rowIndex: Int
     }
-    init( coreDataML: CoreDataML?) {
+    init( coreDataML: CoreDataML?, regressorName: String) {
         self.coreDataML = coreDataML!
+        self.regressorName = regressorName
         mlTable = self.coreDataML.mlDataTable
         resolve()
         numCols = columns.count
@@ -72,7 +74,7 @@ struct ValuesView: View {
                     newGridItem = GridItem(.flexible(),spacing: 10, alignment: .leading)
                 }
                 if column.istarget == true {
-                    predictedValue = predictFromRow(mlRow: row).featureValue(for: column.name!)
+                    predictedValue = predictFromRow(regressorName: regressorName, mlRow: row).featureValue(for: column.name!)
                     newTargetColumn?.rows.append(BaseServices.doubleFormatter.string(from: predictedValue!.doubleValue as NSNumber)!)
                     newTargetColumn?.alignment = .trailing
                     newTargetColumn?.title = "Predict"
@@ -120,7 +122,7 @@ struct ValuesView: View {
                 }
             )
     }
-    fileprivate mutating func predict(_ result: [String : MLDataValueConvertible]) -> MLFeatureProvider {
+    fileprivate mutating func predict(regressorName: String, result: [String : MLDataValueConvertible]) -> MLFeatureProvider {
         let provider: MLDictionaryFeatureProvider = {
             do {
                 return try MLDictionaryFeatureProvider(dictionary: result)
@@ -128,8 +130,8 @@ struct ValuesView: View {
                 fatalError(error.localizedDescription)
             }
         }()
-        let path = "/Users/kdreiners/Library/Containers/peas.com.PartChurn-Predictor/Data/LinearPredictor.mlmodel"
-        let model = getModel(path: path)
+        let url = BaseServices.homePath.appendingPathComponent(regressorName+".mlmodel")
+        let model = getModel(path: url.path)
         let prediction: MLFeatureProvider = {
             do {
                 return try model.prediction(from: provider)
@@ -165,7 +167,7 @@ struct ValuesView: View {
         models.append(newModel)
         return result!
     }
-    public mutating func predictFromRow(mlRow: MLDataTable.Row) -> MLFeatureProvider {
+    public mutating func predictFromRow(regressorName: String, mlRow: MLDataTable.Row) -> MLFeatureProvider {
         var result = [String: MLDataValueConvertible]()
         for i in 0..<mlRow.keys.count {
             if mlRow.keys[i] != "Kuendigt" {
@@ -178,12 +180,12 @@ struct ValuesView: View {
                 }
             }
         }
-        return predict(result)
+        return predict(regressorName: regressorName, result: result)
     }
 }
 
 struct ValuesView_Previews: PreviewProvider {
     static var previews: some View {
-        return ValuesView(coreDataML: nil)
+        return ValuesView(coreDataML: nil, regressorName: "mllinearRegressor")
     }
 }

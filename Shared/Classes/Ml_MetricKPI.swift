@@ -63,7 +63,7 @@ internal class Ml_MetricKPI: ObservableObject {
         dictOfMetrics["evaluationMetrics.rootMeanSquaredError"] = 0
     }
     
-    internal func postMetric(model: Models, file: Files, algorithmName: String) {
+    internal func postMetric(model: Models, file: Files?, algorithmName: String) {
         
         let metricsvaluesModel = MetricvaluesModel()
         let datasetTypeModel = DatasettypesModel()
