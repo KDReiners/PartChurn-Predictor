@@ -14,8 +14,9 @@ public struct Trainer {
     var file: Files?
     var model: Models?
     var targetColumnName: String!
-    init(model: Models) {
+    init(model: Models, file: Files? = nil) {
         self.model = model
+        self.file = file
         coreDataML = CoreDataML(model: model)
         regressorTable = CoreDataML(model: model).mlDataTable
         self.targetColumnName = coreDataML.targetColumns.first?.name
@@ -26,7 +27,7 @@ public struct Trainer {
             return
         }
     }
-    public func createModel(regressorName: String) -> Void {
+    public func createModel(regressorName: String, fileName: String? = nil) -> Void {
         let (regressorEvaluationTable, regressorTrainingTable) = regressorTable!.randomSplit(by: 0.20, seed: 5)
         switch regressorName {
         case "MLLinearRegressor":
@@ -34,15 +35,15 @@ public struct Trainer {
                                                                             targetColumn: self.targetColumnName)) else { return }
             writeMetrics(regressor: regressor, regressorName: regressorName, regressorEvaluationTable: regressorEvaluationTable)
         case "MLDecisionTreeRegressor":
-            let params = MLDecisionTreeRegressor.ModelParameters(maxDepth: 100, minLossReduction: 0.01, minChildWeight: 0.01, randomSeed: 10)
+            let params = MLDecisionTreeRegressor.ModelParameters(maxDepth: 100, minLossReduction: 0.01, minChildWeight: 0.01, randomSeed: 20)
             guard let regressor = try? MLRegressor.decisionTree(MLDecisionTreeRegressor(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: params)) else { return }
             writeMetrics(regressor: regressor, regressorName: regressorName, regressorEvaluationTable: regressorEvaluationTable)
         case "MLRandomForestRegressor":
-            let params = MLRandomForestRegressor.ModelParameters(maxIterations: 5000)
+            let params = MLRandomForestRegressor.ModelParameters(maxIterations: 500)
             guard let regressor = try? MLRegressor.randomForest(MLRandomForestRegressor(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: params)) else { return }
             writeMetrics(regressor: regressor, regressorName: regressorName, regressorEvaluationTable: regressorEvaluationTable)
         case "MLBoostedTreeRegressor":
-            let params = MLBoostedTreeRegressor.ModelParameters(maxIterations: 5000)
+            let params = MLBoostedTreeRegressor.ModelParameters(maxIterations: 500)
             guard let regressor = try? MLRegressor.boostedTree(MLBoostedTreeRegressor(trainingData: regressorTrainingTable,
                                                                              targetColumn: targetColumnName, parameters: params as! MLBoostedTreeRegressor.ModelParameters)) else { return}
             writeMetrics(regressor: regressor, regressorName: regressorName, regressorEvaluationTable: regressorEvaluationTable)
@@ -64,7 +65,7 @@ public struct Trainer {
         regressorKPI.dictOfMetrics["evaluationMetrics.maximumError"]? = regressorEvalutation.maximumError
         regressorKPI.dictOfMetrics["evaluationMetrics.rootMeanSquaredError"]? = regressorEvalutation.rootMeanSquaredError
         /// Schreibe in CoreData
-        regressorKPI.postMetric(model: model!, file: file, algorithmName: regressorName)
+        regressorKPI.postMetric(model: model!, file: self.file, algorithmName: regressorName)
         let regressorMetadata = MLModelMetadata(author: "Steps.IT",
                                                 shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden",
                                                 version: "1.0")

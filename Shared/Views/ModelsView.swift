@@ -58,7 +58,7 @@ struct ModelsView: View {
                 }
                 Divider()
                 if fileSelection != nil {
-                    ValuesView(coreDataML: CoreDataML(model: model), regressorName: mlSelection!)
+                    ValuesView(coreDataML: CoreDataML(model: model), regressorName: mlSelection ?? mlAlgorithms.first!)
                     Divider()
                 }
             }
@@ -69,8 +69,8 @@ struct ModelsView: View {
     private func fillFromCoreData() -> Void {
     }
     private func train(regressorName: String) {
-        let trainer = Trainer(model: model)
-        trainer.createModel(regressorName: regressorName)
+        let trainer = Trainer(model: model, file: fileSelection)
+        trainer.createModel(regressorName: regressorName, fileName: fileSelection?.name)
     }
 }
 
