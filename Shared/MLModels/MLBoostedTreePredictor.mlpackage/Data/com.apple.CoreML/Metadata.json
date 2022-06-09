@@ -1,8 +1,0 @@
-{
-  "MLModelVersionStringKey" : "1.0",
-  "MLModelDescriptionKey" : "Predicts the price of a habitat on Mars.",
-  "MLModelCreatorDefinedKey" : {
-    "com.apple.createml.version" : "12.3.1"
-  },
-  "MLModelAuthorKey" : "John Appleseed"
-}

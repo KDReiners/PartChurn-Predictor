@@ -42,7 +42,7 @@ struct ModelsView: View {
                             }.frame(width: 250)
                             VStack{
                                 Button("Lerne..") {
-                                    train(regressorName: mlSelection!)
+                                    train(regressorName: mlSelection)
                                 }.frame(width: 90)
                                 Button("Core Data...") {
                                     fillFromCoreData()
@@ -68,9 +68,13 @@ struct ModelsView: View {
     }
     private func fillFromCoreData() -> Void {
     }
-    private func train(regressorName: String) {
-        let trainer = Trainer(model: model, file: fileSelection)
-        trainer.createModel(regressorName: regressorName, fileName: fileSelection?.name)
+    private func train(regressorName: String?) {
+        var trainer = Trainer(model: model, file: fileSelection)
+        guard let regressorNameWrapped = regressorName==nil ? mlAlgorithms.first : regressorName else {
+            return
+        }
+        mlSelection = regressorNameWrapped
+        trainer.createModel(regressorName: regressorNameWrapped, fileName: fileSelection?.name)
     }
 }
 

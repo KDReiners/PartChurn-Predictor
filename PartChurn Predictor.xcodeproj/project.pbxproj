@@ -19,10 +19,6 @@
 		2D0B8570282565BF00856BCB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D0B8559282565BF00856BCB /* Assets.xcassets */; };
 		2D1EB362283A842F00F86B6D /* CoreDataML.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D1EB361283A842F00F86B6D /* CoreDataML.swift */; };
 		2D1EB363283A842F00F86B6D /* CoreDataML.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D1EB361283A842F00F86B6D /* CoreDataML.swift */; };
-		2D1EB365283BD4AB00F86B6D /* MLBoostedTreePredictor.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 2D1EB364283BD4AB00F86B6D /* MLBoostedTreePredictor.mlpackage */; };
-		2D1EB366283BD4AB00F86B6D /* MLBoostedTreePredictor.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 2D1EB364283BD4AB00F86B6D /* MLBoostedTreePredictor.mlpackage */; };
-		2D1EB368283BE24900F86B6D /* LinearPredictor.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 2D1EB367283BE24900F86B6D /* LinearPredictor.mlpackage */; };
-		2D1EB369283BE24900F86B6D /* LinearPredictor.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 2D1EB367283BE24900F86B6D /* LinearPredictor.mlpackage */; };
 		2D288AC12829793B0078647E /* Trainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D288AC02829793B0078647E /* Trainer.swift */; };
 		2D288AC22829793B0078647E /* Trainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D288AC02829793B0078647E /* Trainer.swift */; };
 		2D481BA528356EA4003EBCF2 /* AlgorithmsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D481BA428356EA4003EBCF2 /* AlgorithmsModel.swift */; };
@@ -79,8 +75,6 @@
 		2D0B8564282565BF00856BCB /* PartChurn Predictor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PartChurn Predictor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D0B8566282565BF00856BCB /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
 		2D1EB361283A842F00F86B6D /* CoreDataML.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataML.swift; sourceTree = "<group>"; };
-		2D1EB364283BD4AB00F86B6D /* MLBoostedTreePredictor.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = MLBoostedTreePredictor.mlpackage; sourceTree = "<group>"; };
-		2D1EB367283BE24900F86B6D /* LinearPredictor.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = LinearPredictor.mlpackage; sourceTree = "<group>"; };
 		2D288AC02829793B0078647E /* Trainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trainer.swift; sourceTree = "<group>"; };
 		2D481BA428356EA4003EBCF2 /* AlgorithmsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgorithmsModel.swift; sourceTree = "<group>"; };
 		2D98958D282EE4100070F475 /* DatasettypesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatasettypesModel.swift; sourceTree = "<group>"; };
@@ -172,8 +166,6 @@
 		2D1C929A282916EE0013585F /* MLModels */ = {
 			isa = PBXGroup;
 			children = (
-				2D1EB364283BD4AB00F86B6D /* MLBoostedTreePredictor.mlpackage */,
-				2D1EB367283BE24900F86B6D /* LinearPredictor.mlpackage */,
 				2D288AC02829793B0078647E /* Trainer.swift */,
 			);
 			path = MLModels;
@@ -376,14 +368,12 @@
 				2DA77EE128256F16007EC3E5 /* BaseServices.swift in Sources */,
 				2DA77EBE282569DC007EC3E5 /* DirectoryView.swift in Sources */,
 				2D0B8569282565BF00856BCB /* PartChurn_PredictorApp.swift in Sources */,
-				2D1EB365283BD4AB00F86B6D /* MLBoostedTreePredictor.mlpackage in Sources */,
 				2D9895942830321D0070F475 /* MetricvaluesModel.swift in Sources */,
 				2DA77EE528256F52007EC3E5 /* ColumnsModel.swift in Sources */,
 				2D0B856D282565BF00856BCB /* Persistence.swift in Sources */,
 				2D0B8567282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */,
 				2D1EB362283A842F00F86B6D /* CoreDataML.swift in Sources */,
 				2DA77EFC28258384007EC3E5 /* Extensions.swift in Sources */,
-				2D1EB368283BE24900F86B6D /* LinearPredictor.mlpackage in Sources */,
 				2DA77EEF282576AA007EC3E5 /* ImportView.swift in Sources */,
 				2D481BA528356EA4003EBCF2 /* AlgorithmsModel.swift in Sources */,
 				2D288AC12829793B0078647E /* Trainer.swift in Sources */,
@@ -410,14 +400,12 @@
 				2DA77EE228256F16007EC3E5 /* BaseServices.swift in Sources */,
 				2DA77EBF282569DC007EC3E5 /* DirectoryView.swift in Sources */,
 				2D0B856A282565BF00856BCB /* PartChurn_PredictorApp.swift in Sources */,
-				2D1EB366283BD4AB00F86B6D /* MLBoostedTreePredictor.mlpackage in Sources */,
 				2D9895952830321D0070F475 /* MetricvaluesModel.swift in Sources */,
 				2DA77EE628256F52007EC3E5 /* ColumnsModel.swift in Sources */,
 				2D0B856E282565BF00856BCB /* Persistence.swift in Sources */,
 				2D0B8568282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */,
 				2D1EB363283A842F00F86B6D /* CoreDataML.swift in Sources */,
 				2DA77EFD28258384007EC3E5 /* Extensions.swift in Sources */,
-				2D1EB369283BE24900F86B6D /* LinearPredictor.mlpackage in Sources */,
 				2DA77EF0282576AA007EC3E5 /* ImportView.swift in Sources */,
 				2D481BA628356EA4003EBCF2 /* AlgorithmsModel.swift in Sources */,
 				2D288AC22829793B0078647E /* Trainer.swift in Sources */,

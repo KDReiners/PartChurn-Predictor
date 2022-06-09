@@ -14,6 +14,7 @@ public struct Trainer {
     var file: Files?
     var model: Models?
     var targetColumnName: String!
+    var regressor: MLRegressor!
     init(model: Models, file: Files? = nil) {
         self.model = model
         self.file = file
@@ -27,29 +28,52 @@ public struct Trainer {
             return
         }
     }
-    public func createModel(regressorName: String, fileName: String? = nil) -> Void {
+    public mutating func createModel(regressorName: String, fileName: String? = nil) -> Void {
         let (regressorEvaluationTable, regressorTrainingTable) = regressorTable!.randomSplit(by: 0.20, seed: 5)
         switch regressorName {
         case "MLLinearRegressor":
-            guard let regressor = try? MLRegressor.linear(MLLinearRegressor(trainingData: regressorTrainingTable,
-                                                                            targetColumn: self.targetColumnName)) else { return }
-            writeMetrics(regressor: regressor, regressorName: regressorName, regressorEvaluationTable: regressorEvaluationTable)
+            let defaultParams = MLLinearRegressor.ModelParameters(validation: .split(strategy: .automatic), maxIterations: 10, l1Penalty: 0, l2Penalty: 0.01, stepSize: 1.0, convergenceThreshold: 0.01, featureRescaling: true)
+            regressor = {
+                do {
+                    return try MLRegressor.linear(MLLinearRegressor(trainingData: regressorTrainingTable,
+                                                                            targetColumn: self.targetColumnName, parameters: defaultParams))
+                } catch {
+                    fatalError(error.localizedDescription)
+                }
+            }()
         case "MLDecisionTreeRegressor":
-            let params = MLDecisionTreeRegressor.ModelParameters(maxDepth: 100, minLossReduction: 0.01, minChildWeight: 0.01, randomSeed: 20)
-            guard let regressor = try? MLRegressor.decisionTree(MLDecisionTreeRegressor(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: params)) else { return }
-            writeMetrics(regressor: regressor, regressorName: regressorName, regressorEvaluationTable: regressorEvaluationTable)
+            
+            let defaultParams = MLDecisionTreeRegressor.ModelParameters(validation:.split(strategy: .automatic) , maxDepth: 6, minLossReduction: 0, minChildWeight: 0.1, randomSeed: 42)
+            regressor = {
+                do {
+                    return try MLRegressor.decisionTree(MLDecisionTreeRegressor(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
+                } catch {
+                    fatalError(error.localizedDescription)
+                }
+            }()
         case "MLRandomForestRegressor":
-            let params = MLRandomForestRegressor.ModelParameters(maxIterations: 500)
-            guard let regressor = try? MLRegressor.randomForest(MLRandomForestRegressor(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: params)) else { return }
-            writeMetrics(regressor: regressor, regressorName: regressorName, regressorEvaluationTable: regressorEvaluationTable)
+            let defaultParams = MLRandomForestRegressor.ModelParameters(validation: .split(strategy: .automatic), maxDepth: 6, maxIterations: 10, minLossReduction: 0, minChildWeight: 0.1, randomSeed: 42, rowSubsample: 0.8, columnSubsample: 0.8)
+            regressor = {
+                do {
+                    return try MLRegressor.randomForest(MLRandomForestRegressor(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
+                } catch {
+                    fatalError(error.localizedDescription)
+                }
+            }()
         case "MLBoostedTreeRegressor":
-            let params = MLBoostedTreeRegressor.ModelParameters(maxIterations: 500)
-            guard let regressor = try? MLRegressor.boostedTree(MLBoostedTreeRegressor(trainingData: regressorTrainingTable,
-                                                                             targetColumn: targetColumnName, parameters: params as! MLBoostedTreeRegressor.ModelParameters)) else { return}
-            writeMetrics(regressor: regressor, regressorName: regressorName, regressorEvaluationTable: regressorEvaluationTable)
+            let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 6, maxIterations: 10, minLossReduction: 0, minChildWeight: 0.1, randomSeed: 42, stepSize: 0.3, earlyStoppingRounds: nil, rowSubsample: 1.0, columnSubsample: 1.0)
+            regressor =  {
+                do {
+                    return try MLRegressor.boostedTree(MLBoostedTreeRegressor(trainingData: regressorTrainingTable,
+                                                                              targetColumn: targetColumnName, parameters: defaultParams ))
+                } catch {
+                    fatalError(error.localizedDescription)
+                }
+            }()
         default:
             fatalError()
         }
+        writeMetrics(regressor: regressor, regressorName: regressorName, regressorEvaluationTable: regressorEvaluationTable)
         
     }
     
@@ -74,3 +98,4 @@ public struct Trainer {
                             metadata: regressorMetadata)
     }
 }
+
