@@ -69,6 +69,10 @@ internal class Ml_MetricKPI: ObservableObject {
         let datasetTypeModel = DatasettypesModel()
         let metricsModel = MetricsModel()
         let algorithmsModel = AlgorithmsModel()
+        let obsoleteMetrics = metricsvaluesModel.items.filter({$0.metricvalue2model == model && $0.metricvalue2file == file && $0.metricvalue2algorithm?.name == algorithmName})
+        for item in obsoleteMetrics {
+            metricsvaluesModel.deleteRecord(record: item)
+        }
         for item in dictOfMetrics {
             let resolvedKey = resolveDictOfMetrics(key: item.key)
             let datasetType = datasetTypeModel.items.first(where: {
