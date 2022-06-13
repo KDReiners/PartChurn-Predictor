@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21E258" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Algorithms" representedClassName="Algorithms" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="orderno" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -48,7 +48,7 @@
     </entity>
     <entity name="Values" representedClassName="Values" syncable="YES" codeGenerationType="class">
         <attribute name="predictedvalue" optional="YES" attributeType="String"/>
-        <attribute name="rowno" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="rowno" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="value" optional="YES" attributeType="String"/>
         <relationship name="value2column" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Columns" inverseName="column2values" inverseEntity="Columns"/>
         <relationship name="value2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2values" inverseEntity="Models"/>
@@ -61,6 +61,6 @@
         <element name="Metrics" positionX="-115" positionY="333" width="128" height="89"/>
         <element name="Metricvalues" positionX="72" positionY="162" width="128" height="119"/>
         <element name="Models" positionX="164.75" positionY="144.109375" width="128" height="133"/>
-        <element name="Values" positionX="-114.3515625" positionY="197.5546875" width="128" height="118"/>
+        <element name="Values" positionX="-114.3515625" positionY="197.5546875" width="128" height="104"/>
     </elements>
 </model>

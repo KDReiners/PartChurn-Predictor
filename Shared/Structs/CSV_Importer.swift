@@ -18,7 +18,7 @@ struct CSV_Importer {
         let model = modelsViewModel.items.first(where: {$0.name == modelName})
         let file = filesViewModel.items.first(where: { $0.files2model == model && $0.name == url.lastPathComponent})
         let stream = InputStream(fileAtPath: url.path)
-        let reader = try! CSVReader(stream: stream!, hasHeaderRow: true)
+        let reader = try! CSVReader(stream: stream!, hasHeaderRow: true, delimiter: ";")
         let headerRow = reader.headerRow!
         if !columnsViewModel.items.contains(where: { $0.column2model == model}) {
             var i: Int16 = 0
@@ -34,7 +34,7 @@ struct CSV_Importer {
             let newFile = filesViewModel.insertRecord()
             newFile.name = url.lastPathComponent
             newFile.files2model = model
-            var rowCount: Int16 = 0
+            var rowCount: Int64 = 0
             while let row = reader.next() {
                 for i in 0..<headerRow.count {
                     let newValue = valuesViewModel.insertRecord()
