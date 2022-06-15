@@ -26,7 +26,7 @@ public class ValuesModel: Model<Values> {
     }
     internal func updateDummyRelations() -> Void  {
         
-        for item in self.items.filter( {return $0.value2model == nil }) {
+        for item in self.items.filter( {return $0.value2model == nil || $0.value2file == nil || $0.value2column == nil }) {
             let modelObjectID = PersistenceController.shared.container.viewContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: URL.init(string: item.idmodel!)!)
             let fileObjectID = PersistenceController.shared.container.viewContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: URL.init(string: item.idfile!)!)
             let columnObjectID = PersistenceController.shared.container.viewContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: URL.init(string: item.idcolumn!)!)

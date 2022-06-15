@@ -30,7 +30,9 @@ struct CSV_Importer {
         let stream = InputStream(fileAtPath: url.path)
         let reader = try! CSVReader(stream: stream!, hasHeaderRow: true, delimiter: ";")
         let columns = reader.headerRow!
-        
+        columns.forEach { col in
+            print(col)
+        }
         if !columnsViewModel.items.contains(where: { $0.column2model == model && $0.column2file?.name == url.lastPathComponent }) {
             var i: Int16 = 0
             columns.forEach { column in
@@ -59,7 +61,7 @@ struct CSV_Importer {
             }
             rowCount += 1
             print(rowCount)
-            if rowCount>1000 {
+            if rowCount>10000 {
                 break
             }
         }

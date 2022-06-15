@@ -11,6 +11,7 @@ import CreateML
 struct ModelsView: View {
     @ObservedObject var model: Models
     @ObservedObject var metric: Ml_MetricKPI
+    @ObservedObject var valueViewModel = ValuesModel()
     @State var fileSelection: Files? = nil
     @State var mlSelection: String? = nil
     var mlAlgorithms = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor"]
