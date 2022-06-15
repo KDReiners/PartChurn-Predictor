@@ -63,13 +63,13 @@ struct CSV_Importer {
                 break
             }
         }
-        let batchProvider = BatchProvider(inMemory: false)
+        let batchProvider = BatchProvider()
         _ = try? await batchProvider.importValues(from: batchArray)
-        columnsViewModel.saveChanges()
-        valuesViewModel.saveChanges()
-        modelsViewModel.saveChanges()
-        filesViewModel.saveChanges()
-        await valuesViewModel.updateDummyRelations()
+//        columnsViewModel.saveChanges()
+//        valuesViewModel.saveChanges()
+//        modelsViewModel.saveChanges()
+//        filesViewModel.saveChanges()
+//        valuesViewModel.updateDummyRelations()
     }
     
 }

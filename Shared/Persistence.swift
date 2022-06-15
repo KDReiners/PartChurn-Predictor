@@ -6,34 +6,118 @@
 //
 
 import CoreData
+import OSLog
 
-struct PersistenceController {
-    static let shared = PersistenceController()
+class PersistenceController {
+    private let inMemory: Bool
+    private var notificationToken: NSObjectProtocol?
+    let logger = Logger(subsystem: "peas.com.PartChurn-Predictor", category: "persistence")
+    /// A peristent history token used for fetching transactions from the store.
+    private var lastToken: NSPersistentHistoryToken?
+    static let  shared = PersistenceController()
+    /// A persistent container to set up the Core Data stack.
+    lazy var container: NSPersistentContainer = {
+        /// - Tag: persistentContainer
+        let container = NSPersistentContainer(name: "PartChurn_Predictor")
 
+        guard let description = container.persistentStoreDescriptions.first else {
+            fatalError("Failed to retrieve a persistent store description.")
+        }
 
-    let container: NSPersistentContainer
+        if inMemory {
+            description.url = URL(fileURLWithPath: "/dev/null")
+        }
+
+        // Enable persistent store remote change notifications
+        /// - Tag: persistentStoreRemoteChange
+        description.setOption(true as NSNumber,
+                              forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
+
+        // Enable persistent history tracking
+        /// - Tag: persistentHistoryTracking
+        description.setOption(true as NSNumber,
+                              forKey: NSPersistentHistoryTrackingKey)
+        container.loadPersistentStores { storeDescription, error in
+            if let error = error as NSError? {
+                fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
+        }
+
+        // This sample refreshes UI by consuming store changes via persistent history tracking.
+        /// - Tag: viewContextMergeParentChanges
+        container.viewContext.automaticallyMergesChangesFromParent = false
+        container.viewContext.name = "viewContext"
+        /// - Tag: viewContextMergePolicy
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        container.viewContext.undoManager = nil
+        container.viewContext.shouldDeleteInaccessibleFaults = true
+        return container
+    }()
 
     init(inMemory: Bool = false) {
-        container = NSPersistentContainer(name: "PartChurn_Predictor")
+        self.inMemory = inMemory
+//        container = NSPersistentContainer(name: "PartChurn_Predictor")
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-            if let error = error as NSError? {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-
-                /*
-                 Typical reasons for an error here include:
-                 * The parent directory does not exist, cannot be created, or disallows writing.
-                 * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-                 * The device is out of space.
-                 * The store could not be migrated to the current model version.
-                 Check the error message to determine what the actual problem was.
-                 */
-                fatalError("Unresolved error \(error), \(error.userInfo)")
+        // Observe Core Data remote change notifications on the queue where the changes were made.
+        notificationToken = NotificationCenter.default.addObserver(forName: .NSPersistentStoreRemoteChange, object: nil, queue: nil) { note in
+            self.logger.debug("Received a persistent store remote change notification.")
+            Task {
+                await self.fetchPersistentHistory()
             }
-        })
+        }
         container.viewContext.automaticallyMergesChangesFromParent = true
+    }
+    func fetchPersistentHistory() async {
+        do {
+            try await fetchPersistentHistoryTransactionsAndChanges()
+        } catch {
+            logger.debug("\(error.localizedDescription)")
+        }
+    }
+    private func mergePersistentHistoryChanges(from history: [NSPersistentHistoryTransaction]) {
+        self.logger.debug("Received \(history.count) persistent history transactions.")
+        // Update view context with objectIDs from history change request.
+        /// - Tag: mergeChanges
+        let viewContext = container.viewContext
+        viewContext.perform {
+            for transaction in history {
+                viewContext.mergeChanges(fromContextDidSave: transaction.objectIDNotification())
+                self.lastToken = transaction.token
+            }
+        }
+    }
+    private func fetchPersistentHistoryTransactionsAndChanges() async throws {
+        let taskContext = newTaskContext()
+        taskContext.name = "persistentHistoryContext"
+        logger.debug("Start fetching persistent history changes from the store...")
+
+        try await taskContext.perform {
+            // Execute the persistent history change since the last transaction.
+            /// - Tag: fetchHistory
+            let changeRequest = NSPersistentHistoryChangeRequest.fetchHistory(after: self.lastToken)
+            let historyResult = try taskContext.execute(changeRequest) as? NSPersistentHistoryResult
+            if let history = historyResult?.result as? [NSPersistentHistoryTransaction],
+               !history.isEmpty {
+                self.mergePersistentHistoryChanges(from: history)
+                return
+            }
+
+            self.logger.debug("No persistent history transactions found.")
+            throw BatchError.persistentHistoryChangeError
+        }
+        logger.debug("Finished merging history changes.")
+    }
+    // Creates and configures a private queue context.
+    internal func newTaskContext() -> NSManagedObjectContext {
+        // Create a private queue context.
+        /// - Tag: newBackgroundContext
+        let taskContext = container.newBackgroundContext()
+        taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        // Set unused undoManager to nil for macOS (it is nil by default on iOS)
+        // to reduce resource requirements.
+        taskContext.undoManager = nil
+        return taskContext
     }
 }
