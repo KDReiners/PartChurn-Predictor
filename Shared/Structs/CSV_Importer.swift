@@ -69,7 +69,7 @@ struct CSV_Importer {
         valuesViewModel.saveChanges()
         modelsViewModel.saveChanges()
         filesViewModel.saveChanges()
-        ValuesModel().updateDummyRelations()
+        await valuesViewModel.updateDummyRelations()
     }
     
 }
