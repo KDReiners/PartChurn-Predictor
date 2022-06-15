@@ -11,6 +11,7 @@
         <attribute name="istarget" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="orderno" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="column2file" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Files" inverseName="file2columns" inverseEntity="Files"/>
         <relationship name="column2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2columns" inverseEntity="Models"/>
         <relationship name="column2values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Values" inverseName="value2column" inverseEntity="Values"/>
     </entity>
@@ -21,6 +22,7 @@
     </entity>
     <entity name="Files" representedClassName="Files" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="file2columns" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Columns" inverseName="column2file" inverseEntity="Columns"/>
         <relationship name="file2metricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2file" inverseEntity="Metricvalues"/>
         <relationship name="files2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2files" inverseEntity="Models"/>
     </entity>
@@ -47,6 +49,9 @@
         <relationship name="model2values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Values" inverseName="value2model" inverseEntity="Values"/>
     </entity>
     <entity name="Values" representedClassName="Values" syncable="YES" codeGenerationType="class">
+        <attribute name="idcolumn" optional="YES" attributeType="String"/>
+        <attribute name="idfile" optional="YES" attributeType="String"/>
+        <attribute name="idmodel" optional="YES" attributeType="String"/>
         <attribute name="predictedvalue" optional="YES" attributeType="String"/>
         <attribute name="rowno" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="value" optional="YES" attributeType="String"/>
@@ -55,12 +60,12 @@
     </entity>
     <elements>
         <element name="Algorithms" positionX="72" positionY="162" width="128" height="74"/>
-        <element name="Columns" positionX="-54" positionY="0" width="128" height="134"/>
+        <element name="Columns" positionX="-54" positionY="0" width="128" height="149"/>
         <element name="Datasettypes" positionX="258" positionY="365" width="128" height="74"/>
-        <element name="Files" positionX="54" positionY="153" width="128" height="88"/>
+        <element name="Files" positionX="54" positionY="153" width="128" height="89"/>
         <element name="Metrics" positionX="-115" positionY="333" width="128" height="89"/>
         <element name="Metricvalues" positionX="72" positionY="162" width="128" height="119"/>
         <element name="Models" positionX="164.75" positionY="144.109375" width="128" height="133"/>
-        <element name="Values" positionX="-114.3515625" positionY="197.5546875" width="128" height="104"/>
+        <element name="Values" positionX="-114.3515625" positionY="197.5546875" width="128" height="149"/>
     </elements>
 </model>

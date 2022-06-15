@@ -59,7 +59,10 @@ struct ImportView: View {
                     }
                 }
                 Button("Import") {
-                    CSV_Importer.read(url: self.url, modelName: (selection?.name)!)
+                    Task {
+                        await
+                        CSV_Importer.read(url: self.url, modelName: (selection?.name)!)
+                    }
                 }
             }.padding()
         }

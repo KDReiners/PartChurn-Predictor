@@ -23,5 +23,14 @@ public class ValuesModel: Model<Values> {
             result = newValue
         }
     }
+    internal func updateDummyRelations() -> Void {
+        
+        for item in self.items.filter( {return $0.idmodel == nil }) {
+            let modelObjectID = PersistenceController.shared.container.viewContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: URL.init(string: item.idmodel!)!)
+            let model = PersistenceController.shared.container.viewContext.object(with: modelObjectID!)
+            item.value2model = model as? Models
+        }
+    }
 }
 
+      
