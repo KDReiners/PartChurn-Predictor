@@ -24,7 +24,7 @@ struct model: Identifiable {
 struct ValuesView: View {
     var numCols: Int = 0
     var numRows : Int = 0
-    var columnItems = [GridItem]()
+    var gridItems = [GridItem]()
     var coreDataML: CoreDataML
     var mlTable: MLDataTable
     var columns = [Column]()
@@ -82,17 +82,17 @@ struct ValuesView: View {
                 }
             }
             self.columns.append(newColumn)
-            self.columnItems.append(newGridItem!)
+            self.gridItems.append(newGridItem!)
             if newTargetColumn != nil {
                 self.columns.append(newTargetColumn!)
-                self.columnItems.append(newTargetGridItem!)
+                self.gridItems.append(newTargetGridItem!)
             }
         }
     }
     var body: some View {
         let cells = (0..<numRows).flatMap{j in columns.enumerated().map{(i,c) in CellIndex(id:j + i*numRows, colIndex:i, rowIndex:j)}}
         ScrollView([.vertical], showsIndicators: true) {
-            LazyVGrid(columns:columnItems, pinnedViews: [.sectionHeaders], content: {
+            LazyVGrid(columns:gridItems, pinnedViews: [.sectionHeaders], content: {
                 Section(header: stickyHeaderView) {
                     ForEach(cells) { cellIndex in
                         let column = columns[cellIndex.colIndex]
@@ -107,20 +107,55 @@ struct ValuesView: View {
         
     }
     var stickyHeaderView: some View {
-        Rectangle()
-            .fill(Color.gray)
-            .frame(maxWidth: .infinity)
-            .frame(minHeight: 40, maxHeight: .infinity)
-            .overlay(
-                LazyVGrid(columns: columnItems) {
-                    ForEach(columns) { col in
-                        Text(col.title)
-                            .foregroundColor(Color.white)
-                            .font(.body)
-                            .scaledToFit()
+        VStack(spacing: 0) {
+            Rectangle()
+                .fill(Color.gray)
+                .frame(maxWidth: .infinity)
+                .frame(minHeight: 40, maxHeight: .infinity)
+                .overlay(
+                    LazyVGrid(columns: gridItems) {
+                        ForEach(columns) { col in
+                            Text(col.title)
+                                .foregroundColor(Color.white)
+                                .font(.body)
+                                .scaledToFit()
+                        }
                     }
-                }
-            )
+                )
+            Rectangle()
+                .fill(Color.white)
+                .frame(maxWidth: .infinity)
+                .frame(minHeight: 40, maxHeight: .infinity)
+                .overlay(
+                     stickyFilterView(columns: columns)
+                )
+        }.padding(0)
+    }
+    struct stickyFilterView: View {
+        var columns: [Column]
+        @State var filterDict = Dictionary<String, String>()
+        init(columns: [Column]) {
+            self.columns = columns
+            for column in columns {
+                filterDict[column.title] = ""
+            }
+        }
+        var body: some View {
+            ForEach(columns) { col in
+                TextField(col.title, text: binding(for: col.title))
+                    .onSubmit {
+                        print(binding(for: col.title))
+                    }
+            }
+        }
+        private func binding(for key: String) -> Binding<String> {
+                return Binding(get: {
+                    return self.filterDict[key] ?? ""
+                }, set: {
+                    self.filterDict[key] = $0
+                })
+            }
+
     }
     fileprivate mutating func predict(regressorName: String, result: [String : MLDataValueConvertible]) -> MLFeatureProvider {
         let provider: MLDictionaryFeatureProvider = {
@@ -148,11 +183,11 @@ struct ValuesView: View {
         } else {
             let url = URL.init(fileURLWithPath: path)
             let compiledUrl:URL = {
-            do {
-                return try MLModel.compileModel(at: url)
-            } catch {
+                do {
+                    return try MLModel.compileModel(at: url)
+                } catch {
                     fatalError(error.localizedDescription)
-            }
+                }
             }()
             result = {
                 do {

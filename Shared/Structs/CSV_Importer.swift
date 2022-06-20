@@ -15,7 +15,6 @@ struct CSV_Importer {
         var batchArray = Array<coreDataProperties>()
         let columnsViewModel = ColumnsModel()
         let modelsViewModel = ModelsModel()
-        let valuesViewModel = ValuesModel()
         let filesViewModel = FilesModel()
         let model = modelsViewModel.items.first(where: {$0.name == modelName})
         let idModel = model?.objectID.uriRepresentation().absoluteString
@@ -43,6 +42,7 @@ struct CSV_Importer {
                 newColumn.column2model = model
                 newColumn.column2file = file
             }
+            columnsViewModel.saveChanges()
         }
         columnsArray.append(contentsOf: columnsViewModel.items.filter({ $0.column2file == file}).sorted(by: { $0.orderno < $1.orderno }))
         
