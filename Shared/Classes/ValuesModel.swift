@@ -21,7 +21,6 @@ public class ValuesModel: Model<Values> {
         set
         {
             result = newValue
-            updateDummyRelations()
         }
     }
     internal func updateDummyRelations() -> Void  {
@@ -43,6 +42,7 @@ public class ValuesModel: Model<Values> {
         }
         saveChanges()
     }
+    
 }
 
       

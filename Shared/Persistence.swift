@@ -7,6 +7,7 @@
 
 import CoreData
 import OSLog
+import SwiftUI
 
 class PersistenceController {
     private let inMemory: Bool
@@ -19,20 +20,20 @@ class PersistenceController {
     lazy var container: NSPersistentContainer = {
         /// - Tag: persistentContainer
         let container = NSPersistentContainer(name: "PartChurn_Predictor")
-
+        
         guard let description = container.persistentStoreDescriptions.first else {
             fatalError("Failed to retrieve a persistent store description.")
         }
-
+        
         if inMemory {
             description.url = URL(fileURLWithPath: "/dev/null")
         }
-
+        
         // Enable persistent store remote change notifications
         /// - Tag: persistentStoreRemoteChange
         description.setOption(true as NSNumber,
                               forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
-
+        
         // Enable persistent history tracking
         /// - Tag: persistentHistoryTracking
         description.setOption(true as NSNumber,
@@ -42,7 +43,7 @@ class PersistenceController {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         }
-
+        
         // This sample refreshes UI by consuming store changes via persistent history tracking.
         /// - Tag: viewContextMergeParentChanges
         container.viewContext.automaticallyMergesChangesFromParent = false
@@ -53,10 +54,10 @@ class PersistenceController {
         container.viewContext.shouldDeleteInaccessibleFaults = true
         return container
     }()
-
+    
     init(inMemory: Bool = false) {
         self.inMemory = inMemory
-//        container = NSPersistentContainer(name: "PartChurn_Predictor")
+        //        container = NSPersistentContainer(name: "PartChurn_Predictor")
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
@@ -86,13 +87,19 @@ class PersistenceController {
                 viewContext.mergeChanges(fromContextDidSave: transaction.objectIDNotification())
                 self.lastToken = transaction.token
             }
+            do {
+                let deleteHistoryRequest = NSPersistentHistoryChangeRequest.deleteHistory(before: self.lastToken)
+                try viewContext.execute(deleteHistoryRequest)
+            } catch {
+                fatalError(error.localizedDescription)
+            }
         }
     }
     private func fetchPersistentHistoryTransactionsAndChanges() async throws {
         let taskContext = newTaskContext()
         taskContext.name = "persistentHistoryContext"
         logger.debug("Start fetching persistent history changes from the store...")
-
+        
         try await taskContext.perform {
             // Execute the persistent history change since the last transaction.
             /// - Tag: fetchHistory
@@ -103,7 +110,7 @@ class PersistenceController {
                 self.mergePersistentHistoryChanges(from: history)
                 return
             }
-
+            
             self.logger.debug("No persistent history transactions found.")
             throw BatchError.persistentHistoryChangeError
         }
@@ -119,5 +126,45 @@ class PersistenceController {
         // to reduce resource requirements.
         taskContext.undoManager = nil
         return taskContext
+    }
+    internal func fixLooseRelations() {
+        /// fetch all loose relations[
+        do {
+            var i = 1
+            let fetchRequest: NSFetchRequest<Values> = Values.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "idcolumn != nil")
+            let fetchedResults =  try self.container.viewContext.fetch(fetchRequest) as! [Values]
+            for result in fetchedResults  as [Values] {
+                let idModel: NSManagedObjectID = getManagedObjectID(stringValue: result.idmodel!)
+                let idFile: NSManagedObjectID = getManagedObjectID(stringValue: result.idfile!)
+                let idColumn: NSManagedObjectID = getManagedObjectID(stringValue: result.idcolumn!)
+                guard let model = self.container.viewContext.object(with: idModel) as? Models   else { return }
+                guard let file = self.container.viewContext.object(with: idFile) as? Files   else { return }
+                guard let column = self.container.viewContext.object(with: idColumn) as? Columns   else { return }
+                result.value2model = model
+                result.idmodel = nil
+                result.value2file = file
+                result.idfile = nil
+                result.value2column = column
+                result.idcolumn = nil
+                print("Update Value: \(i)")
+                i += 1
+                if i % 100000 == 0 {
+                    do {
+                        try self.container.viewContext.save()
+                    } catch {
+                        fatalError(error.localizedDescription)
+                    }
+                }
+            }
+            try? self.container.viewContext.save()
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+       
+    }
+    private func getManagedObjectID(stringValue: String) -> NSManagedObjectID
+    {
+        return (PersistenceController.shared.container.viewContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: URL.init(string: stringValue)!))!
     }
 }

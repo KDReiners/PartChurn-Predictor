@@ -10,7 +10,9 @@ import SwiftUI
 @main
 struct PartChurn_PredictorApp: App {
     let persistenceController = PersistenceController.shared
-
+    init() {
+        persistenceController.fixLooseRelations()
+    }
     var body: some Scene {
         WindowGroup {
             DirectoryView()
