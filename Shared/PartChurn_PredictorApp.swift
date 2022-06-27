@@ -10,12 +10,11 @@ import SwiftUI
 @main
 struct PartChurn_PredictorApp: App {
     let persistenceController = PersistenceController.shared
-    init() {
-        persistenceController.fixLooseRelations()
-    }
+    @StateObject var managerModels = ManagerModels()
     var body: some Scene {
         WindowGroup {
             DirectoryView()
+                .environmentObject(managerModels)
         }
     }
 }

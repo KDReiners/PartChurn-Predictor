@@ -8,22 +8,24 @@
 import SwiftUI
 import CoreData
 struct DirectoryView: View {
-    var modelsDataModel = ModelsModel()
+    @EnvironmentObject var managerModels: ManagerModels
     @State var select: NSManagedObject?
     var body: some View {
         NavigationView {
             List
             {
                 DisclosureGroup("Modelle") {
-                    ForEach(modelsDataModel.items, id: \.self) { item in
+                    ForEach(managerModels.modelsDataModel.items, id: \.self) { item in
                         NavigationLink(item.name ?? "unbenanntes Modell", destination: ModelsView(model: item, metric: Ml_MetricKPI(), mlTable: CoreDataML(model: item).mlDataTable), tag: item, selection: $select)
                     }
-                    
                 }
                 DisclosureGroup("Data Manager") {
                     NavigationLink("Steps Import", destination: ImportView())
                 }
             }
+        }.onAppear {
+            managerModels.deinitAll()
+            PersistenceController.shared.fixLooseRelations()
         }
     }
 }

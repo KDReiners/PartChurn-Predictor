@@ -14,16 +14,30 @@ public class Model<T>: GenericViewModel where T: NSManagedObject {
     public var readWriteAttributes: Array<EntityAttributeInfo> = []
     private var readOnlyFields: [String] = []
     private var deviceCancellable: AnyCancellable?
+    private var attachedStorage = Storage<T>()
     init(readOnlyFields: [String]){
         self.readOnlyFields = readOnlyFields
         BaseServices.returnAttributeCluster(readOnlyFields: readOnlyFields, attributes: &attributes, readOnlyAttributes: &readOnlyAttributes, readWriteAttributes: &readWriteAttributes)
         attachValues()
     }
+    internal func detachValues() -> Void {
+        deviceCancellable = nil
+    }
     private func attachValues (devicePublisher: AnyPublisher<[T], Never> = Storage<T>().items.eraseToAnyPublisher()) {
-        deviceCancellable = devicePublisher.sink { items in
-            self.items = items
+        deviceCancellable = devicePublisher.sink {[weak self] items in
+            self?.items = items
         }
         BaseServices.returnAttributeCluster(readOnlyFields: readOnlyFields, attributes: &attributes, readOnlyAttributes: &readOnlyAttributes, readWriteAttributes: &readWriteAttributes)
+    }
+    public func deleteAllEntriesByEntitName(entityName: String) -> Void {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        batchDeleteRequest.resultType = .resultTypeObjectIDs
+        let result = try? PersistenceController.shared.container.viewContext.execute(batchDeleteRequest) as? NSBatchDeleteResult
+        let changes: [AnyHashable: Any] = [
+            NSDeletedObjectsKey: result?.result as! [NSManagedObjectID]
+        ]
+        NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [PersistenceController.shared.container.viewContext])
     }
     public func deleteAllRecords() -> Void {
         items.forEach { item in

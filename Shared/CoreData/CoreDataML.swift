@@ -11,7 +11,7 @@ import CreateML
 import SwiftUI
 public class CoreDataML: ObservableObject {
     var model: Models
-    var files: [Files]
+    var files: Files?
     var columnsModel: ColumnsModel
     internal var mlDataTable: MLDataTable {
         get {
@@ -20,7 +20,7 @@ public class CoreDataML: ObservableObject {
     }
     internal var orderedColumns: [Columns] {
         get {
-            return columnsModel.items.filter { return $0.isincluded == true && $0.column2model == self.model}.sorted(by: {
+            return columnsModel.items.filter { return $0.isincluded == true && $0.column2model == self.model && $0.column2file == files}.sorted(by: {
                 $0.orderno < $1.orderno
             })
         }
@@ -32,7 +32,7 @@ public class CoreDataML: ObservableObject {
             })
         }
     }
-    init( model: Models, files: [Files] =  [Files]()) {
+    init( model: Models, files: Files = Files()) {
         self.columnsModel = ColumnsModel()
         self.model = model
         self.files = files

@@ -59,7 +59,7 @@ struct ModelsView: View {
                 }
                 Divider()
                 if fileSelection != nil {
-                    ValuesView(coreDataML: CoreDataML(model: model), regressorName: mlSelection ?? mlAlgorithms.first!)
+                    ValuesView(coreDataML: CoreDataML(model: model, files: fileSelection!), regressorName: mlSelection ?? mlAlgorithms.first!)
                     Divider()
                 }
             }

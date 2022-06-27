@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A589C13286614A000D1239B /* ManagerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A589C12286614A000D1239B /* ManagerModels.swift */; };
+		0A589C14286614A000D1239B /* ManagerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A589C12286614A000D1239B /* ManagerModels.swift */; };
 		0AD6C8952858D5FD00EB92FB /* BatchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */; };
 		0AD6C8962858D5FD00EB92FB /* BatchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */; };
 		0AFCB7042850A5FA00676AF6 /* ValuesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFCB7032850A5FA00676AF6 /* ValuesView.swift */; };
@@ -66,6 +68,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A589C12286614A000D1239B /* ManagerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerModels.swift; sourceTree = "<group>"; };
 		0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchProvider.swift; sourceTree = "<group>"; };
 		0AFCB7032850A5FA00676AF6 /* ValuesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValuesView.swift; sourceTree = "<group>"; };
 		2D0B8555282565BD00856BCB /* Shared.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Shared.xcdatamodel; sourceTree = "<group>"; };
@@ -219,6 +222,7 @@
 				2D989590282EE47F0070F475 /* MetricsModel.swift */,
 				2D9895932830321D0070F475 /* MetricvaluesModel.swift */,
 				2D481BA428356EA4003EBCF2 /* AlgorithmsModel.swift */,
+				0A589C12286614A000D1239B /* ManagerModels.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -366,6 +370,7 @@
 				2D1EB362283A842F00F86B6D /* CoreDataML.swift in Sources */,
 				2DA77EFC28258384007EC3E5 /* Extensions.swift in Sources */,
 				2DA77EEF282576AA007EC3E5 /* ImportView.swift in Sources */,
+				0A589C13286614A000D1239B /* ManagerModels.swift in Sources */,
 				2D481BA528356EA4003EBCF2 /* AlgorithmsModel.swift in Sources */,
 				2D288AC12829793B0078647E /* Trainer.swift in Sources */,
 				2DA77EEB2825721B007EC3E5 /* ValuesModel.swift in Sources */,
@@ -399,6 +404,7 @@
 				2D1EB363283A842F00F86B6D /* CoreDataML.swift in Sources */,
 				2DA77EFD28258384007EC3E5 /* Extensions.swift in Sources */,
 				2DA77EF0282576AA007EC3E5 /* ImportView.swift in Sources */,
+				0A589C14286614A000D1239B /* ManagerModels.swift in Sources */,
 				2D481BA628356EA4003EBCF2 /* AlgorithmsModel.swift in Sources */,
 				2D288AC22829793B0078647E /* Trainer.swift in Sources */,
 				2DA77EEC2825721B007EC3E5 /* ValuesModel.swift in Sources */,

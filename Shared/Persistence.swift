@@ -87,12 +87,12 @@ class PersistenceController {
                 viewContext.mergeChanges(fromContextDidSave: transaction.objectIDNotification())
                 self.lastToken = transaction.token
             }
-            do {
-                let deleteHistoryRequest = NSPersistentHistoryChangeRequest.deleteHistory(before: self.lastToken)
-                try viewContext.execute(deleteHistoryRequest)
-            } catch {
-                fatalError(error.localizedDescription)
-            }
+//            do {
+//                let deleteHistoryRequest = NSPersistentHistoryChangeRequest.deleteHistory(before: self.lastToken)
+//                try viewContext.execute(deleteHistoryRequest)
+//            } catch {
+//                fatalError(error.localizedDescription)
+//            }
         }
     }
     private func fetchPersistentHistoryTransactionsAndChanges() async throws {
@@ -133,7 +133,7 @@ class PersistenceController {
             var i = 1
             let fetchRequest: NSFetchRequest<Values> = Values.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "idcolumn != nil")
-            let fetchedResults =  try self.container.viewContext.fetch(fetchRequest) as! [Values]
+            let fetchedResults =  try self.container.viewContext.fetch(fetchRequest)
             for result in fetchedResults  as [Values] {
                 let idModel: NSManagedObjectID = getManagedObjectID(stringValue: result.idmodel!)
                 let idFile: NSManagedObjectID = getManagedObjectID(stringValue: result.idfile!)
@@ -147,17 +147,16 @@ class PersistenceController {
                 result.idfile = nil
                 result.value2column = column
                 result.idcolumn = nil
-                print("Update Value: \(i)")
                 i += 1
                 if i % 100000 == 0 {
-                    do {
-                        try self.container.viewContext.save()
-                    } catch {
-                        fatalError(error.localizedDescription)
-                    }
+                    logger.debug("Der \(i).te Wert wurde gesetzt!")
                 }
             }
-            try? self.container.viewContext.save()
+            do {
+                try self.container.viewContext.save()
+            } catch {
+                fatalError("error while saving viewContext")
+            }
         } catch {
             fatalError(error.localizedDescription)
         }

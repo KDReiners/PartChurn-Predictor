@@ -16,6 +16,10 @@ struct CSV_Importer {
         let columnsViewModel = ColumnsModel()
         let modelsViewModel = ModelsModel()
         let filesViewModel = FilesModel()
+//        filesViewModel.deleteAllRecords()
+//        columnsViewModel.deleteAllEntriesByEntitName(entityName: "Columns")
+//        columnsViewModel.deleteAllEntriesByEntitName(entityName: "Values")
+//        columnsViewModel.deleteAllEntriesByEntitName(entityName: "Metricvalues")
         let model = modelsViewModel.items.first(where: {$0.name == modelName})
         let idModel = model?.objectID.uriRepresentation().absoluteString
         var file = filesViewModel.items.first(where: { $0.files2model == model && $0.name == url.lastPathComponent})
@@ -45,7 +49,7 @@ struct CSV_Importer {
             columnsViewModel.saveChanges()
         }
         columnsArray.append(contentsOf: columnsViewModel.items.filter({ $0.column2file == file}).sorted(by: { $0.orderno < $1.orderno }))
-        
+    
         var rowCount: Int64 = 0
         while let row = reader.next() {
             for i in 0..<columns.count {
@@ -59,11 +63,9 @@ struct CSV_Importer {
                 //                    newValue.rowno = rowCount
                 //                    newValue.value2model = model
             }
-            rowCount += 1
             print(rowCount)
-            if rowCount>10000 {
-                break
-            }
+            rowCount += 1
+
         }
         let batchProvider = BatchProvider()
         _ = try? await batchProvider.importValues(from: batchArray)
