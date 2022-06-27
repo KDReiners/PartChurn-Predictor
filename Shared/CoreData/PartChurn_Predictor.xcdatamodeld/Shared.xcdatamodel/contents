@@ -7,8 +7,8 @@
     </entity>
     <entity name="Columns" representedClassName="Columns" syncable="YES" codeGenerationType="class">
         <attribute name="datatype" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="isincluded" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
-        <attribute name="isshown" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isincluded" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO"/>
+        <attribute name="isshown" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO"/>
         <attribute name="istarget" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="orderno" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A4C56552869750900961D1D /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4C56542869750900961D1D /* FilesView.swift */; };
+		0A4C56562869750900961D1D /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4C56542869750900961D1D /* FilesView.swift */; };
+		0A4C56582869862C00961D1D /* ColumnsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4C56572869862C00961D1D /* ColumnsView.swift */; };
+		0A4C56592869862C00961D1D /* ColumnsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4C56572869862C00961D1D /* ColumnsView.swift */; };
 		0A589C13286614A000D1239B /* ManagerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A589C12286614A000D1239B /* ManagerModels.swift */; };
 		0A589C14286614A000D1239B /* ManagerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A589C12286614A000D1239B /* ManagerModels.swift */; };
 		0AD6C8952858D5FD00EB92FB /* BatchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */; };
@@ -68,6 +72,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A4C56542869750900961D1D /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
+		0A4C56572869862C00961D1D /* ColumnsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColumnsView.swift; sourceTree = "<group>"; };
 		0A589C12286614A000D1239B /* ManagerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerModels.swift; sourceTree = "<group>"; };
 		0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchProvider.swift; sourceTree = "<group>"; };
 		0AFCB7032850A5FA00676AF6 /* ValuesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValuesView.swift; sourceTree = "<group>"; };
@@ -234,6 +240,8 @@
 				2DA77EBD282569DC007EC3E5 /* DirectoryView.swift */,
 				2DA77F012827E1DD007EC3E5 /* ModelsView.swift */,
 				0AFCB7032850A5FA00676AF6 /* ValuesView.swift */,
+				0A4C56542869750900961D1D /* FilesView.swift */,
+				0A4C56572869862C00961D1D /* ColumnsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -356,6 +364,7 @@
 			files = (
 				2DA77EE82825716A007EC3E5 /* ModelsModel.swift in Sources */,
 				2DA77ED328256E8A007EC3E5 /* Model.swift in Sources */,
+				0A4C56582869862C00961D1D /* ColumnsView.swift in Sources */,
 				0AFCB7042850A5FA00676AF6 /* ValuesView.swift in Sources */,
 				2DA77EF828257B97007EC3E5 /* CSV_Importer.swift in Sources */,
 				0AD6C8952858D5FD00EB92FB /* BatchProvider.swift in Sources */,
@@ -374,6 +383,7 @@
 				2D481BA528356EA4003EBCF2 /* AlgorithmsModel.swift in Sources */,
 				2D288AC12829793B0078647E /* Trainer.swift in Sources */,
 				2DA77EEB2825721B007EC3E5 /* ValuesModel.swift in Sources */,
+				0A4C56552869750900961D1D /* FilesView.swift in Sources */,
 				2D98958E282EE4100070F475 /* DatasettypesModel.swift in Sources */,
 				2DFE31BE282D8BA40058C3AA /* Ml_MetricKPI.swift in Sources */,
 				2DA77F022827E1DD007EC3E5 /* ModelsView.swift in Sources */,
@@ -390,6 +400,7 @@
 			files = (
 				2DA77EE92825716A007EC3E5 /* ModelsModel.swift in Sources */,
 				2DA77ED428256E8A007EC3E5 /* Model.swift in Sources */,
+				0A4C56592869862C00961D1D /* ColumnsView.swift in Sources */,
 				0AFCB7052850A5FA00676AF6 /* ValuesView.swift in Sources */,
 				2DA77EF928257B97007EC3E5 /* CSV_Importer.swift in Sources */,
 				0AD6C8962858D5FD00EB92FB /* BatchProvider.swift in Sources */,
@@ -408,6 +419,7 @@
 				2D481BA628356EA4003EBCF2 /* AlgorithmsModel.swift in Sources */,
 				2D288AC22829793B0078647E /* Trainer.swift in Sources */,
 				2DA77EEC2825721B007EC3E5 /* ValuesModel.swift in Sources */,
+				0A4C56562869750900961D1D /* FilesView.swift in Sources */,
 				2D98958F282EE4100070F475 /* DatasettypesModel.swift in Sources */,
 				2DFE31BF282D8BA40058C3AA /* Ml_MetricKPI.swift in Sources */,
 				2DA77F032827E1DD007EC3E5 /* ModelsView.swift in Sources */,

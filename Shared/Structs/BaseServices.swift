@@ -74,4 +74,13 @@ public struct BaseServices
         format.dateFormat = "dd-MM-yyyy HH:mm"
         return format.date(from: dateString)
     }
+    public static func save() -> Void {
+        do {
+            if PersistenceController.shared.container.viewContext.hasChanges {
+                try PersistenceController.shared.container.viewContext.save()
+            }
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }
 }

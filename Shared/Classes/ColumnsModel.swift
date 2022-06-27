@@ -18,7 +18,7 @@ public class ColumnsModel: Model<Columns> {
         }
         set
         {
-            result = newValue.sorted(by: { $1.name ?? "" > $0.name ?? ""})
+            result = newValue.sorted(by: { $1.orderno > $0.orderno })
         }
     }
     

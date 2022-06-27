@@ -12,6 +12,22 @@ extension Binding {
         Binding<T>(get: { self.wrappedValue ?? defaultValue }, set: { self.wrappedValue = $0 })
     }
 }
+extension Binding where Value == NSNumber? {
+    var boolBinding: Binding<Bool> {
+        Binding<Bool>(get: {
+            self.wrappedValue == true
+        }, set: { value in
+            self.wrappedValue = NSNumber(value: value)
+        })
+    }
+}
+//open class ManagedObject: NSManagedObject {
+//    override public func willChangeValue(forKey key: String) {
+//        super.willChangeValue(forKey: key)
+//
+//        objectWillChange.send()
+//    }
+//}
 extension Sequence {
   func sorted(
     by firstPredicate: (Element, Element) -> Bool,
