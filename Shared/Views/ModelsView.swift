@@ -15,8 +15,7 @@ struct ModelsView: View {
     @State var fileSelection: Files? = nil
     @State var mlSelection: String? = nil
     var mlAlgorithms = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor"]
-    let mlTable: MLDataTable
-    
+    var mlTable: MLDataTable?
     var body: some View {
         HStack(spacing: 50) {
             VStack(alignment: .center) {

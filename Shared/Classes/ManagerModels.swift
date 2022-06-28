@@ -7,17 +7,35 @@
 
 import Foundation
 public class ManagerModels: ObservableObject {
+    
     private var _modelsDataModel: ModelsModel?
     private var _filesDataModel: FilesModel?
     private var _columnsDataModel: ColumnsModel?
-    @Published var modelIsInstantiated = false
-    @Published var fileIsInstantiated = false
-    @Published var columnIsInstantiated = false
+    private var _valuesDataModel: ValuesModel?
+    private var _dataSetTypesDataModel: DatasettypesModel?
+    private var _metricsDataModel: MetricsModel?
+
+    init() {
+        if self.modelsDataModel.items.count == 0 {
+            let defaultModel = self.modelsDataModel.insertRecord()
+            defaultModel.name = "New Analysis"
+            let training = self.dataSetTypesDataModel.insertRecord()
+            training.name = "training"
+            let validation = self.dataSetTypesDataModel.insertRecord()
+            validation.name = "validation"
+            let evaluation = self.dataSetTypesDataModel.insertRecord()
+            evaluation.name = "evaluation"
+            let rootMeanSquaredError = self.metricsDataModel.insertRecord()
+            rootMeanSquaredError.name = "rootMeanSquaredError"
+            let maximumError = self.metricsDataModel.insertRecord()
+            maximumError.name = "maximumError"
+            BaseServices.save()
+        }
+    }
     public var modelsDataModel: ModelsModel {
         get {
             if _modelsDataModel == nil {
                 _modelsDataModel = ModelsModel()
-                modelIsInstantiated = true
             }
             return _modelsDataModel!
         }
@@ -26,7 +44,6 @@ public class ManagerModels: ObservableObject {
         get {
             if _filesDataModel == nil {
                 _filesDataModel = FilesModel()
-                fileIsInstantiated = true
             }
             return _filesDataModel!
         }
@@ -35,15 +52,35 @@ public class ManagerModels: ObservableObject {
         get {
             if _columnsDataModel == nil {
                 _columnsDataModel = ColumnsModel()
-                columnIsInstantiated = true
             }
             return _columnsDataModel!
         }
     }
+    public var valuessDataModel: ValuesModel {
+        get {
+            if _valuesDataModel == nil {
+                _valuesDataModel = ValuesModel()
+            }
+            return _valuesDataModel!
+        }
+    }
+    public var dataSetTypesDataModel: DatasettypesModel {
+        get {
+            if _dataSetTypesDataModel == nil {
+                _dataSetTypesDataModel = DatasettypesModel()
+            }
+            return _dataSetTypesDataModel!
+        }
+    }
+    public var metricsDataModel: MetricsModel {
+        get {
+            if _metricsDataModel == nil {
+                _metricsDataModel = MetricsModel()
+            }
+            return _metricsDataModel!
+        }
+    }
     public func deinitAll() -> Void {
-        _modelsDataModel?.detachValues()
-        _modelsDataModel = nil
-        modelIsInstantiated = false
     }
    
 }

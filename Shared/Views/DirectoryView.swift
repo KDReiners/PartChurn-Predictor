@@ -13,23 +13,32 @@ struct DirectoryView: View {
     @State var fileSelect: NSManagedObjectID?
     var body: some View {
         NavigationView {
-            List
-            {
+            List {
                 DisclosureGroup("Modelle") {
-                    ForEach(managerModels.modelsDataModel.items, id: \.self) { item in
-                        NavigationLink(item.name ?? "unbenanntes Modell", destination: ModelsView(model: item, metric: Ml_MetricKPI(), mlTable: CoreDataML(model: item).mlDataTable), tag: item, selection: $modelSelect)
+                    if managerModels.modelsDataModel.items.count > 0 {
+                        ForEach(managerModels.modelsDataModel.items, id: \.self) { item in
+                            NavigationLink(item.name ?? "unbenanntes Modell", destination: ModelsView(model: item, metric: Ml_MetricKPI()), tag: item, selection: $modelSelect)
+                        }
+                    } else {
+                        Text("No models")
                     }
                 }
                 DisclosureGroup("Files") {
-                    ForEach(managerModels.filesDataModel.items, id: \.self) { item in
-                        NavigationLink(item.name ?? "unbenanntes Modell", destination: FilesView(file: item).environmentObject(managerModels), tag: item, selection: $modelSelect)
+                    if managerModels.filesDataModel.items.count > 0 {
+                        ForEach(managerModels.filesDataModel.items, id: \.self) { item in
+                            NavigationLink( item.name ?? "unbenanntes Modell", destination: FilesView(file: item).environmentObject(managerModels), tag: item, selection: $modelSelect)
+                        }
+                    } else {
+                        Text("No files")
                     }
+                    
                 }
                 DisclosureGroup("Data Manager") {
                     NavigationLink("Steps Import", destination: ImportView())
                 }
             }
-        }.onAppear {
+        }
+        .onAppear {
             managerModels.deinitAll()
             PersistenceController.shared.fixLooseRelations()
         }

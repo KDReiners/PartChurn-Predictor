@@ -10,14 +10,25 @@ import SwiftUI
 struct FilesView: View {
     var file: Files
     @EnvironmentObject var managerModels: ManagerModels
-    var columnsModelData: ColumnsModel?
     init(file: Files) {
         self.file = file
-        
+
     }
     
     var body: some View {
         ColumnsView(file: file, columnsDataModel: managerModels.columnssDataModel)
+        Spacer()
+        Button("Delete") {
+            eraseFileEntries(file: file)
+        }
+    }
+    public func eraseFileEntries(file: Files) {
+        var predicate = NSPredicate(format: "column2file == %@", file)
+        managerModels.columnssDataModel.deleteAllRecords(predicate: predicate)
+        predicate = NSPredicate(format: "self == %@", file)
+        managerModels.filesDataModel.deleteAllRecords(predicate: predicate)
+        predicate = NSPredicate(format: "value2file == %@", file)
+        managerModels.valuessDataModel.deleteAllRecords(predicate: predicate)
     }
 }
 

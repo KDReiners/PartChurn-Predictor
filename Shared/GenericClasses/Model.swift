@@ -29,8 +29,9 @@ public class Model<T>: GenericViewModel where T: NSManagedObject {
         }
         BaseServices.returnAttributeCluster(readOnlyFields: readOnlyFields, attributes: &attributes, readOnlyAttributes: &readOnlyAttributes, readWriteAttributes: &readWriteAttributes)
     }
-    public func deleteAllEntriesByEntitName(entityName: String) -> Void {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+    public func deleteAllRecords(predicate: NSPredicate?) -> Void {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: T.self.entity().name!)
+        fetchRequest.predicate = predicate
         let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         batchDeleteRequest.resultType = .resultTypeObjectIDs
         let result = try? PersistenceController.shared.container.viewContext.execute(batchDeleteRequest) as? NSBatchDeleteResult
@@ -38,12 +39,6 @@ public class Model<T>: GenericViewModel where T: NSManagedObject {
             NSDeletedObjectsKey: result?.result as! [NSManagedObjectID]
         ]
         NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [PersistenceController.shared.container.viewContext])
-    }
-    public func deleteAllRecords() -> Void {
-        items.forEach { item in
-            context.delete(item)
-        }
-        try? context.save()
     }
     public func insertRecord() -> T {
         let result = NSEntityDescription.insertNewObject(forEntityName: T.entity().name!, into: context) as! T
@@ -58,3 +53,4 @@ public class Model<T>: GenericViewModel where T: NSManagedObject {
         try? context.save()
     }
 }
+
