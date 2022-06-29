@@ -15,7 +15,6 @@ class PersistenceController {
     private var didSaveNotificationToken: NSObjectProtocol?
     let logger = Logger(subsystem: "peas.com.PartChurn-Predictor", category: "persistence")
     /// A peristent history token used for fetching transactions from the store.
-    private var lastToken: NSPersistentHistoryToken?
     static let  shared = PersistenceController()
     /// A persistent container to set up the Core Data stack.
     lazy var container: NSPersistentContainer = {

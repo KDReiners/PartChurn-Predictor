@@ -54,25 +54,13 @@ struct CSV_Importer {
                 let idColumn = columnsArray[i].objectID.uriRepresentation().absoluteString
                 let newEntry = coreDataProperties(predictedvalue: "", rowno: rowCount, value: row[i], idmodel: idModel!, idfile: idFile, idcolumn: idColumn)
                 batchArray.append(newEntry)
-                //                    let newValue = valuesViewModel.insertRecord()
-                //                    let col = columnsViewModel.items.first(where: { $0.name == headerRow[i] && $0.column2model == model})
-                //                    newValue.value = row[i]
-                //                    newValue.value2column = col
-                //                    newValue.rowno = rowCount
-                //                    newValue.value2model = model
             }
-            print(rowCount)
             rowCount += 1
 
         }
         let batchProvider = BatchProvider()
         batchProvider.importValues(from: batchArray)
         PersistenceController.shared.fixLooseRelations()
-//        columnsViewModel.saveChanges()
-//        valuesViewModel.saveChanges()
-//        modelsViewModel.saveChanges()
-//        filesViewModel.saveChanges()
-//        valuesViewModel.updateDummyRelations()
     }
     
 }
