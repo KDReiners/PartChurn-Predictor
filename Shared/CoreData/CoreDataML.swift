@@ -15,7 +15,8 @@ public class CoreDataML: ObservableObject {
     var columnsModel: ColumnsModel
     internal var mlDataTable: MLDataTable {
         get {
-            return  getBaseData()
+            
+            return  getValuesForColumns(columns: Set(self.orderedColumns))
         }
     }
     internal var orderedColumns: [Columns] {
@@ -36,9 +37,6 @@ public class CoreDataML: ObservableObject {
         self.columnsModel = ColumnsModel()
         self.model = model
         self.files = files
-    }
-    private func getBaseData() -> MLDataTable {
-        return getValuesForColumns(columns: Set(orderedColumns))
     }
     internal func getValuesForColumns(columns: Set<Columns>) -> MLDataTable {
         var subEntries = Array<colValTuple>()
