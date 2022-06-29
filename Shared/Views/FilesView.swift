@@ -8,18 +8,24 @@
 import SwiftUI
 
 struct FilesView: View {
-    var file: Files
     @EnvironmentObject var managerModels: ManagerModels
+    var file: Files
+    var coreDataML: CoreDataML {
+        CoreDataML(model: file.files2model!, files: file)
+    }
     init(file: Files) {
         self.file = file
 
     }
     
     var body: some View {
-        ColumnsView(file: file, columnsDataModel: managerModels.columnssDataModel)
-        Spacer()
-        Button("Delete") {
-            eraseFileEntries(file: file)
+        VStack {
+//            ColumnsView(file: file, columnsDataModel: managerModels.columnssDataModel)
+//            Spacer()
+            ValuesView(coreDataML: self.coreDataML, regressorName: "MLLinearRegressor")
+            Button("Delete") {
+                eraseFileEntries(file: file)
+            }
         }
     }
     public func eraseFileEntries(file: Files) {

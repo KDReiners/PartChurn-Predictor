@@ -62,6 +62,5 @@ struct CSV_Importer {
         batchProvider.importValues(from: batchArray)
         PersistenceController.shared.fixLooseRelations()
     }
-    
 }
 
