@@ -16,10 +16,6 @@ struct CSV_Importer {
         let columnsViewModel = ColumnsModel()
         let modelsViewModel = ModelsModel()
         let filesViewModel = FilesModel()
-//        filesViewModel.deleteAllRecords()
-//        columnsViewModel.deleteAllEntriesByEntitName(entityName: "Columns")
-//        columnsViewModel.deleteAllEntriesByEntitName(entityName: "Values")
-//        columnsViewModel.deleteAllEntriesByEntitName(entityName: "Metricvalues")
         let model = modelsViewModel.items.first(where: {$0.name == modelName})
         let idModel = model?.objectID.uriRepresentation().absoluteString
         var file = filesViewModel.items.first(where: { $0.files2model == model && $0.name == url.lastPathComponent})
@@ -28,6 +24,8 @@ struct CSV_Importer {
             file!.name = url.lastPathComponent
             file!.files2model = model
             filesViewModel.saveChanges()
+        } else {
+            return
         }
         let idFile = (file?.objectID.uriRepresentation().absoluteString)!
         let stream = InputStream(fileAtPath: url.path)
@@ -68,7 +66,8 @@ struct CSV_Importer {
 
         }
         let batchProvider = BatchProvider()
-        _ = try? await batchProvider.importValues(from: batchArray)
+        batchProvider.importValues(from: batchArray)
+        PersistenceController.shared.fixLooseRelations()
 //        columnsViewModel.saveChanges()
 //        valuesViewModel.saveChanges()
 //        modelsViewModel.saveChanges()

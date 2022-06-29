@@ -56,7 +56,7 @@ public class ManagerModels: ObservableObject {
             return _columnsDataModel!
         }
     }
-    public var valuessDataModel: ValuesModel {
+    public var valuesDataModel: ValuesModel {
         get {
             if _valuesDataModel == nil {
                 _valuesDataModel = ValuesModel()

@@ -34,11 +34,15 @@ public class Model<T>: GenericViewModel where T: NSManagedObject {
         fetchRequest.predicate = predicate
         let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         batchDeleteRequest.resultType = .resultTypeObjectIDs
-        let result = try? PersistenceController.shared.container.viewContext.execute(batchDeleteRequest) as? NSBatchDeleteResult
-        let changes: [AnyHashable: Any] = [
-            NSDeletedObjectsKey: result?.result as! [NSManagedObjectID]
-        ]
-        NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [PersistenceController.shared.container.viewContext])
+        do {
+            let result = try PersistenceController.shared.container.viewContext.execute(batchDeleteRequest) as? NSBatchDeleteResult
+            let changes: [AnyHashable: Any] = [
+                NSDeletedObjectsKey: result?.result as! [NSManagedObjectID]
+            ]
+            NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [PersistenceController.shared.container.viewContext])
+        } catch {
+            fatalError(error.localizedDescription)
+        }
     }
     public func insertRecord() -> T {
         let result = NSEntityDescription.insertNewObject(forEntityName: T.entity().name!, into: context) as! T

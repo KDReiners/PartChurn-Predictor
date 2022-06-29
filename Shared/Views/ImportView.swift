@@ -63,7 +63,7 @@ struct ImportView: View {
                         await
                         CSV_Importer.read(url: self.url, modelName: (selection?.name)!)
                     }
-                }
+                }.disabled(selection == nil)
             }.padding()
         }
     }

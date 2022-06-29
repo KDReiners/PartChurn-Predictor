@@ -25,10 +25,10 @@ struct FilesView: View {
     public func eraseFileEntries(file: Files) {
         var predicate = NSPredicate(format: "column2file == %@", file)
         managerModels.columnssDataModel.deleteAllRecords(predicate: predicate)
+        predicate = NSPredicate(format: "value2file == %@", file)
+        managerModels.valuesDataModel.deleteAllRecords(predicate: predicate)
         predicate = NSPredicate(format: "self == %@", file)
         managerModels.filesDataModel.deleteAllRecords(predicate: predicate)
-        predicate = NSPredicate(format: "value2file == %@", file)
-        managerModels.valuessDataModel.deleteAllRecords(predicate: predicate)
     }
 }
 

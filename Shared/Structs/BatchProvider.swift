@@ -54,27 +54,21 @@ A class to fetch data from the remote server and save it to the Core Data store.
 
 internal class BatchProvider {
     /// Uses `NSBatchInsertRequest` (BIR) to import a JSON dictionary into the Core Data store on a private queue.
-    internal func importValues(from propertiesList: [coreDataProperties]) async throws {
+    internal func importValues(from propertiesList: [coreDataProperties]) {
         guard !propertiesList.isEmpty else { return }
 
-        let taskContext = PersistenceController.shared.container.newBackgroundContext()
-        // Add name and author to identify source of persistent history changes.
-        taskContext.name = "importContext"
-        taskContext.transactionAuthor = "ImportValues"
 
         /// - Tag: performAndWait
-        try await taskContext.perform {
             // Execute the batch insert.
             /// - Tag: batchInsertRequest
             let batchInsertRequest = self.newBatchInsertRequest(with: propertiesList)
-            if let fetchResult = try? taskContext.execute(batchInsertRequest),
+        if let fetchResult = try? PersistenceController.shared.container.viewContext.execute(batchInsertRequest),
                let batchInsertResult = fetchResult as? NSBatchInsertResult,
                let success = batchInsertResult.result as? Bool, success {
                 return
             }
             BaseServices.logger.debug("Failed to execute batch insert request.")
-            throw BatchError.batchInsertError
-        }
+        
         BaseServices.logger.debug("Successfully inserted data.")
     }
     

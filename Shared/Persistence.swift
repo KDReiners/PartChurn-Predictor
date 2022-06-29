@@ -12,6 +12,7 @@ import SwiftUI
 class PersistenceController {
     private let inMemory: Bool
     private var notificationToken: NSObjectProtocol?
+    private var didSaveNotificationToken: NSObjectProtocol?
     let logger = Logger(subsystem: "peas.com.PartChurn-Predictor", category: "persistence")
     /// A peristent history token used for fetching transactions from the store.
     private var lastToken: NSPersistentHistoryToken?
@@ -61,54 +62,6 @@ class PersistenceController {
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
-        // Observe Core Data remote change notifications on the queue where the changes were made.
-        notificationToken = NotificationCenter.default.addObserver(forName: .NSPersistentStoreRemoteChange, object: nil, queue: nil) { note in
-            self.logger.debug("Received a persistent store remote change notification.")
-            Task {
-                await self.fetchPersistentHistory()
-            }
-        }
-        container.viewContext.automaticallyMergesChangesFromParent = true
-    }
-    func fetchPersistentHistory() async {
-        do {
-            try await fetchPersistentHistoryTransactionsAndChanges()
-        } catch {
-            logger.debug("\(error.localizedDescription)")
-        }
-    }
-    private func mergePersistentHistoryChanges(from history: [NSPersistentHistoryTransaction]) {
-        self.logger.debug("Received \(history.count) persistent history transactions.")
-        // Update view context with objectIDs from history change request.
-        /// - Tag: mergeChanges
-        let viewContext = container.viewContext
-        viewContext.perform {
-            for transaction in history {
-                viewContext.mergeChanges(fromContextDidSave: transaction.objectIDNotification())
-                self.lastToken = transaction.token
-            }
-        }
-    }
-    private func fetchPersistentHistoryTransactionsAndChanges() async throws {
-        let taskContext = newTaskContext()
-        taskContext.name = "persistentHistoryContext"
-        logger.debug("Start fetching persistent history changes from the store...")
-        
-        try await taskContext.perform {
-            // Execute the persistent history change since the last transaction.
-            /// - Tag: fetchHistory
-            let changeRequest = NSPersistentHistoryChangeRequest.fetchHistory(after: self.lastToken)
-            let historyResult = try taskContext.execute(changeRequest) as? NSPersistentHistoryResult
-            if let history = historyResult?.result as? [NSPersistentHistoryTransaction],
-               !history.isEmpty {
-                self.mergePersistentHistoryChanges(from: history)
-                return
-            }
-            
-            self.logger.debug("No persistent history transactions found.")
-            throw BatchError.persistentHistoryChangeError
-        }
-        logger.debug("Finished merging history changes.")
     }
     // Creates and configures a private queue context.
     internal func newTaskContext() -> NSManagedObjectContext {
@@ -121,8 +74,7 @@ class PersistenceController {
         taskContext.undoManager = nil
         return taskContext
     }
-    internal func fixLooseRelations() {
-        /// fetch all loose relations[
+    internal func fixLooseRelations(){
         do {
             let fetchRequest: NSFetchRequest<Values> = Values.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "idcolumn != nil")
