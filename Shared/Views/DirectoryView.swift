@@ -9,14 +9,16 @@ import SwiftUI
 import CoreData
 struct DirectoryView: View {
     @EnvironmentObject var managerModels: ManagerModels
+    @ObservedObject var modelsDataModel: ModelsModel
+    @ObservedObject var filesDataModel: FilesModel
     @State var modelSelect: NSManagedObject?
     @State var fileSelect: NSManagedObjectID?
     var body: some View {
         NavigationView {
             List {
                 DisclosureGroup("Modelle") {
-                    if managerModels.modelsDataModel.items.count > 0 {
-                        ForEach(managerModels.modelsDataModel.items, id: \.self) { item in
+                    if modelsDataModel.items.count > 0 {
+                        ForEach(modelsDataModel.items, id: \.self) { item in
                             NavigationLink(item.name ?? "unbenanntes Modell", destination: ModelsView(model: item, metric: Ml_MetricKPI()), tag: item, selection: $modelSelect)
                         }
                     } else {
@@ -24,8 +26,8 @@ struct DirectoryView: View {
                     }
                 }
                 DisclosureGroup("Files") {
-                    if managerModels.filesDataModel.items.count > 0 {
-                        ForEach(managerModels.filesDataModel.items, id: \.self) { item in
+                    if filesDataModel.items.count > 0 {
+                        ForEach(filesDataModel.items, id: \.self) { item in
                             NavigationLink( item.name ?? "unbenanntes Modell", destination: FilesView(file: item).environmentObject(managerModels), tag: item, selection: $modelSelect)
                         }
                     } else {
@@ -45,8 +47,3 @@ struct DirectoryView: View {
     }
 }
 
-struct directoryView_Previews: PreviewProvider {
-    static var previews: some View {
-        DirectoryView()
-    }
-}

@@ -13,7 +13,7 @@ struct PartChurn_PredictorApp: App {
     @StateObject var managerModels = ManagerModels()
     var body: some Scene {
         WindowGroup {
-            DirectoryView()
+            DirectoryView(modelsDataModel: managerModels.modelsDataModel, filesDataModel: managerModels.filesDataModel)
                 .environmentObject(managerModels)
         }
     }

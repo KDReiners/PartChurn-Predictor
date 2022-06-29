@@ -75,10 +75,9 @@ internal class BatchProvider {
             BaseServices.logger.debug("Failed to execute batch insert request.")
             throw BatchError.batchInsertError
         }
-
         BaseServices.logger.debug("Successfully inserted data.")
     }
-
+    
     private func newBatchInsertRequest(with propertyList: [coreDataProperties]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count

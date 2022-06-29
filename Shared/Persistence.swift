@@ -87,12 +87,6 @@ class PersistenceController {
                 viewContext.mergeChanges(fromContextDidSave: transaction.objectIDNotification())
                 self.lastToken = transaction.token
             }
-//            do {
-//                let deleteHistoryRequest = NSPersistentHistoryChangeRequest.deleteHistory(before: self.lastToken)
-//                try viewContext.execute(deleteHistoryRequest)
-//            } catch {
-//                fatalError(error.localizedDescription)
-//            }
         }
     }
     private func fetchPersistentHistoryTransactionsAndChanges() async throws {
@@ -130,7 +124,6 @@ class PersistenceController {
     internal func fixLooseRelations() {
         /// fetch all loose relations[
         do {
-            var i = 1
             let fetchRequest: NSFetchRequest<Values> = Values.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "idcolumn != nil")
             let fetchedResults =  try self.container.viewContext.fetch(fetchRequest)
@@ -147,10 +140,6 @@ class PersistenceController {
                 result.idfile = nil
                 result.value2column = column
                 result.idcolumn = nil
-                i += 1
-                if i % 100000 == 0 {
-                    logger.debug("Der \(i).te Wert wurde gesetzt!")
-                }
             }
             do {
                 try self.container.viewContext.save()
