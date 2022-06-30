@@ -10,6 +10,7 @@ import SwiftUI
 struct FilesView: View {
     @EnvironmentObject var managerModels: ManagerModels
     var file: Files
+    @State var valuesView: ValuesView?
     var coreDataML: CoreDataML {
         CoreDataML(model: file.files2model!, files: file)
     }
@@ -22,9 +23,19 @@ struct FilesView: View {
         VStack {
 //            ColumnsView(file: file, columnsDataModel: managerModels.columnssDataModel)
 //            Spacer()
-            ValuesView(coreDataML: self.coreDataML, regressorName: "MLLinearRegressor")
+//            ValuesView(coreDataML: self.coreDataML, regressorName: "MLLinearRegressor")
+            valuesView
             Button("Delete") {
                 eraseFileEntries(file: file)
+            }
+        }.task {
+            let test = self.coreDataML
+            let sampler = DispatchQueue(label: "KD", qos: .background, attributes: .concurrent)
+            sampler.async {
+                let result = ValuesView(coreDataML: test, regressorName: "MLLinearRegressor")
+                DispatchQueue.main.async {
+                    self.valuesView = result
+                }
             }
         }
     }
