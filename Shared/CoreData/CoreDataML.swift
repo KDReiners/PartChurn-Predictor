@@ -12,6 +12,7 @@ import SwiftUI
 public class CoreDataML: ObservableObject {
     var model: Models
     var files: Files?
+    internal var inputDictionary = [String: MLDataValueConvertible]()
     var columnsModel: ColumnsModel
     internal var mlDataTable: MLDataTable {
         get {
@@ -49,7 +50,6 @@ public class CoreDataML: ObservableObject {
         let groupedDictionary = Dictionary(grouping: subEntries, by: { (tuple) -> Columns in
             return tuple.column
         })
-        var inputDictionary = [String: MLDataValueConvertible]()
         for (key, values) in groupedDictionary.sorted(by: { $0.key.orderno < $1.key.orderno }) {
             let typeOfValues = returnBestType(untypedValues: values)
             var inputArray = [String]()

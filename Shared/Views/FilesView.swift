@@ -21,7 +21,7 @@ struct FilesView: View {
     
     var body: some View {
         VStack {
-//            ColumnsView(file: file, columnsDataModel: managerModels.columnssDataModel)
+            ColumnsView(file: file, columnsDataModel: managerModels.columnssDataModel)
 //            Spacer()
 //            ValuesView(coreDataML: self.coreDataML, regressorName: "MLLinearRegressor")
             valuesView
@@ -30,10 +30,12 @@ struct FilesView: View {
             }
         }.task {
             let test = self.coreDataML
-            let sampler = DispatchQueue(label: "KD", qos: .background, attributes: .concurrent)
+            let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
             sampler.async {
                 let result = ValuesView(coreDataML: test, regressorName: "MLLinearRegressor")
+                print("ready from sync")
                 DispatchQueue.main.async {
+                    print("Back to main queue")
                     self.valuesView = result
                 }
             }

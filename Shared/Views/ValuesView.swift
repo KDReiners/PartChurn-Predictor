@@ -14,6 +14,7 @@ struct Column: Identifiable {
     var title: String
     var enabled: Bool = true
     var rows: [String] = []
+    var betterRows: [String] = []
     var alignment: Alignment
 }
 struct model: Identifiable {
@@ -26,6 +27,7 @@ struct ValuesView: View {
     var numRows : Int = 0
     var gridItems = [GridItem]()
     var coreDataML: CoreDataML
+    var mlDict = [String: MLDataValueConvertible]()
     var mlTable: MLDataTable
     var columns = [Column]()
     var models = [model]()
@@ -41,12 +43,13 @@ struct ValuesView: View {
         self.coreDataML = coreDataML!
         self.regressorName = regressorName
         mlTable = self.coreDataML.mlDataTable
-        resolve()
+        mlDict = self.coreDataML.inputDictionary
+        prepareView()
         numCols = columns.count
-        numRows = columns[0].rows.count
+        numRows = columns[0].betterRows.count
     }
-    mutating func resolve() -> Void {
-        
+    mutating func prepareView() -> Void {
+        var rows = [String]()
         for column in self.coreDataML.orderedColumns {
             var newColumn = Column(title: column.name ?? "Unbekannt", alignment: .trailing)
             var newGridItem: GridItem?
@@ -56,31 +59,26 @@ struct ValuesView: View {
                 newTargetColumn = Column(title: column.name ?? "Unbekannt" + "_predicted", alignment: .trailing)
                 newTargetGridItem = GridItem(.flexible(),spacing: 10, alignment: .leading)
             }
-            var predictedValue: MLFeatureValue?
-            for row in mlTable.rows {
-                if let intValue = row[column.name!]?.intValue {
-                    newColumn.rows.append(BaseServices.intFormatter.string(from: intValue as NSNumber)!)
-                    newColumn.alignment = .trailing
-                    newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
-                }
-                if let doubleValue = row[column.name!]?.doubleValue {
-                    newColumn.rows.append(BaseServices.doubleFormatter.string(from: doubleValue as NSNumber)!)
-                    newColumn.alignment = .trailing
-                    newGridItem = GridItem(.flexible(),spacing: 10, alignment: .trailing)
-                }
-                if let  stringValue = row[column.name!]?.stringValue {
-                    newColumn.rows.append(stringValue)
-                    newColumn.alignment = .leading
-                    newGridItem = GridItem(.flexible(),spacing: 10, alignment: .leading)
-                }
-                if column.istarget == true {
-                    predictedValue = predictFromRow(regressorName: regressorName, mlRow: row).featureValue(for: column.name!)
-                    newTargetColumn?.rows.append(BaseServices.doubleFormatter.string(from: predictedValue!.doubleValue as NSNumber)!)
-                    newTargetColumn?.alignment = .trailing
-                    newTargetColumn?.title = "Predict"
-                    newTargetGridItem?.alignment = .trailing
-                }
+            let valueType = mlTable[column.name!].type
+            switch valueType {
+            case MLDataValue.ValueType.int:
+                rows = Array.init(mlTable[column.name!].map( { BaseServices.intFormatter.string(from: NSNumber(value: $0.intValue!)) }))
+                newColumn.alignment = .trailing
+                newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
+                case MLDataValue.ValueType.double:
+                rows = Array.init(mlTable[column.name!].map( { BaseServices.doubleFormatter.string(from: NSNumber(value: $0.doubleValue!)) }))
+                newColumn.alignment = .trailing
+                newGridItem = GridItem(.flexible(),spacing: 10, alignment: .trailing)
+            case MLDataValue.ValueType.string:
+                    rows = Array.init(mlTable[column.name!].map( { $0.stringValue! }))
+                newColumn.alignment = .leading
+                newGridItem = GridItem(.flexible(),spacing: 10, alignment: .leading)
+                default:
+                    print("error")
             }
+//          rows = Array.init(mlTable[column.name!].map( { String($0.intValue!) }))
+            newColumn.betterRows.append(contentsOf: rows)
+            newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
             self.columns.append(newColumn)
             self.gridItems.append(newGridItem!)
             if newTargetColumn != nil {
@@ -96,18 +94,20 @@ struct ValuesView: View {
                 Section(header: stickyHeaderView) {
                     ForEach(cells) { cellIndex in
                         let column = columns[cellIndex.colIndex]
-                        Text(column.rows[cellIndex.rowIndex])
+                        Text(column.betterRows[cellIndex.rowIndex]).padding(.horizontal)
                             .font(.body).monospacedDigit()
                             .scaledToFit()
                         
                     }
                 }
             })
-        }.background(.white)
+        }
+        .background(.white)
+        .padding(.horizontal)
         
     }
     var stickyHeaderView: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: 10) {
             Rectangle()
                 .fill(Color.gray)
                 .frame(maxWidth: .infinity)
@@ -119,6 +119,7 @@ struct ValuesView: View {
                                 .foregroundColor(Color.white)
                                 .font(.body)
                                 .scaledToFit()
+                                .padding(.horizontal)
                         }
                     }
                 )
