@@ -67,16 +67,13 @@ struct ValuesView: View {
                 rows = Array.init(mlTable[column.name!].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.intValue!)) }))
                 newColumn.alignment = .trailing
                 newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
-                column.datatype = setColumnDataType(column: column, calcedDataType: BaseServices.columnDataTypes.Int)
             case MLDataValue.ValueType.double:
                 rows = Array.init(mlTable[column.name!].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.doubleValue!)) }))
-                column.datatype = setColumnDataType(column: column, calcedDataType:BaseServices.columnDataTypes.Double)
                 newColumn.alignment = .trailing
                 newGridItem = GridItem(.flexible(),spacing: 10, alignment: .trailing)
             case MLDataValue.ValueType.string:
                 rows = Array.init(mlTable[column.name!].map( { $0.stringValue! }))
                 column.datatype = BaseServices.columnDataTypes.String.rawValue
-                column.datatype = setColumnDataType(column: column, calcedDataType:BaseServices.columnDataTypes.String)
                 newColumn.alignment = .leading
                 newGridItem = GridItem(.flexible(),spacing: 10, alignment: .leading)
                 default:
@@ -93,18 +90,6 @@ struct ValuesView: View {
                 self.gridItems.append(newTargetGridItem!)
             }
         }
-    }
-    func setColumnDataType(column: Columns, calcedDataType: BaseServices.columnDataTypes) -> Int16 {
-        var result: Int16 = 0
-        if column.datatype == calcedDataType.rawValue {
-            column.isuserdefined = false
-            result = calcedDataType.rawValue
-            
-        }
-        if column.isuserdefined == true && column.datatype != calcedDataType.rawValue {
-            result = column.datatype
-        }
-        return result
     }
     var body: some View {
         let cells = (0..<numRows).flatMap{j in columns.enumerated().map{(i,c) in CellIndex(id:j + i*numRows, colIndex:i, rowIndex:j)}}

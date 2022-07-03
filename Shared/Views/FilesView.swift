@@ -22,9 +22,9 @@ struct FilesView: View {
     var body: some View {
         VStack {
             ColumnsView(file: file, columnsDataModel: managerModels.columnssDataModel)
-//            Spacer()
-//            ValuesView(coreDataML: self.coreDataML, regressorName: "MLLinearRegressor")
+            Spacer()
             valuesView
+            Spacer()
             Button("Delete") {
                 eraseFileEntries(file: file)
             }

@@ -22,7 +22,8 @@ struct ColumnsView: View {
                     VStack(alignment: .leading) {
                         Text(column.name.wrappedValue!).font(.subheadline)
                         HStack {
-                            dataTypePicker(selectedDataType: column.datatype.wrappedValue, selectedColumn: column.wrappedValue)
+                            /// DataType User Setting perhaps later
+//                            dataTypePicker(selectedDataType: column.datatype.wrappedValue, selectedColumn: column.wrappedValue)
                             Toggle("isIncluded", isOn: column.isincluded.boolBinding)
                             Toggle("isShown", isOn: column.isshown.boolBinding)
                             Toggle("withDecimalPoint", isOn: column.decimalpoint.boolBinding).disabled(column.datatype.wrappedValue == BaseServices.columnDataTypes.String.rawValue)
@@ -38,20 +39,21 @@ struct ColumnsView: View {
         }
     }
 }
-struct dataTypePicker: View {
-    @State var selectedDataType: Int16
-    @State var selectedColumn: Columns
-    
-    var body: some View {
-        Picker(selection: $selectedDataType, label: Text("DataType")) {
-            ForEach(Array(BaseServices.columnDataTypes.allCases), id: \.self) { dataType in
-                Text(String(describing: dataType)).tag(dataType.rawValue)
-            }
-        }.onChange(of: selectedDataType) { tag in selectedColumn.datatype = tag
-            selectedColumn.isuserdefined = true
-        }
-    }
-}
+/// datatype user setting perhaps later
+//struct dataTypePicker: View {
+//    @State var selectedDataType: Int16
+//    @State var selectedColumn: Columns
+//
+//    var body: some View {
+//        Picker(selection: $selectedDataType, label: Text("DataType")) {
+//            ForEach(Array(BaseServices.columnDataTypes.allCases), id: \.self) { dataType in
+//                Text(String(describing: dataType)).tag(dataType.rawValue)
+//            }
+//        }.onChange(of: selectedDataType) { tag in selectedColumn.datatype = tag
+//            selectedColumn.isuserdefined = true
+//        }
+//    }
+//}
 
 struct ColumnsView_Previews: PreviewProvider {
     static var previews: some View {
