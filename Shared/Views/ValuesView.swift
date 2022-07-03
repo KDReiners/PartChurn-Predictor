@@ -60,14 +60,16 @@ struct ValuesView: View {
                 newTargetGridItem = GridItem(.flexible(),spacing: 10, alignment: .leading)
             }
             let valueType = mlTable[column.name!].type
+            let mlDataValueFormatter = NumberFormatter()
+            mlDataValueFormatter.numberStyle = column.decimalpoint == true ? .decimal : .none
             switch valueType {
             case MLDataValue.ValueType.int:
-                rows = Array.init(mlTable[column.name!].map( { BaseServices.intFormatter.string(from: NSNumber(value: $0.intValue!)) }))
+                rows = Array.init(mlTable[column.name!].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.intValue!)) }))
                 newColumn.alignment = .trailing
                 newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
                 column.datatype = setColumnDataType(column: column, calcedDataType: BaseServices.columnDataTypes.Int)
             case MLDataValue.ValueType.double:
-                rows = Array.init(mlTable[column.name!].map( { BaseServices.doubleFormatter.string(from: NSNumber(value: $0.doubleValue!)) }))
+                rows = Array.init(mlTable[column.name!].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.doubleValue!)) }))
                 column.datatype = setColumnDataType(column: column, calcedDataType:BaseServices.columnDataTypes.Double)
                 newColumn.alignment = .trailing
                 newGridItem = GridItem(.flexible(),spacing: 10, alignment: .trailing)

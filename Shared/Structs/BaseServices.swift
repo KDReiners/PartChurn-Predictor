@@ -32,7 +32,7 @@ public struct BaseServices
         formatter.timeStyle = .medium
         return formatter
     }()
-    public static let intFormatter: NumberFormatter = {
+    public static var intFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.maximumFractionDigits = 0
