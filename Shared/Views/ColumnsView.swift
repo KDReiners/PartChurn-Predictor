@@ -57,6 +57,6 @@ struct ColumnsView: View {
 
 struct ColumnsView_Previews: PreviewProvider {
     static var previews: some View {
-        ColumnsView(file: ManagerModels().filesDataModel.items.first!, columnsDataModel: ManagerModels().columnssDataModel)
+        ColumnsView(file: ManagerModels().filesDataModel.items.first!, columnsDataModel: ManagerModels().columnsDataModel)
     }
 }

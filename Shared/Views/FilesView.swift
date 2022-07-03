@@ -21,7 +21,7 @@ struct FilesView: View {
     
     var body: some View {
         VStack {
-            ColumnsView(file: file, columnsDataModel: managerModels.columnssDataModel)
+            ColumnsView(file: file, columnsDataModel: managerModels.columnsDataModel)
             Spacer()
             valuesView
             Spacer()
@@ -41,7 +41,7 @@ struct FilesView: View {
     }
     public func eraseFileEntries(file: Files) {
         var predicate = NSPredicate(format: "column2file == %@", file)
-        managerModels.columnssDataModel.deleteAllRecords(predicate: predicate)
+        managerModels.columnsDataModel.deleteAllRecords(predicate: predicate)
         predicate = NSPredicate(format: "value2file == %@", file)
         managerModels.valuesDataModel.deleteAllRecords(predicate: predicate)
         predicate = NSPredicate(format: "self == %@", file)

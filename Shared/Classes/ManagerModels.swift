@@ -48,7 +48,7 @@ public class ManagerModels: ObservableObject {
             return _filesDataModel!
         }
     }
-    public var columnssDataModel: ColumnsModel {
+    public var columnsDataModel: ColumnsModel {
         get {
             if _columnsDataModel == nil {
                 _columnsDataModel = ColumnsModel()
