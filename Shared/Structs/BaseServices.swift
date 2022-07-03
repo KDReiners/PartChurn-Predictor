@@ -10,6 +10,11 @@ import OSLog
 import CoreData
 public struct BaseServices
 {
+    internal enum columnDataTypes: Int16, CaseIterable {
+        case Int = 0
+        case Double = 1
+        case String = 2
+    }
     /// Properties
     public static var homePath: URL {
         get {

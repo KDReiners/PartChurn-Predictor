@@ -33,9 +33,7 @@ struct FilesView: View {
             let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
             sampler.async {
                 let result = ValuesView(coreDataML: test, regressorName: "MLLinearRegressor")
-                print("ready from sync")
                 DispatchQueue.main.async {
-                    print("Back to main queue")
                     self.valuesView = result
                 }
             }

@@ -22,9 +22,11 @@ struct ColumnsView: View {
                     VStack(alignment: .leading) {
                         Text(column.name.wrappedValue!).font(.subheadline)
                         HStack {
-                            Toggle("isIncluded", isOn: column.isincluded.boolBinding).toggleStyle(.checkbox)
+                            dataTypePicker(selectedDataType: column.datatype.wrappedValue, selectedColumn: column.wrappedValue)
+                            Toggle("isIncluded", isOn: column.isincluded.boolBinding)
                             Toggle("isShown", isOn: column.isshown.boolBinding)
-                            Toggle("isTarget", isOn: column.istarget.boolBinding)
+                            Toggle("withDecimalPoint", isOn: column.decimalpoint.boolBinding).disabled(column.datatype.wrappedValue == BaseServices.columnDataTypes.String.rawValue)
+                            Toggle("isTarget", isOn: column.istarget.boolBinding).disabled(column.datatype.wrappedValue == BaseServices.columnDataTypes.String.rawValue)
                             Text("orderNo")
                             TextField("orderNo", value: column.orderno, formatter: NumberFormatter())
                         }.padding(.bottom, 10)
@@ -33,6 +35,20 @@ struct ColumnsView: View {
             }
         }.onDisappear {
             BaseServices.save()
+        }
+    }
+}
+struct dataTypePicker: View {
+    @State var selectedDataType: Int16
+    @State var selectedColumn: Columns
+    
+    var body: some View {
+        Picker(selection: $selectedDataType, label: Text("DataType")) {
+            ForEach(Array(BaseServices.columnDataTypes.allCases), id: \.self) { dataType in
+                Text(String(describing: dataType)).tag(dataType.rawValue)
+            }
+        }.onChange(of: selectedDataType) { tag in selectedColumn.datatype = tag
+            selectedColumn.isuserdefined = true
         }
     }
 }
