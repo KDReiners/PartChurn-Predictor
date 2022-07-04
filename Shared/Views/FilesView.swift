@@ -29,12 +29,12 @@ struct FilesView: View {
                 eraseFileEntries(file: file)
             }
         }.task {
-            let test = self.coreDataML
+            let file = self.file
             let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
             sampler.async {
-                let result = ValuesView(coreDataML: test, regressorName: "MLLinearRegressor")
+                let result =  ValuesTableProvider(file: file)
                 DispatchQueue.main.async {
-                    self.valuesView = result
+                    valuesView = ValuesView(valuesTableProvider: result)
                 }
             }
         }
