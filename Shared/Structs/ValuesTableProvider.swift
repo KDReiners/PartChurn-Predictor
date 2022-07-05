@@ -61,7 +61,7 @@ class ValuesTableProvider: ObservableObject {
             default:
                 print("error")
             }
-            BaseServices.save()
+//            BaseServices.save()
             newCustomColumn.betterRows.append(contentsOf: rows)
             newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
             self.customColumns.append(newCustomColumn)

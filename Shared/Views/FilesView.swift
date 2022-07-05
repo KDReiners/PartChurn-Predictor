@@ -11,7 +11,7 @@ struct FilesView: View {
     @EnvironmentObject var managerModels: ManagerModels
     var file: Files
     @ObservedObject var columnsDataModel: ColumnsModel
-//    @State var valuesView: ValuesView?
+    @State var valuesView: ValuesView?
     var coreDataML: CoreDataML
     init(file: Files) {
         self.file = file
@@ -24,22 +24,25 @@ struct FilesView: View {
         VStack {
             ColumnsView(file: file, columnsDataModel: columnsDataModel)
             Spacer()
-            ValuesView(valuesTableProvider: ValuesTableProvider(file: file))
+            loadValuesView()
             Spacer()
             Button("Delete") {
                 eraseFileEntries(file: file)
             }
         }
-//        .task {
-//            let file = self.file
-//            let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
-//            sampler.async {
-//                let result =  ValuesTableProvider(file: file)
-//                DispatchQueue.main.async {
-//                    valuesView = ValuesView(valuesTableProvider: result)
-//                }
-//            }
-//        }
+    }
+    private func loadValuesView() -> ValuesView? {
+        do {
+            let file = self.file
+            let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
+            sampler.async {
+                let result =  ValuesTableProvider(file: file)
+                DispatchQueue.main.async {
+                    valuesView = ValuesView(valuesTableProvider: result)
+                }
+            }
+        }
+        return valuesView
     }
     public func eraseFileEntries(file: Files) {
         var predicate = NSPredicate(format: "column2file == %@", file)
