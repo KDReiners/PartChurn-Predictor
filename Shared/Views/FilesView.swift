@@ -10,34 +10,36 @@ import SwiftUI
 struct FilesView: View {
     @EnvironmentObject var managerModels: ManagerModels
     var file: Files
-    @State var valuesView: ValuesView?
-    var coreDataML: CoreDataML {
-        CoreDataML(model: file.files2model!, files: file)
-    }
+    @ObservedObject var columnsDataModel: ColumnsModel
+//    @State var valuesView: ValuesView?
+    var coreDataML: CoreDataML
     init(file: Files) {
         self.file = file
+        self.coreDataML = CoreDataML(model: file.files2model!, files: file)
+        self.columnsDataModel = ColumnsModel()
 
     }
     
     var body: some View {
         VStack {
-            ColumnsView(file: file, columnsDataModel: managerModels.columnsDataModel)
+            ColumnsView(file: file, columnsDataModel: columnsDataModel)
             Spacer()
-            valuesView
+            ValuesView(valuesTableProvider: ValuesTableProvider(file: file))
             Spacer()
             Button("Delete") {
                 eraseFileEntries(file: file)
             }
-        }.task {
-            let file = self.file
-            let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
-            sampler.async {
-                let result =  ValuesTableProvider(file: file)
-                DispatchQueue.main.async {
-                    valuesView = ValuesView(valuesTableProvider: result)
-                }
-            }
         }
+//        .task {
+//            let file = self.file
+//            let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
+//            sampler.async {
+//                let result =  ValuesTableProvider(file: file)
+//                DispatchQueue.main.async {
+//                    valuesView = ValuesView(valuesTableProvider: result)
+//                }
+//            }
+//        }
     }
     public func eraseFileEntries(file: Files) {
         var predicate = NSPredicate(format: "column2file == %@", file)
