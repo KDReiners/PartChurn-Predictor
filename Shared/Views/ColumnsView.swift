@@ -27,7 +27,7 @@ struct ColumnsView: View {
                             Toggle("isIncluded", isOn: column.isincluded.boolBinding)
                             Toggle("isShown", isOn: column.isshown.boolBinding)
                             Toggle("withDecimalPoint", isOn: column.decimalpoint.boolBinding).disabled(column.datatype.wrappedValue == BaseServices.columnDataTypes.String.rawValue)
-                            Toggle("isTarget", isOn: column.istarget.boolBinding).disabled(column.datatype.wrappedValue == BaseServices.columnDataTypes.String.rawValue)
+                            Toggle("isTarget", isOn: column.istarget.boolBinding)
                             Text("orderNo")
                             TextField("orderNo", value: column.orderno, formatter: NumberFormatter())
                         }.padding(.bottom, 10)
