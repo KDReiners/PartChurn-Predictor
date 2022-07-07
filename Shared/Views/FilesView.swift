@@ -9,41 +9,26 @@ import SwiftUI
 
 struct FilesView: View {
     @EnvironmentObject var managerModels: ManagerModels
-    var file: Files
     @ObservedObject var columnsDataModel: ColumnsModel
-    @State var valuesView: ValuesView?
-    var coreDataML: CoreDataML
-    init(file: Files) {
+    var file: Files
+ 
+    init(file: Files, columnsDataModel: ColumnsModel) {
         self.file = file
-        self.coreDataML = CoreDataML(model: file.files2model!, files: file)
-        self.columnsDataModel = ColumnsModel()
-
+        self.columnsDataModel = columnsDataModel
     }
     
     var body: some View {
         VStack {
             ColumnsView(file: file, columnsDataModel: columnsDataModel)
             Spacer()
-            loadValuesView()
+            ValuesView(file: self.file)
             Spacer()
             Button("Delete") {
                 eraseFileEntries(file: file)
             }
         }
     }
-    private func loadValuesView() -> ValuesView? {
-        do {
-            let file = self.file
-            let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
-            sampler.async {
-                let result =  ValuesTableProvider(file: file)
-                DispatchQueue.main.async {
-                    valuesView = ValuesView(valuesTableProvider: result)
-                }
-            }
-        }
-        return valuesView
-    }
+
     public func eraseFileEntries(file: Files) {
         var predicate = NSPredicate(format: "column2file == %@", file)
         managerModels.columnsDataModel.deleteAllRecords(predicate: predicate)
@@ -56,6 +41,6 @@ struct FilesView: View {
 
 struct FilesView_Previews: PreviewProvider {
     static var previews: some View {
-        FilesView(file: ManagerModels().filesDataModel.items.first!)
+        FilesView(file: ManagerModels().filesDataModel.items.first!, columnsDataModel: ManagerModels().columnsDataModel)
     }
 }

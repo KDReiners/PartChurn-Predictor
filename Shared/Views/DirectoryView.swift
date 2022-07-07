@@ -28,7 +28,7 @@ struct DirectoryView: View {
                 DisclosureGroup("Files") {
                     if filesDataModel.items.count > 0 {
                         ForEach(filesDataModel.items, id: \.self) { item in
-                            NavigationLink( item.name ?? "unbenanntes Modell", destination: FilesView(file: item).environmentObject(managerModels), tag: item, selection: $modelSelect)
+                            NavigationLink( item.name ?? "unbenanntes Modell", destination: FilesView(file: item, columnsDataModel: managerModels.columnsDataModel), tag: item, selection: $modelSelect)
                         }
                     } else {
                         Text("No files")

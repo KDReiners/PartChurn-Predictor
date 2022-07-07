@@ -58,7 +58,7 @@ struct ModelsView: View {
                 }
                 Divider()
                 if fileSelection != nil {
-                    ValuesView(valuesTableProvider: ValuesTableProvider(file: fileSelection!))
+                    ValuesView(file: fileSelection!)
                     Divider()
                 }
             }

@@ -13,11 +13,10 @@ import CreateML
 class ValuesTableProvider: ObservableObject {
     var coreDataML: CoreDataML
     var mlDataTable: MLDataTable
-    @Published var customColumns = [CustomColumn]()
+    var customColumns = [CustomColumn]()
     var gridItems = [GridItem]()
     var numCols: Int = 0
     var numRows: Int = 0
-    
     init(file: Files) {
         self.coreDataML = CoreDataML(model: file.files2model!, files: file)
         self.mlDataTable = coreDataML.mlDataTable
@@ -50,7 +49,6 @@ class ValuesTableProvider: ObservableObject {
                     newGridItem = GridItem(.flexible(),spacing: 10, alignment: .trailing)
                 case MLDataValue.ValueType.string:
                     rows = Array.init(mlDataTable[column.name!].map( { $0.stringValue! }))
-                    column.datatype = BaseServices.columnDataTypes.String.rawValue
                     newCustomColumn.alignment = .leading
                     newGridItem = GridItem(.flexible(),spacing: 10, alignment: .leading)
                 default:
