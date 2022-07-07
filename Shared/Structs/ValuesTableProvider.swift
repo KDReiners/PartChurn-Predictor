@@ -36,12 +36,6 @@ class ValuesTableProvider: ObservableObject {
             if column.isshown! == 1 {
                 var newCustomColumn = CustomColumn(title: column.name ?? "Unbekannt", alignment: .trailing)
                 var newGridItem: GridItem?
-                var newTargetColumn: CustomColumn?
-                var newTargetGridItem: GridItem?
-                if column.istarget == true {
-                    newTargetColumn = CustomColumn(title: column.name ?? "Unbekannt" + "_predicted", alignment: .trailing)
-                    newTargetGridItem = GridItem(.flexible(),spacing: 10, alignment: .leading)
-                }
                 let valueType = mlDataTable[column.name!].type
                 let mlDataValueFormatter = NumberFormatter()
                 mlDataValueFormatter.numberStyle = column.decimalpoint == true ? .decimal : .none
@@ -66,10 +60,6 @@ class ValuesTableProvider: ObservableObject {
                 newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
                 self.customColumns.append(newCustomColumn)
                 self.gridItems.append(newGridItem!)
-                if newTargetColumn != nil {
-                    self.customColumns.append(newTargetColumn!)
-                    self.gridItems.append(newTargetGridItem!)
-                }
             }
         }
     }
