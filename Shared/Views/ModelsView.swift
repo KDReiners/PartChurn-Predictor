@@ -64,7 +64,6 @@ struct ModelsView: View {
             }
             Spacer()
         }
-        Spacer()
     }
     private func fillFromCoreData() -> Void {
     }

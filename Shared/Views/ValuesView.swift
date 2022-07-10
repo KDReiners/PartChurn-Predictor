@@ -38,7 +38,7 @@ struct ValuesView: View {
                     loader.gridItems = result.gridItems
                     loader.customColumns = result.customColumns
                     loader.loaded = true
-                    loader.numRows = loader.customColumns[0].betterRows.count
+                    loader.numRows = loader.customColumns.count > 0 ? loader.customColumns[0].betterRows.count:0
                 }
             }
         }

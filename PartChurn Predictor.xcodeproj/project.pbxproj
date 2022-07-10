@@ -21,6 +21,10 @@
 		0AD6C8962858D5FD00EB92FB /* BatchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */; };
 		0AFCB7042850A5FA00676AF6 /* ValuesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFCB7032850A5FA00676AF6 /* ValuesView.swift */; };
 		0AFCB7052850A5FA00676AF6 /* ValuesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFCB7032850A5FA00676AF6 /* ValuesView.swift */; };
+		2D01395E287868C000AC8EBF /* ComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D01395D287868C000AC8EBF /* ComposerView.swift */; };
+		2D01395F287868C000AC8EBF /* ComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D01395D287868C000AC8EBF /* ComposerView.swift */; };
+		2D0139612878692500AC8EBF /* ScenarioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0139602878692500AC8EBF /* ScenarioView.swift */; };
+		2D0139622878692500AC8EBF /* ScenarioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0139602878692500AC8EBF /* ScenarioView.swift */; };
 		2D0B8567282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B8554282565BD00856BCB /* PartChurn_Predictor.xcdatamodeld */; };
 		2D0B8568282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B8554282565BD00856BCB /* PartChurn_Predictor.xcdatamodeld */; };
 		2D0B8569282565BF00856BCB /* PartChurn_PredictorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B8556282565BD00856BCB /* PartChurn_PredictorApp.swift */; };
@@ -83,6 +87,8 @@
 		0A827F7328736F0400C928F2 /* CustomColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColumn.swift; sourceTree = "<group>"; };
 		0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchProvider.swift; sourceTree = "<group>"; };
 		0AFCB7032850A5FA00676AF6 /* ValuesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValuesView.swift; sourceTree = "<group>"; };
+		2D01395D287868C000AC8EBF /* ComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposerView.swift; sourceTree = "<group>"; };
+		2D0139602878692500AC8EBF /* ScenarioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioView.swift; sourceTree = "<group>"; };
 		2D0B8555282565BD00856BCB /* Shared.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Shared.xcdatamodel; sourceTree = "<group>"; };
 		2D0B8556282565BD00856BCB /* PartChurn_PredictorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartChurn_PredictorApp.swift; sourceTree = "<group>"; };
 		2D0B8558282565BD00856BCB /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -250,6 +256,8 @@
 				0AFCB7032850A5FA00676AF6 /* ValuesView.swift */,
 				0A4C56542869750900961D1D /* FilesView.swift */,
 				0A4C56572869862C00961D1D /* ColumnsView.swift */,
+				2D01395D287868C000AC8EBF /* ComposerView.swift */,
+				2D0139602878692500AC8EBF /* ScenarioView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -386,9 +394,11 @@
 				2D0B856D282565BF00856BCB /* Persistence.swift in Sources */,
 				0A827F7428736F0400C928F2 /* CustomColumn.swift in Sources */,
 				2D0B8567282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */,
+				2D01395E287868C000AC8EBF /* ComposerView.swift in Sources */,
 				2D1EB362283A842F00F86B6D /* CoreDataML.swift in Sources */,
 				2DA77EFC28258384007EC3E5 /* Extensions.swift in Sources */,
 				2DA77EEF282576AA007EC3E5 /* ImportView.swift in Sources */,
+				2D0139612878692500AC8EBF /* ScenarioView.swift in Sources */,
 				0A589C13286614A000D1239B /* ManagerModels.swift in Sources */,
 				2D481BA528356EA4003EBCF2 /* AlgorithmsModel.swift in Sources */,
 				2D288AC12829793B0078647E /* Trainer.swift in Sources */,
@@ -424,9 +434,11 @@
 				2D0B856E282565BF00856BCB /* Persistence.swift in Sources */,
 				0A827F7528736F0400C928F2 /* CustomColumn.swift in Sources */,
 				2D0B8568282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */,
+				2D01395F287868C000AC8EBF /* ComposerView.swift in Sources */,
 				2D1EB363283A842F00F86B6D /* CoreDataML.swift in Sources */,
 				2DA77EFD28258384007EC3E5 /* Extensions.swift in Sources */,
 				2DA77EF0282576AA007EC3E5 /* ImportView.swift in Sources */,
+				2D0139622878692500AC8EBF /* ScenarioView.swift in Sources */,
 				0A589C14286614A000D1239B /* ManagerModels.swift in Sources */,
 				2D481BA628356EA4003EBCF2 /* AlgorithmsModel.swift in Sources */,
 				2D288AC22829793B0078647E /* Trainer.swift in Sources */,

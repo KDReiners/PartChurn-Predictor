@@ -17,12 +17,12 @@ class ValuesTableProvider: ObservableObject {
     var gridItems = [GridItem]()
     var numCols: Int = 0
     var numRows: Int = 0
-    init(file: Files) {
-        self.coreDataML = CoreDataML(model: file.files2model!, files: file)
+    init(file: Files?) {
+        self.coreDataML = CoreDataML(model: file?.files2model, files: file)
         self.mlDataTable = coreDataML.mlDataTable
         prepareView()
         numCols = customColumns.count
-        numRows = customColumns[0].betterRows.count
+        numRows = numCols > 0 ?customColumns[0].betterRows.count : 0
     }
     struct model: Identifiable {
         let id = UUID()

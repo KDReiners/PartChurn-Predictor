@@ -10,7 +10,7 @@ import CoreML
 import CreateML
 import SwiftUI
 public class CoreDataML: ObservableObject {
-    var model: Models
+    var model: Models?
     var files: Files?
     internal var inputDictionary = [String: MLDataValueConvertible]()
     var columnsModel: ColumnsModel
@@ -34,9 +34,15 @@ public class CoreDataML: ObservableObject {
             })
         }
     }
-    init( model: Models, files: Files = Files()) {
+    init( model: Models?, files: Files? = Files()) {
         self.columnsModel = ColumnsModel()
+        guard let model = model else {
+            return
+        }
         self.model = model
+        guard let files = files else {
+            return
+        }
         self.files = files
     }
     internal func getValuesForColumns(columns: Set<Columns>) -> MLDataTable {

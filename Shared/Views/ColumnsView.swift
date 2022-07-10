@@ -12,7 +12,7 @@ struct ColumnsView: View {
     @ObservedObject var columnsDataModel: ColumnsModel
     init(file: Files, columnsDataModel: ColumnsModel) {
         self.file = file
-        self.columnsDataModel = columnsDataModel
+        self.columnsDataModel = ColumnsModel()
     }
     
     var body: some View {
