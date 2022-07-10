@@ -8,6 +8,12 @@
 import SwiftUI
 
 struct ComposerView: View {
+    var model: Models
+    internal var composer: Composer?
+    init(model: Models) {
+        self.model = model
+        self.composer = Composer(model: model)
+    }
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
@@ -15,6 +21,6 @@ struct ComposerView: View {
 
 struct ComposerView_Previews: PreviewProvider {
     static var previews: some View {
-        ComposerView()
+        ComposerView(model: ModelsModel().items.first!)
     }
 }

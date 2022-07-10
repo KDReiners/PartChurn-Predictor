@@ -13,6 +13,8 @@
 		0A4C56592869862C00961D1D /* ColumnsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4C56572869862C00961D1D /* ColumnsView.swift */; };
 		0A589C13286614A000D1239B /* ManagerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A589C12286614A000D1239B /* ManagerModels.swift */; };
 		0A589C14286614A000D1239B /* ManagerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A589C12286614A000D1239B /* ManagerModels.swift */; };
+		0A660F34287AD1920001EF16 /* Composer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A660F33287AD1920001EF16 /* Composer.swift */; };
+		0A660F35287AD1920001EF16 /* Composer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A660F33287AD1920001EF16 /* Composer.swift */; };
 		0A827F712873686A00C928F2 /* ValuesTableProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A827F702873686A00C928F2 /* ValuesTableProvider.swift */; };
 		0A827F722873686A00C928F2 /* ValuesTableProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A827F702873686A00C928F2 /* ValuesTableProvider.swift */; };
 		0A827F7428736F0400C928F2 /* CustomColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A827F7328736F0400C928F2 /* CustomColumn.swift */; };
@@ -83,6 +85,7 @@
 		0A4C56542869750900961D1D /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
 		0A4C56572869862C00961D1D /* ColumnsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColumnsView.swift; sourceTree = "<group>"; };
 		0A589C12286614A000D1239B /* ManagerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerModels.swift; sourceTree = "<group>"; };
+		0A660F33287AD1920001EF16 /* Composer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Composer.swift; sourceTree = "<group>"; };
 		0A827F702873686A00C928F2 /* ValuesTableProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValuesTableProvider.swift; sourceTree = "<group>"; };
 		0A827F7328736F0400C928F2 /* CustomColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColumn.swift; sourceTree = "<group>"; };
 		0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchProvider.swift; sourceTree = "<group>"; };
@@ -243,6 +246,7 @@
 				2D9895932830321D0070F475 /* MetricvaluesModel.swift */,
 				2D481BA428356EA4003EBCF2 /* AlgorithmsModel.swift */,
 				0A589C12286614A000D1239B /* ManagerModels.swift */,
+				0A660F33287AD1920001EF16 /* Composer.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -387,6 +391,7 @@
 				2DA77EDE28256F09007EC3E5 /* EntityAttributeInfo.swift in Sources */,
 				2DA77EE128256F16007EC3E5 /* BaseServices.swift in Sources */,
 				2DA77EBE282569DC007EC3E5 /* DirectoryView.swift in Sources */,
+				0A660F34287AD1920001EF16 /* Composer.swift in Sources */,
 				2D0B8569282565BF00856BCB /* PartChurn_PredictorApp.swift in Sources */,
 				2D9895942830321D0070F475 /* MetricvaluesModel.swift in Sources */,
 				0A827F712873686A00C928F2 /* ValuesTableProvider.swift in Sources */,
@@ -427,6 +432,7 @@
 				2DA77EDF28256F09007EC3E5 /* EntityAttributeInfo.swift in Sources */,
 				2DA77EE228256F16007EC3E5 /* BaseServices.swift in Sources */,
 				2DA77EBF282569DC007EC3E5 /* DirectoryView.swift in Sources */,
+				0A660F35287AD1920001EF16 /* Composer.swift in Sources */,
 				2D0B856A282565BF00856BCB /* PartChurn_PredictorApp.swift in Sources */,
 				2D9895952830321D0070F475 /* MetricvaluesModel.swift in Sources */,
 				0A827F722873686A00C928F2 /* ValuesTableProvider.swift in Sources */,

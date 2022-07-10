@@ -40,10 +40,6 @@ struct DirectoryView: View {
                 }
             }
         }
-//        .onAppear {
-//            managerModels.deinitAll()
-//            PersistenceController.shared.fixLooseRelations()
-//        }
     }
 }
 

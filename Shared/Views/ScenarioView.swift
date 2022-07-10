@@ -16,6 +16,8 @@ struct ScenarioView: View {
     var fileSelection: Files?
     var mlSelection: String?
     var mlAlgorithms = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor"]
+    /// composerView
+    
     
     
     var mlTable: MLDataTable?
@@ -25,7 +27,7 @@ struct ScenarioView: View {
             .tabItem {
                 Label("Analysis", systemImage: "tray.and.arrow.down.fill")
             }
-        ComposerView()
+            ComposerView(model: model)
             .tabItem {
                 Label("Composer", systemImage: "tray.and.arrow.up.fill")
             }

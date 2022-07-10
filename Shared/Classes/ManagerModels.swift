@@ -8,12 +8,12 @@
 import Foundation
 public class ManagerModels: ObservableObject {
     
-    @Published var _modelsDataModel: ModelsModel?
-    @Published var _filesDataModel: FilesModel?
-    @Published var _columnsDataModel: ColumnsModel?
-    @Published var _valuesDataModel: ValuesModel?
-    @Published var _dataSetTypesDataModel: DatasettypesModel?
-    @Published var _metricsDataModel: MetricsModel?
+   var _modelsDataModel: ModelsModel?
+   var _filesDataModel: FilesModel?
+   var _columnsDataModel: ColumnsModel?
+   var _valuesDataModel: ValuesModel?
+   var _dataSetTypesDataModel: DatasettypesModel?
+   var _metricsDataModel: MetricsModel?
 
     init() {
         if self.modelsDataModel.items.count == 0 {

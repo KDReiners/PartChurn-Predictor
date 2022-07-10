@@ -9,10 +9,10 @@ import SwiftUI
 
 struct ColumnsView: View {
     var file: Files
-    @ObservedObject var columnsDataModel: ColumnsModel
+    @ObservedObject var columnsDataModel : ColumnsModel
     init(file: Files, columnsDataModel: ColumnsModel) {
         self.file = file
-        self.columnsDataModel = ColumnsModel()
+        self.columnsDataModel = columnsDataModel
     }
     
     var body: some View {
