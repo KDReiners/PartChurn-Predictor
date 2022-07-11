@@ -85,13 +85,13 @@ struct ValuesView: View {
                     Rectangle()
                         .fill(Color.white)
                         .frame(maxWidth: .infinity)
-                        .frame(minHeight: 40, maxHeight: .infinity)
+                        .frame(maxHeight: .infinity)
                         .overlay(
                             stickyFilterView(columns: loader.customColumns)
                         )
-                }.padding(0)
+                }.background(.white)
             }
-                 struct stickyFilterView: View {
+                struct stickyFilterView: View {
                 var columns: [CustomColumn]
                 @State var filterDict = Dictionary<String, String>()
                 init(columns: [CustomColumn]) {
