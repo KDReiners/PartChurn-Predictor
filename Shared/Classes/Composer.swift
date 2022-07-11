@@ -39,7 +39,8 @@ internal class Composer {
     static func getColumnPivotValue(pivotColum: Columns?) ->String? {
         return Composer.valuesDataModel.items.filter { $0.value2column == pivotColum}.first?.value
     }
-    struct CognitionSource {
+    internal struct CognitionSource: Identifiable {
+        var id = UUID()
         var name: String!
         var columns: [Columns]
         var valueColumns: [Columns]
@@ -50,7 +51,8 @@ internal class Composer {
             self.valueColumns = columns.filter { return $0.name != "COGNITIONSOURCE" }
         }
     }
-    struct CognitionObject {
+    internal struct CognitionObject: Identifiable {
+        var id = UUID()
         var name: String!
         var columns: [Columns]
         var valueColumns: [Columns]
@@ -63,3 +65,4 @@ internal class Composer {
         }
     }
 }
+
