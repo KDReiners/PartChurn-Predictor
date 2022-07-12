@@ -24,6 +24,7 @@ struct ColumnsView: View {
                         HStack {
                             /// DataType User Setting perhaps later
 //                            dataTypePicker(selectedDataType: column.datatype.wrappedValue, selectedColumn: column.wrappedValue)
+                            Toggle("isPartOfPrimaryKey", isOn: column.ispartofprimarykey.boolBinding)
                             Toggle("isIncluded", isOn: column.isincluded.boolBinding)
                             Toggle("isShown", isOn: column.isshown.boolBinding)
                             Toggle("withDecimalPoint", isOn: column.decimalpoint.boolBinding).disabled(column.datatype.wrappedValue == BaseServices.columnDataTypes.String.rawValue)

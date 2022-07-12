@@ -12,6 +12,7 @@ struct ComposerView: View {
     @State var sourceSelection =  Set<UUID>()
     @State var sourceColumnSelection: Columns?
     @State var targetSelection = Set<UUID>()
+    @State var targetColumnSelection: Columns?
     internal var composer: Composer?
     init(model: Models) {
         self.model = model
@@ -31,7 +32,7 @@ struct ComposerView: View {
                         List(composer!.cognitionSources, id: \.id, selection: $sourceSelection) { source in
                             Text(source.name!)
                         }
-                        ForEach(composer!.cognitionSources.filter { $0.id == sourceSelection.first} , id: \.id) { source in
+                        ForEach(composer!.cognitionSources.filter { $0.id == sourceSelection.first } , id: \.id) { source in
                             List(source.valueColumns, id: \.self, selection: $sourceColumnSelection) { column in
                                 Text(column.name!)
                             }
@@ -39,13 +40,18 @@ struct ComposerView: View {
                     }
                     VStack(alignment: .leading) {
                         Text("Cognitiontargets")
-                        ForEach(composer!.cognitionObjects, id: \.id) { target in
-                            List(target.valueColumns, id: \.self) { col in
-                                Text(col.name!)
+                        List(composer!.cognitionObjects, id: \.id, selection: $targetSelection) { target in
+                            Text(target.name!)
+                        }
+                        ForEach(composer!.cognitionObjects.filter { $0.id == targetSelection.first }, id: \.id) { target in
+                            List(target.valueColumns, id:\.self, selection: $targetSelection) { column in
+                                Text(column.name!)
                             }
+                            
                         }
                     }
                 }
+                ValuesView(mlDataTable: (composer?.mlDataTable_Base)!)
             }
         }
     }

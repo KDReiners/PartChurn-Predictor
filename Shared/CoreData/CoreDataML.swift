@@ -65,19 +65,19 @@ public class CoreDataML: ObservableObject {
             switch typeOfValues.self {
             case is Int.Type:
                 inputDictionary[key.name!] = typedArray<Int>(untypedValues: values).result
-                if key.istarget == true {
-                    inputDictionary[key.name!+"_predicted"] = typedArray<Int>(untypedValues: values).result
-                }
+//                if key.istarget == true {
+//                    inputDictionary[key.name!+"_predicted"] = typedArray<Int>(untypedValues: values).result
+//                }
             case is Double.Type:
                 inputDictionary[key.name!] = typedArray<Double>(untypedValues: values).result
-                if key.istarget == true {
-                    inputDictionary[key.name!+"_predicted"] = typedArray<Double>(untypedValues: values).result
-                }
+//                if key.istarget == true {
+//                    inputDictionary[key.name!+"_predicted"] = typedArray<Double>(untypedValues: values).result
+//                }
             default:
                 inputDictionary[key.name!] = typedArray<String>(untypedValues: values).result
-                if key.istarget == true {
-                    inputDictionary[key.name!+"_predicted"] = typedArray<String>(untypedValues: values).result
-                }
+//                if key.istarget == true {
+//                    inputDictionary[key.name!+"_predicted"] = typedArray<String>(untypedValues: values).result
+//                }
             }
         }
         return try! MLDataTable(dictionary: inputDictionary)
