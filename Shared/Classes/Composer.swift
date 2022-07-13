@@ -59,7 +59,7 @@ internal class Composer {
         var mlDataTable_Adjusted = cognitionSource.mlDataTable
         for columnName in cognitionSource.mlDataTable.columnNames {
             if columnName != "COGNITIONSOURCE" && cognitionSource.columns.filter({ $0.name == columnName}).first?.isincluded == true {
-                mlDataTable_Adjusted?.renameColumn(named: columnName, to: prefix! + "_" + columnName)
+                mlDataTable_Adjusted?.renameColumn(named: columnName, to: prefix! +  "\n" + columnName)
             } else {
                 mlDataTable_Adjusted?.removeColumn(named: "COGNITIONSOURCE")
             }
@@ -71,7 +71,7 @@ internal class Composer {
         var mlDataTable_Adjusted = cognitionObject.mlDataTable
         for columnName in cognitionObject.mlDataTable.columnNames {
             if columnName != "COGNITIONOBJECT" && cognitionObject.columns.filter({ $0.name == columnName}).first?.isincluded == true {
-                mlDataTable_Adjusted?.renameColumn(named: columnName, to: prefix! + "_" + columnName)
+                mlDataTable_Adjusted?.renameColumn(named: columnName, to: prefix! + "\n" + columnName)
             } else {
                 mlDataTable_Adjusted?.removeColumn(named: "COGNITIONOBJECT")
             }

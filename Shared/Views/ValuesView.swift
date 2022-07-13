@@ -71,7 +71,8 @@ struct ValuesView: View {
                         Section(header: stickyHeaderView) {
                             ForEach(cells) { cellIndex in
                                 let column = loader.customColumns[cellIndex.colIndex]
-                                Text(column.betterRows[cellIndex.rowIndex]).padding(.horizontal)
+                                Text(column.betterRows[cellIndex.rowIndex])
+                                    .padding(.horizontal)
                                     .font(.body).monospacedDigit()
                                     .scaledToFit()
                                 
@@ -97,6 +98,7 @@ struct ValuesView: View {
                                         .font(.body)
                                         .scaledToFit()
                                         .padding(.horizontal)
+                                        .multilineTextAlignment(.center)
                                 }
                             }
                         )
@@ -107,7 +109,9 @@ struct ValuesView: View {
                         .overlay(
                             stickyFilterView(columns: loader.customColumns)
                         )
-                }.background(.white)
+                }
+                .background(.white)
+                .padding(.bottom)
             }
                 struct stickyFilterView: View {
                 var columns: [CustomColumn]
