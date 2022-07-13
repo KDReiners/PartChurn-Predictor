@@ -22,7 +22,7 @@ public class CoreDataML: ObservableObject {
     }
     internal var orderedColumns: [Columns] {
         get {
-            return columnsModel.items.filter { return ($0.isincluded == true || $0.isshown == true)  && $0.column2model == self.model && $0.column2file == files}.sorted(by: {
+            return columnsModel.items.filter { return ($0.isincluded == true || $0.isshown == true || $0.istarget == true)  && $0.column2model == self.model && $0.column2file == files}.sorted(by: {
                 $0.orderno < $1.orderno
             })
         }
