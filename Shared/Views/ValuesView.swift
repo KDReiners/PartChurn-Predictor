@@ -25,18 +25,18 @@ struct ValuesView: View {
         let colIndex: Int
         let rowIndex: Int
     }
-    init(mlDataTable: MLDataTable) {
-        loadValuesTableProvider(mlDataTable: mlDataTable)
+    init(mlDataTable: MLDataTable, orderedColumns: [Columns]) {
+        loadValuesTableProvider(mlDataTable: mlDataTable, orderedColums: orderedColumns)
     }
     init(file: Files) {
         loadValuesTableProvider(file: file)
     }
-    func loadValuesTableProvider(mlDataTable: MLDataTable) -> Void {
+    func loadValuesTableProvider(mlDataTable: MLDataTable, orderedColums: [Columns]) -> Void {
         var result: ValuesTableProvider!
         do {
             let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
             sampler.async {
-                result =  ValuesTableProvider(mlDataTable: mlDataTable)
+                result =  ValuesTableProvider(mlDataTable: mlDataTable, orderedColumns: orderedColums)
                 DispatchQueue.main.async {
                     loader.gridItems = result.gridItems
                     loader.customColumns = result.customColumns

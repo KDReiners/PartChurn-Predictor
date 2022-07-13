@@ -51,12 +51,12 @@ struct ComposerView: View {
                         }
                     }
                 }
-                ValuesView(mlDataTable: (composer?.mlDataTable_Base)!)
+                ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: composer!.orderedColumns)
             }
         }
     }
 }
-
+    
 struct ComposerView_Previews: PreviewProvider {
     static var previews: some View {
         ComposerView(model: ModelsModel().items.first!)

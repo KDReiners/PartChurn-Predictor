@@ -17,9 +17,9 @@ class ValuesTableProvider: ObservableObject {
     var gridItems = [GridItem]()
     var numCols: Int = 0
     var numRows: Int = 0
-    init(mlDataTable: MLDataTable) {
+    init(mlDataTable: MLDataTable, orderedColumns: [Columns]) {
         self.mlDataTable = mlDataTable
-        prepareView_1()
+        prepareView(orderedColumns: orderedColumns)
     }
     init(file: Files?) {
         self.coreDataML = CoreDataML(model: file?.files2model, files: file)
@@ -33,9 +33,10 @@ class ValuesTableProvider: ObservableObject {
         var model: MLModel
         var path: String
     }
-    func prepareView_1() -> Void {
+    func prepareView(orderedColumns: [Columns]) -> Void {
         var rows = [String]()
-        for columnName in self.mlDataTable.columnNames {
+        for column in  orderedColumns {
+            let columnName = column.alias!
             var newCustomColumn = CustomColumn(title: columnName, alignment: .trailing)
             var newGridItem: GridItem?
             let valueType = mlDataTable[columnName].type

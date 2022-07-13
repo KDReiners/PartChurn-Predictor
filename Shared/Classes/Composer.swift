@@ -15,6 +15,7 @@ internal class Composer {
     var files: NSSet!
     var mlDataTable_Base: MLDataTable!
     var columnsDataModel = ColumnsModel()
+    var orderedColumns = [Columns]()
     static var valuesDataModel = ValuesModel()
     var cognitionSources = [CognitionSource]()
     var cognitionObjects = [CognitionObject]()
@@ -27,7 +28,7 @@ internal class Composer {
     }
     private func examine() -> Void {
         for file in files {
-            let columns = columnsDataModel.items.filter { $0.column2file == file as? Files}
+            let columns = columnsDataModel.items.filter { $0.column2file == file as? Files }.sorted(by: { $0.orderno < $1.orderno })
             let newCognitionSource = CognitionSource(columns: columns)
             if newCognitionSource.name != nil {
                 cognitionSources.append(newCognitionSource)
@@ -56,10 +57,17 @@ internal class Composer {
     }
     private func adjustColumnNames(cognitionSource: CognitionSource) -> MLDataTable{
         let prefix = cognitionSource.name
-        var mlDataTable_Adjusted = cognitionSource.mlDataTable
-        for columnName in cognitionSource.mlDataTable.columnNames {
-            if columnName != "COGNITIONSOURCE" && cognitionSource.columns.filter({ $0.name == columnName}).first?.isincluded == true {
-                mlDataTable_Adjusted?.renameColumn(named: columnName, to: prefix! +  "\n" + columnName)
+        var mlDataTable_Adjusted = cognitionSource.coreDataML?.mlDataTable
+        for column in cognitionSource.coreDataML!.orderedColumns {
+            let columnName = column.name!
+            column.alias = column.name!
+            if columnName != "COGNITIONSOURCE" && column.isincluded == true {
+                let alias = prefix! +  "\n" + columnName
+                mlDataTable_Adjusted?.renameColumn(named: columnName, to: alias)
+                column.alias = alias
+                self.orderedColumns.append(column)
+            } else if columnName != "COGNITIONSOURCE" && column.isincluded == false && column.isshown == true {
+                self.orderedColumns.append(column)
             } else {
                 mlDataTable_Adjusted?.removeColumn(named: "COGNITIONSOURCE")
             }
@@ -68,11 +76,21 @@ internal class Composer {
     }
     private func adjustColumnNames(cognitionObject: CognitionObject) -> MLDataTable{
         let prefix = cognitionObject.name
-        var mlDataTable_Adjusted = cognitionObject.mlDataTable
-        for columnName in cognitionObject.mlDataTable.columnNames {
-            if columnName != "COGNITIONOBJECT" && cognitionObject.columns.filter({ $0.name == columnName}).first?.isincluded == true {
-                mlDataTable_Adjusted?.renameColumn(named: columnName, to: prefix! + "\n" + columnName)
-            } else {
+        var mlDataTable_Adjusted = cognitionObject.coreDataML?.mlDataTable
+        for column in cognitionObject.coreDataML!.orderedColumns {
+            let columnName = column.name!
+            column.alias = column.name!
+            if columnName != "COGNITIONOBJECT" && column.istarget == true && column.ispartofprimarykey == false {
+                let alias = prefix! +  "\n" + columnName
+                mlDataTable_Adjusted?.renameColumn(named: columnName, to: alias)
+                column.alias = alias
+                self.orderedColumns.append(column)
+            } else if columnName != "COGNITIONOBJECT" && column.istarget == false && column.ispartofprimarykey == true {
+                self.orderedColumns.append(column)
+            } else if columnName != "COGNITIONOBJECT" && column.ispartofprimarykey == true {
+                column.isshown = false
+            }
+            else {
                 mlDataTable_Adjusted?.removeColumn(named: "COGNITIONOBJECT")
             }
         }
@@ -87,7 +105,7 @@ internal class Composer {
         var file: Files!
         var columns: [Columns]
         var valueColumns: [Columns]
-        var mlDataTable: MLDataTable!
+        var coreDataML: CoreDataML?
         init(columns: [Columns]) {
             self.file = columns.first?.column2file
             self.columns = columns
@@ -95,7 +113,7 @@ internal class Composer {
             self.name = getColumnPivotValue(pivotColum: coginitionSourceColumn)
             self.valueColumns = columns.filter { return $0.name != "COGNITIONSOURCE" }
             if self.name != nil {
-                mlDataTable = CoreDataML(model: file.files2model, files: file).mlDataTable
+                coreDataML = CoreDataML(model: file.files2model, files: file)
             }
         }
     }
@@ -105,7 +123,7 @@ internal class Composer {
         var file: Files!
         var columns: [Columns]
         var valueColumns: [Columns]
-        var mlDataTable: MLDataTable!
+        var coreDataML: CoreDataML?
         init(columns: [Columns]) {
             self.file = columns.first?.column2file
             self.columns = columns
@@ -113,7 +131,7 @@ internal class Composer {
             self.name = getColumnPivotValue(pivotColum: cognitionObjectColumn)
             self.valueColumns = columns.filter { return $0.name != "COGNITIONOBJECT" }
             if self.name != nil {
-                mlDataTable = CoreDataML(model: file.files2model, files: file).mlDataTable
+                coreDataML = CoreDataML(model: file.files2model, files: file)
             }
             
         }
