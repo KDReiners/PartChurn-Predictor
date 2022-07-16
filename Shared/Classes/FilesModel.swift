@@ -16,6 +16,16 @@ import Foundation
 import Foundation
 public class FilesModel: Model<Files> {
     @Published var result: [Files]!
+    internal func getCognitionType(file: Files) ->  BaseServices.cognitionTypes {
+        var result: BaseServices.cognitionTypes = .cognitionError
+        if items.filter({ $0.name?.uppercased() == "COGNITIONSOURCE" }).count > 0 && items.filter({ $0.name?.uppercased() == "COGNITIONOBJECT" }).count == 0 {
+            result = .cognitionSource
+        }
+        if items.filter({ $0.name?.uppercased() == "COGNITIONSOURCE" }).count == 0 && items.filter({ $0.name?.uppercased() == "COGNITIONOBJECT" }).count > 0 {
+            result = .cognitionObject
+        }
+        return result
+    }
     public init() {
         let readOnlyFields: [String] = []
         super.init(readOnlyFields: readOnlyFields)

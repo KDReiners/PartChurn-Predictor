@@ -61,6 +61,7 @@ internal class Composer {
         for column in cognitionSource.coreDataML!.orderedColumns {
             let columnName = column.name!
             column.alias = column.name!
+            let pattern = String(column.ispartofprimarykey == true ? 1: 0) + String(column.isincluded == true ? 1: 0) + String(column.isshown == true ? 1: 0)
             if columnName != "COGNITIONSOURCE" && column.isincluded == true {
                 let alias = prefix! +  "\n" + columnName
                 mlDataTable_Adjusted?.renameColumn(named: columnName, to: alias)

@@ -10,6 +10,11 @@ import OSLog
 import CoreData
 public struct BaseServices
 {
+    internal enum cognitionTypes: Int {
+        case cognitionError = 0
+        case cognitionSource = 1
+        case cognitionObject = 2
+    }
     internal enum columnDataTypes: Int16, CaseIterable {
         case Int = 0
         case Double = 1
