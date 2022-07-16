@@ -10,18 +10,18 @@ import SwiftUI
 struct FilesView: View {
     @EnvironmentObject var managerModels: ManagerModels
     @ObservedObject var columnsDataModel: ColumnsModel
-    @ObservedObject var columnViewModel: ViewModel
+    @ObservedObject var columnViewModel: ColumnsViewModel
     var file: Files
  
     init(file: Files, columnsDataModel: ColumnsModel) {
         self.file = file
         self.columnsDataModel = columnsDataModel
-        self.columnViewModel = ViewModel(columns: columnsDataModel.items, file: file, columnsDataModel: columnsDataModel)
+        self.columnViewModel = ColumnsViewModel(columns: columnsDataModel.items, file: file)
     }
     
     var body: some View {
         VStack {
-            ColumnsView(file: file, columnsDataModel: columnsDataModel, columnsViewModel: self.columnViewModel)
+            ColumnsView(file: file, columnsViewModel: self.columnViewModel)
             Spacer()
             ValuesView(file: self.file)
             Spacer()
