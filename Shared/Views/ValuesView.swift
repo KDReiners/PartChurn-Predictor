@@ -88,8 +88,7 @@ struct ValuesView: View {
                 VStack(spacing: 10) {
                     Rectangle()
                         .fill(Color.gray)
-                        .frame(maxWidth: .infinity)
-                        .frame(minHeight: 40, maxHeight: .infinity)
+                        .frame(maxWidth: .infinity, minHeight: 40, maxHeight: .infinity)
                         .overlay(
                             LazyVGrid(columns: loader.gridItems) {
                                 ForEach(loader.customColumns) { col in

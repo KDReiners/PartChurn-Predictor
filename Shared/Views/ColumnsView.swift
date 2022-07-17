@@ -45,6 +45,7 @@ class ColumnsViewModel: ObservableObject {
                     result = self.column.ispartofprimarykey == 0 ? "Target" : "Explaination"
                     result = self.column.ispartoftimeseries == 1 ? result + " timeseries" : result
                     column.istarget = column.ispartofprimarykey == 0 ? 1: 0
+                    column.isincluded = 0
                 }
                 return result
             }
