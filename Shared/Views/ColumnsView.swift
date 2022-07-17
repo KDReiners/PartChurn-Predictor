@@ -22,18 +22,36 @@ class ColumnsViewModel: ObservableObject {
                 resolve()
             }
         }
-        @Published var isOn_isshown: Bool = true
-        @Published var isOn_ispartoftimeseries: Bool = true
-        @Published var isOn_ispartofprimarykey: Bool = true
-        
+        var cognitionType: BaseServices.cognitionTypes
+        var columnInfoText: String!
         @Published var disable_ispartofprimarykey: Bool = false
         @Published var disable_ispartoftimeseries: Bool = false
         @Published var disable_isshown: Bool = false
-        init(column: Columns) {
+        init(column: Columns, cognitionType: BaseServices.cognitionTypes) {
             self.column = column
+            self.cognitionType = cognitionType
             resolve()
         }
+        private var setInfoType: String {
+            get {
+                var result = ""
+                if self.cognitionType == .cognitionSource {
+                    result = self.column.ispartofprimarykey == 0 ? "Input" : "Explaination"
+                    result = self.column.ispartoftimeseries == 1 ? result + " timeseries" : result
+                    column.isincluded = column.ispartofprimarykey == 0 ? 1: 0
+                    column.istarget = 0
+                }
+                if self.cognitionType == .cognitionObject {
+                    result = self.column.ispartofprimarykey == 0 ? "Target" : "Explaination"
+                    result = self.column.ispartoftimeseries == 1 ? result + " timeseries" : result
+                    column.istarget = column.ispartofprimarykey == 0 ? 1: 0
+                }
+                return result
+            }
+        }
+        
         private func resolve() {
+            self.columnInfoText = setInfoType
             let pattern = column.ispartoftimeseries!.stringValue + column.ispartofprimarykey!.stringValue + column.isshown!.stringValue
             print("Pattern: \(pattern)")
             switch pattern {
@@ -83,7 +101,7 @@ class ColumnsViewModel: ObservableObject {
         self.cognitionType = filesDataModel.getCognitionType(file: file)
        
         for column in columns.filter( { $0.column2file == file }) {
-            let newObservedColumn = ObservedColumn(column: column)
+            let newObservedColumn = ObservedColumn(column: column, cognitionType: self.cognitionType)
             self.observedColumns.append(newObservedColumn)
         }
     }
@@ -105,6 +123,7 @@ struct ColumnsView: View {
                     Toggle("isPartOfTimeseries", isOn: observedColumn.column.ispartoftimeseries.boolBinding).disabled(observedColumn.disable_ispartoftimeseries.wrappedValue)
                     Toggle("isPartOfPrimaryKey", isOn: observedColumn.column.ispartofprimarykey.boolBinding).disabled(observedColumn.disable_ispartofprimarykey.wrappedValue)
                     Toggle("isShown", isOn: observedColumn.column.isshown.boolBinding).disabled(observedColumn.disable_isshown.wrappedValue)
+                    Text(observedColumn.columnInfoText.wrappedValue)
                 }
             }
         }.onDisappear {

@@ -77,14 +77,17 @@ class ValuesTableProvider: ObservableObject {
                     rows = Array.init(mlDataTable[column.name!].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.intValue!)) }))
                     newCustomColumn.alignment = .trailing
                     newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
+                    column.datatype = BaseServices.columnDataTypes.Int.rawValue
                 case MLDataValue.ValueType.double:
                     rows = Array.init(mlDataTable[column.name!].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.doubleValue!)) }))
                     newCustomColumn.alignment = .trailing
                     newGridItem = GridItem(.flexible(),spacing: 10, alignment: .trailing)
+                    column.datatype = BaseServices.columnDataTypes.Double.rawValue
                 case MLDataValue.ValueType.string:
                     rows = Array.init(mlDataTable[column.name!].map( { $0.stringValue! }))
                     newCustomColumn.alignment = .leading
                     newGridItem = GridItem(.flexible(),spacing: 10, alignment: .leading)
+                    column.datatype = BaseServices.columnDataTypes.String.rawValue
                 default:
                     print("error")
                 }
