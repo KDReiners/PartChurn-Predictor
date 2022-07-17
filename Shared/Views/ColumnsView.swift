@@ -17,7 +17,11 @@ class ColumnsViewModel: ObservableObject {
         func hash(into hasher: inout Hasher) {
             hasher.combine(column.name)
         }
-        var column: Columns
+        var column: Columns { willSet
+            {
+                resolve()
+            }
+        }
         @Published var isOn_isshown: Bool = true
         @Published var isOn_ispartoftimeseries: Bool = true
         @Published var isOn_ispartofprimarykey: Bool = true
@@ -35,17 +39,36 @@ class ColumnsViewModel: ObservableObject {
             switch pattern {
                 /// no values
             case "000":
+                self.disable_ispartoftimeseries = false
+                self.disable_ispartofprimarykey = false
+                self.disable_isshown = false
                 print("nothing is set")
             case "001":
-                print("only is shown was set")
+                self.disable_ispartoftimeseries = false
+                self.disable_ispartofprimarykey = false
+                self.disable_isshown = false
+                print("isShown")
             case "010":
-                print("only isPartOfPrimaryKey is set")
+                print("isPartOfPrimaryKey")
+                self.disable_ispartoftimeseries = true
+                self.disable_isshown = false
+                self.disable_ispartofprimarykey = false
+                
             case "011":
-                print("is shown and isPartOfPrimaryKey is set")
+                print("isShown & isPartOfPrimaryKey")
+                self.disable_ispartoftimeseries = true
+                self.disable_isshown = false
+                self.disable_ispartofprimarykey = false
             case "100":
-                print("timeseries is set")
+                print("timeSeries")
+                self.column.isshown = 1
+                self.disable_ispartofprimarykey = true
+                self.disable_isshown = true
+                
             case "101":
                 print("timeseries and is shown is set")
+                self.disable_isshown = true
+                self.disable_ispartofprimarykey = true
             case "110":
                 print("timeseries and ispartofprimarykey")
             case "111":
