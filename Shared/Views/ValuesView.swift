@@ -66,7 +66,7 @@ struct ValuesView: View {
             Text("load table...")
                  } else {
                 let cells = (0..<loader.numRows).flatMap{j in loader.customColumns.enumerated().map{(i,c) in CellIndex(id:j + i*loader.numRows, colIndex:i, rowIndex:j)}}
-                ScrollView([.vertical], showsIndicators: true) {
+                     ScrollView([.vertical], showsIndicators: true) {
                     LazyVGrid(columns:loader.gridItems, pinnedViews: [.sectionHeaders], content: {
                         Section(header: stickyHeaderView) {
                             ForEach(cells) { cellIndex in
