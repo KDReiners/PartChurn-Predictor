@@ -36,7 +36,7 @@ class ValuesTableProvider: ObservableObject {
     func prepareView(orderedColumns: [Columns]) -> Void {
         var rows = [String]()
         for column in  orderedColumns {
-            let columnName = column.alias!
+            let columnName = column.name!
             var newCustomColumn = CustomColumn(title: columnName, alignment: .trailing)
             var newGridItem: GridItem?
             let valueType = mlDataTable[columnName].type
@@ -55,7 +55,7 @@ class ValuesTableProvider: ObservableObject {
                 newCustomColumn.alignment = .leading
                 newGridItem = GridItem(.flexible(),spacing: 10, alignment: .leading)
             default:
-                print("error")
+                print("error determing valueType")
             }
             newCustomColumn.betterRows.append(contentsOf: rows)
             newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
@@ -89,7 +89,7 @@ class ValuesTableProvider: ObservableObject {
                     newGridItem = GridItem(.flexible(),spacing: 10, alignment: .leading)
                     column.datatype = BaseServices.columnDataTypes.String.rawValue
                 default:
-                    print("error")
+                    print("error determining value type")
                 }
                 newCustomColumn.betterRows.append(contentsOf: rows)
                 newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)

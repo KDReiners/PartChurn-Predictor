@@ -40,18 +40,40 @@ internal class Composer {
         }
     }
     private func compose() -> MLDataTable {
+        var joinParam1: String = ""
+        var joinParam2: String = ""
         var allInDataTable = MLDataTable()
         for cognitionSource in cognitionSources {
             let transformedTable: MLDataTable = adjustColumnNames(cognitionSource: cognitionSource)
+            let joinColums = Set(allInDataTable.columnNames).intersection(transformedTable.columnNames)
             if allInDataTable.rows.count == 0 {
                 allInDataTable = transformedTable
             } else {
-                allInDataTable = allInDataTable.join(with: transformedTable, on: "S_CUSTNO")
+                switch joinColums.count {
+                case 1:
+                    joinParam1 = Array(joinColums)[0]
+                    allInDataTable = allInDataTable.join(with: transformedTable, on: joinParam1)
+                case 2:
+                    joinParam1 = Array(joinColums)[0]
+                    joinParam2 = Array(joinColums)[1]
+                    allInDataTable = allInDataTable.join(with: transformedTable, on: joinParam1, joinParam2)
+                default: print("no join colums")
+                }
             }
         }
         for cognitionObject in cognitionObjects {
             let transformedTable: MLDataTable = adjustColumnNames(cognitionObject: cognitionObject)
-            allInDataTable = allInDataTable.join(with: transformedTable, on: "S_CUSTNO")
+            let joinColums = Set(allInDataTable.columnNames).intersection(transformedTable.columnNames)
+            switch joinColums.count {
+            case 1:
+                joinParam1 = Array(joinColums)[0]
+                allInDataTable = allInDataTable.join(with: transformedTable, on: joinParam1)
+            case 2:
+                joinParam1 = Array(joinColums)[0]
+                joinParam2 = Array(joinColums)[1]
+                allInDataTable = allInDataTable.join(with: transformedTable, on: joinParam1, joinParam2)
+            default: print("no join colums")
+            }
         }
         return allInDataTable
     }
@@ -64,7 +86,7 @@ internal class Composer {
             let pattern = String(column.ispartofprimarykey == true ? 1: 0) + String(column.isincluded == true ? 1: 0) + String(column.isshown == true ? 1: 0)
             if columnName != "COGNITIONSOURCE" && column.isincluded == true {
                 let alias = prefix! +  "\n" + columnName
-                mlDataTable_Adjusted?.renameColumn(named: columnName, to: alias)
+//                mlDataTable_Adjusted?.renameColumn(named: columnName, to: alias)
                 column.alias = alias
                 self.orderedColumns.append(column)
             } else if columnName != "COGNITIONSOURCE" && column.isincluded == false && column.isshown == true {
@@ -83,7 +105,7 @@ internal class Composer {
             column.alias = column.name!
             if columnName != "COGNITIONOBJECT" && column.istarget == true && column.ispartofprimarykey == false {
                 let alias = prefix! +  "\n" + columnName
-                mlDataTable_Adjusted?.renameColumn(named: columnName, to: alias)
+//                mlDataTable_Adjusted?.renameColumn(named: columnName, to: alias)
                 column.alias = alias
                 self.orderedColumns.append(column)
             } else if columnName != "COGNITIONOBJECT" && column.istarget == false && column.ispartofprimarykey == true {
