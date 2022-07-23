@@ -9,6 +9,7 @@ import Foundation
 import CoreData
 import CoreML
 import CreateML
+import SwiftUI
 
 internal class Composer {
     var model: Models
@@ -16,6 +17,9 @@ internal class Composer {
     var mlDataTable_Base: MLDataTable!
     var columnsDataModel = ColumnsModel()
     var orderedColumns = [Columns]()
+    var timeBasedColumns: [String]
+    var primaryKeyColumns: [String]
+    
     static var valuesDataModel = ValuesModel()
     var cognitionSources = [CognitionSource]()
     var cognitionObjects = [CognitionObject]()
@@ -23,6 +27,12 @@ internal class Composer {
     {
         self.model = model
         self.files = model.model2files
+        self.timeBasedColumns = Array(model.model2columns?.allObjects as! [Columns]).filter({ $0.ispartoftimeseries == 1 }).map( {
+            $0.name!
+        })
+        self.primaryKeyColumns = Array(model.model2columns?.allObjects as! [Columns]).filter({ $0.ispartofprimarykey == 1 }).map( {
+            $0.name!
+        })
         examine()
         self.mlDataTable_Base = compose()
     }
@@ -42,6 +52,7 @@ internal class Composer {
     private func compose() -> MLDataTable {
         var joinParam1: String = ""
         var joinParam2: String = ""
+        var test: MLDataTable?
         var allInDataTable = MLDataTable()
         for cognitionSource in cognitionSources {
             let transformedTable: MLDataTable = adjustColumnNames(cognitionSource: cognitionSource)
@@ -75,6 +86,8 @@ internal class Composer {
             default: print("no join colums")
             }
         }
+        test = allInDataTable.intersect(201712, of: "I_REPORTMONTH")
+        print(test)
         return allInDataTable
     }
     private func adjustColumnNames(cognitionSource: CognitionSource) -> MLDataTable{
