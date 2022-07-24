@@ -41,7 +41,7 @@ struct ValuesView: View {
                     loader.gridItems = result.gridItems
                     loader.customColumns = result.customColumns
                     loader.loaded = true
-                    loader.numRows = loader.customColumns.count > 0 ? loader.customColumns[0].betterRows.count:0
+                    loader.numRows = loader.customColumns.count > 0 ? loader.customColumns[0].rows.count:0
                 }
             }
         }
@@ -56,7 +56,7 @@ struct ValuesView: View {
                     loader.gridItems = result.gridItems
                     loader.customColumns = result.customColumns
                     loader.loaded = true
-                    loader.numRows = loader.customColumns.count > 0 ? loader.customColumns[0].betterRows.count:0
+                    loader.numRows = loader.customColumns.count > 0 ? loader.customColumns[0].rows.count:0
                 }
             }
         }
@@ -71,7 +71,7 @@ struct ValuesView: View {
                         Section(header: stickyHeaderView) {
                             ForEach(cells) { cellIndex in
                                 let column = loader.customColumns[cellIndex.colIndex]
-                                Text(column.betterRows[cellIndex.rowIndex])
+                                Text(column.rows[cellIndex.rowIndex])
                                     .padding(.horizontal)
                                     .font(.body).monospacedDigit()
                                     .scaledToFit()

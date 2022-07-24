@@ -18,15 +18,25 @@ class ValuesTableProvider: ObservableObject {
     var numCols: Int = 0
     var numRows: Int = 0
     init(mlDataTable: MLDataTable, orderedColumns: [Columns]) {
+        var arrangedColumns = [Columns]()
         self.mlDataTable = mlDataTable
-        prepareView(orderedColumns: orderedColumns)
+        for column in orderedColumns {
+            for mlDataColumnName in mlDataTable.columnNames {
+                if mlDataColumnName == column.name && !arrangedColumns.contains(where: { $0.name == mlDataColumnName}) {
+                    arrangedColumns.append(column)
+                }
+            }
+        }
+        let targetColumn = arrangedColumns.first(where:  {$0.istarget == 1})
+        targetColumn?.orderno = Int16(arrangedColumns.count + 1)
+        prepareView(orderedColumns: arrangedColumns.sorted(by: {$0.orderno < $1.orderno}))
     }
     init(file: Files?) {
         self.coreDataML = CoreDataML(model: file?.files2model, files: file)
         self.mlDataTable = coreDataML.mlDataTable
         prepareView()
         numCols = customColumns.count
-        numRows = numCols > 0 ?customColumns[0].betterRows.count : 0
+        numRows = numCols > 0 ?customColumns[0].rows.count : 0
     }
     struct model: Identifiable {
         let id = UUID()
@@ -57,7 +67,7 @@ class ValuesTableProvider: ObservableObject {
             default:
                 print("error determing valueType")
             }
-            newCustomColumn.betterRows.append(contentsOf: rows)
+            newCustomColumn.rows.append(contentsOf: rows)
             newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
             self.customColumns.append(newCustomColumn)
             self.gridItems.append(newGridItem!)
@@ -91,7 +101,7 @@ class ValuesTableProvider: ObservableObject {
                 default:
                     print("error determining value type")
                 }
-                newCustomColumn.betterRows.append(contentsOf: rows)
+                newCustomColumn.rows.append(contentsOf: rows)
                 newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
                 self.customColumns.append(newCustomColumn)
                 self.gridItems.append(newGridItem!)
