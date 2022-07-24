@@ -53,7 +53,6 @@ internal class Composer {
     private func compose() -> MLDataTable {
         var joinParam1: String = ""
         var joinParam2: String = ""
-        var test: MLDataTable?
         var allInDataTable = MLDataTable()
         for cognitionSource in cognitionSources {
             guard let currentMLDataTable = cognitionSource.coreDataML?.mlDataTable else {
@@ -94,14 +93,7 @@ internal class Composer {
             }
         }
         allInDataTable.removeColumn(named: "COGNITIONOBJECT")
-        
-        test = allInDataTable.intersect(201712, of: "I_REPORTMONTH")
-        print(test)
         return allInDataTable
-    }
-    private func reduceColumns(allInDataTable: MLDataTable ) {
-        var result: MLDataTable
-        result = allInDataTable[primaryKeyColumns]
     }
     static func getColumnPivotValue(pivotColum: Columns?) ->String? {
         return Composer.valuesDataModel.items.filter { $0.value2column == pivotColum}.first?.value
