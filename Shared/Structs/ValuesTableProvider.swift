@@ -17,19 +17,10 @@ class ValuesTableProvider: ObservableObject {
     var gridItems = [GridItem]()
     var numCols: Int = 0
     var numRows: Int = 0
+    internal var arrangedColumns = [Columns]()
     init(mlDataTable: MLDataTable, orderedColumns: [Columns]) {
-        var arrangedColumns = [Columns]()
         self.mlDataTable = mlDataTable
-        for column in orderedColumns {
-            for mlDataColumnName in mlDataTable.columnNames {
-                if mlDataColumnName == column.name && !arrangedColumns.contains(where: { $0.name == mlDataColumnName}) {
-                    arrangedColumns.append(column)
-                }
-            }
-        }
-        let targetColumn = arrangedColumns.first(where:  {$0.istarget == 1})
-        targetColumn?.orderno = Int16(arrangedColumns.count + 1)
-        prepareView(orderedColumns: arrangedColumns.sorted(by: {$0.orderno < $1.orderno}))
+        prepareView(orderedColumns: orderedColumns.sorted(by: {$0.orderno < $1.orderno}))
     }
     init(file: Files?) {
         self.coreDataML = CoreDataML(model: file?.files2model, files: file)

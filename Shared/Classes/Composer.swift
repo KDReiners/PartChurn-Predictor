@@ -16,16 +16,18 @@ internal class Composer {
     var files: NSSet!
     var mlDataTable_Base: MLDataTable!
     var columnsDataModel = ColumnsModel()
-    var orderedColumns: [Columns]
+    var allColumns: [Columns]
+    var orderedColumns: [Columns]!
     var timeBasedColumns: [String]
     var primaryKeyColumns: [String]
+    var allInDataTable = MLDataTable()
     
     static var valuesDataModel = ValuesModel()
     var cognitionSources = [CognitionSource]()
     var cognitionObjects = [CognitionObject]()
     init(model: Models)
     {
-        self.orderedColumns = Array(model.model2columns?.allObjects as! [Columns]).sorted(by: { $0.orderno < $1.orderno})
+        self.allColumns = Array(model.model2columns?.allObjects as! [Columns]).sorted(by: { $0.orderno < $1.orderno})
         self.model = model
         self.files = model.model2files
         self.timeBasedColumns = Array(model.model2columns?.allObjects as! [Columns]).filter({ $0.ispartoftimeseries == 1 }).map( {
@@ -36,6 +38,24 @@ internal class Composer {
         })
         examine()
         self.mlDataTable_Base = compose()
+    }
+    private func orderColumns(allColumns: [Columns]) -> [Columns] {
+        var result = [Columns]()
+        var i = -1
+        for column in allColumns {
+            for mlDataColumnName in allInDataTable.columnNames {
+                if mlDataColumnName == column.name && !result.contains(where: { $0.name == mlDataColumnName}) {
+                    i += 1
+                    column.orderno = Int16(i)
+                    result.append(column)
+                }
+            }
+        }
+        let targetColumn = allColumns.first(where:  {$0.istarget == 1})
+        targetColumn?.orderno = Int16(result.count + 1)
+        BaseServices.save()
+        return result
+        
     }
     private func examine() -> Void {
         for file in files {
@@ -53,7 +73,7 @@ internal class Composer {
     private func compose() -> MLDataTable {
         var joinParam1: String = ""
         var joinParam2: String = ""
-        var allInDataTable = MLDataTable()
+        
         for cognitionSource in cognitionSources {
             guard let currentMLDataTable = cognitionSource.coreDataML?.mlDataTable else {
                 fatalError("no mldatatable found in cognition source.")
@@ -70,7 +90,7 @@ internal class Composer {
                 case 2:
                     joinParam1 = Array(joinColumns)[0]
                     joinParam2 = Array(joinColumns)[1]
-                    allInDataTable = allInDataTable.join(with: currentMLDataTable, on: joinParam1, joinParam2)
+                    allInDataTable = allInDataTable.join(with: currentMLDataTable, on: joinParam1, joinParam2, type: .outer)
                 default: print("no join colums")
                 }
             }
@@ -88,11 +108,12 @@ internal class Composer {
             case 2:
                 joinParam1 = Array(joinColums)[0]
                 joinParam2 = Array(joinColums)[1]
-                allInDataTable = allInDataTable.join(with: currentMLDataTable, on: joinParam1, joinParam2)
+                allInDataTable = allInDataTable.join(with: currentMLDataTable, on: joinParam1, joinParam2, type: .outer)
             default: print("no join colums")
             }
         }
         allInDataTable.removeColumn(named: "COGNITIONOBJECT")
+        self.orderedColumns = orderColumns(allColumns: allColumns)
         return allInDataTable
     }
     static func getColumnPivotValue(pivotColum: Columns?) ->String? {

@@ -50,10 +50,19 @@ struct ComposerView: View {
                             
                         }
                     }
+                    VStack(alignment: .leading) {
+                        Text("Compositions")
+                    }
+                }
+                Button("Create Combinations") {
+                    createCombinations()
                 }
                 ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: composer!.orderedColumns)
             }
         }
+    }
+    private func createCombinations() {
+        let combinator = Combinator(model: self.model, orderedColumns: (composer?.orderedColumns)!, mlDataTable: (composer?.mlDataTable_Base)!)
     }
 }
     

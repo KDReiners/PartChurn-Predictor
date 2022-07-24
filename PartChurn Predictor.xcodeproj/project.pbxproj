@@ -77,6 +77,10 @@
 		2DA77F0028266B32007EC3E5 /* FilesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EFE28266B32007EC3E5 /* FilesModel.swift */; };
 		2DA77F022827E1DD007EC3E5 /* ModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77F012827E1DD007EC3E5 /* ModelsView.swift */; };
 		2DA77F032827E1DD007EC3E5 /* ModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77F012827E1DD007EC3E5 /* ModelsView.swift */; };
+		2DBDCCF6288D6B9800CC8EDC /* CompositionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBDCCF5288D6B9800CC8EDC /* CompositionsModel.swift */; };
+		2DBDCCF7288D6B9800CC8EDC /* CompositionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBDCCF5288D6B9800CC8EDC /* CompositionsModel.swift */; };
+		2DBDCCF9288D6C1C00CC8EDC /* Combinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBDCCF8288D6C1C00CC8EDC /* Combinator.swift */; };
+		2DBDCCFA288D6C1C00CC8EDC /* Combinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBDCCF8288D6C1C00CC8EDC /* Combinator.swift */; };
 		2DFE31BE282D8BA40058C3AA /* Ml_MetricKPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFE31BD282D8BA40058C3AA /* Ml_MetricKPI.swift */; };
 		2DFE31BF282D8BA40058C3AA /* Ml_MetricKPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFE31BD282D8BA40058C3AA /* Ml_MetricKPI.swift */; };
 /* End PBXBuildFile section */
@@ -119,6 +123,8 @@
 		2DA77EFB28258384007EC3E5 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		2DA77EFE28266B32007EC3E5 /* FilesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesModel.swift; sourceTree = "<group>"; };
 		2DA77F012827E1DD007EC3E5 /* ModelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelsView.swift; sourceTree = "<group>"; };
+		2DBDCCF5288D6B9800CC8EDC /* CompositionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositionsModel.swift; sourceTree = "<group>"; };
+		2DBDCCF8288D6C1C00CC8EDC /* Combinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Combinator.swift; sourceTree = "<group>"; };
 		2DFE31BD282D8BA40058C3AA /* Ml_MetricKPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ml_MetricKPI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -229,6 +235,7 @@
 				0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */,
 				0A827F702873686A00C928F2 /* ValuesTableProvider.swift */,
 				0A827F7328736F0400C928F2 /* CustomColumn.swift */,
+				2DBDCCF8288D6C1C00CC8EDC /* Combinator.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";
@@ -247,6 +254,7 @@
 				2D481BA428356EA4003EBCF2 /* AlgorithmsModel.swift */,
 				0A589C12286614A000D1239B /* ManagerModels.swift */,
 				0A660F33287AD1920001EF16 /* Composer.swift */,
+				2DBDCCF5288D6B9800CC8EDC /* CompositionsModel.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -394,6 +402,8 @@
 				0A660F34287AD1920001EF16 /* Composer.swift in Sources */,
 				2D0B8569282565BF00856BCB /* PartChurn_PredictorApp.swift in Sources */,
 				2D9895942830321D0070F475 /* MetricvaluesModel.swift in Sources */,
+				2DBDCCF6288D6B9800CC8EDC /* CompositionsModel.swift in Sources */,
+				2DBDCCF9288D6C1C00CC8EDC /* Combinator.swift in Sources */,
 				0A827F712873686A00C928F2 /* ValuesTableProvider.swift in Sources */,
 				2DA77EE528256F52007EC3E5 /* ColumnsModel.swift in Sources */,
 				2D0B856D282565BF00856BCB /* Persistence.swift in Sources */,
@@ -435,6 +445,8 @@
 				0A660F35287AD1920001EF16 /* Composer.swift in Sources */,
 				2D0B856A282565BF00856BCB /* PartChurn_PredictorApp.swift in Sources */,
 				2D9895952830321D0070F475 /* MetricvaluesModel.swift in Sources */,
+				2DBDCCF7288D6B9800CC8EDC /* CompositionsModel.swift in Sources */,
+				2DBDCCFA288D6C1C00CC8EDC /* Combinator.swift in Sources */,
 				0A827F722873686A00C928F2 /* ValuesTableProvider.swift in Sources */,
 				2DA77EE628256F52007EC3E5 /* ColumnsModel.swift in Sources */,
 				2D0B856E282565BF00856BCB /* Persistence.swift in Sources */,
