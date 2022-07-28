@@ -14,9 +14,11 @@ struct ComposerView: View {
     @State var targetSelection = Set<UUID>()
     @State var targetColumnSelection: Columns?
     internal var composer: Composer?
+    internal var combinator: Combinator
     init(model: Models) {
         self.model = model
         self.composer = Composer(model: model)
+        self.combinator = Combinator(model: self.model, orderedColumns: (composer?.orderedColumns)!, mlDataTable: (composer?.mlDataTable_Base)!)
     }
     var body: some View {
         HStack(spacing: 50) {
@@ -39,33 +41,34 @@ struct ComposerView: View {
                         }
                     }
                     VStack(alignment: .leading) {
-                        Text("Cognitiontargets")
-                        List(composer!.cognitionObjects, id: \.id, selection: $targetSelection) { target in
-                            Text(target.name!)
+                        Text("Time Series Combinations")
+                        List(combinator.scenarios.first!.listOfTimeSeriesCombinations(), id: \.self) { timeSeries in
+                            Text("Hallo")
                         }
-                        ForEach(composer!.cognitionObjects.filter { $0.id == targetSelection.first }, id: \.id) { target in
-                            List(target.valueColumns, id:\.self, selection: $targetSelection) { column in
-                                Text(column.name!)
-                            }
-                            
-                        }
+                            .listStyle(.plain)
                     }
                     VStack(alignment: .leading) {
-                        Text("Compositions")
+                        Text("Column Combinations")
+                        List(combinator.scenarios, id: \.self) {
+                            scenario in
+                            if scenario.levelIncludedColumns() > 0 {
+                                Section(header: Text("Level: \(scenario.levelIncludedColumns())")) {
+                                    ForEach(scenario.listOfColumnNames(), id: \.self ) { name in
+                                        Text(name).padding(.bottom, 0)
+                                    }
+                                }
+                                .padding(.bottom, 0 )
+                            }
+                        }.padding(.bottom, 0)
+                            .listStyle(.plain)
                     }
-                }
-                Button("Create Combinations") {
-                    createCombinations()
                 }
                 ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: composer!.orderedColumns)
             }
         }
     }
-    private func createCombinations() {
-        let combinator = Combinator(model: self.model, orderedColumns: (composer?.orderedColumns)!, mlDataTable: (composer?.mlDataTable_Base)!)
-    }
 }
-    
+
 struct ComposerView_Previews: PreviewProvider {
     static var previews: some View {
         ComposerView(model: ModelsModel().items.first!)

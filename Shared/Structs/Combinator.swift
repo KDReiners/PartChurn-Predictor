@@ -28,13 +28,37 @@ struct Combinator {
         seriesStart = self.mlDataTable[(timeSeriesColumns.first?.name)!].ints?.min()
         series = findNextSlice(start: seriesStart, columnName: (timeSeriesColumns.first?.name)!)
         seriesEnd = self.mlDataTable[(timeSeriesColumns.first?.name)!].ints?.max()
+        
+        let timeSeriesCombinations = timeSeriesColumnCombinations()
+       
         for i in 0...includedColumns.count {
-            let combinations = combinations(source: includedColumns, takenBy:  i)
-            let newScenario = Scenario(includedColumns: combinations, timeSeries: [201412], baseTable: mlDataTable)
+            let combinations = includedColumnsCombinations(source: includedColumns, takenBy:  i)
+            let newScenario = Scenario(includedColumns: combinations, timeSeries: timeSeriesCombinations, baseTable: mlDataTable)
             self.scenarios.append(newScenario)
         }
     }
-    func combinations<T>(source: [T], takenBy : Int) -> [[T]] {
+    func timeSeriesColumnCombinations(depth: Int? = 2) -> [[Int]] {
+        var result: [[Int]] = []
+        for i in 0...series!.count - 1 {
+            var combination: [Int] = []
+            let rangeTo = i + depth!
+            if rangeTo <= series!.count {
+            for j in stride(from: i, to: rangeTo, by: 1) {
+                combination.append(series![j])
+            }
+//            if combination.count == depth
+                result.append(combination)
+//            }
+            }
+        }
+        if series!.count > depth! + 1 {
+            let subCombos = timeSeriesColumnCombinations(depth: depth! + 1)
+            result += subCombos.map { $0 }
+        }
+        return result
+        
+    }
+    func includedColumnsCombinations<T>(source: [T], takenBy : Int) -> [[T]] {
         if(source.count == takenBy) {
             return [source]
         }
@@ -54,9 +78,9 @@ struct Combinator {
         var result : [[T]] = []
 
         let rest = Array(source.suffix(from: 1))
-        let subCombos = combinations(source: rest, takenBy: takenBy - 1)
+        let subCombos = includedColumnsCombinations(source: rest, takenBy: takenBy - 1)
         result += subCombos.map { [source[0]] + $0 }
-        result += combinations(source: rest, takenBy: takenBy)
+        result += includedColumnsCombinations(source: rest, takenBy: takenBy)
         return result
     }
     private func findNextSlice(start: Int, columnName: String) -> [Int]? {
