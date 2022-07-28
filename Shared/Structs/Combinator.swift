@@ -30,7 +30,7 @@ struct Combinator {
         seriesEnd = self.mlDataTable[(timeSeriesColumns.first?.name)!].ints?.max()
         
         let timeSeriesCombinations = timeSeriesColumnCombinations()
-       
+        
         for i in 0...includedColumns.count {
             let combinations = includedColumnsCombinations(source: includedColumns, takenBy:  i)
             let newScenario = Scenario(includedColumns: combinations, timeSeries: timeSeriesCombinations, baseTable: mlDataTable)
@@ -43,15 +43,13 @@ struct Combinator {
             var combination: [Int] = []
             let rangeTo = i + depth!
             if rangeTo <= series!.count {
-            for j in stride(from: i, to: rangeTo, by: 1) {
-                combination.append(series![j])
-            }
-//            if combination.count == depth
+                for j in stride(from: i, to: rangeTo, by: 1) {
+                    combination.append(series![j])
+                }
                 result.append(combination)
-//            }
             }
         }
-        if series!.count > depth! + 1 {
+        if series!.count >= depth! + 1 {
             let subCombos = timeSeriesColumnCombinations(depth: depth! + 1)
             result += subCombos.map { $0 }
         }
@@ -62,21 +60,21 @@ struct Combinator {
         if(source.count == takenBy) {
             return [source]
         }
-
+        
         if(source.isEmpty) {
             return []
         }
-
+        
         if(takenBy == 0) {
             return []
         }
-
+        
         if(takenBy == 1) {
             return source.map { [$0] }
         }
-
+        
         var result : [[T]] = []
-
+        
         let rest = Array(source.suffix(from: 1))
         let subCombos = includedColumnsCombinations(source: rest, takenBy: takenBy - 1)
         result += subCombos.map { [source[0]] + $0 }

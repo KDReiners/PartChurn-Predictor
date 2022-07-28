@@ -43,7 +43,7 @@ struct ComposerView: View {
                     VStack(alignment: .leading) {
                         Text("Time Series Combinations")
                         List(combinator.scenarios.first!.listOfTimeSeriesCombinations(), id: \.self) { timeSeries in
-                            Text("Hallo")
+                            Text(timeSeries)
                         }
                             .listStyle(.plain)
                     }
