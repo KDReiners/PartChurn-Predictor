@@ -9,10 +9,8 @@ import SwiftUI
 
 struct ComposerView: View {
     var model: Models
-    @State var sourceSelection =  Set<UUID>()
-    @State var sourceColumnSelection: Columns?
-    @State var targetSelection = Set<UUID>()
-    @State var targetColumnSelection: Columns?
+    @State var scenarioSelection: Scenario?
+    @State var timeSeriesSeletion: [Int]?
     internal var composer: Composer?
     internal var combinator: Combinator
     init(model: Models) {
@@ -29,17 +27,6 @@ struct ComposerView: View {
                     .padding(.bottom, 5)
                 Divider()
                 HStack(spacing: 50) {
-                    VStack(alignment:.leading) {
-                        Text("Cognitionsources")
-                        List(composer!.cognitionSources, id: \.id, selection: $sourceSelection) { source in
-                            Text(source.name!)
-                        }
-                        ForEach(composer!.cognitionSources.filter { $0.id == sourceSelection.first } , id: \.id) { source in
-                            List(source.valueColumns, id: \.self, selection: $sourceColumnSelection) { column in
-                                Text(column.name!)
-                            }
-                        }
-                    }
                     VStack(alignment: .leading) {
                         Text("Time Series Combinations")
                         List(combinator.scenarios.first!.listOfTimeSeriesCombinations(), id: \.self) { timeSeries in
@@ -49,7 +36,7 @@ struct ComposerView: View {
                     }
                     VStack(alignment: .leading) {
                         Text("Column Combinations")
-                        List(combinator.scenarios, id: \.self) {
+                        List(combinator.scenarios, id: \.self, selection: $scenarioSelection) {
                             scenario in
                             if scenario.levelIncludedColumns() > 0 {
                                 Section(header: Text("Level: \(scenario.levelIncludedColumns())")) {
