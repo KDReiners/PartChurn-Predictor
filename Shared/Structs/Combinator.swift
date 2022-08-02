@@ -18,7 +18,7 @@ struct Combinator {
     var seriesStart: Int!
     var seriesEnd: Int!
     var seriesLength: Int!
-    var scenarios = [Scenario]()
+    var scenario: Scenario!
     init(model: Models, orderedColumns: [Columns], mlDataTable: MLDataTable) {
         self.model = model
         self.orderedColumns = orderedColumns
@@ -28,14 +28,13 @@ struct Combinator {
         seriesStart = self.mlDataTable[(timeSeriesColumns.first?.name)!].ints?.min()
         series = findNextSlice(start: seriesStart, columnName: (timeSeriesColumns.first?.name)!)
         seriesEnd = self.mlDataTable[(timeSeriesColumns.first?.name)!].ints?.max()
-        
         let timeSeriesCombinations = timeSeriesColumnCombinations()
-        
-        for i in 0...includedColumns.count {
-            let combinations = includedColumnsCombinations(source: includedColumns, takenBy:  i)
-            let newScenario = Scenario(includedColumns: combinations, timeSeries: timeSeriesCombinations, baseTable: mlDataTable)
-            self.scenarios.append(newScenario)
+        var combinations = [[Columns]]()
+        for i in 1...includedColumns.count {
+            let entry = includedColumnsCombinations(source: includedColumns, takenBy:  i)
+            combinations += entry
         }
+        scenario = Scenario(includedColumns: combinations, timeSeries: timeSeriesCombinations, baseTable: mlDataTable)
     }
     func timeSeriesColumnCombinations(depth: Int? = 2) -> [[Int]] {
         var result: [[Int]] = []
