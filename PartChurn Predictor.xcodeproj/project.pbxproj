@@ -239,7 +239,6 @@
 				0A827F7328736F0400C928F2 /* CustomColumn.swift */,
 				2DA77EDD28256F09007EC3E5 /* EntityAttributeInfo.swift */,
 				0A827F702873686A00C928F2 /* ValuesTableProvider.swift */,
-				2DBDCCFB288EF0A500CC8EDC /* Scenario.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";
@@ -259,6 +258,7 @@
 				0A589C12286614A000D1239B /* ManagerModels.swift */,
 				0A660F33287AD1920001EF16 /* Composer.swift */,
 				2DBDCCF5288D6B9800CC8EDC /* CompositionsModel.swift */,
+				2DBDCCFB288EF0A500CC8EDC /* Scenario.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";

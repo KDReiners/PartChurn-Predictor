@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import CoreMedia
 
 struct ComposerView: View {
     var model: Models
     @State var combinationSelection: [Columns]?
-    @State var timeSeriesSeletion: [Int]?
+    @State var timeSeriesSelection: [Int]?
+    
     internal var composer: Composer?
     internal var combinator: Combinator
     init(model: Models) {
@@ -28,25 +30,35 @@ struct ComposerView: View {
                 Divider()
                 HStack(spacing: 50) {
                     VStack(alignment: .leading) {
-                        Text("Time Series Combinations")
-                        List(combinator.scenario!.listOfTimeSeriesCombinations(), id: \.self) { timeSeries in
-                            Text(timeSeries)
+                        Text("Timeseries Combinations")
+                        List(combinator.scenario.timeSeriesSections, id: \.self, selection: $timeSeriesSelection) { section in
+                            Section(header: Text("Level: \(section.level)"))  {
+                                ForEach(section.timeSeries, id: \.self) { timeSlices in
+                                    HStack {
+                                        ForEach(timeSlices, id: \.self) { timeSlice in
+                                            Text(String(timeSlice))
+                                                .padding(0)
+                                        }
+                                    }
+                                }
+                            }.padding(.top, 2)
                         }
-                        .listStyle(.plain)
                     }
+
                     VStack(alignment: .leading) {
                         Text("Column Combinations")
-                        List(combinator.scenario.includedColumns, id: \.self, selection: $combinationSelection) { entries in
-                            Section(header: Text("Level: \(entries.count)")) {
-                                HStack {
-                            ForEach(entries, id: \.self) { entry in
-                                
-                                    Text(entry.name!)
-                            }
-                            }
-                            }
-                        }.padding(.bottom, 0)
-                            .listStyle(.plain)
+                        List(combinator.scenario.columnSections, id: \.self, selection: $combinationSelection) { section in
+                            Section(header: Text("Level: \(section.level)"))  {
+                                ForEach(section.columns, id: \.self) { columns in
+                                    HStack {
+                                        ForEach(columns, id: \.self) { column in
+                                            Text(column.name!)
+                                                .padding(0)
+                                        }
+                                    }
+                                }
+                            }.padding(.top, 2)
+                        }
                     }
                 }
                 ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: composer!.orderedColumns)
