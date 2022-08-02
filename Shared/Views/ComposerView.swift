@@ -10,8 +10,8 @@ import CoreMedia
 
 struct ComposerView: View {
     var model: Models
-    @State var combinationSelection: [Columns]?
-    @State var timeSeriesSelection: [Int]?
+    @State var selectedColumnCombination: [Columns]?
+    @State var selectedTimeSeriesCombination: [Int]?
     
     internal var composer: Composer?
     internal var combinator: Combinator
@@ -31,7 +31,7 @@ struct ComposerView: View {
                 HStack(spacing: 50) {
                     VStack(alignment: .leading) {
                         Text("Timeseries Combinations")
-                        List(combinator.scenario.timeSeriesSections, id: \.self, selection: $timeSeriesSelection) { section in
+                        List(combinator.scenario.timeSeriesSections, id: \.self, selection: $selectedTimeSeriesCombination) { section in
                             Section(header: Text("Level: \(section.level)"))  {
                                 ForEach(section.timeSeries, id: \.self) { timeSlices in
                                     HStack {
@@ -39,7 +39,7 @@ struct ComposerView: View {
                                             Text(String(timeSlice))
                                                 .padding(0)
                                         }
-                                    }
+                                    }.onTapGesture { selectedTimeSeriesCombination = selectedTimeSeriesCombination == timeSlices ? nil: timeSlices }
                                 }
                             }.padding(.top, 2)
                         }
@@ -47,7 +47,7 @@ struct ComposerView: View {
 
                     VStack(alignment: .leading) {
                         Text("Column Combinations")
-                        List(combinator.scenario.columnSections, id: \.self, selection: $combinationSelection) { section in
+                        List(combinator.scenario.columnSections, id: \.self, selection: $selectedColumnCombination) { section in
                             Section(header: Text("Level: \(section.level)"))  {
                                 ForEach(section.columns, id: \.self) { columns in
                                     HStack {
@@ -55,13 +55,16 @@ struct ComposerView: View {
                                             Text(column.name!)
                                                 .padding(0)
                                         }
-                                    }
+                                    }.onTapGesture { selectedColumnCombination = selectedColumnCombination == columns ? nil: columns }
                                 }
                             }.padding(.top, 2)
                         }
                     }
                 }
-                ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: composer!.orderedColumns)
+                if selectedColumnCombination != nil {
+                    ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: selectedColumnCombination!) } else {
+                        ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!)
+                    }
             }
         }
     }
