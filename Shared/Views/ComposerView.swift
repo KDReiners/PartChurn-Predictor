@@ -61,10 +61,7 @@ struct ComposerView: View {
                         }
                     }
                 }
-                if selectedColumnCombination != nil {
-                    ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: selectedColumnCombination!) } else {
-                        ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!)
-                    }
+                    ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: selectedColumnCombination, selectedTimeSeries: selectedTimeSeriesCombination)
             }
         }
     }

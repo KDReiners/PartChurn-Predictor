@@ -18,6 +18,32 @@ struct ValuesView: View {
         var gridItems: [GridItem]!
         var numRows: Int = 0
         var customColumns = [CustomColumn]()
+        var mlDataTable: MLDataTable!
+        var orderedColumns: [Columns]!
+        var selectedColumns: [Columns]?
+        var mergedColumns: [Columns]!
+        var timeSeries: [Int]?
+        
+        func filterMlDataTable() {
+            var result: MLDataTable!
+            mergedColumns = selectedColumns == nil ? orderedColumns: selectedColumns
+            if selectedColumns != nil {
+                let additions = orderedColumns.filter { $0.ispartofprimarykey == 1 || $0.ispartoftimeseries == 1 || $0.istarget == 1}
+                mergedColumns.append(contentsOf: additions)
+            }
+            let timeSeriesColumn = self.orderedColumns.filter { $0.ispartoftimeseries == 1 }
+            let mlTimeSeriesColumn = mlDataTable[(timeSeriesColumn.first?.name!)!]
+            if let timeSeries = timeSeries {
+                for timeSlice in timeSeries {
+                    let timeSeriesMask = mlTimeSeriesColumn == timeSlice
+                    if result == nil {
+                        result = self.mlDataTable[timeSeriesMask] } else {
+                            result.append(contentsOf: self.mlDataTable[timeSeriesMask] )
+                        }
+                }
+                self.mlDataTable = result
+            }
+        }
         
     }
     struct CellIndex: Identifiable {
@@ -25,12 +51,21 @@ struct ValuesView: View {
         let colIndex: Int
         let rowIndex: Int
     }
-    init(mlDataTable: MLDataTable, orderedColumns: [Columns]) {
-        loadValuesTableProvider(mlDataTable: mlDataTable, orderedColums: orderedColumns)
+
+ 
+    
+    init(mlDataTable: MLDataTable, orderedColumns: [Columns], selectedColumns: [Columns]? = nil, selectedTimeSeries: [Int]? = nil) {
+        loader.orderedColumns = orderedColumns
+        loader.mlDataTable = mlDataTable
+        loader.selectedColumns = selectedColumns
+        loader.timeSeries = selectedTimeSeries
+        loader.filterMlDataTable()
+        loadValuesTableProvider(mlDataTable: loader.mlDataTable, orderedColums: loader.mergedColumns.sorted(by: { $0.orderno < $1.orderno }))
     }
     init(file: Files) {
         loadValuesTableProvider(file: file)
     }
+   
     func loadValuesTableProvider(mlDataTable: MLDataTable, orderedColums: [Columns]) -> Void {
         var result: ValuesTableProvider!
         do {
