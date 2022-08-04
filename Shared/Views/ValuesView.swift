@@ -19,6 +19,7 @@ struct ValuesView: View {
         var numRows: Int = 0
         var customColumns = [CustomColumn]()
         var mlDataTable: MLDataTable!
+        var unionOfMlDataTables: [MLDataTable]?
         var orderedColumns: [Columns]!
         var selectedColumns: [Columns]?
         var mergedColumns: [Columns]!
@@ -36,15 +37,38 @@ struct ValuesView: View {
             if let timeSeries = timeSeries {
                 for timeSlice in timeSeries {
                     let timeSeriesMask = mlTimeSeriesColumn == timeSlice
-                    if result == nil {
-                        result = self.mlDataTable[timeSeriesMask] } else {
-                            result.append(contentsOf: self.mlDataTable[timeSeriesMask] )
+                    let newMlDataTable = self.mlDataTable[timeSeriesMask]
+                    if unionOfMlDataTables == nil {
+                        unionOfMlDataTables = [newMlDataTable] } else {
+                            unionOfMlDataTables?.append(newMlDataTable)
                         }
+                }
+                if let unionTables = unionOfMlDataTables {
+                    adjustTables(unionOfMlDataTables: unionTables)
+                    for mlDataTableForUnion in unionTables {
+                        if result == nil {
+                            result = mlDataTableForUnion } else {
+                                result.append(contentsOf: mlDataTableForUnion)
+                            }
+                    }
                 }
                 self.mlDataTable = result
             }
         }
-        
+        func adjustTables(unionOfMlDataTables: [MLDataTable]) {
+            /// extract non timeSeriesColumn from self.mlDataTable
+            let timeSeriesColumns = self.orderedColumns.filter { $0.ispartoftimeseries == 1 }
+            for column in timeSeriesColumns  {
+                mlDataTable.removeColumn(named: column.name!)
+            }
+            /// rename timeSeriesColumns from each mlDataTable in unionOfMlDataTables
+            for i in 0...unionOfMlDataTables.count {
+                for column in timeSeriesColumns {
+                    var result = unionOfMlDataTables[i]
+                    result.renameColumn(named: column.name!, to: column.name! + "T-(\(i)")
+                }
+            }
+        }
     }
     struct CellIndex: Identifiable {
         let id: Int
