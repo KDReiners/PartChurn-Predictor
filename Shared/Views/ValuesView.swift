@@ -29,10 +29,10 @@ struct ValuesView: View {
             var result: MLDataTable!
             mergedColumns = selectedColumns == nil ? orderedColumns: selectedColumns
             if selectedColumns != nil {
-                let additions = orderedColumns.filter { $0.ispartofprimarykey == 1 || $0.ispartoftimeseries == 1 || $0.istarget == 1}
+                let additions = orderedColumns.filter { $0.ispartofprimarykey == 1 || $0.istimeseries == 1 || $0.istarget == 1}
                 mergedColumns.append(contentsOf: additions)
             }
-            let timeSeriesColumn = self.orderedColumns.filter { $0.ispartoftimeseries == 1 }
+            let timeSeriesColumn = self.orderedColumns.filter { $0.istimeseries == 1 }
             let mlTimeSeriesColumn = mlDataTable[(timeSeriesColumn.first?.name!)!]
             if let timeSeries = timeSeries {
                 for timeSlice in timeSeries {
@@ -43,8 +43,8 @@ struct ValuesView: View {
                             unionOfMlDataTables?.append(newMlDataTable)
                         }
                 }
-                if let unionTables = unionOfMlDataTables {
-                    adjustTables(unionOfMlDataTables: unionTables)
+                if var unionTables = unionOfMlDataTables {
+                    adjustTables(unionOfMlDataTables: &unionTables)
                     for mlDataTableForUnion in unionTables {
                         if result == nil {
                             result = mlDataTableForUnion } else {
@@ -55,17 +55,20 @@ struct ValuesView: View {
                 self.mlDataTable = result
             }
         }
-        func adjustTables(unionOfMlDataTables: [MLDataTable]) {
+        func adjustTables(unionOfMlDataTables: inout [MLDataTable]) {
             /// extract non timeSeriesColumn from self.mlDataTable
-            let timeSeriesColumns = self.orderedColumns.filter { $0.ispartoftimeseries == 1 }
+            let timeSeriesColumns = self.orderedColumns.filter { $0.istimeseries == 1 }
             for column in timeSeriesColumns  {
                 mlDataTable.removeColumn(named: column.name!)
             }
             /// rename timeSeriesColumns from each mlDataTable in unionOfMlDataTables
-            for i in 0...unionOfMlDataTables.count {
-                for column in timeSeriesColumns {
-                    var result = unionOfMlDataTables[i]
-                    result.renameColumn(named: column.name!, to: column.name! + "T-(\(i)")
+            let timeDependantColumns = self.orderedColumns.filter { $0.istimeseries == 0 && $0.ispartofprimarykey == 0}
+            for i in 0..<unionOfMlDataTables.count {
+                for column in timeDependantColumns {
+                    if unionOfMlDataTables[i].columnNames.contains(column.name!) {
+                        unionOfMlDataTables[i].renameColumn(named: column.name!, to: column.name! + " T-(\(i))")
+                        column.name = column.name! + " T-(\(i))"
+                    }
                 }
             }
         }

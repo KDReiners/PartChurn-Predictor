@@ -22,8 +22,8 @@ struct Combinator {
     init(model: Models, orderedColumns: [Columns], mlDataTable: MLDataTable) {
         self.model = model
         self.orderedColumns = orderedColumns
-        self.includedColumns = orderedColumns.filter( { $0.isincluded == 1 && $0.ispartoftimeseries == 0})
-        self.timeSeriesColumns = orderedColumns.filter({$0.ispartoftimeseries == 1 })
+        self.includedColumns = orderedColumns.filter( { $0.isincluded == 1 && $0.istimeseries == 0})
+        self.timeSeriesColumns = orderedColumns.filter({$0.istimeseries == 1 })
         self.mlDataTable = mlDataTable
         seriesStart = self.mlDataTable[(timeSeriesColumns.first?.name)!].ints?.min()
         series = findNextSlice(start: seriesStart, columnName: (timeSeriesColumns.first?.name)!)

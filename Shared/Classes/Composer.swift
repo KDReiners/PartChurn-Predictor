@@ -30,7 +30,7 @@ internal class Composer {
         self.allColumns = Array(model.model2columns?.allObjects as! [Columns]).sorted(by: { $0.orderno < $1.orderno})
         self.model = model
         self.files = model.model2files
-        self.timeBasedColumns = Array(model.model2columns?.allObjects as! [Columns]).filter({ $0.ispartoftimeseries == 1 }).map( {
+        self.timeBasedColumns = Array(model.model2columns?.allObjects as! [Columns]).filter({ $0.istimeseries == 1 }).map( {
             $0.name!
         })
         self.primaryKeyColumns = Array(model.model2columns?.allObjects as! [Columns]).filter({ $0.ispartofprimarykey == 1 }).map( {

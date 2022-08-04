@@ -25,7 +25,7 @@ class ColumnsViewModel: ObservableObject {
         var cognitionType: BaseServices.cognitionTypes
         var columnInfoText: String!
         @Published var disable_ispartofprimarykey: Bool = false
-        @Published var disable_ispartoftimeseries: Bool = false
+        @Published var disable_istimeseries: Bool = false
         @Published var disable_isshown: Bool = false
         init(column: Columns, cognitionType: BaseServices.cognitionTypes) {
             self.column = column
@@ -37,13 +37,13 @@ class ColumnsViewModel: ObservableObject {
                 var result = ""
                 if self.cognitionType == .cognitionSource {
                     result = self.column.ispartofprimarykey == 0 ? "Input" : "Explaination"
-                    result = self.column.ispartoftimeseries == 1 ? result + " timeseries" : result
+                    result = self.column.istimeseries == 1 ? result + " timeseries" : result
                     column.isincluded = column.ispartofprimarykey == 0 ? 1: 0
                     column.istarget = 0
                 }
                 if self.cognitionType == .cognitionObject {
                     result = self.column.ispartofprimarykey == 0 ? "Target" : "Explaination"
-                    result = self.column.ispartoftimeseries == 1 ? result + " timeseries" : result
+                    result = self.column.istimeseries == 1 ? result + " timeseries" : result
                     column.istarget = column.ispartofprimarykey == 0 ? 1: 0
                     column.isincluded = 0
                 }
@@ -53,29 +53,29 @@ class ColumnsViewModel: ObservableObject {
         
         private func resolve() {
             self.columnInfoText = setInfoType
-            let pattern = column.ispartoftimeseries!.stringValue + column.ispartofprimarykey!.stringValue + column.isshown!.stringValue
+            let pattern = column.istimeseries!.stringValue + column.ispartofprimarykey!.stringValue + column.isshown!.stringValue
             print("Pattern: \(pattern)")
             switch pattern {
                 /// no values
             case "000":
-                self.disable_ispartoftimeseries = false
+                self.disable_istimeseries = false
                 self.disable_ispartofprimarykey = false
                 self.disable_isshown = false
                 print("nothing is set")
             case "001":
-                self.disable_ispartoftimeseries = false
+                self.disable_istimeseries = false
                 self.disable_ispartofprimarykey = false
                 self.disable_isshown = false
                 print("isShown")
             case "010":
                 print("isPartOfPrimaryKey")
-                self.disable_ispartoftimeseries = true
+                self.disable_istimeseries = true
                 self.disable_isshown = false
                 self.disable_ispartofprimarykey = false
                 
             case "011":
                 print("isShown & isPartOfPrimaryKey")
-                self.disable_ispartoftimeseries = true
+                self.disable_istimeseries = true
                 self.disable_isshown = false
                 self.disable_ispartofprimarykey = false
             case "100":
@@ -121,7 +121,7 @@ struct ColumnsView: View {
             ForEach($columnsViewModel.observedColumns, id: \.self) { observedColumn in
                 Text(observedColumn.column.name.wrappedValue!)
                 HStack {
-                    Toggle("isPartOfTimeseries", isOn: observedColumn.column.ispartoftimeseries.boolBinding).disabled(observedColumn.disable_ispartoftimeseries.wrappedValue)
+                    Toggle("istimeseries", isOn: observedColumn.column.istimeseries.boolBinding).disabled(observedColumn.disable_istimeseries.wrappedValue)
                     Toggle("isPartOfPrimaryKey", isOn: observedColumn.column.ispartofprimarykey.boolBinding).disabled(observedColumn.disable_ispartofprimarykey.wrappedValue)
                     Toggle("isShown", isOn: observedColumn.column.isshown.boolBinding).disabled(observedColumn.disable_isshown.wrappedValue)
                     Text(observedColumn.columnInfoText.wrappedValue)
