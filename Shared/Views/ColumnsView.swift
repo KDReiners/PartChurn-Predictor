@@ -121,7 +121,8 @@ struct ColumnsView: View {
             ForEach($columnsViewModel.observedColumns, id: \.self) { observedColumn in
                 Text(observedColumn.column.name.wrappedValue!)
                 HStack {
-                    Toggle("istimeseries", isOn: observedColumn.column.istimeseries.boolBinding).disabled(observedColumn.disable_istimeseries.wrappedValue)
+                    Toggle("isTimeSeries", isOn: observedColumn.column.istimeseries.boolBinding).disabled(observedColumn.disable_istimeseries.wrappedValue)
+                    Toggle("isPartOfSeries", isOn: observedColumn.column.ispartoftimeseries.boolBinding)
                     Toggle("isPartOfPrimaryKey", isOn: observedColumn.column.ispartofprimarykey.boolBinding).disabled(observedColumn.disable_ispartofprimarykey.wrappedValue)
                     Toggle("isShown", isOn: observedColumn.column.isshown.boolBinding).disabled(observedColumn.disable_isshown.wrappedValue)
                     Text(observedColumn.columnInfoText.wrappedValue)

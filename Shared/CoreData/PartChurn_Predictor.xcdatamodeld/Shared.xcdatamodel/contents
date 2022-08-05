@@ -11,6 +11,7 @@
         <attribute name="decimalpoint" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO"/>
         <attribute name="isincluded" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO"/>
         <attribute name="ispartofprimarykey" optional="YES" attributeType="Boolean" defaultValueString="0" usesScalarValueType="NO"/>
+        <attribute name="ispartoftimeseries" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO"/>
         <attribute name="isshown" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO"/>
         <attribute name="istarget" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO"/>
         <attribute name="istimeseries" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO"/>
@@ -78,7 +79,7 @@
     </entity>
     <elements>
         <element name="Algorithms" positionX="0" positionY="0" width="128" height="74"/>
-        <element name="Columns" positionX="0" positionY="0" width="128" height="239"/>
+        <element name="Columns" positionX="0" positionY="0" width="128" height="254"/>
         <element name="Compositions" positionX="0" positionY="0" width="128" height="59"/>
         <element name="Datasettypes" positionX="0" positionY="0" width="128" height="74"/>
         <element name="Files" positionX="0" positionY="0" width="128" height="104"/>
