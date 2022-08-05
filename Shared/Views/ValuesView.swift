@@ -58,6 +58,8 @@ struct ValuesView: View {
             }
         }
         func adjustTables(unionOfMlDataTables: inout [MLDataTable]) {
+            let seriesDataModel = SeriesModel()
+            seriesDataModel.deleteAllRecords(predicate: nil)
             /// extract non timeSeriesColumn from self.mlDataTable
             let timeSeriesColumns = self.orderedColumns.filter { $0.istimeseries == 1 }
             for column in timeSeriesColumns  {
@@ -69,6 +71,10 @@ struct ValuesView: View {
                 for column in timeDependantColumns {
                     if unionOfMlDataTables[i].columnNames.contains(column.name!) {
                         unionOfMlDataTables[i].renameColumn(named: column.name!, to: column.name! + " T-(\(i))")
+                        let newSeries = SeriesModel().insertRecord()
+                        newSeries.timeslice = Int16(i)
+                        newSeries.alias = column.name! + " T-(\(i))"
+                        newSeries.series2column = column    
                         column.alias = column.name! + " T-(\(i))"
                     }
                 }

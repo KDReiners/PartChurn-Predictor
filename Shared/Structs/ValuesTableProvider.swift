@@ -34,34 +34,46 @@ class ValuesTableProvider: ObservableObject {
         var model: MLModel
         var path: String
     }
+    fileprivate func insertIntoGridItems(_ columnName: String?, _ rows: inout [String]) {
+        var newCustomColumn = CustomColumn(title: columnName!, alignment: .trailing)
+        var newGridItem: GridItem?
+        let valueType = mlDataTable[columnName!].type
+        let mlDataValueFormatter = NumberFormatter()
+        switch valueType {
+        case MLDataValue.ValueType.int:
+            rows = Array.init(mlDataTable[columnName!].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.intValue!)) }))
+            newCustomColumn.alignment = .trailing
+            newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
+        case MLDataValue.ValueType.double:
+            rows = Array.init(mlDataTable[columnName!].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.doubleValue!)) }))
+            newCustomColumn.alignment = .trailing
+            newGridItem = GridItem(.flexible(),spacing: 10, alignment: .trailing)
+        case MLDataValue.ValueType.string:
+            rows = Array.init(mlDataTable[columnName!].map( { $0.stringValue! }))
+            newCustomColumn.alignment = .leading
+            newGridItem = GridItem(.flexible(),spacing: 10, alignment: .leading)
+        default:
+            print("error determing valueType")
+        }
+        newCustomColumn.rows.append(contentsOf: rows)
+        newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
+        self.customColumns.append(newCustomColumn)
+        self.gridItems.append(newGridItem!)
+    }
+    
     func prepareView(orderedColumns: [Columns]) -> Void {
         var rows = [String]()
         for column in  orderedColumns {
-            let columnName = column.alias != nil ? column.alias : column.name
-            var newCustomColumn = CustomColumn(title: columnName!, alignment: .trailing)
-            var newGridItem: GridItem?
-            let valueType = mlDataTable[columnName!].type
-            let mlDataValueFormatter = NumberFormatter()
-            switch valueType {
-            case MLDataValue.ValueType.int:
-                rows = Array.init(mlDataTable[columnName!].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.intValue!)) }))
-                newCustomColumn.alignment = .trailing
-                newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
-            case MLDataValue.ValueType.double:
-                rows = Array.init(mlDataTable[columnName!].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.doubleValue!)) }))
-                newCustomColumn.alignment = .trailing
-                newGridItem = GridItem(.flexible(),spacing: 10, alignment: .trailing)
-            case MLDataValue.ValueType.string:
-                rows = Array.init(mlDataTable[columnName!].map( { $0.stringValue! }))
-                newCustomColumn.alignment = .leading
-                newGridItem = GridItem(.flexible(),spacing: 10, alignment: .leading)
-            default:
-                print("error determing valueType")
+            if column.column2series?.count == 0 {
+                insertIntoGridItems(column.name, &rows)
             }
-            newCustomColumn.rows.append(contentsOf: rows)
-            newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
-            self.customColumns.append(newCustomColumn)
-            self.gridItems.append(newGridItem!)
+            else {
+                for series in column.column2series! {
+                    if (series as! Series).alias != nil {
+                        insertIntoGridItems((series as! Series).alias, &rows)
+                    }
+                }
+            }
         }
     }
     func prepareView() -> Void {

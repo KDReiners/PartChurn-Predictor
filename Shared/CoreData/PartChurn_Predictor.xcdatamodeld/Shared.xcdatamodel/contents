@@ -18,6 +18,7 @@
         <attribute name="orderno" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="column2file" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Files" inverseName="file2columns" inverseEntity="Files"/>
         <relationship name="column2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2columns" inverseEntity="Models"/>
+        <relationship name="column2series" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Series" inverseName="series2column" inverseEntity="Series"/>
         <relationship name="column2values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Values" inverseName="value2column" inverseEntity="Values"/>
     </entity>
     <entity name="Compositions" representedClassName="Compositions" syncable="YES" codeGenerationType="class">
@@ -59,6 +60,11 @@
         <relationship name="model2metricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2model" inverseEntity="Metricvalues"/>
         <relationship name="model2values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Values" inverseName="value2model" inverseEntity="Values"/>
     </entity>
+    <entity name="Series" representedClassName="Series" syncable="YES" codeGenerationType="class">
+        <attribute name="alias" optional="YES" transient="YES" attributeType="String"/>
+        <attribute name="timeslice" optional="YES" transient="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="series2column" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Columns" inverseName="column2series" inverseEntity="Columns"/>
+    </entity>
     <entity name="Values" representedClassName="Values" syncable="YES" codeGenerationType="class">
         <attribute name="idcolumn" optional="YES" attributeType="String"/>
         <attribute name="idfile" optional="YES" attributeType="String"/>
@@ -71,14 +77,15 @@
         <relationship name="value2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2values" inverseEntity="Models"/>
     </entity>
     <elements>
-        <element name="Algorithms" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Columns" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Compositions" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Datasettypes" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Files" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Metrics" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Metricvalues" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Models" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Values" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Algorithms" positionX="0" positionY="0" width="128" height="74"/>
+        <element name="Columns" positionX="0" positionY="0" width="128" height="239"/>
+        <element name="Compositions" positionX="0" positionY="0" width="128" height="59"/>
+        <element name="Datasettypes" positionX="0" positionY="0" width="128" height="74"/>
+        <element name="Files" positionX="0" positionY="0" width="128" height="104"/>
+        <element name="Metrics" positionX="0" positionY="0" width="128" height="89"/>
+        <element name="Metricvalues" positionX="0" positionY="0" width="128" height="119"/>
+        <element name="Models" positionX="0" positionY="0" width="128" height="134"/>
+        <element name="Values" positionX="0" positionY="0" width="128" height="164"/>
+        <element name="Series" positionX="18" positionY="117" width="128" height="74"/>
     </elements>
 </model>
