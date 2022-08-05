@@ -37,22 +37,22 @@ class ValuesTableProvider: ObservableObject {
     func prepareView(orderedColumns: [Columns]) -> Void {
         var rows = [String]()
         for column in  orderedColumns {
-            let columnName = column.name!
-            var newCustomColumn = CustomColumn(title: columnName, alignment: .trailing)
+            let columnName = column.alias != nil ? column.alias : column.name
+            var newCustomColumn = CustomColumn(title: columnName!, alignment: .trailing)
             var newGridItem: GridItem?
-            let valueType = mlDataTable[columnName].type
+            let valueType = mlDataTable[columnName!].type
             let mlDataValueFormatter = NumberFormatter()
             switch valueType {
             case MLDataValue.ValueType.int:
-                rows = Array.init(mlDataTable[columnName].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.intValue!)) }))
+                rows = Array.init(mlDataTable[columnName!].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.intValue!)) }))
                 newCustomColumn.alignment = .trailing
                 newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
             case MLDataValue.ValueType.double:
-                rows = Array.init(mlDataTable[columnName].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.doubleValue!)) }))
+                rows = Array.init(mlDataTable[columnName!].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.doubleValue!)) }))
                 newCustomColumn.alignment = .trailing
                 newGridItem = GridItem(.flexible(),spacing: 10, alignment: .trailing)
             case MLDataValue.ValueType.string:
-                rows = Array.init(mlDataTable[columnName].map( { $0.stringValue! }))
+                rows = Array.init(mlDataTable[columnName!].map( { $0.stringValue! }))
                 newCustomColumn.alignment = .leading
                 newGridItem = GridItem(.flexible(),spacing: 10, alignment: .leading)
             default:

@@ -45,11 +45,13 @@ struct ValuesView: View {
                 }
                 if var unionTables = unionOfMlDataTables {
                     adjustTables(unionOfMlDataTables: &unionTables)
+                    let joinColumn = orderedColumns.first(where: { $0.ispartofprimarykey == 1 })
                     for mlDataTableForUnion in unionTables {
                         if result == nil {
-                            result = mlDataTableForUnion } else {
-                                result.append(contentsOf: mlDataTableForUnion)
-                            }
+                            result = mlDataTableForUnion
+                        } else {
+                            result = result.join(with: mlDataTableForUnion, on: (joinColumn?.name!)!, type: .inner)
+                        }
                     }
                 }
                 self.mlDataTable = result
@@ -67,7 +69,7 @@ struct ValuesView: View {
                 for column in timeDependantColumns {
                     if unionOfMlDataTables[i].columnNames.contains(column.name!) {
                         unionOfMlDataTables[i].renameColumn(named: column.name!, to: column.name! + " T-(\(i))")
-                        column.name = column.name! + " T-(\(i))"
+                        column.alias = column.name! + " T-(\(i))"
                     }
                 }
             }
