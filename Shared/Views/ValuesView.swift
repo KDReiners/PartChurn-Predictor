@@ -62,12 +62,18 @@ struct ValuesView: View {
             seriesDataModel.deleteAllRecords(predicate: nil)
             /// extract non timeSeriesColumn from self.mlDataTable
             let timeSeriesColumns = self.orderedColumns.filter { $0.istimeseries == 1 }
-            for column in timeSeriesColumns  {
-                mlDataTable.removeColumn(named: column.name!)
-            }
             /// rename timeSeriesColumns from each mlDataTable in unionOfMlDataTables
-            let timeDependantColumns = self.orderedColumns.filter { $0.istimeseries == 0 && $0.ispartofprimarykey == 0}
+            let timeDependantColumns = self.orderedColumns.filter { $0.istimeseries == 0 && $0.ispartoftimeseries == 1 }
+            let timeInDependantColumns = self.orderedColumns.filter { $0.istimeseries == 0 && $0.ispartoftimeseries == 0 && $0.ispartofprimarykey == 0 }
             for i in 0..<unionOfMlDataTables.count {
+                for column in timeSeriesColumns {
+                    unionOfMlDataTables[i].removeColumn(named: column.name!)
+                }
+                if i > 0 {
+                    for column in timeInDependantColumns {
+                        unionOfMlDataTables[i].removeColumn(named: column.name!)
+                    }
+                }
                 for column in timeDependantColumns {
                     if unionOfMlDataTables[i].columnNames.contains(column.name!) {
                         unionOfMlDataTables[i].renameColumn(named: column.name!, to: column.name! + " T-(\(i))")

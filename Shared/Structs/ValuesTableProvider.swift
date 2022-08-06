@@ -63,6 +63,7 @@ class ValuesTableProvider: ObservableObject {
     
     func prepareView(orderedColumns: [Columns]) -> Void {
         var rows = [String]()
+        self.gridItems.removeAll()
         for column in  orderedColumns {
             if column.column2series?.count == 0 {
                 insertIntoGridItems(column.name, &rows)

@@ -57,7 +57,8 @@ struct ComposerView: View {
                                         }
                                     }.onTapGesture { selectedColumnCombination = selectedColumnCombination == columns ? nil: columns }
                                 }
-                            }.padding(.top, 2)
+                            }
+                            .padding(.top, 2)
                         }
                     }
                 }
