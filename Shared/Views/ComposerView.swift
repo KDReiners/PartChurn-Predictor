@@ -11,7 +11,7 @@ import CoreMedia
 struct ComposerView: View {
     var model: Models
     @State var selectedColumnCombination: [Columns]?
-    @State var selectedTimeSeriesCombination: [Int]?
+    @State var selectedTimeSeriesCombination: [String]?
     
     internal var composer: Composer?
     internal var combinator: Combinator
@@ -31,15 +31,13 @@ struct ComposerView: View {
                 HStack(spacing: 50) {
                     VStack(alignment: .leading) {
                         Text("Timeseries Combinations")
-                        List(combinator.scenario.timeSeriesSections, id: \.self, selection: $selectedTimeSeriesCombination) { section in
+                        List(combinator.scenario.timeSeriesSections, id: \.rows, selection: $selectedTimeSeriesCombination) { section in
                             Section(header: Text("Level: \(section.level)"))  {
-                                ForEach(section.timeSeries, id: \.self) { timeSlices in
+                                ForEach(section.rows, id: \.self) { row in
                                     HStack {
-                                        ForEach(timeSlices, id: \.self) { timeSlice in
-                                            Text(String(timeSlice))
-                                                .padding(0)
-                                        }
-                                    }.onTapGesture { selectedTimeSeriesCombination = selectedTimeSeriesCombination == timeSlices ? nil: timeSlices }
+                                        Text(row)
+                                    }
+                                    .onTapGesture { selectedTimeSeriesCombination = selectedTimeSeriesCombination == section.rows ? nil: section.rows }
                                 }
                             }.padding(.top, 2)
                         }
@@ -62,7 +60,7 @@ struct ComposerView: View {
                         }
                     }
                 }
-                    ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: selectedColumnCombination, selectedTimeSeries: selectedTimeSeriesCombination)
+//                    ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: selectedColumnCombination, selectedTimeSeries: selectedTimeSeriesCombination)
             }
         }
     }

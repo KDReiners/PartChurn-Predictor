@@ -77,5 +77,15 @@ class Scenario: Hashable {
         var id = UUID()
         var level: Int!
         var timeSeries = [[Int]]()
+        var rows: Array<String> {
+            get {
+                var result = [String]()
+                for series in timeSeries {
+                    result.append(series.map { String($0) }.joined(separator: ", "))
+                }
+                return result
+            }
+        }
+        
     }
 }
