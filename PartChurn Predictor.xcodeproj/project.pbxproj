@@ -43,6 +43,8 @@
 		2D481BA628356EA4003EBCF2 /* AlgorithmsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D481BA428356EA4003EBCF2 /* AlgorithmsModel.swift */; };
 		2D6B0E53289D746C0016E57F /* SeriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6B0E52289D746C0016E57F /* SeriesModel.swift */; };
 		2D6B0E54289D746C0016E57F /* SeriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6B0E52289D746C0016E57F /* SeriesModel.swift */; };
+		2D6B0E59289EC8680016E57F /* MlDataTableFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6B0E58289EC8680016E57F /* MlDataTableFactory.swift */; };
+		2D6B0E5A289EC8680016E57F /* MlDataTableFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6B0E58289EC8680016E57F /* MlDataTableFactory.swift */; };
 		2D98958E282EE4100070F475 /* DatasettypesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D98958D282EE4100070F475 /* DatasettypesModel.swift */; };
 		2D98958F282EE4100070F475 /* DatasettypesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D98958D282EE4100070F475 /* DatasettypesModel.swift */; };
 		2D989591282EE47F0070F475 /* MetricsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D989590282EE47F0070F475 /* MetricsModel.swift */; };
@@ -111,6 +113,7 @@
 		2D288AC02829793B0078647E /* Trainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trainer.swift; sourceTree = "<group>"; };
 		2D481BA428356EA4003EBCF2 /* AlgorithmsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgorithmsModel.swift; sourceTree = "<group>"; };
 		2D6B0E52289D746C0016E57F /* SeriesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeriesModel.swift; sourceTree = "<group>"; };
+		2D6B0E58289EC8680016E57F /* MlDataTableFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MlDataTableFactory.swift; sourceTree = "<group>"; };
 		2D98958D282EE4100070F475 /* DatasettypesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatasettypesModel.swift; sourceTree = "<group>"; };
 		2D989590282EE47F0070F475 /* MetricsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsModel.swift; sourceTree = "<group>"; };
 		2D9895932830321D0070F475 /* MetricvaluesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricvaluesModel.swift; sourceTree = "<group>"; };
@@ -263,6 +266,7 @@
 				2DBDCCF5288D6B9800CC8EDC /* CompositionsModel.swift */,
 				2DBDCCFB288EF0A500CC8EDC /* Scenario.swift */,
 				2D6B0E52289D746C0016E57F /* SeriesModel.swift */,
+				2D6B0E58289EC8680016E57F /* MlDataTableFactory.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -426,6 +430,7 @@
 				2D0139612878692500AC8EBF /* ScenarioView.swift in Sources */,
 				0A589C13286614A000D1239B /* ManagerModels.swift in Sources */,
 				2D481BA528356EA4003EBCF2 /* AlgorithmsModel.swift in Sources */,
+				2D6B0E59289EC8680016E57F /* MlDataTableFactory.swift in Sources */,
 				2D288AC12829793B0078647E /* Trainer.swift in Sources */,
 				2DA77EEB2825721B007EC3E5 /* ValuesModel.swift in Sources */,
 				0A4C56552869750900961D1D /* FilesView.swift in Sources */,
@@ -471,6 +476,7 @@
 				2D0139622878692500AC8EBF /* ScenarioView.swift in Sources */,
 				0A589C14286614A000D1239B /* ManagerModels.swift in Sources */,
 				2D481BA628356EA4003EBCF2 /* AlgorithmsModel.swift in Sources */,
+				2D6B0E5A289EC8680016E57F /* MlDataTableFactory.swift in Sources */,
 				2D288AC22829793B0078647E /* Trainer.swift in Sources */,
 				2DA77EEC2825721B007EC3E5 /* ValuesModel.swift in Sources */,
 				0A4C56562869750900961D1D /* FilesView.swift in Sources */,

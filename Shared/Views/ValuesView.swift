@@ -11,82 +11,8 @@ import CoreML
 import CreateML
 struct ValuesView: View {
     
-    @ObservedObject var loader = Loader()
+    @ObservedObject var mlDataTableFactory = MlDataTableFactory()
     
-    class Loader: ObservableObject {
-        @Published var loaded = false
-        var gridItems: [GridItem]!
-        var numRows: Int = 0
-        var customColumns = [CustomColumn]()
-        var mlDataTable: MLDataTable!
-        var unionOfMlDataTables: [MLDataTable]?
-        var orderedColumns: [Columns]!
-        var selectedColumns: [Columns]?
-        var mergedColumns: [Columns]!
-        var timeSeries: [Int]?
-        
-        func filterMlDataTable() {
-            var result: MLDataTable!
-            mergedColumns = selectedColumns == nil ? orderedColumns: selectedColumns
-            if selectedColumns != nil {
-                let additions = orderedColumns.filter { $0.ispartofprimarykey == 1 || $0.istimeseries == 1 || $0.istarget == 1}
-                mergedColumns.append(contentsOf: additions)
-            }
-            let timeSeriesColumn = self.orderedColumns.filter { $0.istimeseries == 1 }
-            let mlTimeSeriesColumn = mlDataTable[(timeSeriesColumn.first?.name!)!]
-            if let timeSeries = timeSeries {
-                for timeSlice in timeSeries {
-                    let timeSeriesMask = mlTimeSeriesColumn == timeSlice
-                    let newMlDataTable = self.mlDataTable[timeSeriesMask]
-                    if unionOfMlDataTables == nil {
-                        unionOfMlDataTables = [newMlDataTable] } else {
-                            unionOfMlDataTables?.append(newMlDataTable)
-                        }
-                }
-                if var unionTables = unionOfMlDataTables {
-                    adjustTables(unionOfMlDataTables: &unionTables)
-                    let joinColumn = orderedColumns.first(where: { $0.ispartofprimarykey == 1 })
-                    for mlDataTableForUnion in unionTables {
-                        if result == nil {
-                            result = mlDataTableForUnion
-                        } else {
-                            result = result.join(with: mlDataTableForUnion, on: (joinColumn?.name!)!, type: .inner)
-                        }
-                    }
-                }
-                self.mlDataTable = result
-            }
-        }
-        func adjustTables(unionOfMlDataTables: inout [MLDataTable]) {
-            let seriesDataModel = SeriesModel()
-            seriesDataModel.deleteAllRecords(predicate: nil)
-            /// extract non timeSeriesColumn from self.mlDataTable
-            let timeSeriesColumns = self.orderedColumns.filter { $0.istimeseries == 1 }
-            /// rename timeSeriesColumns from each mlDataTable in unionOfMlDataTables
-            let timeDependantColumns = self.orderedColumns.filter { $0.istimeseries == 0 && $0.ispartoftimeseries == 1 }
-            let timeInDependantColumns = self.orderedColumns.filter { $0.istimeseries == 0 && $0.ispartoftimeseries == 0 && $0.ispartofprimarykey == 0 }
-            for i in 0..<unionOfMlDataTables.count {
-                for column in timeSeriesColumns {
-                    unionOfMlDataTables[i].removeColumn(named: column.name!)
-                }
-                if i > 0 {
-                    for column in timeInDependantColumns {
-                        unionOfMlDataTables[i].removeColumn(named: column.name!)
-                    }
-                }
-                for column in timeDependantColumns {
-                    if unionOfMlDataTables[i].columnNames.contains(column.name!) {
-                        unionOfMlDataTables[i].renameColumn(named: column.name!, to: column.name! + " T-(\(i))")
-                        let newSeries = SeriesModel().insertRecord()
-                        newSeries.timeslice = Int16(i)
-                        newSeries.alias = column.name! + " T-(\(i))"
-                        newSeries.series2column = column    
-                        column.alias = column.name! + " T-(\(i))"
-                    }
-                }
-            }
-        }
-    }
     struct CellIndex: Identifiable {
         let id: Int
         let colIndex: Int
@@ -96,12 +22,12 @@ struct ValuesView: View {
  
     
     init(mlDataTable: MLDataTable, orderedColumns: [Columns], selectedColumns: [Columns]? = nil, selectedTimeSeries: [Int]? = nil) {
-        loader.orderedColumns = orderedColumns
-        loader.mlDataTable = mlDataTable
-        loader.selectedColumns = selectedColumns
-        loader.timeSeries = selectedTimeSeries
-        loader.filterMlDataTable()
-        loadValuesTableProvider(mlDataTable: loader.mlDataTable, orderedColums: loader.mergedColumns.sorted(by: { $0.orderno < $1.orderno }))
+        mlDataTableFactory.orderedColumns = orderedColumns
+        mlDataTableFactory.mlDataTable = mlDataTable
+        mlDataTableFactory.selectedColumns = selectedColumns
+        mlDataTableFactory.timeSeries = selectedTimeSeries
+        mlDataTableFactory.filterMlDataTable()
+        loadValuesTableProvider(mlDataTable: mlDataTableFactory.mlDataTable, orderedColums: mlDataTableFactory.mergedColumns.sorted(by: { $0.orderno < $1.orderno }))
     }
     init(file: Files) {
         loadValuesTableProvider(file: file)
@@ -114,10 +40,10 @@ struct ValuesView: View {
             sampler.async {
                 result =  ValuesTableProvider(mlDataTable: mlDataTable, orderedColumns: orderedColums)
                 DispatchQueue.main.async {
-                    loader.gridItems = result.gridItems
-                    loader.customColumns = result.customColumns
-                    loader.loaded = true
-                    loader.numRows = loader.customColumns.count > 0 ? loader.customColumns[0].rows.count:0
+                    mlDataTableFactory.gridItems = result.gridItems
+                    mlDataTableFactory.customColumns = result.customColumns
+                    mlDataTableFactory.loaded = true
+                    mlDataTableFactory.numRows = mlDataTableFactory.customColumns.count > 0 ? mlDataTableFactory.customColumns[0].rows.count:0
                 }
             }
         }
@@ -129,24 +55,24 @@ struct ValuesView: View {
             sampler.async {
                 result =  ValuesTableProvider(file: file)
                 DispatchQueue.main.async {
-                    loader.gridItems = result.gridItems
-                    loader.customColumns = result.customColumns
-                    loader.loaded = true
-                    loader.numRows = loader.customColumns.count > 0 ? loader.customColumns[0].rows.count:0
+                    mlDataTableFactory.gridItems = result.gridItems
+                    mlDataTableFactory.customColumns = result.customColumns
+                    mlDataTableFactory.loaded = true
+                    mlDataTableFactory.numRows = mlDataTableFactory.customColumns.count > 0 ? mlDataTableFactory.customColumns[0].rows.count:0
                 }
             }
         }
     }
     var body: some View {
-        if loader.loaded == false {
+        if mlDataTableFactory.loaded == false {
             Text("load table...")
                  } else {
-                let cells = (0..<loader.numRows).flatMap{j in loader.customColumns.enumerated().map{(i,c) in CellIndex(id:j + i*loader.numRows, colIndex:i, rowIndex:j)}}
+                let cells = (0..<mlDataTableFactory.numRows).flatMap{j in mlDataTableFactory.customColumns.enumerated().map{(i,c) in CellIndex(id:j + i*mlDataTableFactory.numRows, colIndex:i, rowIndex:j)}}
                      ScrollView([.vertical], showsIndicators: true) {
-                    LazyVGrid(columns:loader.gridItems, pinnedViews: [.sectionHeaders], content: {
+                    LazyVGrid(columns:mlDataTableFactory.gridItems, pinnedViews: [.sectionHeaders], content: {
                         Section(header: stickyHeaderView) {
                             ForEach(cells) { cellIndex in
-                                let column = loader.customColumns[cellIndex.colIndex]
+                                let column = mlDataTableFactory.customColumns[cellIndex.colIndex]
                                 Text(column.rows[cellIndex.rowIndex])
                                     .padding(.horizontal)
                                     .font(.body).monospacedDigit()
@@ -166,8 +92,8 @@ struct ValuesView: View {
                         .fill(Color.gray)
                         .frame(maxWidth: .infinity, minHeight: 40, maxHeight: .infinity)
                         .overlay(
-                            LazyVGrid(columns: loader.gridItems) {
-                                ForEach(loader.customColumns) { col in
+                            LazyVGrid(columns: mlDataTableFactory.gridItems) {
+                                ForEach(mlDataTableFactory.customColumns) { col in
                                     Text(col.title)
                                         .foregroundColor(Color.white)
                                         .font(.body)
@@ -182,7 +108,7 @@ struct ValuesView: View {
                         .frame(maxWidth: .infinity)
                         .frame(maxHeight: .infinity)
                         .overlay(
-                            stickyFilterView(columns: loader.customColumns)
+                            stickyFilterView(columns: mlDataTableFactory.customColumns)
                         )
                 }
                 .background(.white)
