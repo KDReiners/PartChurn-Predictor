@@ -31,14 +31,19 @@ class MlDataTableFactory: ObservableObject {
         let mlTimeSeriesColumn = mlDataTable[(timeSeriesColumn.first?.name!)!]
         if let timeSeries = timeSeries {
             for timeSlices in timeSeries {
+                let newCluster = mlTableCluster(columns: mergedColumns)
                 for timeSlice in timeSlices {
+                    
                     let timeSeriesMask = mlTimeSeriesColumn == timeSlice
                     let newMlDataTable = self.mlDataTable[timeSeriesMask]
+                    newCluster.tables.append(newMlDataTable)
+                    
                     if unionOfMlDataTables == nil {
                         unionOfMlDataTables = [newMlDataTable] } else {
                             unionOfMlDataTables?.append(newMlDataTable)
                         }
                 }
+                newCluster.construct()
             }
             if var unionTables = unionOfMlDataTables {
 //                adjustTables(unionOfMlDataTables: &unionTables)
