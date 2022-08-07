@@ -18,7 +18,7 @@ class MlDataTableFactory: ObservableObject {
     var orderedColumns: [Columns]!
     var selectedColumns: [Columns]?
     var mergedColumns: [Columns]!
-    var timeSeries: [Int]?
+    var timeSeries: [[Int]]?
     
     func filterMlDataTable() {
         var result: MLDataTable!
@@ -30,16 +30,18 @@ class MlDataTableFactory: ObservableObject {
         let timeSeriesColumn = self.orderedColumns.filter { $0.istimeseries == 1 }
         let mlTimeSeriesColumn = mlDataTable[(timeSeriesColumn.first?.name!)!]
         if let timeSeries = timeSeries {
-            for timeSlice in timeSeries {
-                let timeSeriesMask = mlTimeSeriesColumn == timeSlice
-                let newMlDataTable = self.mlDataTable[timeSeriesMask]
-                if unionOfMlDataTables == nil {
-                    unionOfMlDataTables = [newMlDataTable] } else {
-                        unionOfMlDataTables?.append(newMlDataTable)
-                    }
+            for timeSlices in timeSeries {
+                for timeSlice in timeSlices {
+                    let timeSeriesMask = mlTimeSeriesColumn == timeSlice
+                    let newMlDataTable = self.mlDataTable[timeSeriesMask]
+                    if unionOfMlDataTables == nil {
+                        unionOfMlDataTables = [newMlDataTable] } else {
+                            unionOfMlDataTables?.append(newMlDataTable)
+                        }
+                }
             }
             if var unionTables = unionOfMlDataTables {
-                adjustTables(unionOfMlDataTables: &unionTables)
+//                adjustTables(unionOfMlDataTables: &unionTables)
                 let joinColumn = orderedColumns.first(where: { $0.ispartofprimarykey == 1 })
                 for mlDataTableForUnion in unionTables {
                     if result == nil {

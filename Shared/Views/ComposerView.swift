@@ -60,7 +60,7 @@ struct ComposerView: View {
                         }
                     }
                 }
-//                    ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: selectedColumnCombination, selectedTimeSeries: selectedTimeSeriesCombination)
+                    ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: selectedColumnCombination, timeSeriesRows: selectedTimeSeriesCombination)
             }
         }
     }

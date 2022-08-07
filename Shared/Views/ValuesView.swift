@@ -21,11 +21,19 @@ struct ValuesView: View {
 
  
     
-    init(mlDataTable: MLDataTable, orderedColumns: [Columns], selectedColumns: [Columns]? = nil, selectedTimeSeries: [Int]? = nil) {
+    init(mlDataTable: MLDataTable, orderedColumns: [Columns], selectedColumns: [Columns]? = nil, timeSeriesRows: [String]? = nil) {
         mlDataTableFactory.orderedColumns = orderedColumns
         mlDataTableFactory.mlDataTable = mlDataTable
         mlDataTableFactory.selectedColumns = selectedColumns
-        mlDataTableFactory.timeSeries = selectedTimeSeries
+        if let timeSeriesRows = timeSeriesRows {
+            var selectedTimeSeries = [[Int]]()
+            for row in timeSeriesRows {
+                let innerResult = row.components(separatedBy: ", ").map { Int($0)! }
+                selectedTimeSeries.append(innerResult)
+            }
+                    mlDataTableFactory.timeSeries = selectedTimeSeries
+        }
+
         mlDataTableFactory.filterMlDataTable()
         loadValuesTableProvider(mlDataTable: mlDataTableFactory.mlDataTable, orderedColums: mlDataTableFactory.mergedColumns.sorted(by: { $0.orderno < $1.orderno }))
     }
