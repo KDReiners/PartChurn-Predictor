@@ -18,9 +18,9 @@ class ValuesTableProvider: ObservableObject {
     var numCols: Int = 0
     var numRows: Int = 0
     internal var arrangedColumns = [Columns]()
-    init(mlDataTable: MLDataTable, orderedColumns: [Columns]) {
+    init(mlDataTable: MLDataTable, orderedColumns: [String]) {
         self.mlDataTable = mlDataTable
-        prepareView(orderedColumns: orderedColumns.sorted(by: {$0.orderno < $1.orderno}))
+        prepareView(orderedColumns: orderedColumns)
     }
     init(file: Files?) {
         self.coreDataML = CoreDataML(model: file?.files2model, files: file)
@@ -61,20 +61,11 @@ class ValuesTableProvider: ObservableObject {
         self.gridItems.append(newGridItem!)
     }
     
-    func prepareView(orderedColumns: [Columns]) -> Void {
+    func prepareView(orderedColumns: [String]) -> Void {
         var rows = [String]()
         self.gridItems.removeAll()
         for column in  orderedColumns {
-            if column.column2series?.count == 0 {
-                insertIntoGridItems(column.name, &rows)
-            }
-            else {
-                for series in column.column2series! {
-                    if (series as! Series).alias != nil {
-                        insertIntoGridItems((series as! Series).alias, &rows)
-                    }
-                }
-            }
+            insertIntoGridItems(column, &rows)
         }
     }
     func prepareView() -> Void {
@@ -84,15 +75,18 @@ class ValuesTableProvider: ObservableObject {
                 var newCustomColumn = CustomColumn(title: column.name ?? "Unbekannt", alignment: .trailing)
                 var newGridItem: GridItem?
                 let valueType = mlDataTable[column.name!].type
-                let mlDataValueFormatter = NumberFormatter()
+                var mlDataValueFormatter = NumberFormatter()
                 mlDataValueFormatter.numberStyle = column.decimalpoint == true ? .decimal : .none
                 switch valueType {
                 case MLDataValue.ValueType.int:
+                    mlDataValueFormatter.minimumFractionDigits = 0
                     rows = Array.init(mlDataTable[column.name!].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.intValue!)) }))
                     newCustomColumn.alignment = .trailing
                     newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
                     column.datatype = BaseServices.columnDataTypes.Int.rawValue
                 case MLDataValue.ValueType.double:
+                    mlDataValueFormatter.minimumFractionDigits = 2
+                    mlDataValueFormatter.maximumFractionDigits = 2
                     rows = Array.init(mlDataTable[column.name!].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.doubleValue!)) }))
                     newCustomColumn.alignment = .trailing
                     newGridItem = GridItem(.flexible(),spacing: 10, alignment: .trailing)

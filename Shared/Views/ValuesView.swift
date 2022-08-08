@@ -34,14 +34,14 @@ struct ValuesView: View {
                     mlDataTableFactory.timeSeries = selectedTimeSeries
         }
 
-        mlDataTableFactory.filterMlDataTable()
-        loadValuesTableProvider(mlDataTable: mlDataTableFactory.mlDataTable, orderedColums: mlDataTableFactory.mergedColumns.sorted(by: { $0.orderno < $1.orderno }))
+        let unionResult = mlDataTableFactory.filterMlDataTable()
+        loadValuesTableProvider(mlDataTable: unionResult.mlDataTable, orderedColums: unionResult.orderedColumns)
     }
     init(file: Files) {
         loadValuesTableProvider(file: file)
     }
    
-    func loadValuesTableProvider(mlDataTable: MLDataTable, orderedColums: [Columns]) -> Void {
+    func loadValuesTableProvider(mlDataTable: MLDataTable, orderedColums: [String]) -> Void {
         var result: ValuesTableProvider!
         do {
             let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
