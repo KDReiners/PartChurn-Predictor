@@ -18,8 +18,8 @@ struct ValuesView: View {
         let colIndex: Int
         let rowIndex: Int
     }
-
- 
+    
+    
     
     init(mlDataTable: MLDataTable, orderedColumns: [Columns], selectedColumns: [Columns]? = nil, timeSeriesRows: [String]? = nil) {
         mlDataTableFactory.orderedColumns = orderedColumns
@@ -31,16 +31,16 @@ struct ValuesView: View {
                 let innerResult = row.components(separatedBy: ", ").map { Int($0)! }
                 selectedTimeSeries.append(innerResult)
             }
-                    mlDataTableFactory.timeSeries = selectedTimeSeries
+            mlDataTableFactory.timeSeries = selectedTimeSeries
         }
-
+        
         let unionResult = mlDataTableFactory.filterMlDataTable()
         loadValuesTableProvider(mlDataTable: unionResult.mlDataTable, orderedColums: unionResult.orderedColumns)
     }
     init(file: Files) {
         loadValuesTableProvider(file: file)
     }
-   
+    
     func loadValuesTableProvider(mlDataTable: MLDataTable, orderedColums: [String]) -> Void {
         var result: ValuesTableProvider!
         do {
@@ -74,84 +74,86 @@ struct ValuesView: View {
     var body: some View {
         if mlDataTableFactory.loaded == false {
             Text("load table...")
-                 } else {
-                let cells = (0..<mlDataTableFactory.numRows).flatMap{j in mlDataTableFactory.customColumns.enumerated().map{(i,c) in CellIndex(id:j + i*mlDataTableFactory.numRows, colIndex:i, rowIndex:j)}}
-                     ScrollView([.vertical], showsIndicators: true) {
-                    LazyVGrid(columns:mlDataTableFactory.gridItems, pinnedViews: [.sectionHeaders], content: {
-                        Section(header: stickyHeaderView) {
-                            ForEach(cells) { cellIndex in
-                                let column = mlDataTableFactory.customColumns[cellIndex.colIndex]
-                                Text(column.rows[cellIndex.rowIndex])
-                                    .padding(.horizontal)
-                                    .font(.body).monospacedDigit()
-                                    .scaledToFit()
-                                
-                            }
+        } else {
+            let cells = (0..<mlDataTableFactory.numRows).flatMap{j in mlDataTableFactory.customColumns.enumerated().map{(i,c) in CellIndex(id:j + i*mlDataTableFactory.numRows, colIndex:i, rowIndex:j)}}
+            ScrollView([.vertical], showsIndicators: true) {
+                LazyVGrid(columns:mlDataTableFactory.gridItems, pinnedViews: [.sectionHeaders], content: {
+                    Section(header: stickyHeaderView) {
+                        ForEach(cells) { cellIndex in
+                            let column = mlDataTableFactory.customColumns[cellIndex.colIndex]
+                            Text(column.rows[cellIndex.rowIndex])
+                                .padding(.horizontal)
+                                .font(.body).monospacedDigit()
+                                .scaledToFit()
+                            
                         }
-                    })
-                }
-                .background(.white)
-                .padding(.horizontal)
-            }
-                 }
-                 var stickyHeaderView: some View {
-                VStack(spacing: 10) {
-                    Rectangle()
-                        .fill(Color.gray)
-                        .frame(maxWidth: .infinity, minHeight: 40, maxHeight: .infinity)
-                        .overlay(
-                            LazyVGrid(columns: mlDataTableFactory.gridItems) {
-                                ForEach(mlDataTableFactory.customColumns) { col in
-                                    Text(col.title)
-                                        .foregroundColor(Color.white)
-                                        .font(.body)
-                                        .scaledToFit()
-                                        .padding(.horizontal)
-                                        .multilineTextAlignment(.center)
-                                }
-                            }
-                        )
-                    Rectangle()
-                        .fill(Color.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(maxHeight: .infinity)
-                        .overlay(
-                            stickyFilterView(columns: mlDataTableFactory.customColumns)
-                        )
-                }
-                .background(.white)
-                .padding(.bottom)
-            }
-                struct stickyFilterView: View {
-                var columns: [CustomColumn]
-                @State var filterDict = Dictionary<String, String>()
-                init(columns: [CustomColumn]) {
-                    self.columns = columns
-                    for column in columns {
-                        filterDict[column.title] = ""
                     }
-                }
-                var body: some View {
-                    ForEach(columns) { col in
-                        TextField(col.title, text: binding(for: col.title))
-                            .onSubmit {
-                                print(binding(for: col.title))
-                            }
-                    }
-                }
-                private func binding(for key: String) -> Binding<String> {
-                    return Binding(get: {
-                        return self.filterDict[key] ?? ""
-                    }, set: {
-                        self.filterDict[key] = $0
-                    })
-                }
-                
+                })
             }
+            .background(.white)
+            .padding(.horizontal)
+        }
+    }
+    var stickyHeaderView: some View {
+        VStack(spacing: 10) {
+            LazyVGrid(columns: mlDataTableFactory.gridItems) {
+                ForEach(mlDataTableFactory.customColumns) { col in
+                    Text(col.title)
+                        .foregroundColor(Color.blue)
+                        .font(.body)
+                        .padding(.horizontal)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
             
-            struct ValuesView_Previews: PreviewProvider {
-                static var previews: some View {
-                    return ValuesView(file: FilesModel().items.first!)
+            Rectangle()
+                .fill(Color.white)
+                .frame(maxWidth: .infinity)
+                .frame(maxHeight: .infinity)
+                .overlay(
+                    stickyFilterView(columns: mlDataTableFactory.customColumns, gridItems: mlDataTableFactory.gridItems, mlDataTable: mlDataTableFactory.mlDataTable)
+                )
+        }
+        .background(.white)
+        .padding(.bottom)
+    }
+    struct stickyFilterView: View {
+        var gridItems: [GridItem]
+        var columns: [CustomColumn]
+        var mlDataTable: MLDataTable
+        @State var filterDict = Dictionary<String, String>()
+        init(columns: [CustomColumn], gridItems: [GridItem], mlDataTable: MLDataTable) {
+            self.columns = columns
+            self.gridItems = gridItems
+            self.mlDataTable = mlDataTable
+            for column in columns {
+                filterDict[column.title] = ""
+            }
+        }
+        var body: some View {
+            LazyVGrid(columns: gridItems) {
+                ForEach(columns) { col in
+                    TextField(col.title, text: binding(for: col.title)).frame(alignment: .trailing)
+                        .onSubmit {
+                            print(binding(for: col.title))
+                        }
                 }
             }
+        }
+        private func binding(for key: String) -> Binding<String> {
+            return Binding(get: {0
+                return self.filterDict[key] ?? ""
+            }, set: {
+                self.filterDict[key] = $0
+            })
+        }
+        
+    }
+}
+
+struct ValuesView_Previews: PreviewProvider {
+    static var previews: some View {
+        return ValuesView(file: FilesModel().items.first!)
+    }
+}
