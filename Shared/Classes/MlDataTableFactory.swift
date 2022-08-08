@@ -19,19 +19,21 @@ class MlDataTableFactory: ObservableObject {
     var selectedColumns: [Columns]?
     var mergedColumns: [Columns]!
     var timeSeries: [[Int]]?
+    var mlColumns: [String]?
     
-    func filterMlDataTable() {
-        var result: MLDataTable!
+    func filterMlDataTable() -> UnionResult {
+        var result: MLDataTable?
         mergedColumns = selectedColumns == nil ? orderedColumns: selectedColumns
         if selectedColumns != nil {
             let additions = orderedColumns.filter { $0.ispartofprimarykey == 1 || $0.istimeseries == 1 || $0.istarget == 1}
             mergedColumns.append(contentsOf: additions)
         }
+        self.mlColumns = mergedColumns.map { $0.name!}
         let timeSeriesColumn = self.orderedColumns.filter { $0.istimeseries == 1 }
         let mlTimeSeriesColumn = mlDataTable[(timeSeriesColumn.first?.name!)!]
         if let timeSeries = timeSeries {
             for timeSlices in timeSeries {
-                let newCluster = mlTableCluster(columns: mergedColumns)
+                let newCluster = MLTableCluster(columns: mergedColumns)
                 for timeSlice in timeSlices {
                     
                     let timeSeriesMask = mlTimeSeriesColumn == timeSlice
@@ -43,49 +45,24 @@ class MlDataTableFactory: ObservableObject {
                             unionOfMlDataTables?.append(newMlDataTable)
                         }
                 }
-                newCluster.construct()
-            }
-            if var unionTables = unionOfMlDataTables {
-//                adjustTables(unionOfMlDataTables: &unionTables)
-                let joinColumn = orderedColumns.first(where: { $0.ispartofprimarykey == 1 })
-                for mlDataTableForUnion in unionTables {
-                    if result == nil {
-                        result = mlDataTableForUnion
-                    } else {
-                        result = result.join(with: mlDataTableForUnion, on: (joinColumn?.name!)!, type: .inner)
-                    }
+                if result == nil {
+                    result = newCluster.construct()
+                    self.mlColumns = newCluster.orderedColumns
+                } else {
+                    result?.append(contentsOf: newCluster.construct())
                 }
             }
             self.mlDataTable = result
         }
+        let unionResult = UnionResult(mlDataTable: self.mlDataTable, mlColumns:self.mlColumns!)
+        return unionResult
     }
-    func adjustTables(unionOfMlDataTables: inout [MLDataTable]) {
-        let seriesDataModel = SeriesModel()
-        seriesDataModel.deleteAllRecords(predicate: nil)
-        /// extract non timeSeriesColumn from self.mlDataTable
-        let timeSeriesColumns = self.orderedColumns.filter { $0.istimeseries == 1 }
-        /// rename timeSeriesColumns from each mlDataTable in unionOfMlDataTables
-        let timeDependantColumns = self.orderedColumns.filter { $0.istimeseries == 0 && $0.ispartoftimeseries == 1 }
-        let timeInDependantColumns = self.orderedColumns.filter { $0.istimeseries == 0 && $0.ispartoftimeseries == 0 && $0.ispartofprimarykey == 0 }
-        for i in 0..<unionOfMlDataTables.count {
-            for column in timeSeriesColumns {
-                unionOfMlDataTables[i].removeColumn(named: column.name!)
-            }
-            if i > 0 {
-                for column in timeInDependantColumns {
-                    unionOfMlDataTables[i].removeColumn(named: column.name!)
-                }
-            }
-            for column in timeDependantColumns {
-                if unionOfMlDataTables[i].columnNames.contains(column.name!) {
-                    unionOfMlDataTables[i].renameColumn(named: column.name!, to: column.name! + " T-(\(i))")
-                    let newSeries = SeriesModel().insertRecord()
-                    newSeries.timeslice = Int16(i)
-                    newSeries.alias = column.name! + " T-(\(i))"
-                    newSeries.series2column = column
-                    column.alias = column.name! + " T-(\(i))"
-                }
-            }
+    struct UnionResult {
+        var mlDataTable: MLDataTable!
+        var orderedColumns: [String]!
+        init(mlDataTable: MLDataTable, mlColumns: [String]) {
+            self.mlDataTable = mlDataTable
+            self.orderedColumns = mlColumns
         }
     }
 }
