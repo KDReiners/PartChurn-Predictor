@@ -12,7 +12,7 @@ import CreateML
 struct ValuesView: View {
     
     @ObservedObject var mlDataTableFactory = MlDataTableFactory()
-    
+    var mlDataTable: MLDataTable?
     struct CellIndex: Identifiable {
         let id: Int
         let colIndex: Int
@@ -35,6 +35,7 @@ struct ValuesView: View {
         }
         
         let unionResult = mlDataTableFactory.filterMlDataTable()
+        self.mlDataTable = unionResult.mlDataTable
         loadValuesTableProvider(mlDataTable: unionResult.mlDataTable, orderedColums: unionResult.orderedColumns)
     }
     init(file: Files) {
@@ -93,6 +94,13 @@ struct ValuesView: View {
             .background(.white)
             .padding(.horizontal)
         }
+        Button("Save") {
+            do {
+                try self.mlDataTable!.writeCSV(to: URL(fileURLWithPath:"/Users/klaus.reiners/Library/Containers/peas.com.PartChurn-Predictor/Data/Library/Application Support/PartChurn Predictor/Khaled.csv"))
+            } catch {
+                print("")
+            }
+        }
     }
     var stickyHeaderView: some View {
         VStack(spacing: 10) {
@@ -112,7 +120,7 @@ struct ValuesView: View {
                 .frame(maxWidth: .infinity)
                 .frame(maxHeight: .infinity)
                 .overlay(
-                    stickyFilterView(columns: mlDataTableFactory.customColumns, gridItems: mlDataTableFactory.gridItems, mlDataTable: mlDataTableFactory.mlDataTable)
+                    stickyFilterView(columns: mlDataTableFactory.customColumns, gridItems: mlDataTableFactory.gridItems)
                 )
         }
         .background(.white)
@@ -121,12 +129,10 @@ struct ValuesView: View {
     struct stickyFilterView: View {
         var gridItems: [GridItem]
         var columns: [CustomColumn]
-        var mlDataTable: MLDataTable
         @State var filterDict = Dictionary<String, String>()
-        init(columns: [CustomColumn], gridItems: [GridItem], mlDataTable: MLDataTable) {
+        init(columns: [CustomColumn], gridItems: [GridItem]) {
             self.columns = columns
             self.gridItems = gridItems
-            self.mlDataTable = mlDataTable
             for column in columns {
                 filterDict[column.title] = ""
             }

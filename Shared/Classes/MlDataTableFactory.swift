@@ -10,7 +10,7 @@ import SwiftUI
 import CreateML
 class MlDataTableFactory: ObservableObject {
     @Published var loaded = false
-    var gridItems: [GridItem]!
+    @Published var gridItems: [GridItem]!
     var numRows: Int = 0
     var customColumns = [CustomColumn]()
     var mlDataTable: MLDataTable!

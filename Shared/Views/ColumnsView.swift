@@ -111,6 +111,7 @@ class ColumnsViewModel: ObservableObject {
 struct ColumnsView: View {
     var file: Files
     @ObservedObject var columnsViewModel: ColumnsViewModel
+    @ObservedObject var columnsDataModel = ColumnsModel()
     init(file: Files, columnsViewModel: ColumnsViewModel) {
         self.file = file
         self.columnsViewModel = columnsViewModel
