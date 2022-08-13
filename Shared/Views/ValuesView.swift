@@ -13,6 +13,7 @@ struct ValuesView: View {
     
     @ObservedObject var mlDataTableFactory = MlDataTableFactory()
     var mlDataTable: MLDataTable?
+    var valuesTableProvider: ValuesTableProvider!
     struct CellIndex: Identifiable {
         let id: Int
         let colIndex: Int
@@ -36,27 +37,11 @@ struct ValuesView: View {
         
         let unionResult = mlDataTableFactory.filterMlDataTable()
         self.mlDataTable = unionResult.mlDataTable
-        loadValuesTableProvider(mlDataTable: unionResult.mlDataTable, orderedColums: unionResult.orderedColumns)
     }
     init(file: Files) {
         loadValuesTableProvider(file: file)
     }
     
-    func loadValuesTableProvider(mlDataTable: MLDataTable, orderedColums: [String]) -> Void {
-        var result: ValuesTableProvider!
-        do {
-            let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
-            sampler.async {
-                result =  ValuesTableProvider(mlDataTable: mlDataTable, orderedColumns: orderedColums)
-                DispatchQueue.main.async {
-                    mlDataTableFactory.gridItems = result.gridItems
-                    mlDataTableFactory.customColumns = result.customColumns
-                    mlDataTableFactory.loaded = true
-                    mlDataTableFactory.numRows = mlDataTableFactory.customColumns.count > 0 ? mlDataTableFactory.customColumns[0].rows.count:0
-                }
-            }
-        }
-    }
     func loadValuesTableProvider(file: Files) -> Void {
         var result: ValuesTableProvider!
         do {
@@ -148,7 +133,7 @@ struct ValuesView: View {
             }
         }
         private func binding(for key: String) -> Binding<String> {
-            return Binding(get: {0
+            return Binding(get: {
                 return self.filterDict[key] ?? ""
             }, set: {
                 self.filterDict[key] = $0

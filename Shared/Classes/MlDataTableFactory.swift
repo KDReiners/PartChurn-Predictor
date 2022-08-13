@@ -20,6 +20,7 @@ class MlDataTableFactory: ObservableObject {
     var mergedColumns: [Columns]!
     var timeSeries: [[Int]]?
     var mlColumns: [String]?
+    var valuesTableProvider: ValuesTableProvider!
     
     func filterMlDataTable() -> UnionResult {
         var result: MLDataTable?
@@ -54,15 +55,37 @@ class MlDataTableFactory: ObservableObject {
             }
             self.mlDataTable = result
         }
+        tableProvider(mlDataTable: mlDataTable, orderedColums: mlColumns!) { provider in
+            DispatchQueue.main.async {
+                self.valuesTableProvider = provider
+                self.loaded = true
+            }
+        }
         let unionResult = UnionResult(mlDataTable: self.mlDataTable, mlColumns:self.mlColumns!)
         return unionResult
     }
-    struct UnionResult {
-        var mlDataTable: MLDataTable!
-        var orderedColumns: [String]!
-        init(mlDataTable: MLDataTable, mlColumns: [String]) {
-            self.mlDataTable = mlDataTable
-            self.orderedColumns = mlColumns
+    func tableProvider(mlDataTable: MLDataTable, orderedColums: [String], returnCompletion: @escaping (ValuesTableProvider) -> () ) {
+        var result: ValuesTableProvider!
+        do {
+            let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
+            sampler.async {
+                result =  ValuesTableProvider(mlDataTable: mlDataTable, orderedColumns: orderedColums)
+                DispatchQueue.main.async {
+                    self.gridItems = result.gridItems
+                    self.customColumns = result.customColumns
+                    self.loaded = true
+                    self.numRows = self.customColumns.count > 0 ? self.customColumns[0].rows.count:0
+                    returnCompletion(result as ValuesTableProvider)
+                }
+            }
         }
+    }
+}
+struct UnionResult {
+    var mlDataTable: MLDataTable!
+    var orderedColumns: [String]!
+    init(mlDataTable: MLDataTable, mlColumns: [String]) {
+        self.mlDataTable = mlDataTable
+        self.orderedColumns = mlColumns
     }
 }
