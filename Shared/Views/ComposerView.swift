@@ -59,10 +59,10 @@ struct ComposerView: View {
                             .padding(.top, 2)
                         }
                     }
-                }
+                }.padding()
                 VStack(alignment: .leading) {
                     ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: selectedColumnCombination, timeSeriesRows: selectedTimeSeriesCombination)
-                }
+                }.padding(.horizontal)
             }
         }
     }

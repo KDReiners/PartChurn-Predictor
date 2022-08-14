@@ -38,13 +38,16 @@ class ValuesTableProvider: ObservableObject {
         var newCustomColumn = CustomColumn(title: columnName!, alignment: .trailing)
         var newGridItem: GridItem?
         let valueType = mlDataTable[columnName!].type
-        let mlDataValueFormatter = NumberFormatter()
+        var mlDataValueFormatter = NumberFormatter()
         switch valueType {
         case MLDataValue.ValueType.int:
             rows = Array.init(mlDataTable[columnName!].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.intValue!)) }))
             newCustomColumn.alignment = .trailing
             newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
         case MLDataValue.ValueType.double:
+            mlDataValueFormatter.minimumFractionDigits = 2
+            mlDataValueFormatter.maximumFractionDigits = 2
+            mlDataValueFormatter.hasThousandSeparators = true
             rows = Array.init(mlDataTable[columnName!].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.doubleValue!)) }))
             newCustomColumn.alignment = .trailing
             newGridItem = GridItem(.flexible(),spacing: 10, alignment: .trailing)

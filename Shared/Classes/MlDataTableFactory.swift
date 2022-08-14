@@ -23,7 +23,7 @@ class MlDataTableFactory: ObservableObject {
     var mlColumns: [String]?
     var valuesTableProvider: ValuesTableProvider!
     var filterViewProvider: FilterViewProvider!
-    func updateTableProvider() {
+    func updateTableProvider(file: Files? = nil) {
         tableProvider(mlDataTable: mlDataTable, orderedColums: mlColumns!) { provider in
             DispatchQueue.main.async {
                 self.valuesTableProvider = provider
@@ -90,7 +90,8 @@ class MlDataTableFactory: ObservableObject {
         case MLDataValue.ValueType.int:
             result = mlDataTable[mlDataTable[columnName] == Int(value)!]
         case MLDataValue.ValueType.double:
-            result = mlDataTable[mlDataTable[columnName] == Double(value)!]
+            result = mlDataTable[mlDataTable[columnName] > Double(value)! - 0.01]
+            result = result[result[columnName] < Double(value)! + 0.01]
         case MLDataValue.ValueType.string:
             result = mlDataTable[mlDataTable[columnName] == value]
         default:
