@@ -35,7 +35,6 @@ struct ValuesView: View {
             }
             mlDataTableFactory.timeSeries = selectedTimeSeries
         }
-        
         unionResult = mlDataTableFactory.buildMlDataTable()
         self.mlDataTable = unionResult.mlDataTable
     }
@@ -106,7 +105,8 @@ struct ValuesView: View {
                 .frame(maxWidth: .infinity)
                 .frame(maxHeight: .infinity)
                 .overlay(
-                    TableFilterView(columns: mlDataTableFactory.customColumns, gridItems: mlDataTableFactory.gridItems, mlDataTableFactory: self.mlDataTableFactory)
+//                    TableFilterView(columns: mlDataTableFactory.customColumns, gridItems: mlDataTableFactory.gridItems, mlDataTableFactory: self.mlDataTableFactory)
+                    mlDataTableFactory.filterViewProvider.tableFilterView
                 )
         }
         .background(.white)

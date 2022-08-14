@@ -75,7 +75,7 @@ class ValuesTableProvider: ObservableObject {
                 var newCustomColumn = CustomColumn(title: column.name ?? "Unbekannt", alignment: .trailing)
                 var newGridItem: GridItem?
                 let valueType = mlDataTable[column.name!].type
-                var mlDataValueFormatter = NumberFormatter()
+                let mlDataValueFormatter = NumberFormatter()
                 mlDataValueFormatter.numberStyle = column.decimalpoint == true ? .decimal : .none
                 switch valueType {
                 case MLDataValue.ValueType.int:

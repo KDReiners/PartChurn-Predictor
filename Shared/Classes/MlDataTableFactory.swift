@@ -22,11 +22,14 @@ class MlDataTableFactory: ObservableObject {
     var timeSeries: [[Int]]?
     var mlColumns: [String]?
     var valuesTableProvider: ValuesTableProvider!
-    
+    var filterViewProvider: FilterViewProvider!
     func updateTableProvider() {
         tableProvider(mlDataTable: mlDataTable, orderedColums: mlColumns!) { provider in
             DispatchQueue.main.async {
                 self.valuesTableProvider = provider
+                if self.filterViewProvider == nil {
+                    self.filterViewProvider = FilterViewProvider(mlDataTableFactory: self)
+                }
                 self.loaded = true
             }
         }
@@ -87,7 +90,6 @@ class MlDataTableFactory: ObservableObject {
                 DispatchQueue.main.async {
                     self.gridItems = result.gridItems
                     self.customColumns = result.customColumns
-                    self.loaded = true
                     self.numRows = self.customColumns.count > 0 ? self.customColumns[0].rows.count:0
                     returnCompletion(result as ValuesTableProvider)
                 }

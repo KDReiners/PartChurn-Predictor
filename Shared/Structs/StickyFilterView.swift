@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-class filterViewProvider: ObservableObject {
+class FilterViewProvider: ObservableObject {
     var mlDataTableFactory: MlDataTableFactory
     var tableFilterView: TableFilterView
     init(mlDataTableFactory: MlDataTableFactory) {
@@ -36,7 +36,6 @@ struct TableFilterView: View {
                 TextField(col.title, text: binding(for: col.title)).frame(alignment: .trailing)
                     .onSubmit {
                         print(binding(for: col.title))
-                        self.mlDataTableFactory.loaded = false
                         self.mlDataTableFactory.filterMlDataTable(filterDict: filterDict)
                     }
             }
