@@ -13,7 +13,8 @@ struct ValuesView: View {
     
     @ObservedObject var mlDataTableFactory = MlDataTableFactory()
     var mlDataTable: MLDataTable?
-    var valuesTableProvider: ValuesTableProvider!
+    var unionResult: UnionResult!
+    var masterDict = Dictionary<String, String>()
     struct CellIndex: Identifiable {
         let id: Int
         let colIndex: Int
@@ -35,7 +36,7 @@ struct ValuesView: View {
             mlDataTableFactory.timeSeries = selectedTimeSeries
         }
         
-        let unionResult = mlDataTableFactory.filterMlDataTable()
+        unionResult = mlDataTableFactory.buildMlDataTable()
         self.mlDataTable = unionResult.mlDataTable
     }
     init(file: Files) {
@@ -105,7 +106,7 @@ struct ValuesView: View {
                 .frame(maxWidth: .infinity)
                 .frame(maxHeight: .infinity)
                 .overlay(
-                    stickyFilterView(columns: mlDataTableFactory.customColumns, gridItems: mlDataTableFactory.gridItems)
+                    stickyFilterView(columns: mlDataTableFactory.customColumns, gridItems: mlDataTableFactory.gridItems, mlDataTableFactory: self.mlDataTableFactory)
                 )
         }
         .background(.white)
@@ -114,10 +115,13 @@ struct ValuesView: View {
     struct stickyFilterView: View {
         var gridItems: [GridItem]
         var columns: [CustomColumn]
-        @State var filterDict = Dictionary<String, String>()
-        init(columns: [CustomColumn], gridItems: [GridItem]) {
+        @State var filterDict: Dictionary<String, String>!
+        var mlDataTableFactory: MlDataTableFactory
+        init(columns: [CustomColumn], gridItems: [GridItem], mlDataTableFactory: MlDataTableFactory) {
             self.columns = columns
             self.gridItems = gridItems
+            self.filterDict = Dictionary<String, String>()
+            self.mlDataTableFactory = mlDataTableFactory
             for column in columns {
                 filterDict[column.title] = ""
             }
@@ -128,6 +132,8 @@ struct ValuesView: View {
                     TextField(col.title, text: binding(for: col.title)).frame(alignment: .trailing)
                         .onSubmit {
                             print(binding(for: col.title))
+                            self.mlDataTableFactory.loaded = false
+                            self.mlDataTableFactory.filterMlDataTable(filterDict: filterDict)
                         }
                 }
             }
@@ -136,7 +142,14 @@ struct ValuesView: View {
             return Binding(get: {
                 return self.filterDict[key] ?? ""
             }, set: {
-                self.filterDict[key] = $0
+                if !$0.isEmpty {
+                    self.filterDict[key] = $0
+                } else {
+                    if self.filterDict[key] != nil {
+
+                        self.filterDict.removeValue(forKey: key)
+                    }
+                }
             })
         }
         

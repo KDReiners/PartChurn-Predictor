@@ -14,6 +14,7 @@ class MlDataTableFactory: ObservableObject {
     var numRows: Int = 0
     var customColumns = [CustomColumn]()
     var mlDataTable: MLDataTable!
+    var mlDataTableRaw: MLDataTable!
     var unionOfMlDataTables: [MLDataTable]?
     var orderedColumns: [Columns]!
     var selectedColumns: [Columns]?
@@ -22,7 +23,16 @@ class MlDataTableFactory: ObservableObject {
     var mlColumns: [String]?
     var valuesTableProvider: ValuesTableProvider!
     
-    func filterMlDataTable() -> UnionResult {
+    func updateTableProvider() {
+        tableProvider(mlDataTable: mlDataTable, orderedColums: mlColumns!) { provider in
+            DispatchQueue.main.async {
+                self.valuesTableProvider = provider
+                self.loaded = true
+            }
+        }
+    }
+    
+    func buildMlDataTable() -> UnionResult {
         var result: MLDataTable?
         mergedColumns = selectedColumns == nil ? orderedColumns: selectedColumns
         if selectedColumns != nil {
@@ -55,14 +65,18 @@ class MlDataTableFactory: ObservableObject {
             }
             self.mlDataTable = result
         }
-        tableProvider(mlDataTable: mlDataTable, orderedColums: mlColumns!) { provider in
-            DispatchQueue.main.async {
-                self.valuesTableProvider = provider
-                self.loaded = true
-            }
-        }
+        updateTableProvider()
         let unionResult = UnionResult(mlDataTable: self.mlDataTable, mlColumns:self.mlColumns!)
+        self.mlDataTableRaw = mlDataTableRaw == nil ? mlDataTable: self.mlDataTableRaw
         return unionResult
+    }
+    func filterMlDataTable(filterDict: Dictionary<String, String>) {
+        if filterDict.count > 0 {
+            self.mlDataTable = mlDataTable[mlDataTable["S_CUSTNO"] == 1010180]
+        } else {
+            self.mlDataTable = mlDataTableRaw
+        }
+        updateTableProvider()
     }
     func tableProvider(mlDataTable: MLDataTable, orderedColums: [String], returnCompletion: @escaping (ValuesTableProvider) -> () ) {
         var result: ValuesTableProvider!

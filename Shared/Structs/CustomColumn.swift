@@ -13,4 +13,5 @@ struct CustomColumn: Identifiable {
     var enabled: Bool = true
     var rows: [String] = []
     var alignment: Alignment
+    var filter: String
 }

@@ -86,7 +86,7 @@
         <element name="Metrics" positionX="0" positionY="0" width="128" height="89"/>
         <element name="Metricvalues" positionX="0" positionY="0" width="128" height="119"/>
         <element name="Models" positionX="0" positionY="0" width="128" height="134"/>
-        <element name="Values" positionX="0" positionY="0" width="128" height="164"/>
         <element name="Series" positionX="18" positionY="117" width="128" height="74"/>
+        <element name="Values" positionX="0" positionY="0" width="128" height="164"/>
     </elements>
 </model>
