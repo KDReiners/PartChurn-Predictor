@@ -75,11 +75,29 @@ class MlDataTableFactory: ObservableObject {
     }
     func filterMlDataTable(filterDict: Dictionary<String, String>) {
         if filterDict.count > 0 {
-            self.mlDataTable = mlDataTable[mlDataTable["S_CUSTNO"] == 1010180]
+            for key in filterDict.keys {
+                self.mlDataTable = setFilterForColumn(mlDataTable: self.mlDataTable, columnName: key, value: filterDict[key]!)
+            }
         } else {
             self.mlDataTable = mlDataTableRaw
         }
         updateTableProvider()
+    }
+    func setFilterForColumn(mlDataTable: MLDataTable, columnName: String, value: String) ->MLDataTable {
+        var result = mlDataTable
+        let column = mlDataTable[columnName]
+        switch column.type {
+        case MLDataValue.ValueType.int:
+            result = mlDataTable[mlDataTable[columnName] == Int(value)!]
+        case MLDataValue.ValueType.double:
+            result = mlDataTable[mlDataTable[columnName] == Double(value)!]
+        case MLDataValue.ValueType.string:
+            result = mlDataTable[mlDataTable[columnName] == value]
+        default:
+            print("error")
+        }
+        
+        return result
     }
     func tableProvider(mlDataTable: MLDataTable, orderedColums: [String], returnCompletion: @escaping (ValuesTableProvider) -> () ) {
         var result: ValuesTableProvider!
