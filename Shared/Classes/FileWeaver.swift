@@ -11,7 +11,7 @@ import CoreML
 import CreateML
 import SwiftUI
 
-internal class Composer {
+internal class FileWeaver {
     var model: Models
     var files: NSSet!
     var mlDataTable_Base: MLDataTable!
@@ -117,7 +117,7 @@ internal class Composer {
         return allInDataTable
     }
     static func getColumnPivotValue(pivotColum: Columns?) ->String? {
-        return Composer.valuesDataModel.items.filter { $0.value2column == pivotColum}.first?.value
+        return FileWeaver.valuesDataModel.items.filter { $0.value2column == pivotColum}.first?.value
     }
     internal struct CognitionSource: Identifiable {
         var id = UUID()

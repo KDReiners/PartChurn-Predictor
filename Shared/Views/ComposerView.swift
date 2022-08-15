@@ -13,11 +13,11 @@ struct ComposerView: View {
     @State var selectedColumnCombination: [Columns]?
     @State var selectedTimeSeriesCombination: [String]?
     
-    internal var composer: Composer?
+    internal var composer: FileWeaver?
     internal var combinator: Combinator
     init(model: Models) {
         self.model = model
-        self.composer = Composer(model: model)
+        self.composer = FileWeaver(model: model)
         self.combinator = Combinator(model: self.model, orderedColumns: (composer?.orderedColumns)!, mlDataTable: (composer?.mlDataTable_Base)!)
     }
     var body: some View {

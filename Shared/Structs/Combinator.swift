@@ -36,7 +36,7 @@ struct Combinator {
         }
         scenario = Scenario(includedColumns: combinations, timeSeries: timeSeriesCombinations, baseTable: mlDataTable)
     }
-    func timeSeriesColumnCombinations(depth: Int? = 2) -> [[Int]] {
+    func timeSeriesColumnCombinations(depth: Int? = 3) -> [[Int]] {
         var result: [[Int]] = []
         for i in 0...series!.count - 1 {
             var combination: [Int] = []

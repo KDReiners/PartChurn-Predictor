@@ -37,7 +37,7 @@ class ValuesTableProvider: ObservableObject {
         var newCustomColumn = CustomColumn(title: columnName!, alignment: .trailing)
         var newGridItem: GridItem?
         let valueType = mlDataTable[columnName!].type
-        var mlDataValueFormatter = NumberFormatter()
+        let mlDataValueFormatter = NumberFormatter()
         switch valueType {
         case MLDataValue.ValueType.int:
             rows = Array.init(mlDataTable[columnName!].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.intValue!)) }))
