@@ -49,8 +49,10 @@ struct TableFilterView: View {
                 self.filterDict[key] = $0
             } else {
                 if self.filterDict[key] != nil {
-
                     self.filterDict.removeValue(forKey: key)
+                    if filterDict.count == 0 {
+                        self.mlDataTableFactory.filterMlDataTable(filterDict: filterDict)
+                    }
                 }
             }
         })

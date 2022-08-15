@@ -23,7 +23,7 @@ class MlDataTableFactory: ObservableObject {
     var mlColumns: [String]?
     var valuesTableProvider: ValuesTableProvider!
     var filterViewProvider: FilterViewProvider!
-    func updateTableProvider(file: Files? = nil) {
+    func updateTableProvider() {
         tableProvider(mlDataTable: mlDataTable, orderedColums: mlColumns!) { provider in
             DispatchQueue.main.async {
                 self.valuesTableProvider = provider
@@ -34,7 +34,19 @@ class MlDataTableFactory: ObservableObject {
             }
         }
     }
-    
+    func updateTableProvider(file: Files) {
+        let columns = file.file2columns
+        self.mlColumns = (columns?.allObjects as! [Columns]).sorted(by: { $0.orderno < $1.orderno }).map({ $0.name! })
+        tableProvider(file: file ) { provider in
+            DispatchQueue.main.async {
+                self.valuesTableProvider = provider
+                if self.filterViewProvider == nil {
+                    self.filterViewProvider = FilterViewProvider(mlDataTableFactory: self)
+                }
+                self.loaded = true
+            }
+        }
+    }
     func buildMlDataTable() -> UnionResult {
         var result: MLDataTable?
         mergedColumns = selectedColumns == nil ? orderedColumns: selectedColumns
@@ -110,6 +122,23 @@ class MlDataTableFactory: ObservableObject {
                     self.gridItems = result.gridItems
                     self.customColumns = result.customColumns
                     self.numRows = self.customColumns.count > 0 ? self.customColumns[0].rows.count:0
+                    returnCompletion(result as ValuesTableProvider)
+                }
+            }
+        }
+    }
+    func tableProvider(file: Files, returnCompletion: @escaping (ValuesTableProvider) -> () ) {
+        var result: ValuesTableProvider!
+        do {
+            let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
+            sampler.async {
+                result =  ValuesTableProvider(file: file)
+                DispatchQueue.main.async {
+                    self.mlDataTable = result.mlDataTable
+                    self.gridItems = result.gridItems
+                    self.customColumns = result.customColumns
+                    self.numRows = self.customColumns.count > 0 ? self.customColumns[0].rows.count:0
+                    self.mlDataTableRaw = self.mlDataTableRaw == nil ? self.mlDataTable: self.mlDataTableRaw
                     returnCompletion(result as ValuesTableProvider)
                 }
             }

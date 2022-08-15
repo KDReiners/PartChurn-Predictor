@@ -37,23 +37,7 @@ struct ValuesView: View {
         self.mlDataTable = unionResult.mlDataTable
     }
     init(file: Files) {
-        loadValuesTableProvider(file: file)
-    }
-    
-    func loadValuesTableProvider(file: Files) -> Void {
-        var result: ValuesTableProvider!
-        do {
-            let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
-            sampler.async {
-                result =  ValuesTableProvider(file: file)
-                DispatchQueue.main.async {
-                    mlDataTableFactory.gridItems = result.gridItems
-                    mlDataTableFactory.customColumns = result.customColumns
-                    mlDataTableFactory.loaded = true
-                    mlDataTableFactory.numRows = mlDataTableFactory.customColumns.count > 0 ? mlDataTableFactory.customColumns[0].rows.count:0
-                }
-            }
-        }
+        mlDataTableFactory.updateTableProvider(file: file)
     }
     var body: some View {
         if mlDataTableFactory.loaded == false {

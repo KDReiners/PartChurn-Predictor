@@ -17,7 +17,6 @@ class ValuesTableProvider: ObservableObject {
     var gridItems = [GridItem]()
     var numCols: Int = 0
     var numRows: Int = 0
-    internal var arrangedColumns = [Columns]()
     init(mlDataTable: MLDataTable, orderedColumns: [String]) {
         self.mlDataTable = mlDataTable
         prepareView(orderedColumns: orderedColumns)
