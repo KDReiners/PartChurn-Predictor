@@ -100,7 +100,7 @@ class ColumnsViewModel: ObservableObject {
     
     init(columns: [Columns], file: Files) {
         self.cognitionType = filesDataModel.getCognitionType(file: file)
-       
+        
         for column in columns.filter( { $0.column2file == file }) {
             let newObservedColumn = ObservedColumn(column: column, cognitionType: self.cognitionType)
             self.observedColumns.append(newObservedColumn)
@@ -120,15 +120,18 @@ struct ColumnsView: View {
     var body: some View {
         List {
             ForEach($columnsViewModel.observedColumns, id: \.self) { observedColumn in
-                Text(observedColumn.column.name.wrappedValue!)
-                HStack {
-                    Toggle("isTimeSeries", isOn: observedColumn.column.istimeseries.boolBinding).disabled(observedColumn.disable_istimeseries.wrappedValue)
-                    Toggle("isPartOfSeries", isOn: observedColumn.column.ispartoftimeseries.boolBinding)
-                    Toggle("isPartOfPrimaryKey", isOn: observedColumn.column.ispartofprimarykey.boolBinding).disabled(observedColumn.disable_ispartofprimarykey.wrappedValue)
-                    Toggle("isShown", isOn: observedColumn.column.isshown.boolBinding).disabled(observedColumn.disable_isshown.wrappedValue)
-                    Text(observedColumn.columnInfoText.wrappedValue)
+
+                    HStack(alignment: .top, spacing: 20) {
+                        Text(observedColumn.column.name.wrappedValue!).bold().frame(width: 150, alignment: .leading)
+                        Toggle("isTimeSeries", isOn: observedColumn.column.istimeseries.boolBinding).disabled(observedColumn.disable_istimeseries.wrappedValue)
+                        Toggle("isPartOfSeries", isOn: observedColumn.column.ispartoftimeseries.boolBinding)
+                        Toggle("isPartOfPrimaryKey", isOn: observedColumn.column.ispartofprimarykey.boolBinding).disabled(observedColumn.disable_ispartofprimarykey.wrappedValue)
+                        Toggle("isShown", isOn: observedColumn.column.isshown.boolBinding).disabled(observedColumn.disable_isshown.wrappedValue)
+                        Text(observedColumn.columnInfoText.wrappedValue).frame(width: 150)
+                        Text("OrderNo").bold()
+                        TextField("", value: observedColumn.column.orderno, format: .number)
+                    }
                 }
-            }
         }.onDisappear {
             BaseServices.save()
         }

@@ -46,13 +46,13 @@ struct TableFilterView: View {
             return self.filterDict[key] ?? ""
         }, set: {
             if !$0.isEmpty {
-                self.filterDict[key] = $0
+                self.filterDict[key] = $0.replacingOccurrences(of: ",", with: ".")
             } else {
                 if self.filterDict[key] != nil {
                     self.filterDict.removeValue(forKey: key)
-                    if filterDict.count == 0 {
-                        self.mlDataTableFactory.filterMlDataTable(filterDict: filterDict)
-                    }
+//                    if filterDict.count == 0 {
+//                        self.mlDataTableFactory.filterMlDataTable(filterDict: filterDict)
+//                    }
                 }
             }
         })

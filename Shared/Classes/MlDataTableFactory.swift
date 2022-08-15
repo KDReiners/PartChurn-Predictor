@@ -86,6 +86,7 @@ class MlDataTableFactory: ObservableObject {
         return unionResult
     }
     func filterMlDataTable(filterDict: Dictionary<String, String>) {
+        self.mlDataTable = mlDataTableRaw
         if filterDict.count > 0 {
             for key in filterDict.keys {
                 self.mlDataTable = setFilterForColumn(mlDataTable: self.mlDataTable, columnName: key, value: filterDict[key]!)

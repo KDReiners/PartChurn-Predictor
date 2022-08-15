@@ -21,6 +21,15 @@ extension Binding where Value == NSNumber? {
         })
     }
 }
+extension Binding where Value == String? {
+    var stringBinding: Binding<String> {
+        Binding<String>(get: {
+            self.wrappedValue ?? ""
+        }, set: { value in
+            self.wrappedValue = value
+        })
+    }
+}
 //open class ManagedObject: NSManagedObject {
 //    override public func willChangeValue(forKey key: String) {
 //        super.willChangeValue(forKey: key)

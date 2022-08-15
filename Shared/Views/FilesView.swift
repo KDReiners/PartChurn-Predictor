@@ -21,7 +21,7 @@ struct FilesView: View {
     
     var body: some View {
         VStack {
-            ColumnsView(file: file, columnsViewModel: self.columnViewModel)
+            ColumnsView(file: file, columnsViewModel: self.columnViewModel).frame(minHeight: 100, idealHeight: 150, maxHeight: 200)
             Spacer()
             ValuesView(file: self.file)
             Spacer()

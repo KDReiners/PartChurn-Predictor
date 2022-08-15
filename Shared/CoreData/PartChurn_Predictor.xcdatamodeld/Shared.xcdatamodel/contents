@@ -24,6 +24,7 @@
     </entity>
     <entity name="Compositions" representedClassName="Compositions" syncable="YES" codeGenerationType="class">
         <attribute name="orderno" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="composition2columns" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Columns"/>
         <relationship name="composition2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2compositions" inverseEntity="Models"/>
     </entity>
     <entity name="Datasettypes" representedClassName="Datasettypes" syncable="YES" codeGenerationType="class">
@@ -80,7 +81,7 @@
     <elements>
         <element name="Algorithms" positionX="0" positionY="0" width="128" height="74"/>
         <element name="Columns" positionX="0" positionY="0" width="128" height="254"/>
-        <element name="Compositions" positionX="0" positionY="0" width="128" height="59"/>
+        <element name="Compositions" positionX="0" positionY="0" width="128" height="74"/>
         <element name="Datasettypes" positionX="0" positionY="0" width="128" height="74"/>
         <element name="Files" positionX="0" positionY="0" width="128" height="104"/>
         <element name="Metrics" positionX="0" positionY="0" width="128" height="89"/>
