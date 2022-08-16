@@ -66,12 +66,12 @@
     <entity name="Timeseries" representedClassName="Timeseries" syncable="YES" codeGenerationType="class">
         <attribute name="from" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="to" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="timeseries2compositions" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Compositions" inverseName="composition2timeseries" inverseEntity="Compositions"/>
+        <relationship name="timeseries2compositions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Compositions" inverseName="composition2timeseries" inverseEntity="Compositions"/>
         <relationship name="timeseries2timeslices" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Timeslices" inverseName="timeslice2timeseries" inverseEntity="Timeslices"/>
     </entity>
     <entity name="Timeslices" representedClassName="Timeslices" syncable="YES" codeGenerationType="class">
         <attribute name="value" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="timeslice2timeseries" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Timeseries" inverseName="timeseries2timeslices" inverseEntity="Timeseries"/>
+        <relationship name="timeslice2timeseries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Timeseries" inverseName="timeseries2timeslices" inverseEntity="Timeseries"/>
     </entity>
     <entity name="Values" representedClassName="Values" syncable="YES" codeGenerationType="class">
         <attribute name="idcolumn" optional="YES" attributeType="String"/>

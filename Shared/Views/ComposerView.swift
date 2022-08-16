@@ -60,10 +60,14 @@ struct ComposerView: View {
                         }
                     }
                 }
-                Button("Save Compositions") {
-                    self.combinator.storeCompositions()
+                HStack {
+                    Button("Save Compositions") {
+                        self.combinator.storeCompositions()
+                    }
+                    Button("Delete Compositions") {
+                        self.combinator.deleteCombinations()
+                    }
                 }
-                .padding()
                 VStack(alignment: .leading) {
                     ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: selectedColumnCombination, timeSeriesRows: selectedTimeSeriesCombination)
                 }.padding(.horizontal)

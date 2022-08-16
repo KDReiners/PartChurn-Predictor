@@ -50,14 +50,16 @@ public class Model<T>: GenericViewModel where T: NSManagedObject {
         try? context.save()
         return result
     }
-    public func recordExists(predicate:  NSPredicate) -> Bool {
-        var result = false
+    public func getExistingRecord(predicate:  NSPredicate) -> T? {
+        var result: T?
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: T.self.entity().name!)
         fetchRequest.predicate = predicate
-        fetchRequest.resultType = .managedObjectIDResultType
+        fetchRequest.resultType = .managedObjectResultType
         do {
-            result = try PersistenceController.shared.container.viewContext.fetch(fetchRequest).count > 0
-            
+            let results = try PersistenceController.shared.container.viewContext.fetch(fetchRequest)
+            if results.count == 1 {
+                result = results.first as? T
+            }
         } catch {
             fatalError(error.localizedDescription)
         }
