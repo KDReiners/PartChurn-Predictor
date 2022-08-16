@@ -16,10 +16,6 @@ struct ScenarioView: View {
     var fileSelection: Files?
     var mlSelection: String?
     var mlAlgorithms = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor"]
-    /// composerView
-    
-    
-    
     var mlTable: MLDataTable?
     var body: some View {
         TabView {

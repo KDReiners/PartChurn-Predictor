@@ -9,7 +9,8 @@ import Foundation
 import CreateML
 struct Combinator {
     var model: Models
-    var columnCombinations: [Columns]?
+    var columnCombinations: [[Columns]]!
+    var timeSeriesCombinations: [[Int]]!
     var orderedColumns: [Columns]
     var includedColumns: [Columns]
     var timeSeriesColumns: [Columns]
@@ -28,13 +29,13 @@ struct Combinator {
         seriesStart = self.mlDataTable[(timeSeriesColumns.first?.name)!].ints?.min()
         series = findNextSlice(start: seriesStart, columnName: (timeSeriesColumns.first?.name)!)
         seriesEnd = self.mlDataTable[(timeSeriesColumns.first?.name)!].ints?.max()
-        let timeSeriesCombinations = timeSeriesColumnCombinations()
-        var combinations = [[Columns]]()
+        timeSeriesCombinations = timeSeriesColumnCombinations()
+        columnCombinations = [[Columns]]()
         for i in 1...includedColumns.count {
             let entry = includedColumnsCombinations(source: includedColumns, takenBy:  i)
-            combinations += entry
+            columnCombinations += entry
         }
-        scenario = Scenario(includedColumns: combinations, timeSeries: timeSeriesCombinations, baseTable: mlDataTable)
+        scenario = Scenario(includedColumns: columnCombinations, timeSeries: timeSeriesCombinations, baseTable: mlDataTable)
     }
     func timeSeriesColumnCombinations(depth: Int? = 3) -> [[Int]] {
         var result: [[Int]] = []
@@ -102,4 +103,71 @@ struct Combinator {
         }
         return result
     }
+    internal func storeCompositions() {
+        deleteCombiantions()
+        let distinctDepths = distinctDepths()
+        for columns in columnCombinations {
+            for depth in distinctDepths {
+                var combination = Combination()
+                combination.model = self.model
+                combination.columns.append(contentsOf: columns)
+                combination.timeSeries = depth.timeSeries
+                combination.saveToCoreData()
+            }
+        }
+    }
+    private func distinctDepths() -> Set<TimeSeriesEntry> {
+        let timeSeriesDataModel = TimeSeriesModel()
+        let timeSliceDataModel = TimeSliceModel()
+        var result = Set<TimeSeriesEntry>()
+        for series in self.timeSeriesCombinations {
+            var seriesEntry = timeSeriesDataModel.insertRecord()
+            seriesEntry.from = Int16(series.min()!)
+            seriesEntry.to = Int16(series.max()!)
+            for timeSlice in series {
+                var timeSliceEntry = timeSliceDataModel.insertRecord()
+                timeSliceEntry.value = Int16(timeSlice)
+                seriesEntry.addToTimeseries2timeslices(timeSliceEntry)
+            }
+            var timeSeriesEntry = TimeSeriesEntry()
+            timeSeriesEntry.timeSeries = seriesEntry
+            result.insert(timeSeriesEntry)
+        }
+        BaseServices.save()
+        return result
+    }
+    func deleteCombiantions() {
+        let compositionDataModel = CompositionModel()
+        compositionDataModel.deleteAllRecords(predicate: nil)
+        let timeseriesDataModel = TimeSeriesModel()
+        timeseriesDataModel.deleteAllRecords(predicate: nil)
+        let timeSliceModel = TimeSliceModel()
+        timeSliceModel.deleteAllRecords(predicate: nil)
+        BaseServices.save()
+        
+    }
+}
+struct Combination {
+    var compositionDataModel = CompositionModel()
+    var modelsDataModel = ModelsModel()
+    var columnsDataModel = ColumnsModel()
+    var model: Models!
+    var columns = [Columns]()
+    var timeSeries: Timeseries!
+    var i: Int16 = 0
+    func saveToCoreData() {
+        let compositionEntry = compositionDataModel.insertRecord()
+        compositionEntry.composition2model = self.model
+        timeSeries.timeseries2compositions = compositionEntry
+        for column in columns {
+            compositionEntry.addToComposition2columns(column)
+        }
+        BaseServices.save()
+        
+    }
+}
+struct TimeSeriesEntry: Hashable{
+    var id = UUID()
+    var timeSeries: Timeseries!
+    
 }

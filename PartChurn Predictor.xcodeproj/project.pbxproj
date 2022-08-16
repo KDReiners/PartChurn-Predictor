@@ -45,6 +45,10 @@
 		2D6B0E5A289EC8680016E57F /* MlDataTableFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6B0E58289EC8680016E57F /* MlDataTableFactory.swift */; };
 		2D6B0E5C28A00CC00016E57F /* MLTableCluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6B0E5B28A00CC00016E57F /* MLTableCluster.swift */; };
 		2D6B0E5D28A00CC00016E57F /* MLTableCluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6B0E5B28A00CC00016E57F /* MLTableCluster.swift */; };
+		2D867B5A28AACC4B005E8B87 /* TimeSeriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D867B5928AACC4B005E8B87 /* TimeSeriesModel.swift */; };
+		2D867B5B28AACC4B005E8B87 /* TimeSeriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D867B5928AACC4B005E8B87 /* TimeSeriesModel.swift */; };
+		2D867B5D28AACCB5005E8B87 /* TimeSliceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D867B5C28AACCB5005E8B87 /* TimeSliceModel.swift */; };
+		2D867B5E28AACCB5005E8B87 /* TimeSliceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D867B5C28AACCB5005E8B87 /* TimeSliceModel.swift */; };
 		2D98958E282EE4100070F475 /* DatasettypesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D98958D282EE4100070F475 /* DatasettypesModel.swift */; };
 		2D98958F282EE4100070F475 /* DatasettypesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D98958D282EE4100070F475 /* DatasettypesModel.swift */; };
 		2D989591282EE47F0070F475 /* MetricsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D989590282EE47F0070F475 /* MetricsModel.swift */; };
@@ -116,6 +120,8 @@
 		2D481BA428356EA4003EBCF2 /* AlgorithmsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgorithmsModel.swift; sourceTree = "<group>"; };
 		2D6B0E58289EC8680016E57F /* MlDataTableFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MlDataTableFactory.swift; sourceTree = "<group>"; usesTabs = 0; };
 		2D6B0E5B28A00CC00016E57F /* MLTableCluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLTableCluster.swift; sourceTree = "<group>"; };
+		2D867B5928AACC4B005E8B87 /* TimeSeriesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSeriesModel.swift; sourceTree = "<group>"; };
+		2D867B5C28AACCB5005E8B87 /* TimeSliceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSliceModel.swift; sourceTree = "<group>"; };
 		2D98958D282EE4100070F475 /* DatasettypesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatasettypesModel.swift; sourceTree = "<group>"; };
 		2D989590282EE47F0070F475 /* MetricsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsModel.swift; sourceTree = "<group>"; };
 		2D9895932830321D0070F475 /* MetricvaluesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricvaluesModel.swift; sourceTree = "<group>"; };
@@ -271,6 +277,8 @@
 				2D6B0E5B28A00CC00016E57F /* MLTableCluster.swift */,
 				2D6B0E58289EC8680016E57F /* MlDataTableFactory.swift */,
 				2DFD1B3028A930810057C74A /* FilterViewProvider.swift */,
+				2D867B5928AACC4B005E8B87 /* TimeSeriesModel.swift */,
+				2D867B5C28AACCB5005E8B87 /* TimeSliceModel.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -407,6 +415,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DA77EE82825716A007EC3E5 /* ModelsModel.swift in Sources */,
+				2D867B5A28AACC4B005E8B87 /* TimeSeriesModel.swift in Sources */,
 				2DA77ED328256E8A007EC3E5 /* Model.swift in Sources */,
 				0A4C56582869862C00961D1D /* ColumnsView.swift in Sources */,
 				0AFCB7042850A5FA00676AF6 /* ValuesView.swift in Sources */,
@@ -444,6 +453,7 @@
 				2DA77F022827E1DD007EC3E5 /* ModelsView.swift in Sources */,
 				2DA77EDA28256EE5007EC3E5 /* GenericViewModel.swift in Sources */,
 				2DA77ED628256E9D007EC3E5 /* Storage.swift in Sources */,
+				2D867B5D28AACCB5005E8B87 /* TimeSliceModel.swift in Sources */,
 				2D989591282EE47F0070F475 /* MetricsModel.swift in Sources */,
 				2DA77EFF28266B32007EC3E5 /* FilesModel.swift in Sources */,
 			);
@@ -454,6 +464,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DA77EE92825716A007EC3E5 /* ModelsModel.swift in Sources */,
+				2D867B5B28AACC4B005E8B87 /* TimeSeriesModel.swift in Sources */,
 				2DA77ED428256E8A007EC3E5 /* Model.swift in Sources */,
 				0A4C56592869862C00961D1D /* ColumnsView.swift in Sources */,
 				0AFCB7052850A5FA00676AF6 /* ValuesView.swift in Sources */,
@@ -491,6 +502,7 @@
 				2DA77F032827E1DD007EC3E5 /* ModelsView.swift in Sources */,
 				2DA77EDB28256EE5007EC3E5 /* GenericViewModel.swift in Sources */,
 				2DA77ED728256E9D007EC3E5 /* Storage.swift in Sources */,
+				2D867B5E28AACCB5005E8B87 /* TimeSliceModel.swift in Sources */,
 				2D989592282EE47F0070F475 /* MetricsModel.swift in Sources */,
 				2DA77F0028266B32007EC3E5 /* FilesModel.swift in Sources */,
 			);

@@ -18,7 +18,7 @@ public class CompositionModel: Model<Compositions> {
         }
         set
         {
-            result = newValue.sorted(by: { $1.orderno > $0.orderno })
+            result = newValue.sorted(by: { $1.seriesdepth > $0.seriesdepth })
         }
     }
     

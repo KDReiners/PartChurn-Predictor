@@ -23,9 +23,10 @@
         <relationship name="column2values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Values" inverseName="value2column" inverseEntity="Values"/>
     </entity>
     <entity name="Compositions" representedClassName="Compositions" syncable="YES" codeGenerationType="class">
-        <attribute name="orderno" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="seriesdepth" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="composition2columns" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Columns" inverseName="column2compositions" inverseEntity="Columns"/>
         <relationship name="composition2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2compositions" inverseEntity="Models"/>
+        <relationship name="composition2timeseries" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Timeseries" inverseName="timeseries2compositions" inverseEntity="Timeseries"/>
     </entity>
     <entity name="Datasettypes" representedClassName="Datasettypes" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
@@ -62,6 +63,16 @@
         <relationship name="model2metricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2model" inverseEntity="Metricvalues"/>
         <relationship name="model2values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Values" inverseName="value2model" inverseEntity="Values"/>
     </entity>
+    <entity name="Timeseries" representedClassName="Timeseries" syncable="YES" codeGenerationType="class">
+        <attribute name="from" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="to" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="timeseries2compositions" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Compositions" inverseName="composition2timeseries" inverseEntity="Compositions"/>
+        <relationship name="timeseries2timeslices" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Timeslices" inverseName="timeslice2timeseries" inverseEntity="Timeslices"/>
+    </entity>
+    <entity name="Timeslices" representedClassName="Timeslices" syncable="YES" codeGenerationType="class">
+        <attribute name="value" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="timeslice2timeseries" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Timeseries" inverseName="timeseries2timeslices" inverseEntity="Timeseries"/>
+    </entity>
     <entity name="Values" representedClassName="Values" syncable="YES" codeGenerationType="class">
         <attribute name="idcolumn" optional="YES" attributeType="String"/>
         <attribute name="idfile" optional="YES" attributeType="String"/>
@@ -76,12 +87,14 @@
     <elements>
         <element name="Algorithms" positionX="0" positionY="0" width="128" height="74"/>
         <element name="Columns" positionX="0" positionY="0" width="128" height="254"/>
-        <element name="Compositions" positionX="0" positionY="0" width="128" height="74"/>
+        <element name="Compositions" positionX="0" positionY="0" width="128" height="89"/>
         <element name="Datasettypes" positionX="0" positionY="0" width="128" height="74"/>
         <element name="Files" positionX="0" positionY="0" width="128" height="104"/>
         <element name="Metrics" positionX="0" positionY="0" width="128" height="89"/>
         <element name="Metricvalues" positionX="0" positionY="0" width="128" height="119"/>
         <element name="Models" positionX="0" positionY="0" width="128" height="134"/>
+        <element name="Timeseries" positionX="9" positionY="117" width="128" height="89"/>
+        <element name="Timeslices" positionX="18" positionY="126" width="128" height="59"/>
         <element name="Values" positionX="0" positionY="0" width="128" height="164"/>
     </elements>
 </model>
