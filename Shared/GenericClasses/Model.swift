@@ -50,6 +50,19 @@ public class Model<T>: GenericViewModel where T: NSManagedObject {
         try? context.save()
         return result
     }
+    public func recordExists(predicate:  NSPredicate) -> Bool {
+        var result = false
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: T.self.entity().name!)
+        fetchRequest.predicate = predicate
+        fetchRequest.resultType = .managedObjectIDResultType
+        do {
+            result = try PersistenceController.shared.container.viewContext.fetch(fetchRequest).count > 0
+            
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+        return result
+    }
     public func deleteRecord(record: T) -> Void {
         context.delete(record)
     }

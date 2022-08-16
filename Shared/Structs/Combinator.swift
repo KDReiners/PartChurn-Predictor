@@ -104,39 +104,43 @@ struct Combinator {
         return result
     }
     internal func storeCompositions() {
-        deleteCombiantions()
-        let distinctDepths = distinctDepths()
+        deleteCombinations()
+        let seriesEntries = getTimeSeriesEntries()
         for columns in columnCombinations {
-            for depth in distinctDepths {
+            for seriesEntry in seriesEntries {
                 var combination = Combination()
                 combination.model = self.model
                 combination.columns.append(contentsOf: columns)
-                combination.timeSeries = depth.timeSeries
+                combination.timeSeries = seriesEntry.timeSeries
+                seriesEntry.timeSeries.timeseries2compositions
                 combination.saveToCoreData()
             }
         }
     }
-    private func distinctDepths() -> Set<TimeSeriesEntry> {
+    private func getTimeSeriesEntries() -> Set<TimeSeriesEntry> {
         let timeSeriesDataModel = TimeSeriesModel()
         let timeSliceDataModel = TimeSliceModel()
         var result = Set<TimeSeriesEntry>()
         for series in self.timeSeriesCombinations {
-            var seriesEntry = timeSeriesDataModel.insertRecord()
-            seriesEntry.from = Int16(series.min()!)
-            seriesEntry.to = Int16(series.max()!)
-            for timeSlice in series {
-                var timeSliceEntry = timeSliceDataModel.insertRecord()
-                timeSliceEntry.value = Int16(timeSlice)
-                seriesEntry.addToTimeseries2timeslices(timeSliceEntry)
+            let predicate = NSPredicate(format: "from == %i and  to ==%i", Int16(series.min()!), Int16(series.max()!))
+                if timeSeriesDataModel.recordExists(predicate: predicate) == false {
+                let seriesEntry = timeSeriesDataModel.insertRecord()
+                seriesEntry.from = Int16(series.min()!)
+                seriesEntry.to = Int16(series.max()!)
+                for timeSlice in series {
+                    let timeSliceEntry = timeSliceDataModel.insertRecord()
+                    timeSliceEntry.value = Int16(timeSlice)
+                    seriesEntry.addToTimeseries2timeslices(timeSliceEntry)
+                }
+                var timeSeriesEntry = TimeSeriesEntry()
+                timeSeriesEntry.timeSeries = seriesEntry
+                result.insert(timeSeriesEntry)
             }
-            var timeSeriesEntry = TimeSeriesEntry()
-            timeSeriesEntry.timeSeries = seriesEntry
-            result.insert(timeSeriesEntry)
         }
         BaseServices.save()
         return result
     }
-    func deleteCombiantions() {
+    func deleteCombinations() {
         let compositionDataModel = CompositionModel()
         compositionDataModel.deleteAllRecords(predicate: nil)
         let timeseriesDataModel = TimeSeriesModel()
