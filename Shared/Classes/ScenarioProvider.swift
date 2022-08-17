@@ -9,8 +9,8 @@ import Foundation
 import CreateML
 import CoreML
 import SwiftUI
-class Scenario: Hashable {
-    static func == (lhs: Scenario, rhs: Scenario) -> Bool {
+class ScenarioProvider: Hashable {
+    static func == (lhs: ScenarioProvider, rhs: ScenarioProvider) -> Bool {
         Set(lhs.includedColumns) == Set(rhs.includedColumns) && Set(lhs.timeSeries) == Set(rhs.timeSeries)
     }
     
@@ -57,7 +57,7 @@ class Scenario: Hashable {
         }
     }
     class ColumnSection: Hashable {
-        static func == (lhs: Scenario.ColumnSection, rhs: Scenario.ColumnSection) -> Bool {
+        static func == (lhs: ScenarioProvider.ColumnSection, rhs: ScenarioProvider.ColumnSection) -> Bool {
             Set(lhs.columns) == Set(rhs.columns)
         }
         func hash(into hasher: inout Hasher) {
@@ -68,7 +68,7 @@ class Scenario: Hashable {
         var columns = [[Columns]]()
     }
     class TimeSeriesSection: Hashable {
-        static func == (lhs: Scenario.TimeSeriesSection, rhs: Scenario.TimeSeriesSection) -> Bool {
+        static func == (lhs: ScenarioProvider.TimeSeriesSection, rhs: ScenarioProvider.TimeSeriesSection) -> Bool {
             Set(lhs.timeSeries) == Set(rhs.timeSeries)
         }
         func hash(into hasher: inout Hasher) {

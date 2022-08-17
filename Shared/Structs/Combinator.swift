@@ -19,7 +19,7 @@ struct Combinator {
     var seriesStart: Int!
     var seriesEnd: Int!
     var seriesLength: Int!
-    var scenario: Scenario!
+    var scenario: ScenarioProvider!
     init(model: Models, orderedColumns: [Columns], mlDataTable: MLDataTable) {
         self.model = model
         self.orderedColumns = orderedColumns
@@ -35,7 +35,7 @@ struct Combinator {
             let entry = includedColumnsCombinations(source: includedColumns, takenBy:  i)
             columnCombinations += entry
         }
-        scenario = Scenario(includedColumns: columnCombinations, timeSeries: timeSeriesCombinations, baseTable: mlDataTable)
+        scenario = ScenarioProvider(includedColumns: columnCombinations, timeSeries: timeSeriesCombinations, baseTable: mlDataTable)
     }
     func timeSeriesColumnCombinations(depth: Int? = 3) -> [[Int]] {
         var result: [[Int]] = []

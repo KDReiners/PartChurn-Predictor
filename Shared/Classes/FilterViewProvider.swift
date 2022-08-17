@@ -8,9 +8,9 @@
 import Foundation
 import SwiftUI
 class FilterViewProvider: ObservableObject {
-    var mlDataTableFactory: MlDataTableFactory
+    var mlDataTableFactory: MlDataTableProvider
     var tableFilterView: TableFilterView
-    init(mlDataTableFactory: MlDataTableFactory) {
+    init(mlDataTableFactory: MlDataTableProvider) {
         self.mlDataTableFactory = mlDataTableFactory
         tableFilterView = TableFilterView(columns: self.mlDataTableFactory.customColumns, gridItems: self.mlDataTableFactory.gridItems, mlDataTableFactory: self.mlDataTableFactory)
     }
@@ -20,8 +20,8 @@ struct TableFilterView: View {
     var gridItems: [GridItem]
     var columns: [CustomColumn]
     @State var filterDict: Dictionary<String, String>!
-    var mlDataTableFactory: MlDataTableFactory
-    init(columns: [CustomColumn], gridItems: [GridItem], mlDataTableFactory: MlDataTableFactory) {
+    var mlDataTableFactory: MlDataTableProvider
+    init(columns: [CustomColumn], gridItems: [GridItem], mlDataTableFactory: MlDataTableProvider) {
         self.columns = columns
         self.gridItems = gridItems
         self.filterDict = Dictionary<String, String>()

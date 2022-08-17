@@ -19,7 +19,7 @@ struct ScenarioView: View {
     var mlTable: MLDataTable?
     var body: some View {
         TabView {
-            ModelsView(model: model, metric: metric, valueViewModel: valuesViewModel, fileSelection: fileSelection, mlSelection: mlSelection, mlAlgorithms: mlAlgorithms, mlTable: mlTable)
+            ModelsView(model: model, metric: metric, valueViewModel: valuesViewModel, mlSelection: mlSelection, mlAlgorithms: mlAlgorithms, mlTable: mlTable)
             .tabItem {
                 Label("Analysis", systemImage: "tray.and.arrow.down.fill")
             }

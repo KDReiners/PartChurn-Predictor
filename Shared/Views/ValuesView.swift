@@ -11,7 +11,7 @@ import CoreML
 import CreateML
 struct ValuesView: View {
     
-    @ObservedObject var mlDataTableFactory = MlDataTableFactory()
+    @ObservedObject var mlDataTableFactory = MlDataTableProvider()
     var mlDataTable: MLDataTable?
     var unionResult: UnionResult!
     var masterDict = Dictionary<String, String>()

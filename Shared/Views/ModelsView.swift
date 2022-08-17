@@ -12,7 +12,6 @@ struct ModelsView: View {
     @ObservedObject var model: Models
     @ObservedObject var metric: Ml_MetricKPI
     @ObservedObject var valueViewModel = ValuesModel()
-    @State var fileSelection: Files? = nil
     @State var mlSelection: String? = nil
     var mlAlgorithms = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor"]
     var mlTable: MLDataTable?
@@ -25,14 +24,6 @@ struct ModelsView: View {
                     .padding(.bottom, 5)
                 Divider()
                 HStack {
-                    VStack(alignment: .leading) {
-                        Text("Files")
-                            .font(.title)
-                        List(ModelsModel.getFilesForItem(model: model), id: \.self, selection: $fileSelection) { file in
-                            Text(file.name!)
-                                .font(.body)
-                        }
-                    }.padding()
                     VStack(alignment: .leading) {
                         Text("Algorithmus")
                             .font(.title)
@@ -53,14 +44,10 @@ struct ModelsView: View {
                     VStack(alignment: .leading) {
                         Text("Algorithmus KPI")
                             .font(.title)
-                        AlgorithmsModel.valueList(model: model, file: fileSelection, algorithmName: mlSelection ?? "unbekannt")
+//                        AlgorithmsModel.valueList(model: model, file: fileSelection, algorithmName: mlSelection ?? "unbekannt")
                     }.padding()
                 }
                 Divider()
-                if fileSelection != nil {
-                    ValuesView(file: fileSelection!)
-                    Divider()
-                }
             }
             Spacer()
         }
@@ -68,12 +55,12 @@ struct ModelsView: View {
     private func fillFromCoreData() -> Void {
     }
     private func train(regressorName: String?) {
-        var trainer = Trainer(model: model, file: fileSelection)
-        guard let regressorNameWrapped = regressorName==nil ? mlAlgorithms.first : regressorName else {
-            return
-        }
-        mlSelection = regressorNameWrapped
-        trainer.createModel(regressorName: regressorNameWrapped, fileName: fileSelection?.name)
+//        var trainer = Trainer(model: model, file: fileSelection)
+//        guard let regressorNameWrapped = regressorName==nil ? mlAlgorithms.first : regressorName else {
+//            return
+//        }
+//        mlSelection = regressorNameWrapped
+//        trainer.createModel(regressorName: regressorNameWrapped, fileName: fileSelection?.name)
     }
 }
 
