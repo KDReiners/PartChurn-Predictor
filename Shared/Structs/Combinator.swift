@@ -162,6 +162,7 @@ struct Combination {
     var i: Int16 = 0
     func saveToCoreData() {
         let compositionEntry = compositionDataModel.insertRecord()
+        compositionEntry.id = UUID()
         compositionEntry.composition2model = self.model
         compositionEntry.composition2timeseries = timeSeries
         for column in columns {

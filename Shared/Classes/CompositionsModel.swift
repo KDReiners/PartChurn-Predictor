@@ -9,7 +9,6 @@ import Foundation
 public class CompositionsModel: Model<Compositions> {
     @Published var result: [Compositions]!
     @Published var arrayOfClusters = [Cluster]()
-    @Published var testCluser: [String] = ["1", "2", "3"]
     private var model: Models?
     public init() {
         let readOnlyFields: [String] = []
@@ -31,18 +30,19 @@ public class CompositionsModel: Model<Compositions> {
                 if lhs.seriesdepth == rhs.seriesdepth { // <1>
                     return lhs.columnsdepth > rhs.columnsdepth
                 }
-                let test = hierarchy
                 return lhs.columnsdepth > rhs.columnsdepth // <2>
             }
-            
+             
         }
     }
     internal var hierarchy: [Cluster] {
         get {
             let timeSeriesDataModel = TimeSeriesModel()
+//            let myItems = items.filter({$0.composition2model == model })
+//            let item = myItems.first
             for item in items.filter({$0.composition2model == model }) {
-                let seriesDepth = Int16(item.composition2timeseries?.timeseries2timeslices?.count ?? 0)
-                let columnsDepth = Int16(item.composition2columns?.count ?? 0)
+            let seriesDepth = Int16(item.composition2timeseries?.timeseries2timeslices?.count ?? 0)
+            let columnsDepth = Int16(item.composition2columns?.count ?? 0)
                 let groupingPattern = "Col count \(columnsDepth)" + " TimeSlice count \(seriesDepth)"
                 if !findCluster(groupingPattern: groupingPattern) {
                     let workCluster = Cluster()
@@ -75,6 +75,7 @@ public class CompositionsModel: Model<Compositions> {
             hasher.combine(id)
         }
         @Published var id = UUID()
+        var compositions: [Compositions]?
         var groupingPattern: String?
         var columns = [Columns]()
         var timeSeries = [Timeseries]()

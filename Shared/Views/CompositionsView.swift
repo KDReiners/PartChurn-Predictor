@@ -10,19 +10,25 @@ import SwiftUI
 struct CompositionsView: View {
     @ObservedObject var compositionViewModel: CompositionsModel
     var compositionViewDict: Dictionary<String, [CompositionsViewEntry]>?
-    @State var mlSelection: String? = nil
-    var mlAlgorithms = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor"]
-    
+    @State var clusterSelection: CompositionsModel.Cluster!
     init(model: Models) {
         self.compositionViewModel = CompositionsModel(model: model)
-        if compositionViewModel.arrayOfClusters.count == 0 {
+
             let test = compositionViewModel.hierarchy
-        }
+
     }
-        var body: some View {
-            List {ForEach(mlSelection, id: \.self, selection: mlSelection!) { cluster in
-                VStack
-                
+    var body: some View {
+        HStack(alignment: .center)
+        {
+            if compositionViewModel.arrayOfClusters.count > 0 {
+                List(compositionViewModel.arrayOfClusters, id: \.self, selection: $clusterSelection) { algorithm in
+                    Text(algorithm.groupingPattern!)
+                }.frame(width: 250)
+            }
+            if clusterSelection != nil {
+                List(clusterSelection.timeSeries, id: \.self ) { series in
+                    Text("\(series.from)")
+                }
             }
         }
     }
