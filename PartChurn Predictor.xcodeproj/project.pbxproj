@@ -83,6 +83,13 @@
 		2DA77F0028266B32007EC3E5 /* FilesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EFE28266B32007EC3E5 /* FilesModel.swift */; };
 		2DA77F022827E1DD007EC3E5 /* ModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77F012827E1DD007EC3E5 /* ModelsView.swift */; };
 		2DA77F032827E1DD007EC3E5 /* ModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77F012827E1DD007EC3E5 /* ModelsView.swift */; };
+		2DB5E69328AD3536006DC0D2 /* CompositionsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB5E69228AD3536006DC0D2 /* CompositionsProvider.swift */; };
+		2DB5E69428AD3536006DC0D2 /* CompositionsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB5E69228AD3536006DC0D2 /* CompositionsProvider.swift */; };
+		2DB5E69628AD36DE006DC0D2 /* CompositionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB5E69528AD36DE006DC0D2 /* CompositionsView.swift */; };
+		2DB5E69728AD36DE006DC0D2 /* CompositionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB5E69528AD36DE006DC0D2 /* CompositionsView.swift */; };
+		2DB5E69A28AD68B7006DC0D2 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 2DB5E69928AD68B7006DC0D2 /* Collections */; };
+		2DB5E69C28AD68B7006DC0D2 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 2DB5E69B28AD68B7006DC0D2 /* DequeModule */; };
+		2DB5E69E28AD68B7006DC0D2 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 2DB5E69D28AD68B7006DC0D2 /* OrderedCollections */; };
 		2DBDCCF6288D6B9800CC8EDC /* CompositionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBDCCF5288D6B9800CC8EDC /* CompositionsModel.swift */; };
 		2DBDCCF7288D6B9800CC8EDC /* CompositionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBDCCF5288D6B9800CC8EDC /* CompositionsModel.swift */; };
 		2DBDCCF9288D6C1C00CC8EDC /* Combinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBDCCF8288D6C1C00CC8EDC /* Combinator.swift */; };
@@ -136,6 +143,8 @@
 		2DA77EFB28258384007EC3E5 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		2DA77EFE28266B32007EC3E5 /* FilesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesModel.swift; sourceTree = "<group>"; };
 		2DA77F012827E1DD007EC3E5 /* ModelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelsView.swift; sourceTree = "<group>"; };
+		2DB5E69228AD3536006DC0D2 /* CompositionsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositionsProvider.swift; sourceTree = "<group>"; };
+		2DB5E69528AD36DE006DC0D2 /* CompositionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositionsView.swift; sourceTree = "<group>"; };
 		2DBDCCF5288D6B9800CC8EDC /* CompositionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositionsModel.swift; sourceTree = "<group>"; };
 		2DBDCCF8288D6C1C00CC8EDC /* Combinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Combinator.swift; sourceTree = "<group>"; };
 		2DBDCCFB288EF0A500CC8EDC /* ScenarioProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioProvider.swift; sourceTree = "<group>"; };
@@ -156,7 +165,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2DB5E69A28AD68B7006DC0D2 /* Collections in Frameworks */,
 				2DA77EF628257732007EC3E5 /* CSV in Frameworks */,
+				2DB5E69E28AD68B7006DC0D2 /* OrderedCollections in Frameworks */,
+				2DB5E69C28AD68B7006DC0D2 /* DequeModule in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,9 +274,9 @@
 				2DA77EE72825716A007EC3E5 /* ModelsModel.swift */,
 				2DA77EEA2825721B007EC3E5 /* ValuesModel.swift */,
 				2DA77EFE28266B32007EC3E5 /* FilesModel.swift */,
+				2D9895932830321D0070F475 /* MetricvaluesModel.swift */,
 				2D98958D282EE4100070F475 /* DatasettypesModel.swift */,
 				2D989590282EE47F0070F475 /* MetricsModel.swift */,
-				2D9895932830321D0070F475 /* MetricvaluesModel.swift */,
 				2D481BA428356EA4003EBCF2 /* AlgorithmsModel.swift */,
 				0A589C12286614A000D1239B /* ManagerModels.swift */,
 				2D867B5928AACC4B005E8B87 /* TimeSeriesModel.swift */,
@@ -275,6 +287,7 @@
 				2D6B0E58289EC8680016E57F /* MlDataTableProvider.swift */,
 				2DFD1B3028A930810057C74A /* FilterViewProvider.swift */,
 				0A827F702873686A00C928F2 /* ValuesTableProvider.swift */,
+				2DB5E69228AD3536006DC0D2 /* CompositionsProvider.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -290,6 +303,7 @@
 				0A4C56572869862C00961D1D /* ColumnsView.swift */,
 				2D01395D287868C000AC8EBF /* ComposerView.swift */,
 				2D0139602878692500AC8EBF /* ScenarioView.swift */,
+				2DB5E69528AD36DE006DC0D2 /* CompositionsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -340,6 +354,9 @@
 			name = "PartChurn Predictor (macOS)";
 			packageProductDependencies = (
 				2DA77EF528257732007EC3E5 /* CSV */,
+				2DB5E69928AD68B7006DC0D2 /* Collections */,
+				2DB5E69B28AD68B7006DC0D2 /* DequeModule */,
+				2DB5E69D28AD68B7006DC0D2 /* OrderedCollections */,
 			);
 			productName = "PartChurn Predictor (macOS)";
 			productReference = 2D0B8564282565BF00856BCB /* PartChurn Predictor.app */;
@@ -375,6 +392,7 @@
 			packageReferences = (
 				2DA77EF128257710007EC3E5 /* XCRemoteSwiftPackageReference "CSV.swift" */,
 				2DA77EF428257732007EC3E5 /* XCRemoteSwiftPackageReference "CSV.swift" */,
+				2DB5E69828AD68B7006DC0D2 /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			productRefGroup = 2D0B855F282565BF00856BCB /* Products */;
 			projectDirPath = "";
@@ -410,6 +428,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2DB5E69328AD3536006DC0D2 /* CompositionsProvider.swift in Sources */,
 				2DA77EE82825716A007EC3E5 /* ModelsModel.swift in Sources */,
 				2D867B5A28AACC4B005E8B87 /* TimeSeriesModel.swift in Sources */,
 				2DA77ED328256E8A007EC3E5 /* Model.swift in Sources */,
@@ -418,6 +437,7 @@
 				2DA77EF828257B97007EC3E5 /* CSV_Importer.swift in Sources */,
 				2DFD1B3128A930810057C74A /* FilterViewProvider.swift in Sources */,
 				0AD6C8952858D5FD00EB92FB /* BatchProvider.swift in Sources */,
+				2DB5E69628AD36DE006DC0D2 /* CompositionsView.swift in Sources */,
 				2DA77EDE28256F09007EC3E5 /* EntityAttributeInfo.swift in Sources */,
 				2DBDCCFC288EF0A500CC8EDC /* ScenarioProvider.swift in Sources */,
 				2DA77EE128256F16007EC3E5 /* BaseServices.swift in Sources */,
@@ -458,6 +478,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2DB5E69428AD3536006DC0D2 /* CompositionsProvider.swift in Sources */,
 				2DA77EE92825716A007EC3E5 /* ModelsModel.swift in Sources */,
 				2D867B5B28AACC4B005E8B87 /* TimeSeriesModel.swift in Sources */,
 				2DA77ED428256E8A007EC3E5 /* Model.swift in Sources */,
@@ -466,6 +487,7 @@
 				2DA77EF928257B97007EC3E5 /* CSV_Importer.swift in Sources */,
 				2DFD1B3228A930810057C74A /* FilterViewProvider.swift in Sources */,
 				0AD6C8962858D5FD00EB92FB /* BatchProvider.swift in Sources */,
+				2DB5E69728AD36DE006DC0D2 /* CompositionsView.swift in Sources */,
 				2DA77EDF28256F09007EC3E5 /* EntityAttributeInfo.swift in Sources */,
 				2DBDCCFD288EF0A500CC8EDC /* ScenarioProvider.swift in Sources */,
 				2DA77EE228256F16007EC3E5 /* BaseServices.swift in Sources */,
@@ -782,6 +804,14 @@
 				kind = branch;
 			};
 		};
+		2DB5E69828AD68B7006DC0D2 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -794,6 +824,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2DA77EF428257732007EC3E5 /* XCRemoteSwiftPackageReference "CSV.swift" */;
 			productName = CSV;
+		};
+		2DB5E69928AD68B7006DC0D2 /* Collections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2DB5E69828AD68B7006DC0D2 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = Collections;
+		};
+		2DB5E69B28AD68B7006DC0D2 /* DequeModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2DB5E69828AD68B7006DC0D2 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = DequeModule;
+		};
+		2DB5E69D28AD68B7006DC0D2 /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2DB5E69828AD68B7006DC0D2 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
 		};
 /* End XCSwiftPackageProductDependency section */
 

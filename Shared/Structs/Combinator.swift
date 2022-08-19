@@ -142,7 +142,7 @@ struct Combinator {
         return result
     }
     internal func deleteCombinations() {
-        let compositionDataModel = CompositionModel()
+        let compositionDataModel = CompositionsModel()
         compositionDataModel.deleteAllRecords(predicate: nil)
         let timeseriesDataModel = TimeSeriesModel()
         timeseriesDataModel.deleteAllRecords(predicate: nil)
@@ -153,7 +153,7 @@ struct Combinator {
     }
 }
 struct Combination {
-    var compositionDataModel = CompositionModel()
+    var compositionDataModel = CompositionsModel()
     var modelsDataModel = ModelsModel()
     var columnsDataModel = ColumnsModel()
     var model: Models!

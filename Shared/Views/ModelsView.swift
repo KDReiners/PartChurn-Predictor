@@ -25,6 +25,9 @@ struct ModelsView: View {
                 Divider()
                 HStack {
                     VStack(alignment: .leading) {
+                        CompositionsView(model: model)
+                    }
+                    VStack(alignment: .leading) {
                         Text("Algorithmus")
                             .font(.title)
                         HStack {

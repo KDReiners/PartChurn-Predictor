@@ -23,7 +23,8 @@
         <relationship name="column2values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Values" inverseName="value2column" inverseEntity="Values"/>
     </entity>
     <entity name="Compositions" representedClassName="Compositions" syncable="YES" codeGenerationType="class">
-        <attribute name="seriesdepth" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="columnsdepth" optional="YES" transient="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="seriesdepth" optional="YES" transient="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="composition2columns" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Columns" inverseName="column2compositions" inverseEntity="Columns"/>
         <relationship name="composition2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2compositions" inverseEntity="Models"/>
         <relationship name="composition2timeseries" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Timeseries" inverseName="timeseries2compositions" inverseEntity="Timeseries"/>
@@ -87,7 +88,7 @@
     <elements>
         <element name="Algorithms" positionX="0" positionY="0" width="128" height="74"/>
         <element name="Columns" positionX="0" positionY="0" width="128" height="254"/>
-        <element name="Compositions" positionX="0" positionY="0" width="128" height="89"/>
+        <element name="Compositions" positionX="0" positionY="0" width="128" height="104"/>
         <element name="Datasettypes" positionX="0" positionY="0" width="128" height="74"/>
         <element name="Files" positionX="0" positionY="0" width="128" height="104"/>
         <element name="Metrics" positionX="0" positionY="0" width="128" height="89"/>
