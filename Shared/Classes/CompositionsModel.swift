@@ -35,38 +35,37 @@ public class CompositionsModel: Model<Compositions> {
              
         }
     }
+    internal func seriesDepth(item: Compositions) -> Int {
+        return item.composition2timeseries?.timeseries2timeslices?.count ?? 0
+    }
     internal var hierarchy: [Cluster] {
         get {
-            let timeSeriesDataModel = TimeSeriesModel()
-//            let myItems = items.filter({$0.composition2model == model })
-//            let item = myItems.first
+
             for item in items.filter({$0.composition2model == model }) {
-            let seriesDepth = Int16(item.composition2timeseries?.timeseries2timeslices?.count ?? 0)
-            let columnsDepth = Int16(item.composition2columns?.count ?? 0)
-                let groupingPattern = "Col count \(columnsDepth)" + " TimeSlice count \(seriesDepth)"
-                if !findCluster(groupingPattern: groupingPattern) {
-                    let workCluster = Cluster()
-                    workCluster.columns.append(contentsOf: ((item.composition2columns?.allObjects as? [Columns])!))
-                    let timeSeries = timeSeriesDataModel.items.filter( { $0.timeseries2timeslices!.count == seriesDepth })
-                    workCluster.timeSeries.append(contentsOf: timeSeries)
-                    workCluster.groupingPattern = groupingPattern
-                    arrayOfClusters.append(workCluster)
-                }
+                mapCluster(composition: item)
             }
             return arrayOfClusters
         }
     }
-    internal func findCluster(groupingPattern: String) -> Bool {
-        var result = false
-        let found: [Cluster] = arrayOfClusters.filter { $0.groupingPattern == groupingPattern }
-        if found.count == 1 {
-            result = true
+    internal func mapCluster(composition: Compositions) -> Void {
+        let seriesDepth = seriesDepth(item: composition)
+        var cluster = self.arrayOfClusters.filter( {
+            Set($0.columns) == composition.composition2columns as! Set<Columns>
+            && seriesDepth == $0.seriesDepth
+        }).first
+        if cluster == nil {
+            cluster = Cluster()
+            cluster!.columns.append(contentsOf: ((composition.composition2columns?.allObjects as? [Columns])!))
+            let groupingPattern = "Col count \(composition.composition2columns!.count)" + " TimeSlice count \(seriesDepth)"
+            cluster?.groupingPattern = groupingPattern
+            cluster?.timeSeries.append(composition.composition2timeseries!)
+            cluster?.seriesDepth = seriesDepth
+            arrayOfClusters.append(cluster!)
+        } else {
+            cluster!.timeSeries.append(composition.composition2timeseries!)
         }
-        if found.count > 1 {
-            fatalError()
-        }
-       return result
     }
+        
     internal class Cluster: Hashable {
         static func == (lhs: CompositionsModel.Cluster, rhs: CompositionsModel.Cluster) -> Bool {
             return lhs.id == rhs.id
@@ -78,6 +77,7 @@ public class CompositionsModel: Model<Compositions> {
         var compositions: [Compositions]?
         var groupingPattern: String?
         var columns = [Columns]()
+        var seriesDepth: Int!
         var timeSeries = [Timeseries]()
     }
     struct TimeeSeriesCluster: Identifiable {

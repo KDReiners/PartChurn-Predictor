@@ -25,8 +25,6 @@ struct ModelsView: View {
                 Divider()
                 HStack {
                     VStack(alignment: .leading) {
-                        Text("Data Cluster")
-                            .font(.title)
                         CompositionsView(model: model)
                     }.padding()
                     VStack(alignment: .leading) {

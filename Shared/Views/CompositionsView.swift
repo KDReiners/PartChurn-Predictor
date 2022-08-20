@@ -13,21 +13,36 @@ struct CompositionsView: View {
     @State var clusterSelection: CompositionsModel.Cluster!
     init(model: Models) {
         self.compositionViewModel = CompositionsModel(model: model)
-
-            let test = compositionViewModel.hierarchy
-
+        
+        let test = compositionViewModel.hierarchy
+        
     }
     var body: some View {
         HStack(alignment: .center)
         {
-            if compositionViewModel.arrayOfClusters.count > 0 {
-                List(compositionViewModel.arrayOfClusters, id: \.self, selection: $clusterSelection) { algorithm in
-                    Text(algorithm.groupingPattern!)
-                }.frame(width: 250)
+            VStack(alignment: .leading)
+            {
+                Text("Data Cluster")
+                    .font(.title)
+                if compositionViewModel.arrayOfClusters.count > 0 {
+                    List(compositionViewModel.arrayOfClusters.sorted(by: { $0.seriesDepth < $1.seriesDepth }), id: \.self, selection: $clusterSelection) { algorithm in
+                        Text(algorithm.groupingPattern!)
+                    }.frame(width: 250)
+                }
             }
-            if clusterSelection != nil {
-                List(clusterSelection.timeSeries, id: \.self ) { series in
-                    Text("\(series.from)")
+            VStack(alignment: .leading) {
+                if clusterSelection != nil {
+                    Text("Timeseries")
+                        .font(.title)
+                    List(clusterSelection.timeSeries.sorted(by: { $0.from < $1.from }), id: \.self ) { series in
+                        Text("\(series.from) \(series.to)")
+                    }
+                    Text("Columns")
+                        .font(.title)
+                    List(clusterSelection.columns.sorted(by: { $0.orderno < $1.orderno }), id:\.self ) { column in
+                        Text(column.name!)
+                        
+                    }
                 }
             }
         }
