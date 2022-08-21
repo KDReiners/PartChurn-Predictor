@@ -13,9 +13,7 @@ struct CompositionsView: View {
     @State var clusterSelection: CompositionsModel.Cluster!
     init(model: Models) {
         self.compositionViewModel = CompositionsModel(model: model)
-        
-        let test = compositionViewModel.hierarchy
-        
+        compositionViewModel.presentCalculationTasks()
     }
     var body: some View {
         HStack(alignment: .center)
@@ -27,7 +25,7 @@ struct CompositionsView: View {
                 if compositionViewModel.arrayOfClusters.count > 0 {
                     List(compositionViewModel.arrayOfClusters.sorted(by: { $0.seriesDepth < $1.seriesDepth }), id: \.self, selection: $clusterSelection) { algorithm in
                         Text(algorithm.groupingPattern!)
-                    }.frame(width: 250)
+                    }.frame(width: 279)
                 }
             }
             VStack(alignment: .leading) {

@@ -27,10 +27,10 @@ public class CompositionsModel: Model<Compositions> {
         {
             
             result = newValue.sorted { (lhs, rhs) in
-                if lhs.seriesdepth == rhs.seriesdepth { // <1>
-                    return lhs.columnsdepth > rhs.columnsdepth
+                if lhs.columnsdepth == rhs.columnsdepth { // <1>
+                    return lhs.seriesdepth > rhs.seriesdepth
                 }
-                return lhs.columnsdepth > rhs.columnsdepth // <2>
+                return lhs.seriesdepth > rhs.seriesdepth // <2>
             }
              
         }
@@ -38,13 +38,9 @@ public class CompositionsModel: Model<Compositions> {
     internal func seriesDepth(item: Compositions) -> Int {
         return item.composition2timeseries?.timeseries2timeslices?.count ?? 0
     }
-    internal var hierarchy: [Cluster] {
-        get {
-
-            for item in items.filter({$0.composition2model == model }) {
-                mapCluster(composition: item)
-            }
-            return arrayOfClusters
+    internal func presentCalculationTasks() -> Void {
+        for item in items.filter({$0.composition2model == model }) {
+            mapCluster(composition: item)
         }
     }
     internal func mapCluster(composition: Compositions) -> Void {
@@ -56,7 +52,7 @@ public class CompositionsModel: Model<Compositions> {
         if cluster == nil {
             cluster = Cluster()
             cluster!.columns.append(contentsOf: ((composition.composition2columns?.allObjects as? [Columns])!))
-            let groupingPattern = "Col count \(composition.composition2columns!.count)" + " TimeSlice count \(seriesDepth)"
+            let groupingPattern = "TimeSlices count \(seriesDepth)" + " Columns count \(composition.composition2columns!.count)"
             cluster?.groupingPattern = groupingPattern
             cluster?.timeSeries.append(composition.composition2timeseries!)
             cluster?.seriesDepth = seriesDepth
