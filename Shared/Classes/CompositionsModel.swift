@@ -56,9 +56,11 @@ public class CompositionsModel: Model<Compositions> {
             cluster?.groupingPattern = groupingPattern
             cluster?.timeSeries.append(composition.composition2timeseries!)
             cluster?.seriesDepth = seriesDepth
+            cluster?.compositions.append(composition)
             arrayOfClusters.append(cluster!)
         } else {
-            cluster!.timeSeries.append(composition.composition2timeseries!)
+            cluster?.timeSeries.append(composition.composition2timeseries!)
+            cluster?.compositions.append(composition)
         }
     }
         
@@ -70,15 +72,10 @@ public class CompositionsModel: Model<Compositions> {
             hasher.combine(id)
         }
         @Published var id = UUID()
-        var compositions: [Compositions]?
+        var compositions = [Compositions]()
         var groupingPattern: String?
         var columns = [Columns]()
         var seriesDepth: Int!
         var timeSeries = [Timeseries]()
-    }
-    struct TimeeSeriesCluster: Identifiable {
-        var id = UUID()
-        var timeSeries: Timeseries
-        var timeSlices: [Timeslices]
     }
 }

@@ -9,11 +9,15 @@ import SwiftUI
 
 struct CompositionsView: View {
     @ObservedObject var compositionViewModel: CompositionsModel
+    var predictionsDataModel = PredictionsModel()
     var compositionViewDict: Dictionary<String, [CompositionsViewEntry]>?
+    var model: Models
     @State var clusterSelection: CompositionsModel.Cluster!
     init(model: Models) {
-        self.compositionViewModel = CompositionsModel(model: model)
+        self.model = model
+        self.compositionViewModel = CompositionsModel(model: self.model)
         compositionViewModel.presentCalculationTasks()
+        predictionsDataModel.predictions(model: self.model)
     }
     var body: some View {
         HStack(alignment: .center)
@@ -26,6 +30,14 @@ struct CompositionsView: View {
                     List(compositionViewModel.arrayOfClusters.sorted(by: { $0.seriesDepth < $1.seriesDepth }), id: \.self, selection: $clusterSelection) { algorithm in
                         Text(algorithm.groupingPattern!)
                     }.frame(width: 279)
+                    HStack {
+                        Button("Delete") {
+                            predictionsDataModel.deleteAllRecords(predicate: nil)
+                        }
+                        Button("Save") {
+                            savePredictions()
+                        }
+                    }
                 }
             }
             VStack(alignment: .leading) {
@@ -44,5 +56,8 @@ struct CompositionsView: View {
                 }
             }
         }
+    }
+    func savePredictions() {
+        predictionsDataModel.savePredictions(model: self.model)
     }
 }
