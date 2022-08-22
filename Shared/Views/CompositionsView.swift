@@ -12,7 +12,7 @@ struct CompositionsView: View {
     var predictionsDataModel = PredictionsModel()
     var compositionViewDict: Dictionary<String, [CompositionsViewEntry]>?
     var model: Models
-    @State var clusterSelection: CompositionsModel.Cluster!
+    @State var clusterSelection: PredictionsModel.prediction!
     init(model: Models) {
         self.model = model
         self.compositionViewModel = CompositionsModel(model: self.model)
@@ -26,8 +26,8 @@ struct CompositionsView: View {
             {
                 Text("Data Cluster")
                     .font(.title)
-                if compositionViewModel.arrayOfClusters.count > 0 {
-                    List(compositionViewModel.arrayOfClusters.sorted(by: { $0.seriesDepth < $1.seriesDepth }), id: \.self, selection: $clusterSelection) { algorithm in
+                if predictionsDataModel.arrayOfPredictions.count > 0 {
+                    List(predictionsDataModel.arrayOfPredictions, id: \.self, selection: $clusterSelection) { algorithm in
                         Text(algorithm.groupingPattern!)
                     }.frame(width: 279)
                     HStack {
