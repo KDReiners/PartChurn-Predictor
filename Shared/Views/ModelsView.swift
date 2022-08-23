@@ -1,73 +1,73 @@
+////
+////  ModelsView.swift
+////  PartChurn Predictor
+////
+////  Created by Klaus-Dieter Reiners on 08.05.22.
+////
 //
-//  ModelsView.swift
-//  PartChurn Predictor
-//
-//  Created by Klaus-Dieter Reiners on 08.05.22.
-//
-
 import SwiftUI
 import CreateML
-
-struct ModelsView: View {
-    @ObservedObject var model: Models
-    @ObservedObject var valueViewModel = ValuesModel()
-    @State var mlSelection: String? = nil
-    var composer: FileWeaver
-    var mlAlgorithms = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor"]
-    var mlTable: MLDataTable?
-    var body: some View {
-        HStack(spacing: 50) {
-            VStack(alignment: .center) {
-                Text(model.name ?? "unbekanntes Model")
-                    .font(.title)
-                    .padding(.top, 10)
-                    .padding(.bottom, 5)
-                Divider()
-                HStack {
-                    VStack(alignment: .leading) {
-                        CompositionsView(model: model, composer: composer)
-                    }.padding()
-                    VStack(alignment: .leading) {
-                        Text("Algorithmus")
-                            .font(.title)
-                        HStack {
-                            List(mlAlgorithms, id: \.self, selection: $mlSelection) { algorithm in
-                                Text(algorithm)
-                            }.frame(width: 250)
-                            VStack{
-                                Button("Lerne..") {
-                                    train(regressorName: mlSelection)
-                                }.frame(width: 90)
-                                Button("Core Data...") {
-                                    fillFromCoreData()
-                                }.frame(width: 90 )
-                            }
-                        }
-                    }.padding()
-                    VStack(alignment: .leading) {
-                        Text("Algorithmus KPI")
-                            .font(.title)
-//                        AlgorithmsModel.valueList(model: model, file: fileSelection, algorithmName: mlSelection ?? "unbekannt")
-                    }.padding()
-                }
-                Divider()
-            }
-            Spacer()
-        }
-        
-    }
-    private func fillFromCoreData() -> Void {
-    }
-    private func train(regressorName: String?) {
-//        var trainer = Trainer(model: model, file: fileSelection)
-//        guard let regressorNameWrapped = regressorName==nil ? mlAlgorithms.first : regressorName else {
-//            return
+//
+//struct ModelsView: View {
+//    @ObservedObject var model: Models
+//    @ObservedObject var valueViewModel = ValuesModel()
+//    @State var mlSelection: String? = nil
+//    var composer: FileWeaver
+//    var mlAlgorithms = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor"]
+//    var mlTable: MLDataTable?
+//    var body: some View {
+//        HStack(spacing: 50) {
+//            VStack(alignment: .center) {
+//                Text(model.name ?? "unbekanntes Model")
+//                    .font(.title)
+//                    .padding(.top, 10)
+//                    .padding(.bottom, 5)
+//                Divider()
+//                HStack {
+//                    VStack(alignment: .leading) {
+//                        CompositionsView(model: model, composer: composer)
+//                    }.padding()
+//                    VStack(alignment: .leading) {
+//                        Text("Algorithmus")
+//                            .font(.title)
+//                        HStack {
+//                            List(mlAlgorithms, id: \.self, selection: $mlSelection) { algorithm in
+//                                Text(algorithm)
+//                            }.frame(width: 250)
+//                            VStack{
+//                                Button("Lerne..") {
+//                                    train(regressorName: mlSelection)
+//                                }.frame(width: 90)
+//                                Button("Core Data...") {
+//                                    fillFromCoreData()
+//                                }.frame(width: 90 )
+//                            }
+//                        }
+//                    }.padding()
+//                    VStack(alignment: .leading) {
+//                        Text("Algorithmus KPI")
+//                            .font(.title)
+////                        AlgorithmsModel.valueList(model: model, file: fileSelection, algorithmName: mlSelection ?? "unbekannt")
+//                    }.padding()
+//                }
+//                Divider()
+//            }
+//            Spacer()
 //        }
-//        mlSelection = regressorNameWrapped
-//        trainer.createModel(regressorName: regressorNameWrapped, fileName: fileSelection?.name)
-    }
-}
-/// auxiliary views
+//
+//    }
+//    private func fillFromCoreData() -> Void {
+//    }
+//    private func train(regressorName: String?) {
+////        var trainer = Trainer(model: model, file: fileSelection)
+////        guard let regressorNameWrapped = regressorName==nil ? mlAlgorithms.first : regressorName else {
+////            return
+////        }
+////        mlSelection = regressorNameWrapped
+////        trainer.createModel(regressorName: regressorNameWrapped, fileName: fileSelection?.name)
+//    }
+//}
+///// auxiliary views
 public struct ModelListRow: View {
     public var selectedModel: Models
     public var editedModel: Binding<Models>?

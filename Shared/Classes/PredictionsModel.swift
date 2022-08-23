@@ -71,6 +71,13 @@ public class PredictionsModel: Model<Predictions> {
     }
     internal class prediction: CompositionsModel.Cluster {
         var columnsDepth: Int16!
-        
+        var rows: Array<String> {
+            get {
+                var result = [String]()
+                for series in self.timeSeries {
+                    result.append(series.map { String($0) }.joined(separator: ", "))
+                }
+                return result
+            }
     }
 }

@@ -10,21 +10,21 @@ import SwiftUI
 struct CompositionsView: View {
     @ObservedObject var compositionDataModel: CompositionsModel
     @ObservedObject var predictionsDataModel = PredictionsModel()
-    
-    
-    
-//    var compositionViewDict: Dictionary<String, [CompositionsViewEntry]>?
-    var model: Models
-    var mlAlgorithms = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor"]
     @State var mlSelection: String? = nil
-    internal var composer: FileWeaver?
-    @State var clusterSelection: PredictionsModel.prediction!
+    @State var clusterSelection: PredictionsModel.prediction?
     @State var selectedColumnCombination: [Columns]?
     @State var selectedTimeSeriesCombination: [String]?
-    init(model: Models, composer: FileWeaver) {
+    
+    var model: Models
+    var composer: FileWeaver?
+    var combinator: Combinator!
+    var mlAlgorithms = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor"]
+    
+    init(model: Models, composer: FileWeaver, combinator: Combinator) {
         self.model = model
         self.compositionDataModel = CompositionsModel(model: self.model)
         self.composer = composer
+        self.combinator = combinator
         compositionDataModel.presentCalculationTasks()
         predictionsDataModel.predictions(model: self.model)
     }
@@ -40,6 +40,7 @@ struct CompositionsView: View {
                         Spacer()
                         if predictionsDataModel.arrayOfPredictions.count > 0 {
                             Button("Delete") {
+                                predictionsDataModel.deleteAllRecords(predicate: nil)
                                 clusterSelection = nil
                                 predictionsDataModel.predictions(model: self.model)
                             }
@@ -54,6 +55,7 @@ struct CompositionsView: View {
                         List(predictionsDataModel.arrayOfPredictions.sorted(by: { $0.seriesDepth < $1.seriesDepth }), id: \.self, selection: $clusterSelection) { prediction in
                             Text(prediction.groupingPattern!)
                         }
+                        
                     }
                     else if compositionDataModel.arrayOfClusters.count > 0 {
                         List(compositionDataModel.arrayOfClusters.sorted(by: { $0.seriesDepth < $1.seriesDepth }), id:\.self) { cluster in
@@ -68,12 +70,20 @@ struct CompositionsView: View {
                     if predictionsDataModel.arrayOfPredictions.count > 0 && clusterSelection != nil {
                         Text("Timeseries")
                             .font(.title)
-                        List(clusterSelection.timeSeries.sorted(by: { $0.from < $1.from }), id: \.self ) { series in
-                            Text("\(series.from) \(series.to)")
+                        List(combinator.scenario.timeSeriesSections, id: \.rows, selection: $selectedTimeSeriesCombination) { section in
+                            Section(header: Text("Level: \(section.level)"))  {
+                                ForEach(section.rows, id: \.self) { row in
+                                    HStack {
+                                        Text(row)
+                                    }
+                                    .onTapGesture { selectedTimeSeriesCombination = selectedTimeSeriesCombination == section.rows ? nil: section.rows }
+                                }
+                            }
                         }
+
                         Text("Columns")
                             .font(.title)
-                        List(clusterSelection.columns.sorted(by: { $0.orderno < $1.orderno }), id:\.self ) { column in
+                        List((clusterSelection?.columns.sorted(by: { $0.orderno < $1.orderno }))!, id:\.self ) { column in
                             Text(column.name!)
                         }
                     }
@@ -102,7 +112,7 @@ struct CompositionsView: View {
             }
             Divider()
             VStack(alignment: .leading) {
-                ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: selectedColumnCombination, timeSeriesRows: selectedTimeSeriesCombination)
+                ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: clusterSelection?.columns, timeSeriesRows: selectedTimeSeriesCombination)
             }.padding()
         }
     }
