@@ -28,7 +28,7 @@ struct ScenarioView: View {
     }
     var body: some View {
         TabView {
-            ModelsView(model: model, valueViewModel: valuesViewModel, mlSelection: mlSelection, composer: composer, mlAlgorithms: mlAlgorithms, mlTable: mlTable)
+            CompositionsView(model: self.model, composer: self.composer)
             .tabItem {
                 Label("Analysis", systemImage: "tray.and.arrow.down.fill")
             }

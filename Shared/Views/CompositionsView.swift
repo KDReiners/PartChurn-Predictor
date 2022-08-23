@@ -10,8 +10,13 @@ import SwiftUI
 struct CompositionsView: View {
     @ObservedObject var compositionDataModel: CompositionsModel
     @ObservedObject var predictionsDataModel = PredictionsModel()
-    var compositionViewDict: Dictionary<String, [CompositionsViewEntry]>?
+    
+    
+    
+//    var compositionViewDict: Dictionary<String, [CompositionsViewEntry]>?
     var model: Models
+    var mlAlgorithms = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor"]
+    @State var mlSelection: String? = nil
     internal var composer: FileWeaver?
     @State var clusterSelection: PredictionsModel.prediction!
     @State var selectedColumnCombination: [Columns]?
@@ -24,55 +29,92 @@ struct CompositionsView: View {
         predictionsDataModel.predictions(model: self.model)
     }
     var body: some View {
-        HStack(alignment: .center)
-        {
-            VStack(alignment: .leading)
+        VStack {
+            HStack(alignment: .center)
             {
-                Text("Data Cluster")
-                    .font(.title)
-                if predictionsDataModel.arrayOfPredictions.count > 0 {
-                    List(predictionsDataModel.arrayOfPredictions.sorted(by: { $0.seriesDepth < $1.seriesDepth }), id: \.self, selection: $clusterSelection) { prediction in
-                        Text(prediction.groupingPattern!)
+                VStack(alignment: .leading)
+                {
+                    HStack(alignment: .center) {
+                        Text("Data Cluster")
+                        .font(.title)
+                        Spacer()
+                        if predictionsDataModel.arrayOfPredictions.count > 0 {
+                            Button("Delete") {
+                                clusterSelection = nil
+                                predictionsDataModel.predictions(model: self.model)
+                            }
+                        }
+                        else if compositionDataModel.arrayOfClusters.count > 0 {
+                            Button("Save") {
+                                savePredictions()
+                            }
+                        }
                     }
-                    HStack {
-                        Button("Delete") {
-                            clusterSelection = nil
-                            predictionsDataModel.deleteAllRecords(predicate: nil)
-                            predictionsDataModel.predictions(model: self.model)
+                    if predictionsDataModel.arrayOfPredictions.count > 0 {
+                        List(predictionsDataModel.arrayOfPredictions.sorted(by: { $0.seriesDepth < $1.seriesDepth }), id: \.self, selection: $clusterSelection) { prediction in
+                            Text(prediction.groupingPattern!)
+                        }
+                    }
+                    else if compositionDataModel.arrayOfClusters.count > 0 {
+                        List(compositionDataModel.arrayOfClusters.sorted(by: { $0.seriesDepth < $1.seriesDepth }), id:\.self) { cluster in
+                            Text(cluster.groupingPattern!)
                         }
                     }
                 }
-                else if compositionDataModel.arrayOfClusters.count > 0 {
-                    List(compositionDataModel.arrayOfClusters.sorted(by: { $0.seriesDepth < $1.seriesDepth }), id:\.self) { cluster in
-                        Text(cluster.groupingPattern!)
-                    }
-                    Button("Save") {
-                            savePredictions()
+                .frame(width: 270)
+                .padding()
+                
+                VStack(alignment: .leading) {
+                    if predictionsDataModel.arrayOfPredictions.count > 0 && clusterSelection != nil {
+                        Text("Timeseries")
+                            .font(.title)
+                        List(clusterSelection.timeSeries.sorted(by: { $0.from < $1.from }), id: \.self ) { series in
+                            Text("\(series.from) \(series.to)")
+                        }
+                        Text("Columns")
+                            .font(.title)
+                        List(clusterSelection.columns.sorted(by: { $0.orderno < $1.orderno }), id:\.self ) { column in
+                            Text(column.name!)
+                        }
                     }
                 }
-            }.frame(width: 240)
-            
-            VStack(alignment: .leading) {
-                if predictionsDataModel.arrayOfPredictions.count > 0 && clusterSelection != nil {
-                    Text("Timeseries")
+                .padding()
+                VStack(alignment: .leading) {
+                    Text("Algorithmus")
                         .font(.title)
-                    List(clusterSelection.timeSeries.sorted(by: { $0.from < $1.from }), id: \.self ) { series in
-                        Text("\(series.from) \(series.to)")
+                    HStack {
+                        List(mlAlgorithms, id: \.self, selection: $mlSelection) { algorithm in
+                            Text(algorithm)
+                        }.frame(width: 250)
+                        VStack{
+                            Button("Lerne..") {
+                                train(regressorName: mlSelection)
+                            }.frame(width: 90)
+                        }
                     }
-                    Text("Columns")
+                }
+                .padding()
+                VStack(alignment: .leading) {
+                    Text("Algorithmus KPI")
                         .font(.title)
-                    List(clusterSelection.columns.sorted(by: { $0.orderno < $1.orderno }), id:\.self ) { column in
-                        Text(column.name!)
-                        
-                    }
+                    //                        AlgorithmsModel.valueList(model: model, file: fileSelection, algorithmName: mlSelection ?? "unbekannt")
                 }
             }
+            Divider()
+            VStack(alignment: .leading) {
+                ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: selectedColumnCombination, timeSeriesRows: selectedTimeSeriesCombination)
+            }.padding()
         }
-        VStack(alignment: .leading) {
-            ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: selectedColumnCombination, timeSeriesRows: selectedTimeSeriesCombination)
-        }.padding(.horizontal)
     }
     func savePredictions() {
         predictionsDataModel.savePredictions(model: self.model)
+    }
+    private func train(regressorName: String?) {
+        //        var trainer = Trainer(model: model, file: fileSelection)
+        //        guard let regressorNameWrapped = regressorName==nil ? mlAlgorithms.first : regressorName else {
+        //            return
+        //        }
+        //        mlSelection = regressorNameWrapped
+        //        trainer.createModel(regressorName: regressorNameWrapped, fileName: fileSelection?.name)
     }
 }
