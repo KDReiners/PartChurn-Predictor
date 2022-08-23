@@ -12,10 +12,14 @@ struct CompositionsView: View {
     @ObservedObject var predictionsDataModel = PredictionsModel()
     var compositionViewDict: Dictionary<String, [CompositionsViewEntry]>?
     var model: Models
+    internal var composer: FileWeaver?
     @State var clusterSelection: PredictionsModel.prediction!
-    init(model: Models) {
+    @State var selectedColumnCombination: [Columns]?
+    @State var selectedTimeSeriesCombination: [String]?
+    init(model: Models, composer: FileWeaver) {
         self.model = model
         self.compositionDataModel = CompositionsModel(model: self.model)
+        self.composer = composer
         compositionDataModel.presentCalculationTasks()
         predictionsDataModel.predictions(model: self.model)
     }
@@ -64,6 +68,9 @@ struct CompositionsView: View {
                 }
             }
         }
+        VStack(alignment: .leading) {
+            ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: selectedColumnCombination, timeSeriesRows: selectedTimeSeriesCombination)
+        }.padding(.horizontal)
     }
     func savePredictions() {
         predictionsDataModel.savePredictions(model: self.model)

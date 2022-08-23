@@ -10,9 +10,9 @@ import CreateML
 
 struct ModelsView: View {
     @ObservedObject var model: Models
-    @ObservedObject var metric: Ml_MetricKPI
     @ObservedObject var valueViewModel = ValuesModel()
     @State var mlSelection: String? = nil
+    var composer: FileWeaver
     var mlAlgorithms = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor"]
     var mlTable: MLDataTable?
     var body: some View {
@@ -25,7 +25,7 @@ struct ModelsView: View {
                 Divider()
                 HStack {
                     VStack(alignment: .leading) {
-                        CompositionsView(model: model)
+                        CompositionsView(model: model, composer: composer)
                     }.padding()
                     VStack(alignment: .leading) {
                         Text("Algorithmus")
@@ -54,6 +54,7 @@ struct ModelsView: View {
             }
             Spacer()
         }
+        
     }
     private func fillFromCoreData() -> Void {
     }
@@ -64,13 +65,6 @@ struct ModelsView: View {
 //        }
 //        mlSelection = regressorNameWrapped
 //        trainer.createModel(regressorName: regressorNameWrapped, fileName: fileSelection?.name)
-    }
-}
-
-
-struct ModelsView_Previews: PreviewProvider {
-    static var previews: some View {
-        ModelsView(model: ModelsModel().items[0], metric: Ml_MetricKPI(), mlTable: CoreDataML(model: ModelsModel().items[0]).mlDataTable)
     }
 }
 /// auxiliary views

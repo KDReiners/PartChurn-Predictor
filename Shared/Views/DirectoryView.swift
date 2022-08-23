@@ -19,7 +19,7 @@ struct DirectoryView: View {
                 DisclosureGroup("Modelle") {
                     if modelsDataModel.items.count > 0 {
                         ForEach(modelsDataModel.items, id: \.self) { item in
-                            NavigationLink(item.name ?? "unbenanntes Modell", destination: ScenarioView(model: item, metric: Ml_MetricKPI()), tag: item, selection: $modelSelect)
+                            NavigationLink(item.name ?? "unbenanntes Modell", destination: ScenarioView(model: item, modelSelect: $modelSelect.wrappedValue), tag: item, selection: $modelSelect)
                         }
                     } else {
                         Text("No models")

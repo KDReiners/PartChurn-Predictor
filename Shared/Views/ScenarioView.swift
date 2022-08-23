@@ -11,28 +11,31 @@ import CreateML
 struct ScenarioView: View {
     /// for modelsView
     @ObservedObject var model: Models
-    @ObservedObject var metric: Ml_MetricKPI
     @ObservedObject var valuesViewModel = ValuesModel()
     var fileSelection: Files?
     var mlSelection: String?
     var mlAlgorithms = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor"]
     var mlTable: MLDataTable?
+    internal var composer: FileWeaver!
+    internal var combinator: Combinator!
+    init(model: Models,mlTable: MLDataTable? = nil, modelSelect: NSManagedObject?) {
+        self.model = model
+        self.mlTable = mlTable
+        if modelSelect != nil {
+            self.composer = FileWeaver(model: model)
+            self.combinator = Combinator(model: self.model, orderedColumns: (composer?.orderedColumns)!, mlDataTable: (composer?.mlDataTable_Base)!)
+        }
+    }
     var body: some View {
         TabView {
-            ModelsView(model: model, metric: metric, valueViewModel: valuesViewModel, mlSelection: mlSelection, mlAlgorithms: mlAlgorithms, mlTable: mlTable)
+            ModelsView(model: model, valueViewModel: valuesViewModel, mlSelection: mlSelection, composer: composer, mlAlgorithms: mlAlgorithms, mlTable: mlTable)
             .tabItem {
                 Label("Analysis", systemImage: "tray.and.arrow.down.fill")
             }
-            ComposerView(model: model)
+            ComposerView(model: model, composer: self.composer, combinator: self.combinator)
             .tabItem {
                 Label("Composer", systemImage: "tray.and.arrow.up.fill")
             }
         }
-    }
-}
-
-struct ScenarioView_Previews: PreviewProvider {
-    static var previews: some View {
-        ScenarioView(model: ModelsModel().items[0], metric: Ml_MetricKPI(), mlTable: CoreDataML(model: ModelsModel().items[0]).mlDataTable)
     }
 }

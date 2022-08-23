@@ -15,10 +15,10 @@ struct ComposerView: View {
     
     internal var composer: FileWeaver?
     internal var combinator: Combinator
-    init(model: Models) {
+    init(model: Models, composer: FileWeaver?, combinator: Combinator) {
         self.model = model
-        self.composer = FileWeaver(model: model)
-        self.combinator = Combinator(model: self.model, orderedColumns: (composer?.orderedColumns)!, mlDataTable: (composer?.mlDataTable_Base)!)
+        self.composer = composer
+        self.combinator = combinator
     }
     var body: some View {
         HStack(spacing: 50) {
@@ -73,11 +73,5 @@ struct ComposerView: View {
                 }.padding(.horizontal)
             }
         }
-    }
-}
-
-struct ComposerView_Previews: PreviewProvider {
-    static var previews: some View {
-        ComposerView(model: ModelsModel().items.first!)
     }
 }
