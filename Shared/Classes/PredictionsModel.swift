@@ -9,6 +9,7 @@ import Foundation
 public class PredictionsModel: Model<Predictions> {
     @Published var result: [Predictions]!
     @Published var arrayOfPredictions = [prediction]()
+    @Published var timeSeriesSelections = [String]()
     private var model: Models?
     private var compositionsDataModel: CompositionsModel?
     public init() {
@@ -69,15 +70,22 @@ public class PredictionsModel: Model<Predictions> {
             arrayOfPredictions.append(newPredictionPresenatation)
         }
     }
+    internal func getTimeSeries() {
+        for prediction in arrayOfPredictions {
+            self.timeSeriesSelections.append(prediction.timeSeries.map( { String($0.from)}).joined(separator: ", "))
+        }
+    }
     internal class prediction: CompositionsModel.Cluster {
         var columnsDepth: Int16!
-        var rows: Array<String> {
+        var connectedTimeSeries: [String] {
             get {
                 var result = [String]()
-                for series in self.timeSeries {
-                    result.append(series.map { String($0) }.joined(separator: ", "))
+                for series in self.timeSeries.sorted(by: { $0.from < $1.from }) {
+                    let test = (series.timeseries2timeslices?.allObjects as! [Timeslices]).map( {String($0.value)}).joined(separator: ", ")
+                    result.append(test)
                 }
                 return result
             }
+        }
     }
 }

@@ -27,6 +27,7 @@ struct CompositionsView: View {
         self.combinator = combinator
         compositionDataModel.presentCalculationTasks()
         predictionsDataModel.predictions(model: self.model)
+        predictionsDataModel.getTimeSeries()
     }
     var body: some View {
         VStack {
@@ -70,17 +71,9 @@ struct CompositionsView: View {
                     if predictionsDataModel.arrayOfPredictions.count > 0 && clusterSelection != nil {
                         Text("Timeseries")
                             .font(.title)
-                        List(combinator.scenario.timeSeriesSections, id: \.rows, selection: $selectedTimeSeriesCombination) { section in
-                            Section(header: Text("Level: \(section.level)"))  {
-                                ForEach(section.rows, id: \.self) { row in
-                                    HStack {
-                                        Text(row)
-                                    }
-                                    .onTapGesture { selectedTimeSeriesCombination = selectedTimeSeriesCombination == section.rows ? nil: section.rows }
-                                }
-                            }
+                        List((clusterSelection?.timeSeries.sorted(by: { $0.from < $1.from }))!, id: \.self) { series in
+                            Text(String(series.from) + " - " + String(series.to))
                         }
-
                         Text("Columns")
                             .font(.title)
                         List((clusterSelection?.columns.sorted(by: { $0.orderno < $1.orderno }))!, id:\.self ) { column in
@@ -112,7 +105,7 @@ struct CompositionsView: View {
             }
             Divider()
             VStack(alignment: .leading) {
-                ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: clusterSelection?.columns, timeSeriesRows: selectedTimeSeriesCombination)
+                ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: clusterSelection?.columns, timeSeriesRows: clusterSelection?.connectedTimeSeries)
             }.padding()
         }
     }
