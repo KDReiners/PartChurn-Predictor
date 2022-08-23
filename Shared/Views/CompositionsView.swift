@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct CompositionsView: View {
-    @ObservedObject var compositionViewModel: CompositionsModel
-    var predictionsDataModel = PredictionsModel()
+    @ObservedObject var compositionDataModel: CompositionsModel
+    @ObservedObject var predictionsDataModel = PredictionsModel()
     var compositionViewDict: Dictionary<String, [CompositionsViewEntry]>?
     var model: Models
     @State var clusterSelection: PredictionsModel.prediction!
     init(model: Models) {
         self.model = model
-        self.compositionViewModel = CompositionsModel(model: self.model)
-        compositionViewModel.presentCalculationTasks()
+        self.compositionDataModel = CompositionsModel(model: self.model)
+        compositionDataModel.presentCalculationTasks()
         predictionsDataModel.predictions(model: self.model)
     }
     var body: some View {
@@ -27,21 +27,29 @@ struct CompositionsView: View {
                 Text("Data Cluster")
                     .font(.title)
                 if predictionsDataModel.arrayOfPredictions.count > 0 {
-                    List(predictionsDataModel.arrayOfPredictions, id: \.self, selection: $clusterSelection) { algorithm in
-                        Text(algorithm.groupingPattern!)
-                    }.frame(width: 279)
+                    List(predictionsDataModel.arrayOfPredictions.sorted(by: { $0.seriesDepth < $1.seriesDepth }), id: \.self, selection: $clusterSelection) { prediction in
+                        Text(prediction.groupingPattern!)
+                    }
                     HStack {
                         Button("Delete") {
+                            clusterSelection = nil
                             predictionsDataModel.deleteAllRecords(predicate: nil)
-                        }
-                        Button("Save") {
-                            savePredictions()
+                            predictionsDataModel.predictions(model: self.model)
                         }
                     }
                 }
-            }
+                else if compositionDataModel.arrayOfClusters.count > 0 {
+                    List(compositionDataModel.arrayOfClusters.sorted(by: { $0.seriesDepth < $1.seriesDepth }), id:\.self) { cluster in
+                        Text(cluster.groupingPattern!)
+                    }
+                    Button("Save") {
+                            savePredictions()
+                    }
+                }
+            }.frame(width: 240)
+            
             VStack(alignment: .leading) {
-                if clusterSelection != nil {
+                if predictionsDataModel.arrayOfPredictions.count > 0 && clusterSelection != nil {
                     Text("Timeseries")
                         .font(.title)
                     List(clusterSelection.timeSeries.sorted(by: { $0.from < $1.from }), id: \.self ) { series in

@@ -30,6 +30,7 @@ public class CompositionsModel: Model<Compositions> {
                 if lhs.columnsdepth == rhs.columnsdepth { // <1>
                     return lhs.seriesdepth > rhs.seriesdepth
                 }
+                presentCalculationTasks()
                 return lhs.seriesdepth > rhs.seriesdepth // <2>
             }
              
@@ -55,7 +56,7 @@ public class CompositionsModel: Model<Compositions> {
             let groupingPattern = "TimeSlices count \(seriesDepth)" + " Columns count \(composition.composition2columns!.count)"
             cluster?.groupingPattern = groupingPattern
             cluster?.timeSeries.append(composition.composition2timeseries!)
-            cluster?.seriesDepth = seriesDepth
+            cluster?.seriesDepth = Int16(seriesDepth)
             cluster?.compositions.append(composition)
             arrayOfClusters.append(cluster!)
         } else {
@@ -75,7 +76,7 @@ public class CompositionsModel: Model<Compositions> {
         var compositions = [Compositions]()
         var groupingPattern: String?
         var columns = [Columns]()
-        var seriesDepth: Int!
+        var seriesDepth: Int16!
         var timeSeries = [Timeseries]()
     }
 }

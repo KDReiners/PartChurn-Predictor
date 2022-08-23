@@ -35,6 +35,8 @@ public class PredictionsModel: Model<Predictions> {
             let newPrediction = self.insertRecord()
             newPrediction.id = UUID()
             newPrediction.groupingpattern = cluster.groupingPattern
+            newPrediction.seriesdepth = Int16(cluster.seriesDepth)
+            newPrediction.columnsdepth = Int16(cluster.columns.count)
             newPrediction.prediction2model = model
             for composition in cluster.compositions {
                 
@@ -49,19 +51,26 @@ public class PredictionsModel: Model<Predictions> {
         compositionsDataModel?.presentCalculationTasks()
     }
     internal func predictions(model: Models) {
+//      self.deleteAllRecords(predicate: nil)
+        self.model = model
         let foundItems = self.items.filter( { $0.prediction2model == model })
         for item in foundItems {
             let newPredictionPresenatation = prediction()
             newPredictionPresenatation.id = item.id!
             newPredictionPresenatation.groupingPattern = item.groupingpattern
-            for composition in item.prediction2compositions!.allObjects as! [Compositions]{
-                newPredictionPresenatation.columns.append(contentsOf: composition.composition2columns?.allObjects as! [Columns])
+            newPredictionPresenatation.seriesDepth = Int16(item.seriesdepth)
+            newPredictionPresenatation.columnsDepth = Int16(item.columnsdepth)
+            let composition = (item.prediction2compositions!.allObjects.first as! Compositions)
+            newPredictionPresenatation.columns.append(contentsOf: composition.composition2columns?.allObjects as! [Columns])
+            for composition in item.prediction2compositions!.allObjects as! [Compositions] {
+//                newPredictionPresenatation.columns.append(contentsOf: composition.composition2columns?.allObjects as! [Columns])
                 newPredictionPresenatation.timeSeries.append(composition.composition2timeseries!)
             }
             arrayOfPredictions.append(newPredictionPresenatation)
         }
     }
     internal class prediction: CompositionsModel.Cluster {
+        var columnsDepth: Int16!
         
     }
 }

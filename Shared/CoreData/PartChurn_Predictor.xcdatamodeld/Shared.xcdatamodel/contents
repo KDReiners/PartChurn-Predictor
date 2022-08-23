@@ -68,8 +68,10 @@
         <relationship name="model2values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Values" inverseName="value2model" inverseEntity="Values"/>
     </entity>
     <entity name="Predictions" representedClassName="Predictions" syncable="YES" codeGenerationType="class">
+        <attribute name="columnsdepth" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="groupingpattern" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="seriesdepth" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="prediction2compositions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Compositions" inverseName="composition2predictions" inverseEntity="Compositions"/>
         <relationship name="prediction2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2predictions" inverseEntity="Models"/>
     </entity>
@@ -103,9 +105,9 @@
         <element name="Metrics" positionX="-265.921875" positionY="259.66796875" width="128" height="89"/>
         <element name="Metricvalues" positionX="-73.2265625" positionY="-92.19921875" width="128" height="119"/>
         <element name="Models" positionX="-382.08203125" positionY="-90.27734375" width="128" height="149"/>
+        <element name="Predictions" positionX="-540" positionY="63" width="128" height="119"/>
         <element name="Timeseries" positionX="57.18359375" positionY="307.5546875" width="128" height="103"/>
         <element name="Timeslices" positionX="-82.50390625" positionY="416.55859375" width="128" height="59"/>
         <element name="Values" positionX="-586.28515625" positionY="304.29296875" width="128" height="164"/>
-        <element name="Predictions" positionX="-540" positionY="63" width="128" height="89"/>
     </elements>
 </model>
