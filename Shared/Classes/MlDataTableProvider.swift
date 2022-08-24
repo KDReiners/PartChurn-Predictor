@@ -183,13 +183,15 @@ class MLTableCluster {
         }
     }
     var columns: [Columns]
-    
+    var tables = [MLDataTable]()
+    init(columns: [Columns]) {
+        self.columns = columns
+    }
     var timelessInputColumns: [Columns] {
         get {
             return self.columns.filter { $0.ispartofprimarykey == 0 && $0.istimeseries == 0 && $0.ispartoftimeseries == 0 && $0.istarget == 0}
         }
     }
-    
     var timedependantInputColums: [Columns] {
         get {
             return self.columns.filter { $0.ispartofprimarykey == 0 &&  $0.istimeseries == 0 && $0.ispartoftimeseries == 1 && $0.istarget == 0}
@@ -231,15 +233,19 @@ class MLTableCluster {
             }
         }
     }
-    var tables = [MLDataTable]()
-    init(columns: [Columns]) {
-        self.columns = columns
-    }
+
+
     internal func construct() -> MLDataTable {
         var prePeriodsTable: MLDataTable?
         var result: MLDataTable?
         for i in 0..<tables.count - 1 {
+            let columnNames = columns.map({ $0.name! })
             let suffix = -tables.count + 1 + i
+            for column in tables[i].columnNames {
+                if !columnNames.contains(column) {
+                    tables[i].removeColumn(named: column)
+                }
+            }
             for column in timedependantInputColums {
                 let newName = column.name! + String(suffix)
                 tables[i].renameColumn(named: column.name!, to: newName)

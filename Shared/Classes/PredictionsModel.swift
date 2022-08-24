@@ -27,7 +27,12 @@ public class PredictionsModel: Model<Predictions> {
         }
         set
         {
-            result = newValue.sorted(by: { $1.id > $0.id })
+            result = newValue.sorted { (lhs, rhs) in
+                if lhs.columnsdepth == rhs.columnsdepth { // <1>
+                    return lhs.seriesdepth > rhs.seriesdepth
+                }
+                return lhs.seriesdepth < rhs.seriesdepth // <2>
+            }
         }
     }
     internal func savePredictions(model: Models) {
