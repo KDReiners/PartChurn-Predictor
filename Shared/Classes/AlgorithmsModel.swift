@@ -22,7 +22,7 @@ public class AlgorithmsModel: Model<Algorithms> {
             result = newValue.sorted(by: { $1.orderno > $0.orderno })
         }
     }
-    internal static func showKpis(model: Models, algorithmName: String?) -> Ml_MetricKPI {
+    internal static func showKpis(predictions: Predictions?, algorithmName: String?) -> Ml_MetricKPI {
         let result = Ml_MetricKPI()
         let algorithmsModel = AlgorithmsModel()
         let metricValuesModel = MetricvaluesModel()
@@ -30,7 +30,7 @@ public class AlgorithmsModel: Model<Algorithms> {
             return result
         }
         let metricValues = metricValuesModel.items.filter( {
-            return $0.metricvalue2algorithm == algorithm
+            return $0.metricvalue2algorithm == algorithm && $0.metricvalue2prediction == predictions
         })
         for metricValue in  metricValues {
             let key = (metricValue.metricvalue2datasettype?.name!)! + "Metrics." + (metricValue.metricvalue2metric?.name!)!
@@ -44,10 +44,12 @@ public class AlgorithmsModel: Model<Algorithms> {
         var model: Models?
         var fileName: String?
         var algorithmName: String?
-        public init(model: Models, algorithmName: String) {
-            self.model = model
+        var prediction: Predictions?
+        public init(prediction: Predictions?, algorithmName: String) {
+            self.model = prediction?.prediction2model
+            self.prediction = prediction
             self.algorithmName = algorithmName
-            metricStructure = AlgorithmsModel.showKpis(model: model, algorithmName: algorithmName)
+            metricStructure = AlgorithmsModel.showKpis(predictions: prediction, algorithmName: algorithmName)
             metricStructure.updateMetrics()
         }
         public var body: some View {

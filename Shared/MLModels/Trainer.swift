@@ -22,6 +22,7 @@ public struct Trainer {
     var prediction: Predictions!
     init(prediction: Predictions, mlDataTable: MLDataTable, orderedColumns: [Columns], selectedColumns: [Columns]? = nil, timeSeriesRows: [String]? = nil) {
         self.model = prediction.prediction2model
+        self.prediction = prediction
         mlDataTableFactory.orderedColumns = orderedColumns
         mlDataTableFactory.mlDataTable = mlDataTable
         mlDataTableFactory.selectedColumns = selectedColumns
@@ -52,7 +53,11 @@ public struct Trainer {
         }
     }
     public mutating func createModel(regressorName: String) -> Void {
-        let (regressorEvaluationTable, regressorTrainingTable) = regressorTable!.randomSplit(by: 0.20, seed: 5)
+        let (regressorEvaluationTable, regressorTrainingTable) = regressorTable!.randomSplit(by: 0.2, seed: 5)
+        print(self.regressorTable!)
+        print("RegressorTable Rows: " + String(regressorTable!.rows.count))
+        print("RegressorTrainingTable Rows: " + String(regressorTrainingTable.rows.count))
+        print("RegressorEvaluationTable Rows: " + String(regressorEvaluationTable.rows.count))
         switch regressorName {
         case "MLLinearRegressor":
             let defaultParams = MLLinearRegressor.ModelParameters(validation: .split(strategy: .automatic), maxIterations: 500, l1Penalty: 0, l2Penalty: 0.01, stepSize: 1.0, convergenceThreshold: 0.01, featureRescaling: true)
@@ -96,7 +101,7 @@ public struct Trainer {
         default:
             fatalError()
         }
-        writeMetrics(regressor: regressor, regressorName: regressorName, regressorEvaluationTable: regressorEvaluationTable)
+        writeMetrics(regressor: regressor, regressorName:  regressorName, regressorEvaluationTable: regressorEvaluationTable)
         
     }
     
@@ -112,12 +117,12 @@ public struct Trainer {
         regressorKPI.dictOfMetrics["evaluationMetrics.maximumError"]? = regressorEvalutation.maximumError
         regressorKPI.dictOfMetrics["evaluationMetrics.rootMeanSquaredError"]? = regressorEvalutation.rootMeanSquaredError
         /// Schreibe in CoreData
-        regressorKPI.postMetric(model: model!, algorithmName: regressorName)
+        regressorKPI.postMetric(prediction: self.prediction, algorithmName: regressorName)
         let regressorMetadata = MLModelMetadata(author: "Steps.IT",
                                                 shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden",
                                                 version: "1.0")
         /// Speichern des trainierten Modells auf dem Schreibtisch
-        try? regressor.write(to: BaseServices.homePath.appendingPathComponent(regressorName+".mlmodel"),
+        try? regressor.write(to: BaseServices.homePath.appendingPathComponent(self.model.name!, isDirectory: true).appendingPathComponent(regressorName + "_" + self.prediction.id!.uuidString + ".mlmodel"),
                             metadata: regressorMetadata)
     }
 }

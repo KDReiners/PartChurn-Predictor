@@ -63,13 +63,14 @@ internal class Ml_MetricKPI: ObservableObject {
         dictOfMetrics["evaluationMetrics.rootMeanSquaredError"] = 0
     }
     
-    internal func postMetric(model: Models, algorithmName: String) {
-        
+    internal func postMetric(prediction: Predictions, algorithmName: String) {
+        let model = prediction.prediction2model
         let metricsvaluesModel = MetricvaluesModel()
         let datasetTypeModel = DatasettypesModel()
         let metricsModel = MetricsModel()
         let algorithmsModel = AlgorithmsModel()
-        let obsoleteMetrics = metricsvaluesModel.items.filter({$0.metricvalue2model == model && $0.metricvalue2algorithm?.name == algorithmName})
+        let predictionModel = PredictionsModel()
+        let obsoleteMetrics = metricsvaluesModel.items.filter({$0.metricvalue2model == model && $0.metricvalue2algorithm?.name == algorithmName && $0.metricvalue2prediction == prediction})
         for item in obsoleteMetrics {
             metricsvaluesModel.deleteRecord(record: item)
         }
@@ -99,6 +100,7 @@ internal class Ml_MetricKPI: ObservableObject {
             newMetric.metricvalue2model = model
             newMetric.metricvalue2datasettype = datasetType
             newMetric.metricvalue2algorithm = algorithmType
+            newMetric.metricvalue2prediction = prediction
             metricType.metric2datasettypes = metricType.metric2datasettypes?.addingObjects(from: [datasetType]) as NSSet?
             metricType.metric2metricvalues = metricType.metric2metricvalues?.addingObjects(from: [newMetric]) as NSSet?
             /// Set value
@@ -108,6 +110,7 @@ internal class Ml_MetricKPI: ObservableObject {
             datasetTypeModel.saveChanges()
             metricsModel.saveChanges()
             algorithmsModel.saveChanges()
+            predictionModel.saveChanges()
         }
     }
     func resolveDictOfMetrics(key: String) -> (datasetType: String, metricType: String) {

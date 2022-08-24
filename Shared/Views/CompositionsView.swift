@@ -102,7 +102,7 @@ struct CompositionsView: View {
                 VStack(alignment: .leading) {
                     Text("Algorithmus KPI")
                         .font(.title)
-                    AlgorithmsModel.valueList(model: model, algorithmName: mlSelection ?? "unbekannt")
+                    AlgorithmsModel.valueList(prediction: (clusterSelection?.prediction), algorithmName: mlSelection ?? "unbekannt")
                 }
             }
             Divider()

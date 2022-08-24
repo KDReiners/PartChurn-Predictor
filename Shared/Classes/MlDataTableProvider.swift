@@ -23,7 +23,7 @@ class MlDataTableProvider: ObservableObject {
     var mlColumns: [String]?
     var valuesTableProvider: ValuesTableProvider!
     var filterViewProvider: FilterViewProvider!
-    func updateTableProvider() {
+    internal func updateTableProvider() {
         tableProvider(mlDataTable: mlDataTable, orderedColums: mlColumns!) { provider in
             DispatchQueue.main.async {
                 self.valuesTableProvider = provider
