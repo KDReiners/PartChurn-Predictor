@@ -19,11 +19,12 @@ public struct Trainer {
     var model: Models!
     var targetColumnName: String!
     var regressor: MLRegressor!
-    init(model: Models, mlDataTable: MLDataTable, orderedColumns: [Columns], selectedColumns: [Columns]? = nil, timeSeriesRows: [String]? = nil) {
+    var prediction: Predictions!
+    init(prediction: Predictions, mlDataTable: MLDataTable, orderedColumns: [Columns], selectedColumns: [Columns]? = nil, timeSeriesRows: [String]? = nil) {
+        self.model = prediction.prediction2model
         mlDataTableFactory.orderedColumns = orderedColumns
         mlDataTableFactory.mlDataTable = mlDataTable
         mlDataTableFactory.selectedColumns = selectedColumns
-        self.model = model
         if let timeSeriesRows = timeSeriesRows {
             var selectedTimeSeries = [[Int]]()
             for row in timeSeriesRows {

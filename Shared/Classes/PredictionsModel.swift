@@ -8,7 +8,7 @@
 import Foundation
 public class PredictionsModel: Model<Predictions> {
     @Published var result: [Predictions]!
-    @Published var arrayOfPredictions = [prediction]()
+    @Published var arrayOfPredictions = [predictionCluster]()
     @Published var timeSeriesSelections = [String]()
     private var model: Models?
     private var compositionsDataModel: CompositionsModel?
@@ -61,7 +61,8 @@ public class PredictionsModel: Model<Predictions> {
         self.model = model
         let foundItems = self.items.filter( { $0.prediction2model == model })
         for item in foundItems {
-            let newPredictionPresenatation = prediction()
+            let newPredictionPresenatation = predictionCluster()
+            newPredictionPresenatation.prediction = item
             newPredictionPresenatation.id = item.id!
             newPredictionPresenatation.groupingPattern = item.groupingpattern
             newPredictionPresenatation.seriesDepth = Int16(item.seriesdepth)
@@ -80,8 +81,9 @@ public class PredictionsModel: Model<Predictions> {
             self.timeSeriesSelections.append(prediction.timeSeries.map( { String($0.from)}).joined(separator: ", "))
         }
     }
-    internal class prediction: CompositionsModel.Cluster {
+    internal class predictionCluster: CompositionsModel.Cluster {
         var columnsDepth: Int16!
+        var prediction: Predictions!
         var connectedTimeSeries: [String] {
             get {
                 var result = [String]()

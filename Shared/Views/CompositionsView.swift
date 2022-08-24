@@ -11,7 +11,7 @@ struct CompositionsView: View {
     @ObservedObject var compositionDataModel: CompositionsModel
     @ObservedObject var predictionsDataModel = PredictionsModel()
     @State var mlSelection: String? = nil
-    @State var clusterSelection: PredictionsModel.prediction?
+    @State var clusterSelection: PredictionsModel.predictionCluster?
     @State var selectedColumnCombination: [Columns]?
     @State var selectedTimeSeriesCombination: [String]?
     
@@ -115,7 +115,7 @@ struct CompositionsView: View {
         predictionsDataModel.savePredictions(model: self.model)
     }
     private func train(regressorName: String?) {
-        var trainer = Trainer(model: self.model, mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: clusterSelection?.columns, timeSeriesRows: clusterSelection?.connectedTimeSeries)
+        var trainer = Trainer(prediction: (clusterSelection?.prediction)!, mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: clusterSelection?.columns, timeSeriesRows: clusterSelection?.connectedTimeSeries)
         trainer.createModel(regressorName: $mlSelection.wrappedValue!)
     }
 }
