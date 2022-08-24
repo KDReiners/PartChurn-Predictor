@@ -92,7 +92,9 @@ struct CompositionsView: View {
                         VStack{
                             Button("Lerne..") {
                                 train(regressorName: mlSelection)
-                            }.frame(width: 90)
+                            }
+                            .frame(width: 90)
+                            .disabled(mlSelection == nil || clusterSelection == nil)
                         }
                     }
                 }
@@ -113,11 +115,7 @@ struct CompositionsView: View {
         predictionsDataModel.savePredictions(model: self.model)
     }
     private func train(regressorName: String?) {
-        //        var trainer = Trainer(model: model, file: fileSelection)
-        //        guard let regressorNameWrapped = regressorName==nil ? mlAlgorithms.first : regressorName else {
-        //            return
-        //        }
-        //        mlSelection = regressorNameWrapped
-        //        trainer.createModel(regressorName: regressorNameWrapped, fileName: fileSelection?.name)
+        var trainer = Trainer(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: clusterSelection?.columns, timeSeriesRows: clusterSelection?.connectedTimeSeries)
+        trainer.createModel(regressorName: $mlSelection.wrappedValue!)
     }
 }
