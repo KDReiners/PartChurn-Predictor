@@ -102,7 +102,7 @@ struct CompositionsView: View {
                 VStack(alignment: .leading) {
                     Text("Algorithmus KPI")
                         .font(.title)
-                    //                        AlgorithmsModel.valueList(model: model, file: fileSelection, algorithmName: mlSelection ?? "unbekannt")
+                    AlgorithmsModel.valueList(model: model, algorithmName: mlSelection ?? "unbekannt")
                 }
             }
             Divider()
@@ -115,7 +115,7 @@ struct CompositionsView: View {
         predictionsDataModel.savePredictions(model: self.model)
     }
     private func train(regressorName: String?) {
-        var trainer = Trainer(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: clusterSelection?.columns, timeSeriesRows: clusterSelection?.connectedTimeSeries)
+        var trainer = Trainer(model: self.model, mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: clusterSelection?.columns, timeSeriesRows: clusterSelection?.connectedTimeSeries)
         trainer.createModel(regressorName: $mlSelection.wrappedValue!)
     }
 }

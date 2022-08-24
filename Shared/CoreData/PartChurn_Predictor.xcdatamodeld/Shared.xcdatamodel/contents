@@ -39,7 +39,6 @@
     <entity name="Files" representedClassName="Files" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="file2columns" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Columns" inverseName="column2file" inverseEntity="Columns"/>
-        <relationship name="file2metricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2file" inverseEntity="Metricvalues"/>
         <relationship name="file2values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Values" inverseName="value2file" inverseEntity="Values"/>
         <relationship name="files2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2files" inverseEntity="Models"/>
     </entity>
@@ -53,7 +52,6 @@
         <attribute name="value" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="metricvalue2algorithm" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Algorithms" inverseName="algorithm2metricValues" inverseEntity="Algorithms"/>
         <relationship name="metricvalue2datasettype" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Datasettypes" inverseName="datasettype2metricvalues" inverseEntity="Datasettypes"/>
-        <relationship name="metricvalue2file" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Files" inverseName="file2metricvalues" inverseEntity="Files"/>
         <relationship name="metricvalue2metric" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Metrics" inverseName="metric2metricvalues" inverseEntity="Metrics"/>
         <relationship name="metricvalue2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2metricvalues" inverseEntity="Models"/>
     </entity>
@@ -101,9 +99,9 @@
         <element name="Columns" positionX="0" positionY="0" width="128" height="254"/>
         <element name="Compositions" positionX="-736.47265625" positionY="-35.12890625" width="128" height="134"/>
         <element name="Datasettypes" positionX="-94.25390625" positionY="284.86328125" width="128" height="74"/>
-        <element name="Files" positionX="-344.2734375" positionY="374.66015625" width="128" height="104"/>
+        <element name="Files" positionX="-344.2734375" positionY="374.66015625" width="128" height="89"/>
         <element name="Metrics" positionX="-265.921875" positionY="259.66796875" width="128" height="89"/>
-        <element name="Metricvalues" positionX="-73.2265625" positionY="-92.19921875" width="128" height="119"/>
+        <element name="Metricvalues" positionX="-73.2265625" positionY="-92.19921875" width="128" height="104"/>
         <element name="Models" positionX="-382.08203125" positionY="-90.27734375" width="128" height="149"/>
         <element name="Predictions" positionX="-540" positionY="63" width="128" height="119"/>
         <element name="Timeseries" positionX="57.18359375" positionY="307.5546875" width="128" height="103"/>

@@ -16,13 +16,14 @@ public struct Trainer {
     var regressorTable: MLDataTable?
     var coreDataML: CoreDataML!
     var file: Files?
-    var model: Models?
+    var model: Models!
     var targetColumnName: String!
     var regressor: MLRegressor!
-    init(mlDataTable: MLDataTable, orderedColumns: [Columns], selectedColumns: [Columns]? = nil, timeSeriesRows: [String]? = nil) {
+    init(model: Models, mlDataTable: MLDataTable, orderedColumns: [Columns], selectedColumns: [Columns]? = nil, timeSeriesRows: [String]? = nil) {
         mlDataTableFactory.orderedColumns = orderedColumns
         mlDataTableFactory.mlDataTable = mlDataTable
         mlDataTableFactory.selectedColumns = selectedColumns
+        self.model = model
         if let timeSeriesRows = timeSeriesRows {
             var selectedTimeSeries = [[Int]]()
             for row in timeSeriesRows {
@@ -99,24 +100,24 @@ public struct Trainer {
     }
     
     private func writeMetrics (regressor: MLRegressor, regressorName: String, regressorEvaluationTable: MLDataTable) -> Void {
-//        let regressorKPI = Ml_MetricKPI()
-//        regressorKPI.dictOfMetrics["trainingMetrics.maximumError"]? = regressor.trainingMetrics.maximumError
-//        regressorKPI.dictOfMetrics["trainingMetrics.rootMeanSquaredError"]? = regressor.trainingMetrics.rootMeanSquaredError
-//        regressorKPI.dictOfMetrics["validationMetrics.maximumError"]? = regressor.validationMetrics.maximumError
-//        regressorKPI.dictOfMetrics["validationMetrics.rootMeanSquaredError"]? = regressor.validationMetrics.rootMeanSquaredError
-//
-//        /// Evaluation
-//        let regressorEvalutation = regressor.evaluation(on: regressorEvaluationTable)
-//        regressorKPI.dictOfMetrics["evaluationMetrics.maximumError"]? = regressorEvalutation.maximumError
-//        regressorKPI.dictOfMetrics["evaluationMetrics.rootMeanSquaredError"]? = regressorEvalutation.rootMeanSquaredError
-//        /// Schreibe in CoreData
-//        regressorKPI.postMetric(model: model!, file: self.file, algorithmName: regressorName)
-//        let regressorMetadata = MLModelMetadata(author: "Steps.IT",
-//                                                shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden",
-//                                                version: "1.0")
-//        /// Speichern des trainierten Modells auf dem Schreibtisch
-//        try? regressor.write(to: BaseServices.homePath.appendingPathComponent(regressorName+".mlmodel"),
-//                            metadata: regressorMetadata)
+        let regressorKPI = Ml_MetricKPI()
+        regressorKPI.dictOfMetrics["trainingMetrics.maximumError"]? = regressor.trainingMetrics.maximumError
+        regressorKPI.dictOfMetrics["trainingMetrics.rootMeanSquaredError"]? = regressor.trainingMetrics.rootMeanSquaredError
+        regressorKPI.dictOfMetrics["validationMetrics.maximumError"]? = regressor.validationMetrics.maximumError
+        regressorKPI.dictOfMetrics["validationMetrics.rootMeanSquaredError"]? = regressor.validationMetrics.rootMeanSquaredError
+
+        /// Evaluation
+        let regressorEvalutation = regressor.evaluation(on: regressorEvaluationTable)
+        regressorKPI.dictOfMetrics["evaluationMetrics.maximumError"]? = regressorEvalutation.maximumError
+        regressorKPI.dictOfMetrics["evaluationMetrics.rootMeanSquaredError"]? = regressorEvalutation.rootMeanSquaredError
+        /// Schreibe in CoreData
+        regressorKPI.postMetric(model: model!, algorithmName: regressorName)
+        let regressorMetadata = MLModelMetadata(author: "Steps.IT",
+                                                shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden",
+                                                version: "1.0")
+        /// Speichern des trainierten Modells auf dem Schreibtisch
+        try? regressor.write(to: BaseServices.homePath.appendingPathComponent(regressorName+".mlmodel"),
+                            metadata: regressorMetadata)
     }
 }
 

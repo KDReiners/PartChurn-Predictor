@@ -63,13 +63,13 @@ internal class Ml_MetricKPI: ObservableObject {
         dictOfMetrics["evaluationMetrics.rootMeanSquaredError"] = 0
     }
     
-    internal func postMetric(model: Models, file: Files?, algorithmName: String) {
+    internal func postMetric(model: Models, algorithmName: String) {
         
         let metricsvaluesModel = MetricvaluesModel()
         let datasetTypeModel = DatasettypesModel()
         let metricsModel = MetricsModel()
         let algorithmsModel = AlgorithmsModel()
-        let obsoleteMetrics = metricsvaluesModel.items.filter({$0.metricvalue2model == model && $0.metricvalue2file == file && $0.metricvalue2algorithm?.name == algorithmName})
+        let obsoleteMetrics = metricsvaluesModel.items.filter({$0.metricvalue2model == model && $0.metricvalue2algorithm?.name == algorithmName})
         for item in obsoleteMetrics {
             metricsvaluesModel.deleteRecord(record: item)
         }
@@ -97,7 +97,6 @@ internal class Ml_MetricKPI: ObservableObject {
             let newMetric = metricsvaluesModel.insertRecord()
             /// Set relations
             newMetric.metricvalue2model = model
-            newMetric.metricvalue2file = file
             newMetric.metricvalue2datasettype = datasetType
             newMetric.metricvalue2algorithm = algorithmType
             metricType.metric2datasettypes = metricType.metric2datasettypes?.addingObjects(from: [datasetType]) as NSSet?
