@@ -60,7 +60,7 @@ class MlDataTableProvider: ObservableObject {
         if let timeSeries = timeSeries {
             for timeSlices in timeSeries {
                 let newCluster = MLTableCluster(columns: mergedColumns)
-                for timeSlice in timeSlices {
+                for timeSlice in timeSlices.sorted(by: { $0 < $1 }) {
                     
                     let timeSeriesMask = mlTimeSeriesColumn == timeSlice
                     let newMlDataTable = self.mlDataTable[timeSeriesMask]
@@ -238,8 +238,9 @@ class MLTableCluster {
     internal func construct() -> MLDataTable {
         var prePeriodsTable: MLDataTable?
         var result: MLDataTable?
+        let columnNames = columns.map({ $0.name! })
         for i in 0..<tables.count - 1 {
-            let columnNames = columns.map({ $0.name! })
+            
             let suffix = -tables.count + 1 + i
             for column in tables[i].columnNames {
                 if !columnNames.contains(column) {
@@ -261,6 +262,11 @@ class MLTableCluster {
                 prePeriodsTable = tables[i]
             } else {
                 prePeriodsTable = prePeriodsTable?.join(with: tables[i], on: joinColumn.name!, type: .inner)
+            }
+        }
+        for column in tables[tables.count - 1].columnNames {
+            if !columnNames.contains(column) {
+                tables[tables.count - 1].removeColumn(named: column)
             }
         }
         result = prePeriodsTable?.join(with: tables[tables.count - 1], on: joinColumn.name!, type: .inner)
