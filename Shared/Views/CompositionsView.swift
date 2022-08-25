@@ -83,19 +83,20 @@ struct CompositionsView: View {
                 }
                 .padding()
                 VStack(alignment: .leading) {
-                    Text("Algorithmus")
-                        .font(.title)
+                    HStack(alignment: .center) {
+                        Text("Algorithmus")
+                            .font(.title)
+                        Spacer()
+                        Button("Lerne..") {
+                            train(regressorName: mlSelection)
+                        }
+                        .frame(width: 90)
+                        .disabled(mlSelection == nil || clusterSelection == nil)
+                    }
                     HStack {
                         List(mlAlgorithms, id: \.self, selection: $mlSelection) { algorithm in
                             Text(algorithm)
                         }.frame(width: 250)
-                        VStack{
-                            Button("Lerne..") {
-                                train(regressorName: mlSelection)
-                            }
-                            .frame(width: 90)
-                            .disabled(mlSelection == nil || clusterSelection == nil)
-                        }
                     }
                 }
                 .padding()
@@ -104,6 +105,7 @@ struct CompositionsView: View {
                         .font(.title)
                     AlgorithmsModel.valueList(prediction: (clusterSelection?.prediction), algorithmName: mlSelection ?? "unbekannt")
                 }
+                .padding()
             }
             Divider()
             VStack(alignment: .leading) {

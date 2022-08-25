@@ -21,10 +21,11 @@ struct ValuesView: View {
         let rowIndex: Int
     }
     
-    init(mlDataTable: MLDataTable, orderedColumns: [Columns], selectedColumns: [Columns]? = nil, timeSeriesRows: [String]? = nil) {
+    init(mlDataTable: MLDataTable, orderedColumns: [Columns], selectedColumns: [Columns]? = nil, timeSeriesRows: [String]? = nil,  prediction: Predictions? = nil , regressorName: String? = nil) {
         mlDataTableFactory.orderedColumns = orderedColumns
         mlDataTableFactory.mlDataTable = mlDataTable
         mlDataTableFactory.selectedColumns = selectedColumns
+        
         if let timeSeriesRows = timeSeriesRows {
             var selectedTimeSeries = [[Int]]()
             for row in timeSeriesRows {
@@ -99,3 +100,4 @@ struct ValuesView_Previews: PreviewProvider {
         return ValuesView(file: FilesModel().items.first!)
     }
 }
+

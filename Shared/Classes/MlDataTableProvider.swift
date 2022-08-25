@@ -23,8 +23,10 @@ class MlDataTableProvider: ObservableObject {
     var mlColumns: [String]?
     var valuesTableProvider: ValuesTableProvider!
     var filterViewProvider: FilterViewProvider!
+    var prediction: Predictions?
+    var regressorName: String?
     internal func updateTableProvider() {
-        tableProvider(mlDataTable: mlDataTable, orderedColums: mlColumns!) { provider in
+        tableProvider(mlDataTable: mlDataTable, orderedColums: mlColumns!, prediction: prediction, regressorName: regressorName) { provider in
             DispatchQueue.main.async {
                 self.valuesTableProvider = provider
                 if self.filterViewProvider == nil {
@@ -113,12 +115,12 @@ class MlDataTableProvider: ObservableObject {
         
         return result
     }
-    func tableProvider(mlDataTable: MLDataTable, orderedColums: [String], returnCompletion: @escaping (ValuesTableProvider) -> () ) {
+    func tableProvider(mlDataTable: MLDataTable, orderedColums: [String], prediction: Predictions? = nil, regressorName: String? = nil , returnCompletion: @escaping (ValuesTableProvider) -> () ) {
         var result: ValuesTableProvider!
         do {
             let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
             sampler.async {
-                result =  ValuesTableProvider(mlDataTable: mlDataTable, orderedColumns: orderedColums)
+                result =  ValuesTableProvider(mlDataTable: mlDataTable, orderedColumns: orderedColums, prediction: prediction, regressorName: regressorName)
                 DispatchQueue.main.async {
                     self.gridItems = result.gridItems
                     self.customColumns = result.customColumns
@@ -221,7 +223,6 @@ class MLTableCluster {
             return self.columns.first(where: { $0.ispartofprimarykey == 1 })!
         }
     }
-    
     var timeStampColumn: Columns {
         get {
             let result = self.columns.filter { $0.istimeseries == 1}

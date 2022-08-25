@@ -13,11 +13,21 @@ import CreateML
 class ValuesTableProvider: ObservableObject {
     var coreDataML: CoreDataML!
     var mlDataTable: MLDataTable!
+    var models = [model]()
+    var urlToPredictionModel: URL?
+    var predictionModel: MLModel?
     var customColumns = [CustomColumn]()
     var gridItems = [GridItem]()
     var numCols: Int = 0
     var numRows: Int = 0
-    init(mlDataTable: MLDataTable, orderedColumns: [String]) {
+    init( mlDataTable: MLDataTable, orderedColumns: [String], prediction: Predictions? = nil , regressorName: String? = nil) {
+        if regressorName != nil && prediction != nil {
+            urlToPredictionModel = BaseServices.createPredictionPath(prediction: prediction!, regressorName: regressorName!)
+            let fileManager = FileManager.default
+            if fileManager.fileExists(atPath: urlToPredictionModel!.path) {
+                predictionModel = getModel(url: urlToPredictionModel!)
+            }
+        }
         self.mlDataTable = mlDataTable
         prepareView(orderedColumns: orderedColumns)
     }
@@ -28,11 +38,7 @@ class ValuesTableProvider: ObservableObject {
         numCols = customColumns.count
         numRows = numCols > 0 ?customColumns[0].rows.count : 0
     }
-    struct model: Identifiable {
-        let id = UUID()
-        var model: MLModel
-        var path: String
-    }
+    
     fileprivate func insertIntoGridItems(_ columnName: String?, _ rows: inout [String]) {
         var newCustomColumn = CustomColumn(title: columnName!, alignment: .trailing)
         var newGridItem: GridItem?
@@ -107,5 +113,69 @@ class ValuesTableProvider: ObservableObject {
                 self.gridItems.append(newGridItem!)
             }
         }
+    }
+    private func getModel(url: URL) ->MLModel {
+        var result: MLModel?
+        if let result = models.filter({ $0.url == url}).first?.model {
+            return result
+        } else {
+            let compiledUrl:URL = {
+                do {
+                    return try MLModel.compileModel(at: url)
+                } catch {
+                    fatalError(error.localizedDescription)
+                }
+            }()
+            result = {
+                do {
+                    return try MLModel(contentsOf: compiledUrl)
+                } catch {
+                    fatalError(error.localizedDescription)
+                }
+            }()
+            
+        }
+        let newModel = model(model: result!, url: url)
+        models.append(newModel)
+        return result!
+    }
+    private func predict(regressorName: String, result: [String : MLDataValueConvertible]) -> MLFeatureProvider {
+        let provider: MLDictionaryFeatureProvider = {
+            do {
+                return try MLDictionaryFeatureProvider(dictionary: result)
+            } catch {
+                fatalError(error.localizedDescription)
+            }
+        }()
+        let prediction: MLFeatureProvider = {
+            do {
+                return try predictionModel!.prediction(from: provider)
+            } catch {
+                fatalError(error.localizedDescription)
+            }
+        }()
+        return prediction
+    }
+
+    public func predictFromRow(regressorName: String, mlRow: MLDataTable.Row) -> MLFeatureProvider {
+        var result = [String: MLDataValueConvertible]()
+        for i in 0..<mlRow.keys.count {
+            if mlRow.keys[i] != "Kuendigt" {
+                result[mlRow.keys[i]] = mlRow.values[i].intValue
+                if  result[mlRow.keys[i]] == nil {
+                    result[mlRow.keys[i]] = mlRow.values[i].doubleValue
+                }
+                if  result[mlRow.keys[i]] == nil {
+                    result[mlRow.keys[i]] = mlRow.values[i].stringValue
+                }
+            }
+        }
+        return predict(regressorName: regressorName, result: result)
+    }
+    struct model: Identifiable {
+        let id = UUID()
+        var model: MLModel
+        var path: String?
+        var url: URL
     }
 }

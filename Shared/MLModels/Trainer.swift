@@ -35,6 +35,9 @@ public struct Trainer {
             mlDataTableFactory.timeSeries = selectedTimeSeries
         }
         unionResult = mlDataTableFactory.buildMlDataTable()
+        for column in orderedColumns.filter( { ($0.ispartofprimarykey == 1 || $0.ispartoftimeseries == 1 || $0.istimeseries == 1) && $0.istarget == 0 }) {
+            unionResult.mlDataTable.removeColumn(named: column.name!)
+        }
         self.regressorTable = unionResult.mlDataTable
         self.targetColumnName = orderedColumns.first(where: { $0.istarget == 1})?.name!
         

@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import CoreML
 import CreateML
+/*
 struct Column: Identifiable {
     let id = UUID()
     var title: String
@@ -16,11 +17,7 @@ struct Column: Identifiable {
     var rows: [String] = []
     var alignment: Alignment
 }
-struct model: Identifiable {
-    let id = UUID()
-    var model: MLModel
-    var path: String
-}
+
 struct ValuesView_Predict: View {
     var numCols: Int = 0
     var numRows : Int = 0
@@ -176,7 +173,7 @@ struct ValuesView_Predict: View {
         }()
         return prediction
     }
-    private mutating func getModel(path: String) ->MLModel {
+    private mutating func getModel(url: String) ->MLModel {
         var result: MLModel?
         if let result = models.filter({ $0.path == path}).first?.model {
             return result
@@ -198,7 +195,7 @@ struct ValuesView_Predict: View {
             }()
             
         }
-        let newModel = model(model: result!, path: path)
+        let newModel = model(model: result!, url:)
         models.append(newModel)
         return result!
     }
@@ -218,4 +215,6 @@ struct ValuesView_Predict: View {
         return predict(regressorName: regressorName, result: result)
     }
 }
+
+*/
 

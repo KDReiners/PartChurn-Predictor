@@ -93,4 +93,7 @@ public struct BaseServices
             fatalError(error.localizedDescription)
         }
     }
+    public static func createPredictionPath(prediction: Predictions, regressorName: String) -> URL {
+        return BaseServices.homePath.appendingPathComponent(prediction.prediction2model!.name!, isDirectory: true).appendingPathComponent(regressorName + "_" + prediction.id!.uuidString + ".mlmodel")
+    }
 }
