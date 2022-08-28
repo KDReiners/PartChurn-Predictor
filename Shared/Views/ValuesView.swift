@@ -25,7 +25,8 @@ struct ValuesView: View {
         mlDataTableFactory.orderedColumns = orderedColumns
         mlDataTableFactory.mlDataTable = mlDataTable
         mlDataTableFactory.selectedColumns = selectedColumns
-        
+        mlDataTableFactory.regressorName = regressorName
+        mlDataTableFactory.prediction = prediction
         if let timeSeriesRows = timeSeriesRows {
             var selectedTimeSeries = [[Int]]()
             for row in timeSeriesRows {

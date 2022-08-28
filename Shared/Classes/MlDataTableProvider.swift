@@ -26,7 +26,7 @@ class MlDataTableProvider: ObservableObject {
     var prediction: Predictions?
     var regressorName: String?
     internal func updateTableProvider() {
-        tableProvider(mlDataTable: mlDataTable, orderedColums: mlColumns!, prediction: prediction, regressorName: regressorName) { provider in
+        tableProvider(mlDataTable: mlDataTable, orderedColums: mlColumns!, selectedColumns: mergedColumns, prediction: prediction, regressorName: regressorName) { provider in
             DispatchQueue.main.async {
                 self.valuesTableProvider = provider
                 if self.filterViewProvider == nil {
@@ -115,12 +115,12 @@ class MlDataTableProvider: ObservableObject {
         
         return result
     }
-    func tableProvider(mlDataTable: MLDataTable, orderedColums: [String], prediction: Predictions? = nil, regressorName: String? = nil , returnCompletion: @escaping (ValuesTableProvider) -> () ) {
+    func tableProvider(mlDataTable: MLDataTable, orderedColums: [String], selectedColumns: [Columns], prediction: Predictions? = nil, regressorName: String? = nil , returnCompletion: @escaping (ValuesTableProvider) -> () ) {
         var result: ValuesTableProvider!
         do {
             let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
             sampler.async {
-                result =  ValuesTableProvider(mlDataTable: mlDataTable, orderedColumns: orderedColums, prediction: prediction, regressorName: regressorName)
+                result =  ValuesTableProvider(mlDataTable: mlDataTable, orderedColNames: orderedColums, selectedColumns: selectedColumns,  prediction: prediction, regressorName: regressorName)
                 DispatchQueue.main.async {
                     self.gridItems = result.gridItems
                     self.customColumns = result.customColumns

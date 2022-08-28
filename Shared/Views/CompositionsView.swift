@@ -109,7 +109,7 @@ struct CompositionsView: View {
             }
             Divider()
             VStack(alignment: .leading) {
-                ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: clusterSelection?.columns, timeSeriesRows: clusterSelection?.connectedTimeSeries)
+                ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: clusterSelection?.columns, timeSeriesRows: clusterSelection?.connectedTimeSeries, prediction: clusterSelection?.prediction, regressorName: mlSelection)
             }.padding()
         }
     }

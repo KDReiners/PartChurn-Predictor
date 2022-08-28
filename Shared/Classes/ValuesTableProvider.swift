@@ -20,7 +20,7 @@ class ValuesTableProvider: ObservableObject {
     var gridItems = [GridItem]()
     var numCols: Int = 0
     var numRows: Int = 0
-    init( mlDataTable: MLDataTable, orderedColumns: [String], prediction: Predictions? = nil , regressorName: String? = nil) {
+    init( mlDataTable: MLDataTable, orderedColNames: [String], selectedColumns: [Columns]?, prediction: Predictions? = nil , regressorName: String? = nil) {
         self.mlDataTable = mlDataTable
         if regressorName != nil && prediction != nil {
             urlToPredictionModel = BaseServices.createPredictionPath(prediction: prediction!, regressorName: regressorName!)
@@ -30,7 +30,7 @@ class ValuesTableProvider: ObservableObject {
                 incorporatedPredition(model: predictionModel!)
             }
         }
-        prepareView(orderedColumns: orderedColumns)
+        prepareView(orderedColNames: orderedColNames)
     }
     
     init(file: Files?) {
@@ -74,10 +74,10 @@ class ValuesTableProvider: ObservableObject {
         self.gridItems.append(newGridItem!)
     }
     
-    func prepareView(orderedColumns: [String]) -> Void {
+    func prepareView(orderedColNames: [String]) -> Void {
         var rows = [String]()
         self.gridItems.removeAll()
-        for column in  orderedColumns {
+        for column in  orderedColNames {
             insertIntoGridItems(column, &rows)
         }
     }
