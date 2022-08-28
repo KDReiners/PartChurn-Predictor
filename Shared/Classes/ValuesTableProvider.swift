@@ -21,22 +21,27 @@ class ValuesTableProvider: ObservableObject {
     var numCols: Int = 0
     var numRows: Int = 0
     init( mlDataTable: MLDataTable, orderedColumns: [String], prediction: Predictions? = nil , regressorName: String? = nil) {
+        self.mlDataTable = mlDataTable
         if regressorName != nil && prediction != nil {
             urlToPredictionModel = BaseServices.createPredictionPath(prediction: prediction!, regressorName: regressorName!)
             let fileManager = FileManager.default
             if fileManager.fileExists(atPath: urlToPredictionModel!.path) {
-                predictionModel = getModel(url: urlToPredictionModel!)
+               predictionModel = getModel(url: urlToPredictionModel!)
+                incorporatedPredition(model: predictionModel!)
             }
         }
-        self.mlDataTable = mlDataTable
         prepareView(orderedColumns: orderedColumns)
     }
+    
     init(file: Files?) {
         self.coreDataML = CoreDataML(model: file?.files2model, files: file)
         self.mlDataTable = coreDataML.mlDataTable
         prepareView()
         numCols = customColumns.count
         numRows = numCols > 0 ?customColumns[0].rows.count : 0
+    }
+    private func incorporatedPredition(model: MLModel) {
+    
     }
     
     fileprivate func insertIntoGridItems(_ columnName: String?, _ rows: inout [String]) {

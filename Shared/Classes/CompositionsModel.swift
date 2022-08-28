@@ -21,7 +21,7 @@ public class CompositionsModel: Model<Compositions> {
     }
     override public var items: [Compositions] {
         get {
-            return result
+            return model == nil ? result: result.filter( {$0.composition2model == model})
         }
         set
         {
