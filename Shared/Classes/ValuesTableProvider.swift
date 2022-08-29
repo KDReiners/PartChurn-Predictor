@@ -23,7 +23,12 @@ class ValuesTableProvider: ObservableObject {
     var orderedColNames: [String]!
     var numCols: Int = 0
     var numRows: Int = 0
-    init( mlDataTable: MLDataTable, orderedColNames: [String], selectedColumns: [Columns]?, prediction: Predictions? = nil , regressorName: String? = nil) {
+    init( mlDataTable: MLDataTable, orderedColNames: [String], selectedColumns: [Columns]?) {
+        self.mlDataTable = mlDataTable
+        self.orderedColNames = orderedColNames
+        prepareView(orderedColNames: self.orderedColNames)
+    }
+    init( mlDataTable: MLDataTable, orderedColNames: [String], selectedColumns: [Columns]?, prediction: Predictions? , regressorName: String?) {
         self.mlDataTable = mlDataTable
         self.orderedColNames = orderedColNames
         if regressorName != nil && prediction != nil {

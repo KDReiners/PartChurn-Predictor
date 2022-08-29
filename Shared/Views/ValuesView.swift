@@ -64,9 +64,9 @@ struct ValuesView: View {
         }
         Button("Save") {
             do {
-                try self.mlDataTable!.writeCSV(to: URL(fileURLWithPath:BaseServices.homePath.appendingPathComponent("Khaled.csv", isDirectory: false).path))
+                try self.mlDataTableFactory.mlDataTable!.writeCSV(to: URL(fileURLWithPath:BaseServices.homePath.appendingPathComponent("Khaled.csv", isDirectory: false).path))
             } catch {
-                print("File Saved")
+                print("")
             }
         }
     }

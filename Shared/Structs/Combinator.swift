@@ -26,10 +26,14 @@ struct Combinator {
         self.includedColumns = orderedColumns.filter( { $0.isincluded == 1 && $0.istimeseries == 0})
         self.timeSeriesColumns = orderedColumns.filter({$0.istimeseries == 1 })
         self.mlDataTable = mlDataTable
-        seriesStart = self.mlDataTable[(timeSeriesColumns.first?.name)!].ints?.min()
-        series = findNextSlice(start: seriesStart, columnName: (timeSeriesColumns.first?.name)!)
-        seriesEnd = self.mlDataTable[(timeSeriesColumns.first?.name)!].ints?.max()
-        timeSeriesCombinations = timeSeriesColumnCombinations()
+        
+        if timeSeriesColumns.count > 0 {
+            seriesStart = self.mlDataTable[(timeSeriesColumns.first?.name)!].ints?.min()
+            series = findNextSlice(start: seriesStart, columnName: (timeSeriesColumns.first?.name)!)
+            seriesEnd = self.mlDataTable[(timeSeriesColumns.first?.name)!].ints?.max()
+            timeSeriesCombinations = timeSeriesColumnCombinations()
+        }
+
         columnCombinations = [[Columns]]()
         for i in 1...includedColumns.count {
             let entry = includedColumnsCombinations(source: includedColumns, takenBy:  i)

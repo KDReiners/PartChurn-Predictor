@@ -25,12 +25,24 @@ class MlDataTableProvider: ObservableObject {
     var filterViewProvider: FilterViewProvider!
     var prediction: Predictions?
     var regressorName: String?
-    internal func updateTableProvider() {
-        tableProvider(mlDataTable: mlDataTable, orderedColums: mlColumns!, selectedColumns: mergedColumns, prediction: prediction, regressorName: regressorName) { provider in
+    internal func updateTableProviderForFiltering() {
+        tableProvider(mlDataTable: self.mlDataTable, orderedColums: mlColumns!, selectedColumns: mergedColumns) { provider in
             DispatchQueue.main.async {
                 self.valuesTableProvider = provider
-                self.mlDataTable = provider.mlDataTable
+                if self.filterViewProvider == nil {
+                    self.filterViewProvider = FilterViewProvider(mlDataTableFactory: self)
+                }
+                self.loaded = true
+            }
+        }
+    }
+    internal func updateTableProvider() {
+        tableProvider(mlDataTable: mlDataTableRaw, orderedColums: mlColumns!, selectedColumns: mergedColumns, prediction: prediction, regressorName: regressorName) { provider in
+            DispatchQueue.main.async {
+                self.valuesTableProvider = provider
                 self.mlDataTableRaw = provider.mlDataTable
+                self.mlDataTable = self.mlDataTableRaw
+                self.mlColumns = provider.orderedColNames
                 if self.filterViewProvider == nil {
                     self.filterViewProvider = FilterViewProvider(mlDataTableFactory: self)
                 }
@@ -82,11 +94,11 @@ class MlDataTableProvider: ObservableObject {
                     result?.append(contentsOf: newCluster.construct())
                 }
             }
-            self.mlDataTable = result
+            self.mlDataTable = result?.dropMissing()
         }
-        updateTableProvider()
         let unionResult = UnionResult(mlDataTable: self.mlDataTable, mlColumns:self.mlColumns!)
         self.mlDataTableRaw = mlDataTableRaw == nil ? mlDataTable: self.mlDataTableRaw
+        updateTableProvider()
         return unionResult
     }
     func filterMlDataTable(filterDict: Dictionary<String, String>) {
@@ -98,7 +110,7 @@ class MlDataTableProvider: ObservableObject {
         } else {
             self.mlDataTable = mlDataTableRaw
         }
-        updateTableProvider()
+        updateTableProviderForFiltering()
     }
     func setFilterForColumn(mlDataTable: MLDataTable, columnName: String, value: String) ->MLDataTable {
         var result = mlDataTable
@@ -117,7 +129,7 @@ class MlDataTableProvider: ObservableObject {
         
         return result
     }
-    func tableProvider(mlDataTable: MLDataTable, orderedColums: [String], selectedColumns: [Columns], prediction: Predictions? = nil, regressorName: String? = nil , returnCompletion: @escaping (ValuesTableProvider) -> () ) {
+    func tableProvider(mlDataTable: MLDataTable, orderedColums: [String], selectedColumns: [Columns]?, prediction: Predictions? = nil, regressorName: String? = nil , returnCompletion: @escaping (ValuesTableProvider) -> () ) {
         var result: ValuesTableProvider!
         do {
             let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
