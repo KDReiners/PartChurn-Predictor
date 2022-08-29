@@ -62,15 +62,27 @@ public class ColumnsModel: Model<Columns> {
         }
     }
     
-    var primaryKeyColum: Columns {
+    var primaryKeyColumn: Columns? {
         get {
             return self.items.first(where: { $0.ispartofprimarykey == 1 })!
         }
     }
-    var timeStampColumn: Columns {
+    var timeStampColumn: Columns? {
         get {
             let result = self.items.filter { $0.istimeseries == 1}
             return result.first!
+        }
+    }
+    var joinColumns: [Columns] {
+        get {
+            var result = [Columns]()
+            if primaryKeyColumn != nil {
+                result.append(primaryKeyColumn!)
+            }
+            if timeStampColumn != nil {
+                result.append(timeStampColumn!)
+            }
+            return result
         }
     }
 }

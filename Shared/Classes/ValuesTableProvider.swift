@@ -18,19 +18,25 @@ class ValuesTableProvider: ObservableObject {
     var predictionModel: MLModel?
     var customColumns = [CustomColumn]()
     var gridItems = [GridItem]()
+    var regressorName: String?
+    var predistion: Predictions?
+    var orderedColNames: [String]!
     var numCols: Int = 0
     var numRows: Int = 0
     init( mlDataTable: MLDataTable, orderedColNames: [String], selectedColumns: [Columns]?, prediction: Predictions? = nil , regressorName: String? = nil) {
         self.mlDataTable = mlDataTable
+        self.orderedColNames = orderedColNames
         if regressorName != nil && prediction != nil {
+            self.regressorName = regressorName
+            self.predistion = prediction
             urlToPredictionModel = BaseServices.createPredictionPath(prediction: prediction!, regressorName: regressorName!)
             let fileManager = FileManager.default
             if fileManager.fileExists(atPath: urlToPredictionModel!.path) {
                predictionModel = getModel(url: urlToPredictionModel!)
-                incorporatedPredition(model: predictionModel!)
+                incorporatedPredition(selectedColumns: selectedColumns!)
             }
         }
-        prepareView(orderedColNames: orderedColNames)
+        prepareView(orderedColNames: self.orderedColNames)
     }
     
     init(file: Files?) {
@@ -40,8 +46,56 @@ class ValuesTableProvider: ObservableObject {
         numCols = customColumns.count
         numRows = numCols > 0 ?customColumns[0].rows.count : 0
     }
-    private func incorporatedPredition(model: MLModel) {
-    
+    private func incorporatedPredition(selectedColumns: [Columns]) {
+        var predictionsDictionary = [String: MLDataValueConvertible]()
+        let columnDataModel = ColumnsModel(columnsFilter: selectedColumns )
+        let targetColumn = columnDataModel.targetColumns.first
+        let primaryKeyColumn = columnDataModel.primaryKeyColumn
+        let timeStampColumn = columnDataModel.timeStampColumn
+        let predictedColumnName = "Predicted: " + (targetColumn?.name)!
+        let joinColumns = columnDataModel.joinColumns
+        var joinParam1: String = ""
+        var joinParam2: String = ""
+        var subEntries = Array<PredictionEntry>()
+        var joinTable: MLDataTable!
+        switch joinColumns.count {
+        case 1:
+            joinParam1 = Array(joinColumns)[0].name!
+        case 2:
+            joinParam1 = Array(joinColumns)[0].name!
+            joinParam2 = Array(joinColumns)[1].name!
+        default: print("no join colums")
+        }
+        for mlRow in mlDataTable.rows {
+            let primaryKeyValue = mlRow[(primaryKeyColumn?.name)!]?.intValue
+            let timeStampColumnValue = (mlRow[(timeStampColumn?.name)!]?.intValue)!
+            let predictedValue = predictFromRow(regressorName: self.regressorName!, mlRow: mlRow).featureValue(for: targetColumn!.name!)?.doubleValue
+            let newPredictionEntry = PredictionEntry(primaryKey: primaryKeyValue!, timeSeriesValue: timeStampColumnValue, predictedValue: predictedValue!)
+            subEntries.append(newPredictionEntry)
+        }
+        predictionsDictionary[primaryKeyColumn!.name!] = subEntries.map({ $0.primaryKey})
+        predictionsDictionary[timeStampColumn!.name!] = subEntries.map({ $0.timeSeriesValue})
+        predictionsDictionary[predictedColumnName] = subEntries.map({ $0.predictedValue})
+        joinTable = try? MLDataTable(dictionary: predictionsDictionary)
+        switch joinColumns.count {
+        case 1:
+            mlDataTable = mlDataTable.join(with: joinTable, on: joinParam1)
+        case 2:
+            mlDataTable = mlDataTable.join(with: joinTable, on: joinParam1, joinParam2, type: .inner)
+        default: print("no join columns")
+        }
+        self.orderedColNames.append(predictedColumnName)
+        print(self.mlDataTable!)
+    }
+    struct PredictionEntry: Hashable {
+        var primaryKey: Int
+        var timeSeriesValue: Int
+        var predictedValue: Double
+        var combinedKey: String {
+            get {
+                return String(primaryKey) + "_" + String(timeSeriesValue)
+            }
+        }
     }
     
     fileprivate func insertIntoGridItems(_ columnName: String?, _ rows: inout [String]) {
@@ -77,7 +131,8 @@ class ValuesTableProvider: ObservableObject {
     func prepareView(orderedColNames: [String]) -> Void {
         var rows = [String]()
         self.gridItems.removeAll()
-        for column in  orderedColNames {
+        for column in orderedColNames {
+            print(column)
             insertIntoGridItems(column, &rows)
         }
     }
@@ -165,14 +220,14 @@ class ValuesTableProvider: ObservableObject {
     public func predictFromRow(regressorName: String, mlRow: MLDataTable.Row) -> MLFeatureProvider {
         var result = [String: MLDataValueConvertible]()
         for i in 0..<mlRow.keys.count {
-            if mlRow.keys[i] != "Kuendigt" {
+//            if mlRow.keys[i] != "ALIVE" {
                 result[mlRow.keys[i]] = mlRow.values[i].intValue
                 if  result[mlRow.keys[i]] == nil {
                     result[mlRow.keys[i]] = mlRow.values[i].doubleValue
                 }
                 if  result[mlRow.keys[i]] == nil {
                     result[mlRow.keys[i]] = mlRow.values[i].stringValue
-                }
+//                }
             }
         }
         return predict(regressorName: regressorName, result: result)

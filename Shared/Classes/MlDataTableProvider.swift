@@ -29,6 +29,8 @@ class MlDataTableProvider: ObservableObject {
         tableProvider(mlDataTable: mlDataTable, orderedColums: mlColumns!, selectedColumns: mergedColumns, prediction: prediction, regressorName: regressorName) { provider in
             DispatchQueue.main.async {
                 self.valuesTableProvider = provider
+                self.mlDataTable = provider.mlDataTable
+                self.mlDataTableRaw = provider.mlDataTable
                 if self.filterViewProvider == nil {
                     self.filterViewProvider = FilterViewProvider(mlDataTableFactory: self)
                 }
@@ -161,12 +163,14 @@ class MLTableCluster {
     var orderedColumns: [String] {
         get {
             var result = [String] ()
-            result.append(columnsDataModel.primaryKeyColum.name!)
+            result.append(columnsDataModel.primaryKeyColumn!.name!)
             
             for column in columnsDataModel.timelessInputColumns.sorted(by: { $0.orderno < $1.orderno }) {
                 result.append(column.name!)
             }
-            result.append(columnsDataModel.timeStampColumn.name!)
+            if columnsDataModel.timeStampColumn != nil {
+                result.append(columnsDataModel.timeStampColumn!.name!)
+            }
             for i in 0..<tables.count - 1 {
                 let suffix = -tables.count + 1 + i
                 for column in columnsDataModel.timedependantInputColums {
@@ -192,7 +196,6 @@ class MLTableCluster {
         self.columns = columns
         self.model = columns.first?.column2model
         columnsDataModel = ColumnsModel(columnsFilter: self.columns)
-        
     }
     
 
@@ -219,11 +222,13 @@ class MLTableCluster {
             for column in columnsDataModel.targetColumns {
                 tables[i].removeColumn(named: column.name!)
             }
-            tables[i].removeColumn(named: columnsDataModel.timeStampColumn.name!)
+            if columnsDataModel.timeStampColumn != nil {
+                tables[i].removeColumn(named: columnsDataModel.timeStampColumn!.name!)
+            }
             if prePeriodsTable == nil {
                 prePeriodsTable = tables[i]
             } else {
-                prePeriodsTable = prePeriodsTable?.join(with: tables[i], on: columnsDataModel.primaryKeyColum.name!, type: .inner)
+                prePeriodsTable = prePeriodsTable?.join(with: tables[i], on: (columnsDataModel!.primaryKeyColumn?.name)!, type: .inner)
             }
         }
         for column in tables[tables.count - 1].columnNames {
@@ -231,7 +236,7 @@ class MLTableCluster {
                 tables[tables.count - 1].removeColumn(named: column)
             }
         }
-        result = prePeriodsTable?.join(with: tables[tables.count - 1], on: columnsDataModel.primaryKeyColum.name!, type: .inner)
+        result = prePeriodsTable?.join(with: tables[tables.count - 1], on: columnsDataModel!.primaryKeyColumn!.name!, type: .inner)
         return result!
     }
 }

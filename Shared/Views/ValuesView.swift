@@ -64,9 +64,9 @@ struct ValuesView: View {
         }
         Button("Save") {
             do {
-                try self.mlDataTable!.writeCSV(to: URL(fileURLWithPath:"/Users/klaus.reiners/Library/Containers/peas.com.PartChurn-Predictor/Data/Library/Application Support/PartChurn Predictor/Khaled.csv"))
+                try self.mlDataTable!.writeCSV(to: URL(fileURLWithPath:BaseServices.homePath.appendingPathComponent("Khaled.csv", isDirectory: false).path))
             } catch {
-                print("")
+                print("File Saved")
             }
         }
     }
