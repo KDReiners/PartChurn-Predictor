@@ -90,7 +90,6 @@ class ValuesTableProvider: ObservableObject {
         default: print("no join columns")
         }
         self.orderedColNames.append(predictedColumnName)
-        print(self.mlDataTable!)
     }
     struct PredictionEntry: Hashable {
         var primaryKey: Int
@@ -137,7 +136,6 @@ class ValuesTableProvider: ObservableObject {
         var rows = [String]()
         self.gridItems.removeAll()
         for column in orderedColNames {
-            print(column)
             insertIntoGridItems(column, &rows)
         }
     }
@@ -225,14 +223,14 @@ class ValuesTableProvider: ObservableObject {
     public func predictFromRow(regressorName: String, mlRow: MLDataTable.Row) -> MLFeatureProvider {
         var result = [String: MLDataValueConvertible]()
         for i in 0..<mlRow.keys.count {
-//            if mlRow.keys[i] != "ALIVE" {
+            if mlRow.keys[i] != "ALIVE" {
                 result[mlRow.keys[i]] = mlRow.values[i].intValue
                 if  result[mlRow.keys[i]] == nil {
                     result[mlRow.keys[i]] = mlRow.values[i].doubleValue
                 }
                 if  result[mlRow.keys[i]] == nil {
                     result[mlRow.keys[i]] = mlRow.values[i].stringValue
-//                }
+                }
             }
         }
         return predict(regressorName: regressorName, result: result)

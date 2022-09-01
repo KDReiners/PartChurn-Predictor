@@ -35,7 +35,6 @@ struct TableFilterView: View {
             ForEach(columns) { col in
                 TextField(col.title, text: binding(for: col.title)).frame(alignment: .trailing)
                     .onSubmit {
-                        print(binding(for: col.title))
                         self.mlDataTableFactory.filterMlDataTable(filterDict: filterDict)
                     }
             }
@@ -50,9 +49,6 @@ struct TableFilterView: View {
             } else {
                 if self.filterDict[key] != nil {
                     self.filterDict.removeValue(forKey: key)
-//                    if filterDict.count == 0 {
-//                        self.mlDataTableFactory.filterMlDataTable(filterDict: filterDict)
-//                    }
                 }
             }
         })

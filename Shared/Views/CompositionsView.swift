@@ -90,9 +90,9 @@ struct CompositionsView: View {
                         Button("Lerne..") {
                             train(regressorName: mlSelection)
                         }
-                        .frame(width: 90)
+//                        .frame(width: 90)
                         .disabled(mlSelection == nil || clusterSelection == nil)
-                    }
+                    }.frame(width: 250)
                     HStack {
                         List(mlAlgorithms, id: \.self, selection: $mlSelection) { algorithm in
                             Text(algorithm)
