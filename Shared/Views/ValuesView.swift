@@ -20,7 +20,24 @@ struct ValuesView: View {
         let colIndex: Int
         let rowIndex: Int
     }
-    
+    init( composer: FileWeaver?, clusterSelection: PredictionsModel.predictionCluster?, regressorName: String? = nil) {
+        mlDataTableFactory.orderedColumns = composer?.orderedColumns
+        mlDataTableFactory.mlDataTable = composer?.mlDataTable_Base
+        mlDataTableFactory.selectedColumns = clusterSelection?.columns
+        mlDataTableFactory.regressorName = regressorName
+        mlDataTableFactory.prediction = clusterSelection?.prediction
+
+        if let timeSeriesRows = clusterSelection?.connectedTimeSeries {
+            var selectedTimeSeries = [[Int]]()
+            for row in timeSeriesRows {
+                let innerResult = row.components(separatedBy: ", ").map { Int($0)! }
+                selectedTimeSeries.append(innerResult)
+            }
+            mlDataTableFactory.timeSeries = selectedTimeSeries
+        }
+        unionResult = mlDataTableFactory.buildMlDataTable()
+        self.mlDataTable = unionResult.mlDataTable
+    }
     init(mlDataTable: MLDataTable, orderedColumns: [Columns], selectedColumns: [Columns]? = nil, timeSeriesRows: [String]? = nil,  prediction: Predictions? = nil , regressorName: String? = nil) {
         mlDataTableFactory.orderedColumns = orderedColumns
         mlDataTableFactory.mlDataTable = mlDataTable
