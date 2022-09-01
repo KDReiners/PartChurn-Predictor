@@ -11,7 +11,7 @@ import CoreML
 import CreateML
 struct ValuesView: View {
     
-    @ObservedObject var mlDataTableFactory = MlDataTableProvider()
+    @ObservedObject var mlDataTableFactory: MlDataTableProvider
     var mlDataTable: MLDataTable?
     var unionResult: UnionResult!
     var masterDict = Dictionary<String, String>()
@@ -21,6 +21,7 @@ struct ValuesView: View {
         let rowIndex: Int
     }
     init( composer: FileWeaver?, clusterSelection: PredictionsModel.predictionCluster?, regressorName: String? = nil) {
+        mlDataTableFactory = MlDataTableProvider(composer: composer, clusterSelection: clusterSelection)
         mlDataTableFactory.orderedColumns = composer?.orderedColumns
         mlDataTableFactory.mlDataTable = composer?.mlDataTable_Base
         mlDataTableFactory.selectedColumns = clusterSelection?.columns
@@ -38,26 +39,9 @@ struct ValuesView: View {
         unionResult = mlDataTableFactory.buildMlDataTable()
         self.mlDataTable = unionResult.mlDataTable
     }
-    init(mlDataTable: MLDataTable, orderedColumns: [Columns], selectedColumns: [Columns]? = nil, timeSeriesRows: [String]? = nil,  prediction: Predictions? = nil , regressorName: String? = nil) {
-        mlDataTableFactory.orderedColumns = orderedColumns
-        mlDataTableFactory.mlDataTable = mlDataTable
-        mlDataTableFactory.selectedColumns = selectedColumns
-        mlDataTableFactory.regressorName = regressorName
-        mlDataTableFactory.prediction = prediction
-        if let timeSeriesRows = timeSeriesRows {
-            var selectedTimeSeries = [[Int]]()
-            for row in timeSeriesRows {
-                let innerResult = row.components(separatedBy: ", ").map { Int($0)! }
-                selectedTimeSeries.append(innerResult)
-            }
-            mlDataTableFactory.timeSeries = selectedTimeSeries
-        }
-        unionResult = mlDataTableFactory.buildMlDataTable()
-        self.mlDataTable = unionResult.mlDataTable
-    }
-    init(file: Files) {
-        mlDataTableFactory.updateTableProvider(file: file)
-    }
+//    init(file: Files) {
+//        mlDataTableFactory.updateTableProvider(file: file)
+//    }
     var body: some View {
         if mlDataTableFactory.loaded == false {
             Text("load table...")
@@ -113,9 +97,9 @@ struct ValuesView: View {
     }
 }
 
-struct ValuesView_Previews: PreviewProvider {
-    static var previews: some View {
-        return ValuesView(file: FilesModel().items.first!)
-    }
-}
+//struct ValuesView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        return ValuesView(file: FilesModel().items.first!)
+//    }
+//}
 

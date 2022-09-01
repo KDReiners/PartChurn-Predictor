@@ -12,6 +12,7 @@ class MlDataTableProvider: ObservableObject {
     @Published var loaded = false
     @Published var gridItems: [GridItem]!
     var numRows: Int = 0
+    var unionResult: UnionResult!
     var customColumns = [CustomColumn]()
     var mlDataTable: MLDataTable!
     var mlDataTableRaw: MLDataTable!
@@ -25,6 +26,27 @@ class MlDataTableProvider: ObservableObject {
     var filterViewProvider: FilterViewProvider!
     var prediction: Predictions?
     var regressorName: String?
+    
+    init() {
+    }
+    init( composer: FileWeaver?, clusterSelection: PredictionsModel.predictionCluster?, regressorName: String? = nil) {
+        self.orderedColumns = composer?.orderedColumns
+        self.mlDataTable = composer?.mlDataTable_Base
+        self.selectedColumns = clusterSelection?.columns
+        self.regressorName = regressorName
+        self.prediction = clusterSelection?.prediction
+
+        if let timeSeriesRows = clusterSelection?.connectedTimeSeries {
+            var selectedTimeSeries = [[Int]]()
+            for row in timeSeriesRows {
+                let innerResult = row.components(separatedBy: ", ").map { Int($0)! }
+                selectedTimeSeries.append(innerResult)
+            }
+            self.timeSeries = selectedTimeSeries
+        }
+        unionResult = buildMlDataTable()
+        self.mlDataTable = unionResult.mlDataTable
+    }
     internal func updateTableProviderForFiltering() {
         tableProvider(mlDataTable: self.mlDataTable, orderedColums: mlColumns!, selectedColumns: mergedColumns) { provider in
             DispatchQueue.main.async {
