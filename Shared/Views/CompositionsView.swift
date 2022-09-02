@@ -10,6 +10,7 @@ import SwiftUI
 struct CompositionsView: View {
     @ObservedObject var compositionDataModel: CompositionsModel
     @ObservedObject var predictionsDataModel = PredictionsModel()
+    @ObservedObject var mlDataTableProvider: MlDataTableProvider
     @State var mlSelection: String? = nil
     @State var clusterSelection: PredictionsModel.predictionCluster?
     @State var selectedColumnCombination: [Columns]?
@@ -25,6 +26,9 @@ struct CompositionsView: View {
         self.compositionDataModel = CompositionsModel(model: self.model)
         self.composer = composer
         self.combinator = combinator
+        self.mlDataTableProvider = MlDataTableProvider()
+        self.mlDataTableProvider.mlDataTable = composer.mlDataTable_Base!
+        self.mlDataTableProvider.orderedColumns = composer.orderedColumns!
         compositionDataModel.presentCalculationTasks()
         predictionsDataModel.predictions(model: self.model)
         predictionsDataModel.getTimeSeries()
@@ -81,6 +85,17 @@ struct CompositionsView: View {
                         }
                     }
                 }
+                .onChange(of: clusterSelection) { [clusterSelection] newClusterSelection in
+                    self.mlDataTableProvider.selectedColumns = newClusterSelection?.columns
+                    if let timeSeriesRows = newClusterSelection?.connectedTimeSeries {
+                        var selectedTimeSeries = [[Int]]()
+                        for row in timeSeriesRows {
+                            let innerResult = row.components(separatedBy: ", ").map { Int($0)! }
+                            selectedTimeSeries.append(innerResult)
+                        }
+                        self.mlDataTableProvider.timeSeries = selectedTimeSeries
+                    }
+                }
                 .padding()
                 VStack(alignment: .leading) {
                     HStack(alignment: .center) {
@@ -90,13 +105,16 @@ struct CompositionsView: View {
                         Button("Lerne..") {
                             train(regressorName: mlSelection)
                         }
-//                        .frame(width: 90)
                         .disabled(mlSelection == nil || clusterSelection == nil)
                     }.frame(width: 250)
                     HStack {
                         List(mlAlgorithms, id: \.self, selection: $mlSelection) { algorithm in
                             Text(algorithm)
-                        }.frame(width: 250)
+                        }
+                        .frame(width: 250)
+                        .onChange(of: mlSelection) { [mlSelection] newSelection in
+                            self.mlDataTableProvider.regressorName = newSelection
+                        }
                     }
                 }
                 .padding()
