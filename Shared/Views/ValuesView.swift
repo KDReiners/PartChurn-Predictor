@@ -11,9 +11,7 @@ import CoreML
 import CreateML
 struct ValuesView: View {
     
-    @ObservedObject var mlDataTableFactory = MlDataTableProvider()
-    var mlDataTable: MLDataTable?
-    var unionResult: UnionResult!
+    @ObservedObject var mlDataTableFactory: MlDataTableProvider
     var masterDict = Dictionary<String, String>()
     struct CellIndex: Identifiable {
         let id: Int
@@ -21,26 +19,12 @@ struct ValuesView: View {
         let rowIndex: Int
     }
     
-    init(mlDataTable: MLDataTable, orderedColumns: [Columns], selectedColumns: [Columns]? = nil, timeSeriesRows: [String]? = nil,  prediction: Predictions? = nil , regressorName: String? = nil) {
-        mlDataTableFactory.orderedColumns = orderedColumns
-        mlDataTableFactory.mlDataTable = mlDataTable
-        mlDataTableFactory.selectedColumns = selectedColumns
-        mlDataTableFactory.regressorName = regressorName
-        mlDataTableFactory.prediction = prediction
-        if let timeSeriesRows = timeSeriesRows {
-            var selectedTimeSeries = [[Int]]()
-            for row in timeSeriesRows {
-                let innerResult = row.components(separatedBy: ", ").map { Int($0)! }
-                selectedTimeSeries.append(innerResult)
-            }
-            mlDataTableFactory.timeSeries = selectedTimeSeries
-        }
-        unionResult = mlDataTableFactory.buildMlDataTable()
-        self.mlDataTable = unionResult.mlDataTable
+    init(mlDataTableProvider: MlDataTableProvider) {
+        self.mlDataTableFactory = mlDataTableProvider
     }
-    init(file: Files) {
-        mlDataTableFactory.updateTableProvider(file: file)
-    }
+//    init(file: Files) {
+////        mlDataTableFactory.updateTableProvider(file: file)
+//    }
     var body: some View {
         if mlDataTableFactory.loaded == false {
             Text("load table...")
@@ -96,9 +80,9 @@ struct ValuesView: View {
     }
 }
 
-struct ValuesView_Previews: PreviewProvider {
-    static var previews: some View {
-        return ValuesView(file: FilesModel().items.first!)
-    }
-}
-
+//struct ValuesView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        return ValuesView(file: FilesModel().items.first!)
+//    }
+//}
+//

@@ -10,12 +10,15 @@ import SwiftUI
 struct CompositionsView: View {
     @ObservedObject var compositionDataModel: CompositionsModel
     @ObservedObject var predictionsDataModel = PredictionsModel()
-    @ObservedObject var mlDataTableProvider: MlDataTableProvider
+    @ObservedObject var valuesTableProvider = ValuesTableProvider()
+//    @ObservedObject var mlDataTableProvider: MlDataTableProvider
+    var mlDataTableProvider: MlDataTableProvider
     @State var mlSelection: String? = nil
     @State var clusterSelection: PredictionsModel.predictionCluster?
     @State var selectedColumnCombination: [Columns]?
     @State var selectedTimeSeriesCombination: [String]?
-    
+    var valuesView: ValuesView?
+    var unionResult: UnionResult!
     var model: Models
     var composer: FileWeaver?
     var combinator: Combinator!
@@ -29,6 +32,9 @@ struct CompositionsView: View {
         self.mlDataTableProvider = MlDataTableProvider()
         self.mlDataTableProvider.mlDataTable = composer.mlDataTable_Base!
         self.mlDataTableProvider.orderedColumns = composer.orderedColumns!
+        unionResult = self.mlDataTableProvider.buildMlDataTable()
+        self.mlDataTableProvider.updateTableProvider()
+        valuesView = ValuesView(mlDataTableProvider: self.mlDataTableProvider)
         compositionDataModel.presentCalculationTasks()
         predictionsDataModel.predictions(model: self.model)
         predictionsDataModel.getTimeSeries()
@@ -94,7 +100,15 @@ struct CompositionsView: View {
                             selectedTimeSeries.append(innerResult)
                         }
                         self.mlDataTableProvider.timeSeries = selectedTimeSeries
+                    } else {
+                        self.mlDataTableProvider.timeSeries = nil
                     }
+                    self.mlDataTableProvider.mlDataTable = composer?.mlDataTable_Base
+                    self.mlDataTableProvider.orderedColumns = composer?.orderedColumns!
+                    self.mlDataTableProvider.selectedColumns = newClusterSelection?.columns
+                    self.mlDataTableProvider.prediction = newClusterSelection?.prediction
+                    updateValuesView()
+
                 }
                 .padding()
                 VStack(alignment: .leading) {
@@ -114,6 +128,7 @@ struct CompositionsView: View {
                         .frame(width: 250)
                         .onChange(of: mlSelection) { [mlSelection] newSelection in
                             self.mlDataTableProvider.regressorName = newSelection
+                            updateValuesView()
                         }
                     }
                 }
@@ -127,9 +142,15 @@ struct CompositionsView: View {
             }
             Divider()
             VStack(alignment: .leading) {
-                ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: clusterSelection?.columns, timeSeriesRows: clusterSelection?.connectedTimeSeries, prediction: clusterSelection?.prediction, regressorName: mlSelection)
+                valuesView
             }.padding()
         }
+    }
+    func updateValuesView() {
+        self.mlDataTableProvider.mlDataTableRaw = nil
+        self.mlDataTableProvider.mlDataTable = self.mlDataTableProvider.buildMlDataTable().mlDataTable
+//        self.mlDataTableProvider.updateTableProvider()
+        self.mlDataTableProvider.loaded = false
     }
     func savePredictions() {
         predictionsDataModel.savePredictions(model: self.model)

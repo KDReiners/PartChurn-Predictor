@@ -23,6 +23,9 @@ class ValuesTableProvider: ObservableObject {
     var orderedColNames: [String]!
     var numCols: Int = 0
     var numRows: Int = 0
+    init() {
+        
+    }
     init( mlDataTable: MLDataTable, orderedColNames: [String], selectedColumns: [Columns]?) {
         self.mlDataTable = mlDataTable
         self.orderedColNames = orderedColNames
