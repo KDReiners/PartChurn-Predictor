@@ -12,35 +12,18 @@ import CreateML
 struct ValuesView: View {
     
     @ObservedObject var mlDataTableFactory: MlDataTableProvider
-    var mlDataTable: MLDataTable?
-    var unionResult: UnionResult!
     var masterDict = Dictionary<String, String>()
     struct CellIndex: Identifiable {
         let id: Int
         let colIndex: Int
         let rowIndex: Int
     }
-    init( composer: FileWeaver?, clusterSelection: PredictionsModel.predictionCluster?, regressorName: String? = nil) {
-        mlDataTableFactory = MlDataTableProvider(composer: composer, clusterSelection: clusterSelection)
-        mlDataTableFactory.orderedColumns = composer?.orderedColumns
-        mlDataTableFactory.mlDataTable = composer?.mlDataTable_Base
-        mlDataTableFactory.selectedColumns = clusterSelection?.columns
-        mlDataTableFactory.regressorName = regressorName
-        mlDataTableFactory.prediction = clusterSelection?.prediction
-
-        if let timeSeriesRows = clusterSelection?.connectedTimeSeries {
-            var selectedTimeSeries = [[Int]]()
-            for row in timeSeriesRows {
-                let innerResult = row.components(separatedBy: ", ").map { Int($0)! }
-                selectedTimeSeries.append(innerResult)
-            }
-            mlDataTableFactory.timeSeries = selectedTimeSeries
-        }
-        unionResult = mlDataTableFactory.buildMlDataTable()
-        self.mlDataTable = unionResult.mlDataTable
+    
+    init(mlDataTableProvider: MlDataTableProvider) {
+        self.mlDataTableFactory = mlDataTableProvider
     }
 //    init(file: Files) {
-//        mlDataTableFactory.updateTableProvider(file: file)
+////        mlDataTableFactory.updateTableProvider(file: file)
 //    }
     var body: some View {
         if mlDataTableFactory.loaded == false {
@@ -102,4 +85,4 @@ struct ValuesView: View {
 //        return ValuesView(file: FilesModel().items.first!)
 //    }
 //}
-
+//

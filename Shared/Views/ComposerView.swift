@@ -68,9 +68,9 @@ struct ComposerView: View {
                         self.combinator.deleteCombinations()
                     }
                 }
-                VStack(alignment: .leading) {
+//                VStack(alignment: .leading) {
 //                    ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: selectedColumnCombination, timeSeriesRows: selectedTimeSeriesCombination)
-                }.padding(.horizontal)
+//                }.padding(.horizontal)
             }
         }
     }
