@@ -25,10 +25,16 @@ class MlDataTableProvider: ObservableObject {
     var filterViewProvider: FilterViewProvider!
     var prediction: Predictions?
     var regressorName: String?
+    @Published var tableStatistics: TableStatistics?
+    
+    init() {
+        self.tableStatistics = TableStatistics()
+    }
     internal func updateTableProviderForFiltering() {
         tableProvider(mlDataTable: self.mlDataTable, orderedColums: mlColumns!, selectedColumns: mergedColumns) { provider in
             DispatchQueue.main.async {
                 self.valuesTableProvider = provider
+                self.tableStatistics?.filteredRowCount = provider.mlDataTable.rows.count
                 if self.filterViewProvider == nil {
                     self.filterViewProvider = FilterViewProvider(mlDataTableFactory: self)
                 }
@@ -40,6 +46,7 @@ class MlDataTableProvider: ObservableObject {
         tableProvider(mlDataTable: mlDataTableRaw, orderedColums: mlColumns!, selectedColumns: mergedColumns, prediction: prediction, regressorName: regressorName) { provider in
             DispatchQueue.main.async {
                 self.valuesTableProvider = provider
+                self.tableStatistics?.absolutRowCount = provider.mlDataTable.rows.count
                 self.mlDataTableRaw = provider.mlDataTable
                 self.mlDataTable = self.mlDataTableRaw
                 self.mlColumns = provider.orderedColNames
@@ -56,6 +63,7 @@ class MlDataTableProvider: ObservableObject {
         tableProvider(file: file ) { provider in
             DispatchQueue.main.async {
                 self.valuesTableProvider = provider
+                self.tableStatistics?.absolutRowCount = provider.mlDataTable.rows.count
                 if self.filterViewProvider == nil {
                     self.filterViewProvider = FilterViewProvider(mlDataTableFactory: self)
                 }
@@ -160,6 +168,10 @@ class MlDataTableProvider: ObservableObject {
                 }
             }
         }
+    }
+    struct TableStatistics {
+        var absolutRowCount = 0
+        var filteredRowCount = 0
     }
 }
 struct UnionResult {

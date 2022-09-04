@@ -11,7 +11,6 @@ struct CompositionsView: View {
     @ObservedObject var compositionDataModel: CompositionsModel
     @ObservedObject var predictionsDataModel = PredictionsModel()
     @ObservedObject var valuesTableProvider = ValuesTableProvider()
-//    @ObservedObject var mlDataTableProvider: MlDataTableProvider
     var mlDataTableProvider: MlDataTableProvider
     @State var mlSelection: String? = nil
     @State var clusterSelection: PredictionsModel.predictionCluster?
@@ -47,7 +46,7 @@ struct CompositionsView: View {
                 {
                     HStack(alignment: .center) {
                         Text("Data Cluster")
-                        .font(.title)
+                            .font(.title)
                         Spacer()
                         if predictionsDataModel.arrayOfPredictions.count > 0 {
                             Button("Delete") {
@@ -63,10 +62,11 @@ struct CompositionsView: View {
                         }
                     }
                     if predictionsDataModel.arrayOfPredictions.count > 0 {
-                        List(predictionsDataModel.arrayOfPredictions.sorted(by: { $0.seriesDepth < $1.seriesDepth }), id: \.self, selection: $clusterSelection) { prediction in
-                            Text(prediction.groupingPattern!)
-                        }
-                        
+                        List(predictionsDataModel.arrayOfPredictions.sorted(by: {
+                            $0.seriesDepth < $1.seriesDepth }), id: \.self, selection: $clusterSelection) { prediction in
+                                Text(prediction.groupingPattern!)
+                            }.contentShape(Rectangle())
+                            .onTapGesture { clusterSelection?.prediction = clusterSelection?.prediction == mlDataTableProvider.prediction ? nil: clusterSelection?.prediction }
                     }
                     else if compositionDataModel.arrayOfClusters.count > 0 {
                         List(compositionDataModel.arrayOfClusters.sorted(by: { $0.seriesDepth < $1.seriesDepth }), id:\.self) { cluster in
@@ -131,12 +131,17 @@ struct CompositionsView: View {
                             updateValuesView()
                         }
                     }
+                    Text("Table statistics")
+                        .font(.title)
+                    Text(String(mlDataTableProvider.tableStatistics!.absolutRowCount))
+                    Text(String(mlDataTableProvider.tableStatistics!.filteredRowCount))
                 }
                 .padding()
                 VStack(alignment: .leading) {
                     Text("Algorithmus KPI")
                         .font(.title)
                     AlgorithmsModel.valueList(prediction: (clusterSelection?.prediction), algorithmName: mlSelection ?? "unbekannt")
+                    
                 }
                 .padding()
             }
@@ -149,7 +154,7 @@ struct CompositionsView: View {
     func updateValuesView() {
         self.mlDataTableProvider.mlDataTableRaw = nil
         self.mlDataTableProvider.mlDataTable = self.mlDataTableProvider.buildMlDataTable().mlDataTable
-//        self.mlDataTableProvider.updateTableProvider()
+        //        self.mlDataTableProvider.updateTableProvider()
         self.mlDataTableProvider.loaded = false
     }
     func savePredictions() {
