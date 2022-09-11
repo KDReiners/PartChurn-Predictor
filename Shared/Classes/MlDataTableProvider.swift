@@ -73,6 +73,7 @@ class MlDataTableProvider: ObservableObject {
     }
     func buildMlDataTable() -> UnionResult {
         var result: MLDataTable?
+        self.filterViewProvider = nil
         mergedColumns = selectedColumns == nil ? orderedColumns: selectedColumns
         if selectedColumns != nil {
             let additions = orderedColumns.filter { $0.ispartofprimarykey == 1 || $0.istimeseries == 1 || $0.istarget == 1}

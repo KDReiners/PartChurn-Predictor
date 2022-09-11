@@ -138,8 +138,16 @@ struct CompositionsView: View {
                 }
                 .padding()
                 VStack(alignment: .leading) {
+                    HStack(alignment: .center) {
                     Text("Algorithmus KPI")
                         .font(.title)
+                    Spacer()
+                        Button("Delete all...") {
+                            var metricValuesDataModel = MetricvaluesModel()
+                            let predicate = NSPredicate(format: "metricvalue2model == %@", self.model)
+                            metricValuesDataModel.deleteAllRecords(predicate: predicate)
+                        }
+                    }
                     AlgorithmsModel.valueList(prediction: (clusterSelection?.prediction), algorithmName: mlSelection ?? "unbekannt")
                     
                 }

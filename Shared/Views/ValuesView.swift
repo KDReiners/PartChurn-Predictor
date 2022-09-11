@@ -22,9 +22,11 @@ struct ValuesView: View {
     init(mlDataTableProvider: MlDataTableProvider) {
         self.mlDataTableFactory = mlDataTableProvider
     }
-//    init(file: Files) {
-////        mlDataTableFactory.updateTableProvider(file: file)
-//    }
+    init(file: Files) {
+        self.mlDataTableFactory = MlDataTableProvider()
+        self.mlDataTableFactory.updateTableProvider(file: file)
+    
+    }
     var body: some View {
         if mlDataTableFactory.loaded == false {
             Text("load table...")
