@@ -14,7 +14,7 @@ public class ColumnsModel: Model<Columns> {
         let readOnlyFields: [String] = []
         super.init(readOnlyFields: readOnlyFields)
     }
-    public init(model: Models) {
+    public init(model: Models?) {
         let readOnlyFields: [String] = []
         super.init(readOnlyFields: readOnlyFields)
         self.model = model

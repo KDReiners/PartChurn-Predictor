@@ -15,7 +15,7 @@ struct CompositionsView: View {
     @State var clusterSelection: PredictionsModel.predictionCluster?
     @State var selectedColumnCombination: [Columns]?
     @State var selectedTimeSeriesCombination: [String]?
-    var mlDataTableProvider: MlDataTableProvider
+    @ObservedObject var mlDataTableProvider: MlDataTableProvider
     var valuesView: ValuesView?
     var unionResult: UnionResult!
     var model: Models
@@ -138,10 +138,26 @@ struct CompositionsView: View {
                             updateValuesView()
                         }
                     }
-                    Text("Table statistics")
+                    Text("Resultset Statistics")
                         .font(.title)
-                    Text(String(mlDataTableProvider.tableStatistics!.absolutRowCount))
-                    Text(String(mlDataTableProvider.tableStatistics!.filteredRowCount))
+                        .padding(.top, 15)
+                    List {
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Text("All rows count")
+                                Spacer()
+                                let countNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.absolutRowCount)
+                                Text(BaseServices.intFormatter.string(from: countNumber)!)
+                            }
+                            HStack {
+                                Text("Filtered rows count")
+                                Spacer()
+                                let countNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.filteredRowCount)
+                                Text(BaseServices.intFormatter.string(from: countNumber)!)
+                            }
+                                
+                        }
+                    }.frame(width: 250)
                 }
                 .padding()
                 VStack(alignment: .leading) {

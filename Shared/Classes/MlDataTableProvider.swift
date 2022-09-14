@@ -11,6 +11,8 @@ import CreateML
 class MlDataTableProvider: ObservableObject {
     @Published var loaded = false
     @Published var gridItems: [GridItem]!
+    @Published var valuesTableProvider: ValuesTableProvider?
+    @Published var tableStatistics: TableStatistics?
     var numRows: Int = 0
     var customColumns = [CustomColumn]()
     var mlDataTable: MLDataTable!
@@ -21,11 +23,10 @@ class MlDataTableProvider: ObservableObject {
     var mergedColumns: [Columns]!
     var timeSeries: [[Int]]?
     var mlColumns: [String]?
-    @Published var valuesTableProvider: ValuesTableProvider?
+   
     var filterViewProvider: FilterViewProvider!
     var prediction: Predictions?
     var regressorName: String?
-    @Published var tableStatistics: TableStatistics?
     
     init() {
         self.tableStatistics = TableStatistics()
@@ -47,6 +48,7 @@ class MlDataTableProvider: ObservableObject {
             DispatchQueue.main.async {
                 self.valuesTableProvider = provider
                 self.tableStatistics?.absolutRowCount = provider.mlDataTable.rows.count
+                self.tableStatistics?.filteredRowCount = provider.mlDataTable.rows.count
                 self.mlDataTableRaw = provider.mlDataTable
                 self.mlDataTable = self.mlDataTableRaw
                 self.mlColumns = provider.orderedColNames
