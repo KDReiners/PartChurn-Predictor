@@ -81,29 +81,31 @@ class MlDataTableProvider: ObservableObject {
         }
         self.mlColumns = mergedColumns.map { $0.name!}
         let timeSeriesColumn = self.orderedColumns.filter { $0.istimeseries == 1 }
-        let mlTimeSeriesColumn = mlDataTable[(timeSeriesColumn.first?.name!)!]
-        if let timeSeries = timeSeries {
-            for timeSlices in timeSeries {
-                let newCluster = MLTableCluster(columns: mergedColumns)
-                for timeSlice in timeSlices.sorted(by: { $0 < $1 }) {
-                    
-                    let timeSeriesMask = mlTimeSeriesColumn == timeSlice
-                    let newMlDataTable = self.mlDataTable[timeSeriesMask]
-                    newCluster.tables.append(newMlDataTable)
-                    
-                    if unionOfMlDataTables == nil {
-                        unionOfMlDataTables = [newMlDataTable] } else {
-                            unionOfMlDataTables?.append(newMlDataTable)
-                        }
+        if timeSeriesColumn.count > 0 {
+            let  mlTimeSeriesColumn = mlDataTable[(timeSeriesColumn.first?.name)!]
+            if let timeSeries = timeSeries {
+                for timeSlices in timeSeries {
+                    let newCluster = MLTableCluster(columns: mergedColumns)
+                    for timeSlice in timeSlices.sorted(by: { $0 < $1 }) {
+                        
+                        let timeSeriesMask = mlTimeSeriesColumn == timeSlice
+                        let newMlDataTable = self.mlDataTable[timeSeriesMask]
+                        newCluster.tables.append(newMlDataTable)
+                        
+                        if unionOfMlDataTables == nil {
+                            unionOfMlDataTables = [newMlDataTable] } else {
+                                unionOfMlDataTables?.append(newMlDataTable)
+                            }
+                    }
+                    if result == nil {
+                        result = newCluster.construct()
+                        self.mlColumns = newCluster.orderedColumns
+                    } else {
+                        result?.append(contentsOf: newCluster.construct())
+                    }
                 }
-                if result == nil {
-                    result = newCluster.construct()
-                    self.mlColumns = newCluster.orderedColumns
-                } else {
-                    result?.append(contentsOf: newCluster.construct())
-                }
+                self.mlDataTable = result?.dropMissing()
             }
-            self.mlDataTable = result?.dropMissing()
         }
         let unionResult = UnionResult(mlDataTable: self.mlDataTable, mlColumns:self.mlColumns!)
         self.mlDataTableRaw = mlDataTableRaw == nil ? mlDataTable: self.mlDataTableRaw
@@ -223,8 +225,8 @@ class MLTableCluster {
         columnsDataModel = ColumnsModel(columnsFilter: self.columns)
     }
     
-
-
+    
+    
     internal func construct() -> MLDataTable {
         var prePeriodsTable: MLDataTable?
         var result: MLDataTable?

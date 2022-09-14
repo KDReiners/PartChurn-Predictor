@@ -12,13 +12,21 @@ struct ComposerView: View {
     var model: Models
     @State var selectedColumnCombination: [Columns]?
     @State var selectedTimeSeriesCombination: [String]?
-    
-    internal var composer: FileWeaver?
-    internal var combinator: Combinator
-    init(model: Models, composer: FileWeaver?, combinator: Combinator) {
+    var valuesView: ValuesView?
+    var mlDataTableProvider: MlDataTableProvider
+    var composer: FileWeaver?
+    var combinator: Combinator
+    var columnsDataModel: ColumnsModel?
+    init(model: Models, composer: FileWeaver, combinator: Combinator) {
         self.model = model
+        self.columnsDataModel = ColumnsModel(model: self.model)
         self.composer = composer
         self.combinator = combinator
+        self.mlDataTableProvider = MlDataTableProvider()
+        self.mlDataTableProvider.mlDataTable = composer.mlDataTable_Base!
+        self.mlDataTableProvider.orderedColumns = composer.orderedColumns!
+        valuesView = ValuesView(mlDataTableProvider: self.mlDataTableProvider)
+        updateValuesView()
     }
     var body: some View {
         HStack(spacing: 50) {
@@ -36,11 +44,27 @@ struct ComposerView: View {
                                 ForEach(section.rows, id: \.self) { row in
                                     HStack {
                                         Text(row)
+                                        Spacer()
                                     }
+                                    .contentShape(Rectangle())
                                     .onTapGesture { selectedTimeSeriesCombination = selectedTimeSeriesCombination == section.rows ? nil: section.rows }
                                 }
                             }.padding(.top, 2)
                         }
+                    }
+                    .onChange(of: selectedTimeSeriesCombination) { newSelectedTimeSeriesCombination in
+                        self.mlDataTableProvider.mlDataTable = composer?.mlDataTable_Base
+                        if let timeSeriesRows = newSelectedTimeSeriesCombination {
+                            var selectedTimeSeries = [[Int]]()
+                            for row in timeSeriesRows {
+                                let innerResult = row.components(separatedBy: ", ").map { Int($0)! }
+                                selectedTimeSeries.append(innerResult)
+                            }
+                            self.mlDataTableProvider.timeSeries = selectedTimeSeries
+                        } else {
+                            self.mlDataTableProvider.timeSeries = nil
+                        }
+                        updateValuesView()
                     }
 
                     VStack(alignment: .leading) {
@@ -50,14 +74,23 @@ struct ComposerView: View {
                                 ForEach(section.columns, id: \.self) { columns in
                                     HStack {
                                         ForEach(columns, id: \.self) { column in
-                                            Text(column.name!)
-                                                .padding(0)
+                                            HStack {
+                                                Text(column.name!)
+                                                Spacer()
+                                            }
+                                            .contentShape(Rectangle())
                                         }
                                     }.onTapGesture { selectedColumnCombination = selectedColumnCombination == columns ? nil: columns }
                                 }
                             }
                             .padding(.top, 2)
                         }
+                    }
+                    .onChange(of: selectedColumnCombination) { newSelectedColumnCombination in
+                        self.mlDataTableProvider.mlDataTable = composer?.mlDataTable_Base
+                        self.mlDataTableProvider.selectedColumns = newSelectedColumnCombination
+                        self.mlDataTableProvider.orderedColumns = composer?.orderedColumns
+                        updateValuesView()
                     }
                 }
                 HStack {
@@ -68,10 +101,16 @@ struct ComposerView: View {
                         self.combinator.deleteCombinations()
                     }
                 }
-//                VStack(alignment: .leading) {
-//                    ValuesView(mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: selectedColumnCombination, timeSeriesRows: selectedTimeSeriesCombination)
-//                }.padding(.horizontal)
+                VStack(alignment: .leading) {
+                    valuesView
+                }.padding(.horizontal)
             }
         }
     }
+    func updateValuesView() {
+        self.mlDataTableProvider.mlDataTableRaw = nil
+        self.mlDataTableProvider.mlDataTable = self.mlDataTableProvider.buildMlDataTable().mlDataTable
+        self.mlDataTableProvider.loaded = false
+    }
+
 }

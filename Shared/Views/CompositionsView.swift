@@ -11,11 +11,11 @@ struct CompositionsView: View {
     @ObservedObject var compositionDataModel: CompositionsModel
     @ObservedObject var predictionsDataModel = PredictionsModel()
     @ObservedObject var valuesTableProvider = ValuesTableProvider()
-    var mlDataTableProvider: MlDataTableProvider
     @State var mlSelection: String? = nil
     @State var clusterSelection: PredictionsModel.predictionCluster?
     @State var selectedColumnCombination: [Columns]?
     @State var selectedTimeSeriesCombination: [String]?
+    var mlDataTableProvider: MlDataTableProvider
     var valuesView: ValuesView?
     var unionResult: UnionResult!
     var model: Models
@@ -64,9 +64,16 @@ struct CompositionsView: View {
                     if predictionsDataModel.arrayOfPredictions.count > 0 {
                         List(predictionsDataModel.arrayOfPredictions.sorted(by: {
                             $0.seriesDepth < $1.seriesDepth }), id: \.self, selection: $clusterSelection) { prediction in
-                                Text(prediction.groupingPattern!)
-                            }.contentShape(Rectangle())
-                            .onTapGesture { clusterSelection?.prediction = clusterSelection?.prediction == mlDataTableProvider.prediction ? nil: clusterSelection?.prediction }
+                                HStack(alignment: .center) {
+                                    Text(prediction.groupingPattern!)
+                                    Spacer()
+                                }
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    clusterSelection = clusterSelection == prediction ? nil: prediction
+                                }
+                                
+                            }
                     }
                     else if compositionDataModel.arrayOfClusters.count > 0 {
                         List(compositionDataModel.arrayOfClusters.sorted(by: { $0.seriesDepth < $1.seriesDepth }), id:\.self) { cluster in
@@ -91,7 +98,7 @@ struct CompositionsView: View {
                         }
                     }
                 }
-                .onChange(of: clusterSelection) { [clusterSelection] newClusterSelection in
+                .onChange(of: clusterSelection) { newClusterSelection in
                     self.mlDataTableProvider.selectedColumns = newClusterSelection?.columns
                     if let timeSeriesRows = newClusterSelection?.connectedTimeSeries {
                         var selectedTimeSeries = [[Int]]()
@@ -126,7 +133,7 @@ struct CompositionsView: View {
                             Text(algorithm)
                         }
                         .frame(width: 250)
-                        .onChange(of: mlSelection) { [mlSelection] newSelection in
+                        .onChange(of: mlSelection) { newSelection in
                             self.mlDataTableProvider.regressorName = newSelection
                             updateValuesView()
                         }
@@ -143,7 +150,7 @@ struct CompositionsView: View {
                         .font(.title)
                     Spacer()
                         Button("Delete all...") {
-                            var metricValuesDataModel = MetricvaluesModel()
+                            let metricValuesDataModel = MetricvaluesModel()
                             let predicate = NSPredicate(format: "metricvalue2model == %@", self.model)
                             metricValuesDataModel.deleteAllRecords(predicate: predicate)
                         }
