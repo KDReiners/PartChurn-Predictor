@@ -10,8 +10,8 @@ import CreateML
 
 struct ScenarioView: View {
     /// for modelsView
-    @ObservedObject var model: Models
-    @ObservedObject var valuesViewModel = ValuesModel()
+    var model: Models
+    var valuesViewModel = ValuesModel()
     var fileSelection: Files?
     var mlSelection: String?
     var mlAlgorithms = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor"]

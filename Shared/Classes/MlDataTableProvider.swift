@@ -23,7 +23,7 @@ class MlDataTableProvider: ObservableObject {
     var mergedColumns: [Columns]!
     var timeSeries: [[Int]]?
     var mlColumns: [String]?
-   
+    var model: Models?
     var filterViewProvider: FilterViewProvider!
     var prediction: Predictions?
     var regressorName: String?

@@ -9,7 +9,7 @@ import SwiftUI
 import CoreData
 struct DirectoryView: View {
     @EnvironmentObject var managerModels: ManagerModels
-    @ObservedObject var modelsDataModel: ModelsModel
+    var modelsDataModel: ModelsModel
     @ObservedObject var filesDataModel: FilesModel
     @State var modelSelect: NSManagedObject?
     @State var fileSelect: NSManagedObjectID?

@@ -9,10 +9,7 @@ import Foundation
 import CreateML
 import CoreML
 public struct Trainer {
-    var mlDataTableFactory = MlDataTableProvider()
-    var unionResult: UnionResult!
-    var masterDict = Dictionary<String, String>()
-    
+    var mlDataTableProvider: MlDataTableProvider!
     var regressorTable: MLDataTable?
     var coreDataML: CoreDataML!
     var file: Files?
@@ -20,26 +17,10 @@ public struct Trainer {
     var targetColumnName: String!
     var regressor: MLRegressor!
     var prediction: Predictions!
-    init(prediction: Predictions, mlDataTable: MLDataTable, orderedColumns: [Columns], selectedColumns: [Columns]? = nil, timeSeriesRows: [String]? = nil) {
-        self.model = prediction.prediction2model
-        self.prediction = prediction
-        mlDataTableFactory.orderedColumns = orderedColumns
-        mlDataTableFactory.mlDataTable = mlDataTable
-        mlDataTableFactory.selectedColumns = selectedColumns
-        if let timeSeriesRows = timeSeriesRows {
-            var selectedTimeSeries = [[Int]]()
-            for row in timeSeriesRows {
-                let innerResult = row.components(separatedBy: ", ").map { Int($0)! }
-                selectedTimeSeries.append(innerResult)
-            }
-            mlDataTableFactory.timeSeries = selectedTimeSeries
-        }
-        unionResult = mlDataTableFactory.buildMlDataTable()
-        for column in orderedColumns.filter( { ($0.ispartofprimarykey == 1 || $0.ispartoftimeseries == 1 || $0.istimeseries == 1) && $0.istarget == 0 }) {
-            unionResult.mlDataTable.removeColumn(named: column.name!)
-        }
-        self.regressorTable = unionResult.mlDataTable
-        self.targetColumnName = orderedColumns.first(where: { $0.istarget == 1})?.name!
+    init(mlDataTableFactory: MlDataTableProvider) {
+        self.mlDataTableProvider = mlDataTableFactory
+        self.regressorTable = self.mlDataTableProvider.mlDataTable
+        self.targetColumnName = self.mlDataTableProvider.orderedColumns.first(where: { $0.istarget == 1})?.name!
         
     }
     init(model: Models, file: Files? = nil) {
@@ -116,12 +97,12 @@ public struct Trainer {
         regressorKPI.dictOfMetrics["evaluationMetrics.maximumError"]? = regressorEvalutation.maximumError
         regressorKPI.dictOfMetrics["evaluationMetrics.rootMeanSquaredError"]? = regressorEvalutation.rootMeanSquaredError
         /// Schreibe in CoreData
-        regressorKPI.postMetric(prediction: self.prediction, algorithmName: regressorName)
+        regressorKPI.postMetric(prediction: self.mlDataTableProvider.prediction!, algorithmName: self.mlDataTableProvider.regressorName!)
         let regressorMetadata = MLModelMetadata(author: "Steps.IT",
                                                 shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden",
                                                 version: "1.0")
         /// Speichern des trainierten Modells auf dem Schreibtisch
-        try? regressor.write(to: BaseServices.homePath.appendingPathComponent(self.model.name!, isDirectory: true).appendingPathComponent(regressorName + "_" + self.prediction.id!.uuidString + ".mlmodel"),
+        try? regressor.write(to: BaseServices.homePath.appendingPathComponent((self.mlDataTableProvider.model?.name!)!, isDirectory: true).appendingPathComponent(regressorName + "_" + self.mlDataTableProvider.prediction!.id!.uuidString + ".mlmodel"),
                             metadata: regressorMetadata)
     }
 }

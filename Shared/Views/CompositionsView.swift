@@ -31,6 +31,7 @@ struct CompositionsView: View {
         self.mlDataTableProvider = MlDataTableProvider()
         self.mlDataTableProvider.mlDataTable = composer.mlDataTable_Base!
         self.mlDataTableProvider.orderedColumns = composer.orderedColumns!
+        self.mlDataTableProvider.model = self.model
         unionResult = self.mlDataTableProvider.buildMlDataTable()
         self.mlDataTableProvider.updateTableProvider()
         valuesView = ValuesView(mlDataTableProvider: self.mlDataTableProvider)
@@ -93,6 +94,7 @@ struct CompositionsView: View {
                         }
                         Text("Columns")
                             .font(.title)
+                            .padding(.top, 15)
                         List((clusterSelection?.columns.sorted(by: { $0.orderno < $1.orderno }))!, id:\.self ) { column in
                             Text(column.name!)
                         }
@@ -123,14 +125,21 @@ struct CompositionsView: View {
                         Text("Algorithmus")
                             .font(.title)
                         Spacer()
-                        Button("Lerne..") {
+                        Button("Train..") {
                             train(regressorName: mlSelection)
                         }
                         .disabled(mlSelection == nil || clusterSelection == nil)
                     }.frame(width: 250)
                     HStack {
                         List(mlAlgorithms, id: \.self, selection: $mlSelection) { algorithm in
-                            Text(algorithm)
+                            HStack {
+                                Text(algorithm)
+                                Spacer()
+                            }
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                mlSelection = mlSelection == algorithm ? nil: algorithm
+                            }
                         }
                         .frame(width: 250)
                         .onChange(of: mlSelection) { newSelection in
@@ -192,7 +201,8 @@ struct CompositionsView: View {
         predictionsDataModel.savePredictions(model: self.model)
     }
     private func train(regressorName: String?) {
-        var trainer = Trainer(prediction: (clusterSelection?.prediction)!, mlDataTable: (composer?.mlDataTable_Base)!, orderedColumns: (composer?.orderedColumns)!, selectedColumns: clusterSelection?.columns, timeSeriesRows: clusterSelection?.connectedTimeSeries)
+        var trainer = Trainer(mlDataTableFactory: self.mlDataTableProvider)
         trainer.createModel(regressorName: $mlSelection.wrappedValue!)
+        updateValuesView()
     }
 }
