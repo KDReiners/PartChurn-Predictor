@@ -51,6 +51,9 @@ class MlDataTableProvider: ObservableObject {
                 self.tableStatistics?.filteredRowCount = provider.mlDataTable.rows.count
                 self.mlDataTableRaw = provider.mlDataTable
                 self.mlDataTable = self.mlDataTableRaw
+                if provider.targetValues.count > 0 {
+                    self.tableStatistics?.targetStatistics = self.resolveTargetValues(targetValues: provider.targetValues, predictedColumnName: provider.predictedColumnName!)
+                }
                 self.mlColumns = provider.orderedColNames
                 if self.filterViewProvider == nil {
                     self.filterViewProvider = FilterViewProvider(mlDataTableFactory: self)
@@ -72,6 +75,29 @@ class MlDataTableProvider: ObservableObject {
                 self.loaded = true
             }
         }
+    }
+    func resolveTargetValues(targetValues: [String: Int], predictedColumnName: String) -> [TargetStatistics]? {
+        let minimum = mlDataTable[predictedColumnName].doubles?.min()
+        let maximum = mlDataTable[predictedColumnName].doubles?.max()
+        var bestMatchCount = 0
+        var bestTable = MLDataTable()
+        let  mlPredictionColumn = mlDataTable[predictedColumnName]
+        let mlTargetColumn = mlDataTable["ALIVE"]
+        var i  = (minimum! * 1000).rounded() / 1000
+        while i < maximum! {
+            let predictionMask = mlPredictionColumn <= i && mlTargetColumn == 0
+            let breakMask = mlPredictionColumn <= i && mlTargetColumn != 0
+            bestTable = self.mlDataTable[predictionMask]
+            if self.mlDataTable[breakMask].rows.count > 0 {
+                break
+            }
+            bestMatchCount =  bestTable.rows.count
+            i += 1/10000
+        }
+        print(bestMatchCount)
+        print(bestTable)
+        
+        return nil
     }
     func buildMlDataTable() -> UnionResult {
         var result: MLDataTable?
@@ -177,6 +203,14 @@ class MlDataTableProvider: ObservableObject {
     struct TableStatistics {
         var absolutRowCount = 0
         var filteredRowCount = 0
+        var targetStatistics: [TargetStatistics]?
+        
+    }
+    struct TargetStatistics {
+        var targetValue = 0
+        var instancesCount = 0
+        var threshold: Float = 0.00000
+        
     }
 }
 struct UnionResult {

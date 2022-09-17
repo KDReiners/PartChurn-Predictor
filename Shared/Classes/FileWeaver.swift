@@ -90,7 +90,7 @@ internal class FileWeaver {
                 case 2:
                     joinParam1 = Array(joinColumns)[0]
                     joinParam2 = Array(joinColumns)[1]
-                    allInDataTable = allInDataTable.join(with: currentMLDataTable, on: joinParam1, joinParam2, type: .outer)
+                    allInDataTable = allInDataTable.join(with: currentMLDataTable, on: joinParam1, joinParam2, type: .inner)
                 default: print("no join colums")
                 }
             }
@@ -108,7 +108,7 @@ internal class FileWeaver {
             case 2:
                 joinParam1 = Array(joinColums)[0]
                 joinParam2 = Array(joinColums)[1]
-                allInDataTable = allInDataTable.join(with: currentMLDataTable, on: joinParam1, joinParam2, type: .outer)
+                allInDataTable = allInDataTable.join(with: currentMLDataTable, on: joinParam1, joinParam2, type: .inner)
             default: print("no join colums")
             }
         }

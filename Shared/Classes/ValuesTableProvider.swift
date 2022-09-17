@@ -21,6 +21,10 @@ class ValuesTableProvider: ObservableObject {
     var regressorName: String?
     var predistion: Predictions?
     var orderedColNames: [String]!
+    var columnDataModel: ColumnsModel!
+    var targetColumn: Columns!
+    var predictedColumnName: String!
+    var targetValues = [String: Int]()
     var numCols: Int = 0
     var numRows: Int = 0
     init() {
@@ -56,11 +60,11 @@ class ValuesTableProvider: ObservableObject {
     }
     private func incorporatedPredition(selectedColumns: [Columns]) {
         var predictionsDictionary = [String: MLDataValueConvertible]()
-        let columnDataModel = ColumnsModel(columnsFilter: selectedColumns )
-        let targetColumn = columnDataModel.targetColumns.first
+        columnDataModel = ColumnsModel(columnsFilter: selectedColumns )
+        targetColumn = columnDataModel.targetColumns.first
         let primaryKeyColumn = columnDataModel.primaryKeyColumn
         let timeStampColumn = columnDataModel.timeStampColumn
-        let predictedColumnName = "Predicted: " + (targetColumn?.name)!
+        predictedColumnName = "Predicted: " + (targetColumn?.name)!
         let joinColumns = columnDataModel.joinColumns
         var joinParam1: String = ""
         var joinParam2: String = ""
@@ -76,6 +80,7 @@ class ValuesTableProvider: ObservableObject {
         }
         for mlRow in mlDataTable.rows {
             let primaryKeyValue = mlRow[(primaryKeyColumn?.name)!]?.intValue
+            targetValues[String((mlRow[ (targetColumn.name!)]?.intValue)!), default: 0] += 1
             let timeStampColumnValue = (mlRow[(timeStampColumn?.name)!]?.intValue)!
             let predictedValue = predictFromRow(regressorName: self.regressorName!, mlRow: mlRow).featureValue(for: targetColumn!.name!)?.doubleValue
             let newPredictionEntry = PredictionEntry(primaryKey: primaryKeyValue!, timeSeriesValue: timeStampColumnValue, predictedValue: predictedValue!)
