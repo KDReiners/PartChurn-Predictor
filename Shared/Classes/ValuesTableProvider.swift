@@ -38,6 +38,9 @@ class ValuesTableProvider: ObservableObject {
     init( mlDataTable: MLDataTable, orderedColNames: [String], selectedColumns: [Columns]?, prediction: Predictions? , regressorName: String?) {
         self.mlDataTable = mlDataTable
         self.orderedColNames = orderedColNames
+        columnDataModel = ColumnsModel(columnsFilter: selectedColumns! )
+        targetColumn = columnDataModel.targetColumns.first
+        predictedColumnName = "Predicted: " + (targetColumn?.name)!
         if regressorName != nil && prediction != nil {
             self.regressorName = regressorName
             self.predistion = prediction
@@ -46,6 +49,17 @@ class ValuesTableProvider: ObservableObject {
             if fileManager.fileExists(atPath: urlToPredictionModel!.path) {
                predictionModel = getModel(url: urlToPredictionModel!)
                 incorporatedPredition(selectedColumns: selectedColumns!)
+            }
+        } else {
+            
+            if self.mlDataTable.columnNames.contains(predictedColumnName) {
+                self.mlDataTable.removeColumn(named: predictedColumnName)
+                for i in 0..<orderedColNames.count {
+                    if orderedColNames[i] == predictedColumnName {
+                        self.orderedColNames.remove(at: i)
+                    }
+                }
+                
             }
         }
         prepareView(orderedColNames: self.orderedColNames)
@@ -60,11 +74,8 @@ class ValuesTableProvider: ObservableObject {
     }
     private func incorporatedPredition(selectedColumns: [Columns]) {
         var predictionsDictionary = [String: MLDataValueConvertible]()
-        columnDataModel = ColumnsModel(columnsFilter: selectedColumns )
-        targetColumn = columnDataModel.targetColumns.first
         let primaryKeyColumn = columnDataModel.primaryKeyColumn
         let timeStampColumn = columnDataModel.timeStampColumn
-        predictedColumnName = "Predicted: " + (targetColumn?.name)!
         let joinColumns = columnDataModel.joinColumns
         var joinParam1: String = ""
         var joinParam2: String = ""

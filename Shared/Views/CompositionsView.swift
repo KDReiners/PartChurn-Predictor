@@ -144,7 +144,10 @@ struct CompositionsView: View {
                         .frame(width: 250)
                         .onChange(of: mlSelection) { newSelection in
                             self.mlDataTableProvider.regressorName = newSelection
-                            updateValuesView()
+                            self.mlDataTableProvider.filterViewProvider = nil
+                            self.mlDataTableProvider.updateTableProvider()
+                            self.mlDataTableProvider.loaded = false
+                            
                         }
                     }
                     Text("Resultset Statistics")

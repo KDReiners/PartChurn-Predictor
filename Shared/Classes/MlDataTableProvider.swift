@@ -52,7 +52,7 @@ class MlDataTableProvider: ObservableObject {
                 self.mlDataTableRaw = provider.mlDataTable
                 self.mlDataTable = self.mlDataTableRaw
                 if provider.targetValues.count > 0 {
-                    self.tableStatistics?.targetStatistics = self.resolveTargetValues(targetValues: provider.targetValues, predictedColumnName: provider.predictedColumnName!)
+                    self.tableStatistics?.targetStatistics = self.resolveTargetValues(targetValues: provider.targetValues, predictedColumnName: provider.predictedColumnName)
                 }
                 self.mlColumns = provider.orderedColNames
                 if self.filterViewProvider == nil {
@@ -92,11 +92,9 @@ class MlDataTableProvider: ObservableObject {
                 break
             }
             bestMatchCount =  bestTable.rows.count
-            i += 1/10000
+            i += 1/1000
         }
         print(bestMatchCount)
-        print(bestTable)
-        
         return nil
     }
     func buildMlDataTable() -> UnionResult {
