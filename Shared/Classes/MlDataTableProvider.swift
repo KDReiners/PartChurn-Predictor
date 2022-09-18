@@ -32,7 +32,7 @@ class MlDataTableProvider: ObservableObject {
         self.tableStatistics = TableStatistics()
     }
     internal func updateTableProviderForFiltering() {
-        tableProvider(mlDataTable: self.mlDataTable, orderedColums: mlColumns!, selectedColumns: mergedColumns) { provider in
+        tableProvider(mlDataTable: self.mlDataTable, orderedColums: mlColumns!, selectedColumns: mergedColumns, filter: true) { provider in
             DispatchQueue.main.async {
                 self.valuesTableProvider = provider
                 self.tableStatistics?.filteredRowCount = provider.mlDataTable.rows.count
@@ -166,12 +166,12 @@ class MlDataTableProvider: ObservableObject {
         
         return result
     }
-    func tableProvider(mlDataTable: MLDataTable, orderedColums: [String], selectedColumns: [Columns]?, prediction: Predictions? = nil, regressorName: String? = nil , returnCompletion: @escaping (ValuesTableProvider) -> () ) {
+    func tableProvider(mlDataTable: MLDataTable, orderedColums: [String], selectedColumns: [Columns]?, prediction: Predictions? = nil, regressorName: String? = nil, filter: Bool? = false , returnCompletion: @escaping (ValuesTableProvider) -> () ) {
         var result: ValuesTableProvider!
         do {
             let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
             sampler.async {
-                result =  ValuesTableProvider(mlDataTable: mlDataTable, orderedColNames: orderedColums, selectedColumns: selectedColumns,  prediction: prediction, regressorName: regressorName)
+                result =  ValuesTableProvider(mlDataTable: mlDataTable, orderedColNames: orderedColums, selectedColumns: selectedColumns,  prediction: prediction, regressorName: regressorName, filter: filter)
                 DispatchQueue.main.async {
                     self.gridItems = result.gridItems
                     self.customColumns = result.customColumns

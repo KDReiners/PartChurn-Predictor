@@ -35,7 +35,7 @@ class ValuesTableProvider: ObservableObject {
         self.orderedColNames = orderedColNames
         prepareView(orderedColNames: self.orderedColNames)
     }
-    init( mlDataTable: MLDataTable, orderedColNames: [String], selectedColumns: [Columns]?, prediction: Predictions? , regressorName: String?) {
+    init( mlDataTable: MLDataTable, orderedColNames: [String], selectedColumns: [Columns]?, prediction: Predictions? , regressorName: String?, filter: Bool? = false) {
         self.mlDataTable = mlDataTable
         self.orderedColNames = orderedColNames
         columnDataModel = ColumnsModel(columnsFilter: selectedColumns! )
@@ -51,8 +51,7 @@ class ValuesTableProvider: ObservableObject {
                 incorporatedPredition(selectedColumns: selectedColumns!)
             }
         } else {
-            
-            if self.mlDataTable.columnNames.contains(predictedColumnName) {
+            if self.mlDataTable.columnNames.contains(predictedColumnName) && filter != true {
                 self.mlDataTable.removeColumn(named: predictedColumnName)
                 for i in 0..<orderedColNames.count {
                     if orderedColNames[i] == predictedColumnName {

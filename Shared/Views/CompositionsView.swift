@@ -206,6 +206,10 @@ struct CompositionsView: View {
     private func train(regressorName: String?) {
         var trainer = Trainer(mlDataTableFactory: self.mlDataTableProvider)
         trainer.createModel(regressorName: $mlSelection.wrappedValue!)
-        updateValuesView()
+        self.mlDataTableProvider.filterViewProvider = nil
+        self.mlDataTableProvider.prediction = clusterSelection?.prediction
+        self.mlDataTableProvider.regressorName = mlSelection
+        self.mlDataTableProvider.updateTableProvider()
+        self.mlDataTableProvider.loaded = false
     }
 }
