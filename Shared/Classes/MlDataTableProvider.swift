@@ -135,7 +135,6 @@ class MlDataTableProvider: ObservableObject {
         }
         let unionResult = UnionResult(mlDataTable: self.mlDataTable, mlColumns:self.mlColumns!)
         self.mlDataTableRaw = mlDataTableRaw == nil ? mlDataTable: self.mlDataTableRaw
-        updateTableProvider()
         return unionResult
     }
     func filterMlDataTable(filterDict: Dictionary<String, String>) {

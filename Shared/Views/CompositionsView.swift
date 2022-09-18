@@ -116,7 +116,7 @@ struct CompositionsView: View {
                     self.mlDataTableProvider.orderedColumns = composer?.orderedColumns!
                     self.mlDataTableProvider.selectedColumns = newClusterSelection?.columns
                     self.mlDataTableProvider.prediction = newClusterSelection?.prediction
-                    updateValuesView()
+                    generateValuesView()
 
                 }
                 .padding()
@@ -144,9 +144,7 @@ struct CompositionsView: View {
                         .frame(width: 250)
                         .onChange(of: mlSelection) { newSelection in
                             self.mlDataTableProvider.regressorName = newSelection
-                            self.mlDataTableProvider.filterViewProvider = nil
-                            self.mlDataTableProvider.updateTableProvider()
-                            self.mlDataTableProvider.loaded = false
+                            generatePredictionView()
                             
                         }
                     }
@@ -194,22 +192,25 @@ struct CompositionsView: View {
             }.padding()
         }
     }
-    func updateValuesView() {
+    func generateValuesView() {
         self.mlDataTableProvider.mlDataTableRaw = nil
+        mlSelection = clusterSelection?.prediction == nil ? nil: mlSelection
         self.mlDataTableProvider.mlDataTable = self.mlDataTableProvider.buildMlDataTable().mlDataTable
-        //        self.mlDataTableProvider.updateTableProvider()
+        self.mlDataTableProvider.updateTableProvider()
         self.mlDataTableProvider.loaded = false
     }
     func savePredictions() {
         predictionsDataModel.savePredictions(model: self.model)
     }
+    fileprivate func generatePredictionView() {
+        self.mlDataTableProvider.filterViewProvider = nil
+        self.mlDataTableProvider.updateTableProvider()
+        self.mlDataTableProvider.loaded = false
+    }
+    
     private func train(regressorName: String?) {
         var trainer = Trainer(mlDataTableFactory: self.mlDataTableProvider)
         trainer.createModel(regressorName: $mlSelection.wrappedValue!)
-        self.mlDataTableProvider.filterViewProvider = nil
-        self.mlDataTableProvider.prediction = clusterSelection?.prediction
-        self.mlDataTableProvider.regressorName = mlSelection
-        self.mlDataTableProvider.updateTableProvider()
-        self.mlDataTableProvider.loaded = false
+        generatePredictionView()
     }
 }
