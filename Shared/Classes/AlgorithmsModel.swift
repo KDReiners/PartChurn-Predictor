@@ -59,7 +59,7 @@ public class AlgorithmsModel: Model<Algorithms> {
                         Section(header: Text(header.dataSetType ?? "Unbekannt").font(.title3)) {
                             ForEach(header.metricTypes!, id: \.metricType) { metric in
                                 HStack {
-                                    Text(metric.metricType!).font(.title3)
+                                    Text(metric.metricType!)
                                     Spacer()
                                     Text("\(metric.metricValue)")
                                 }

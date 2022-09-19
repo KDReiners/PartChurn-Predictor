@@ -62,3 +62,16 @@ extension NSObject {
         return mirror.children.compactMap{ $0.label }
     }
 }
+extension Int {
+    static func parse(from string: String) -> Int? {
+        return Int(string.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())
+    }
+}
+extension Double {
+    static func parse(from string: String) -> Double? {
+        let allowedCharset = CharacterSet
+            .decimalDigits
+            .union(CharacterSet(charactersIn: "+.-"))
+        return Double(string.components(separatedBy: allowedCharset.inverted).joined())
+    }
+}

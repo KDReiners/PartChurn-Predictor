@@ -11,11 +11,12 @@ struct CompositionsView: View {
     @ObservedObject var compositionDataModel: CompositionsModel
     @ObservedObject var predictionsDataModel = PredictionsModel()
     @ObservedObject var valuesTableProvider = ValuesTableProvider()
+    @ObservedObject var mlDataTableProvider: MlDataTableProvider
     @State var mlSelection: String? = nil
     @State var clusterSelection: PredictionsModel.predictionCluster?
     @State var selectedColumnCombination: [Columns]?
     @State var selectedTimeSeriesCombination: [String]?
-    @ObservedObject var mlDataTableProvider: MlDataTableProvider
+
     var valuesView: ValuesView?
     var unionResult: UnionResult!
     var model: Models
@@ -241,7 +242,7 @@ struct CompositionsView: View {
                                 }
                             }
                         }
-                    }.frame(width: 250)
+                    }.frame(minWidth: 250)
                 }
                 .padding()
                 VStack(alignment: .leading) {
@@ -258,7 +259,7 @@ struct CompositionsView: View {
                     AlgorithmsModel.valueList(prediction: (clusterSelection?.prediction), algorithmName: mlSelection ?? "unbekannt")
                     
                 }
-                .frame(minWidth: 200)
+                .frame(minWidth: 250)
                 .padding()
             }
             Divider()

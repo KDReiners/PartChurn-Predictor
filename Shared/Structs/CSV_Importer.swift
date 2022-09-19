@@ -57,7 +57,8 @@ struct CSV_Importer {
         }
         let batchProvider = BatchProvider()
         batchProvider.importValues(from: batchArray)
-        PersistenceController.shared.fixLooseRelations()
+
     }
+
 }
 

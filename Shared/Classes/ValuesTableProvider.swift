@@ -41,6 +41,7 @@ class ValuesTableProvider: ObservableObject {
         columnDataModel = ColumnsModel(columnsFilter: selectedColumns! )
         targetColumn = columnDataModel.targetColumns.first
         predictedColumnName = "Predicted: " + (targetColumn?.name)!
+        removePreditionColumns(predictionColumName: predictedColumnName, filter: filter)
         if regressorName != nil && prediction != nil {
             self.regressorName = regressorName
             self.predistion = prediction
@@ -51,19 +52,20 @@ class ValuesTableProvider: ObservableObject {
                 incorporatedPredition(selectedColumns: selectedColumns!)
             }
         } else {
-            if self.mlDataTable.columnNames.contains(predictedColumnName) && filter != true {
-                self.mlDataTable.removeColumn(named: predictedColumnName)
-                for i in 0..<orderedColNames.count {
-                    if orderedColNames[i] == predictedColumnName {
-                        self.orderedColNames.remove(at: i)
-                    }
-                }
-                
-            }
+           
         }
         prepareView(orderedColNames: self.orderedColNames)
     }
-    
+    private func removePreditionColumns(predictionColumName: String, filter: Bool? = false) {
+        if self.mlDataTable.columnNames.contains(predictedColumnName) && filter != true {
+            self.mlDataTable.removeColumn(named: predictedColumnName)
+            for i in 0..<orderedColNames.count {
+                if orderedColNames[i] == predictedColumnName {
+                    self.orderedColNames.remove(at: i)
+                }
+            }
+        }
+    }
     init(file: Files?) {
         self.coreDataML = CoreDataML(model: file?.files2model, files: file)
         self.mlDataTable = coreDataML.mlDataTable
@@ -92,7 +94,8 @@ class ValuesTableProvider: ObservableObject {
             let primaryKeyValue = mlRow[(primaryKeyColumn?.name)!]?.intValue
             targetValues[String((mlRow[ (targetColumn.name!)]?.intValue)!), default: 0] += 1
             let timeStampColumnValue = (mlRow[(timeStampColumn?.name)!]?.intValue)!
-            let predictedValue = predictFromRow(regressorName: self.regressorName!, mlRow: mlRow).featureValue(for: targetColumn!.name!)?.doubleValue
+            var predictedValue = predictFromRow(regressorName: self.regressorName!, mlRow: mlRow).featureValue(for: targetColumn!.name!)?.doubleValue
+            predictedValue = (predictedValue! * 10000).rounded() / 10000
             let newPredictionEntry = PredictionEntry(primaryKey: primaryKeyValue!, timeSeriesValue: timeStampColumnValue, predictedValue: predictedValue!)
             subEntries.append(newPredictionEntry)
         }
@@ -131,8 +134,8 @@ class ValuesTableProvider: ObservableObject {
             newCustomColumn.alignment = .trailing
             newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
         case MLDataValue.ValueType.double:
-            mlDataValueFormatter.minimumFractionDigits = 2
-            mlDataValueFormatter.maximumFractionDigits = 2
+            mlDataValueFormatter.minimumFractionDigits = 4
+            mlDataValueFormatter.maximumFractionDigits = 4
             mlDataValueFormatter.hasThousandSeparators = true
             rows = Array.init(mlDataTable[columnName!].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.doubleValue!)) }))
             newCustomColumn.alignment = .trailing

@@ -64,6 +64,9 @@ struct ImportView: View {
                         CSV_Importer.read(url: self.url, modelName: (selection?.name)!)
                     }
                 }.disabled(selection == nil)
+                Button("fix Relations") {
+                    PersistenceController.shared.fixLooseRelations()
+                }
             }.padding()
         }
     }

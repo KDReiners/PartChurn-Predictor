@@ -125,6 +125,7 @@ class MlDataTableProvider: ObservableObject {
     }
     // MARK: - async call for statistics
     func statisticsProvider(targetValues: [String : Int], predictedColumnName: String, completion: @escaping (TargetStatistics) -> ()) {
+        self.tableStatistics?.targetStatistics = [TargetStatistics]()
         do {
             let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
             sampler.async {
@@ -157,13 +158,14 @@ class MlDataTableProvider: ObservableObject {
             predictionMask = mlPredictionColumn <= j && mlTargetColumn == 0
             breakMask = mlPredictionColumn <= j && mlTargetColumn != 0
             targetInstancesCount = mlDataTable[predictionMask].rows.count
-            let foundDirty = self.mlDataTable[breakMask].rows.count
+            var foundDirty = self.mlDataTable[breakMask].rows.count
+            let devisor = foundDirty == 0 ? 1: foundDirty
             print("nearestLowValue: " + String(nearestLowValue))
             print("nearestHighValue: " + String(nearestHighValue))
-            if Double(targetInstancesCount / foundDirty) > relationValueAtOptimum {
+            if Double(targetInstancesCount / devisor) > relationValueAtOptimum {
                 targetsAtOptimum = targetInstancesCount
                 dirtiesAtOptimum = foundDirty
-                relationValueAtOptimum = Double(targetInstancesCount / foundDirty)
+                relationValueAtOptimum = Double(targetInstancesCount / devisor)
                 predictionValueAtOptimum = j
             }
             if nearestHighValue - nearestLowValue > 1 {
@@ -240,12 +242,26 @@ class MlDataTableProvider: ObservableObject {
     func setFilterForColumn(mlDataTable: MLDataTable, columnName: String, value: String) ->MLDataTable {
         var result = mlDataTable
         let column = mlDataTable[columnName]
+        let mlFilterColumn =  mlDataTable[columnName]
+        var formula: String = ""
+        if value.count > 1 {
+            let index = value.index(value.startIndex, offsetBy: 2)
+            let formulaTest = value.prefix(upTo: index)
+            let equalExtension = formulaTest.contains("=") ? "=": ""
+            if formulaTest.contains(">") {
+                formula = ">" + equalExtension
+            }
+            if formulaTest.contains("<") {
+                formula = "<" + equalExtension
+            }
+        }
         switch column.type {
         case MLDataValue.ValueType.int:
-            result = mlDataTable[mlDataTable[columnName] == Int(value)!]
+            let filterMask = constructFilterMask(mlColumn: mlFilterColumn, formula: formula, value: Int.parse(from: value)!)
+            result = mlDataTable[filterMask]
         case MLDataValue.ValueType.double:
-            result = mlDataTable[mlDataTable[columnName] > Double(value)! - 0.01]
-            result = result[result[columnName] < Double(value)! + 0.01]
+            let filterMask = constructFilterMask(mlColumn: mlFilterColumn, formula: formula, value: Double.parse(from: value)!)
+            result = mlDataTable[filterMask]
         case MLDataValue.ValueType.string:
             result = mlDataTable[mlDataTable[columnName] == value]
         default:
@@ -254,6 +270,27 @@ class MlDataTableProvider: ObservableObject {
         
         return result
     }
+    func constructFilterMask(mlColumn: MLUntypedColumn, formula: String, value: Any) -> MLUntypedColumn {
+        var result: MLUntypedColumn!
+        switch mlColumn.type {
+        case MLDataValue.ValueType.int:
+            if formula == ">" { result = mlColumn > value as! Int}
+            if formula == ">=" { result = mlColumn >= value as! Int}
+            if formula == "<" { result = mlColumn < value as! Int}
+            if formula == "<=" { result = mlColumn <= value as! Int}
+            if formula.isEmpty { result = mlColumn == value as! Int}
+        case MLDataValue.ValueType.double:
+            if formula == ">" { result = mlColumn > value as! Double}
+            if formula == ">=" { result = mlColumn >= value as! Double}
+            if formula == "<" { result = mlColumn < value as! Double}
+            if formula == "<=" { result = mlColumn <= value as! Double}
+            if formula.isEmpty { result = mlColumn == value as! Double}
+            
+        default: print("error setting table filter")
+        }
+        return result
+    }
+    
     struct TableStatistics {
         var absolutRowCount = 0
         var filteredRowCount = 0
