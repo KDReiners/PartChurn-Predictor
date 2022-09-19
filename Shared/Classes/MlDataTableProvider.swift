@@ -136,7 +136,7 @@ class MlDataTableProvider: ObservableObject {
     // MARK: - related statistics provider
     func resolveTargetValues(targetValues: [String: Int], predictedColumnName: String) -> TargetStatistics? {
         let mlTargetColumn = mlDataTable["ALIVE"]
-        var targetStatistic: TargetStatistics
+        var targetStatistic = TargetStatistics()
         var predictionMask =  mlTargetColumn == 0
         var breakMask = mlTargetColumn != 0
         let  mlPredictionColumn = mlDataTable[predictedColumnName]
@@ -144,11 +144,10 @@ class MlDataTableProvider: ObservableObject {
         let targetCount = predictionTable.rows.count
         let otherCount = self.mlDataTable.rows.count - targetCount
         let threshold = (0.1 * Double(targetCount)).rounded()
-        targetStatistic = find(trial: (targetCount / 2), nearestHighValue: targetCount)
+        find(trial: (targetCount / 2), nearestHighValue: targetCount, targetStatistic: &targetStatistic)
         targetStatistic.targetPopulation = targetCount
-        func find(trial: Int, nearestLowValue: Int = 0, nearestHighValue: Int = 0, bestRelationValue: Double = 0, bestRelationPredictionValue: Double = 0 ) -> TargetStatistics{
+        func find(trial: Int, nearestLowValue: Int = 0, nearestHighValue: Int = 0, bestRelationValue: Double = 0, bestRelationPredictionValue: Double = 0, targetStatistic: inout TargetStatistics ){
             var value =   predictionTable.rows[Int(trial)][predictedColumnName]?.doubleValue
-            var targetStatistic = TargetStatistics()
             var lastBestRelationValue = bestRelationValue
             var lastBestPredictionValue = bestRelationPredictionValue
             var foundTargetsAtOptimum = 0
@@ -168,22 +167,24 @@ class MlDataTableProvider: ObservableObject {
             }
             if nearestHighValue - nearestLowValue > 1 {
                 if foundDirty < Int(threshold) {
-                    find(trial: (nearestHighValue + trial) / 2, nearestLowValue: trial, nearestHighValue: nearestHighValue, bestRelationValue: lastBestRelationValue, bestRelationPredictionValue: lastBestPredictionValue)
+                    find(trial: (nearestHighValue + trial) / 2, nearestLowValue: trial, nearestHighValue: nearestHighValue, bestRelationValue: lastBestRelationValue, bestRelationPredictionValue: lastBestPredictionValue, targetStatistic: &targetStatistic)
                 } else {
-                    find(trial: (trial + nearestLowValue) / 2, nearestLowValue: nearestLowValue, nearestHighValue: trial, bestRelationValue: lastBestRelationValue, bestRelationPredictionValue: lastBestPredictionValue)
+                    find(trial: (trial + nearestLowValue) / 2, nearestLowValue: nearestLowValue, nearestHighValue: trial, bestRelationValue: lastBestRelationValue, bestRelationPredictionValue: lastBestPredictionValue, targetStatistic: &targetStatistic)
                 }
+            } else {
+                targetStatistic.targetValue = 0
+                targetStatistic.foundTargetsAtThreshold = foundClean
+                targetStatistic.foundDirtiesAtThreshold = foundDirty
             }
             breakMask = mlPredictionColumn <= lastBestPredictionValue && mlTargetColumn != 0
-            targetStatistic.targetValue = 0
+
             targetStatistic.instancesCount = foundClean
             targetStatistic.threshold = threshold
             targetStatistic.lastBestRelationValue = lastBestRelationValue
             targetStatistic.lastBestPredictionValue = lastBestPredictionValue
-            targetStatistic.foundTargetsAtThreshold = foundClean
-            targetStatistic.foundDirtiesAtThreshold = foundDirty
+
             targetStatistic.foundTargetsAtOptimum = foundTargetsAtOptimum
             targetStatistic.foundDirtiesAtOptimum = foundDirtiesAtOptimum
-            return targetStatistic
         }
         return targetStatistic
     }
