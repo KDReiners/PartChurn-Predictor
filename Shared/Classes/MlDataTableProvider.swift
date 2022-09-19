@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import CreateML
 class MlDataTableProvider: ObservableObject {
+    // MARK: Init
     @Published var loaded = false
     @Published var gridItems: [GridItem]!
     @Published var valuesTableProvider: ValuesTableProvider?
@@ -31,6 +32,7 @@ class MlDataTableProvider: ObservableObject {
     init() {
         self.tableStatistics = TableStatistics()
     }
+    // MARK: - Async Calls for CoreMl
     internal func updateTableProviderForFiltering() {
         tableProvider(mlDataTable: self.mlDataTable, orderedColums: mlColumns!, selectedColumns: mergedColumns, filter: true) { provider in
             DispatchQueue.main.async {
@@ -52,7 +54,8 @@ class MlDataTableProvider: ObservableObject {
                 self.mlDataTableRaw = provider.mlDataTable
                 self.mlDataTable = self.mlDataTableRaw
                 if provider.targetValues.count > 0 {
-                    self.tableStatistics?.targetStatistics = self.resolveTargetValues(targetValues: provider.targetValues, predictedColumnName: provider.predictedColumnName)
+//                    self.tableStatistics?.targetStatistics =
+                    self.updateStatisticsProvider(targetValues: provider.targetValues, predictedColumnName: provider.predictedColumnName)
                 }
                 self.mlColumns = provider.orderedColNames
                 if self.filterViewProvider == nil {
@@ -62,6 +65,23 @@ class MlDataTableProvider: ObservableObject {
             }
         }
     }
+    // MARK: - related TableProvider coreMl
+    func tableProvider(mlDataTable: MLDataTable, orderedColums: [String], selectedColumns: [Columns]?, prediction: Predictions? = nil, regressorName: String? = nil, filter: Bool? = false , returnCompletion: @escaping (ValuesTableProvider) -> () ) {
+        var result: ValuesTableProvider!
+        do {
+            let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
+            sampler.async {
+                result =  ValuesTableProvider(mlDataTable: mlDataTable, orderedColNames: orderedColums, selectedColumns: selectedColumns,  prediction: prediction, regressorName: regressorName, filter: filter)
+                DispatchQueue.main.async {
+                    self.gridItems = result.gridItems
+                    self.customColumns = result.customColumns
+                    self.numRows = self.customColumns.count > 0 ? self.customColumns[0].rows.count:0
+                    returnCompletion(result as ValuesTableProvider)
+                }
+            }
+        }
+    }
+    // MARK: - Async call for file inspection
     func updateTableProvider(file: Files) {
         let columns = file.file2columns
         self.mlColumns = (columns?.allObjects as! [Columns]).sorted(by: { $0.orderno < $1.orderno }).map({ $0.name! })
@@ -76,25 +96,81 @@ class MlDataTableProvider: ObservableObject {
             }
         }
     }
-    func resolveTargetValues(targetValues: [String: Int], predictedColumnName: String) -> [TargetStatistics]? {
-        let minimum = mlDataTable[predictedColumnName].doubles?.min()
-        let maximum = mlDataTable[predictedColumnName].doubles?.max()
-        var bestMatchCount = 0
-        var bestTable = MLDataTable()
-        let  mlPredictionColumn = mlDataTable[predictedColumnName]
-        let mlTargetColumn = mlDataTable["ALIVE"]
-        var i  = (minimum! * 1000).rounded() / 1000
-        while i < maximum! {
-            let predictionMask = mlPredictionColumn <= i && mlTargetColumn == 0
-            let breakMask = mlPredictionColumn <= i && mlTargetColumn != 0
-            bestTable = self.mlDataTable[predictionMask]
-            if self.mlDataTable[breakMask].rows.count > 0 {
-                break
+    // MARK: - related Tableprovider file
+    func tableProvider(file: Files, returnCompletion: @escaping (ValuesTableProvider) -> () ) {
+        var result: ValuesTableProvider!
+        do {
+            let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
+            sampler.async {
+                result =  ValuesTableProvider(file: file)
+                DispatchQueue.main.async {
+                    self.mlDataTable = result.mlDataTable
+                    self.gridItems = result.gridItems
+                    self.customColumns = result.customColumns
+                    self.numRows = self.customColumns.count > 0 ? self.customColumns[0].rows.count:0
+                    self.mlDataTableRaw = self.mlDataTableRaw == nil ? self.mlDataTable: self.mlDataTableRaw
+                    returnCompletion(result as ValuesTableProvider)
+                }
             }
-            bestMatchCount =  bestTable.rows.count
-            i += 1/1000
         }
-        print(bestMatchCount)
+    }
+    func updateStatisticsProvider(targetValues: [String : Int], predictedColumnName: String) {
+        if self.regressorName != nil {
+            statisticsProvider(targetValues: targetValues, predictedColumnName: predictedColumnName) { provider in
+                DispatchQueue.main.async { [self] in
+                    self.tableStatistics?.absolutRowCount = provider
+                }
+            }
+        }
+    }
+    // MARK: - async call for statistics
+    func statisticsProvider(targetValues: [String : Int], predictedColumnName: String, completion: @escaping (Int) -> ()) {
+        do {
+            let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
+            sampler.async {
+                self.resolveTargetValues(targetValues: targetValues, predictedColumnName: predictedColumnName)
+                completion(22)
+            }
+        }
+    }
+    // MARK: - related statistics provider
+    func resolveTargetValues(targetValues: [String: Int], predictedColumnName: String) -> [TargetStatistics]? {
+        let mlTargetColumn = mlDataTable["ALIVE"]
+        var predictionMask =  mlTargetColumn == 0
+        var breakMask = mlTargetColumn != 0
+        let  mlPredictionColumn = mlDataTable[predictedColumnName]
+        let predictionTable = mlDataTable[predictionMask].sort(columnNamed: predictedColumnName, byIncreasingOrder: true)
+        let targetCount = predictionTable.rows.count
+        let otherCount = self.mlDataTable.rows.count - targetCount
+        let threshold = (0.1 * Double(targetCount)).rounded()
+        find(trial: (targetCount / 2), nearestHighValue: targetCount)
+        func find(trial: Int, nearestLowValue: Int = 0, nearestHighValue: Int = 0, bestRelationValue: Double = 0, bestRelationPredictionValue: Double = 0 ) {
+            var value =   predictionTable.rows[Int(trial)][predictedColumnName]?.doubleValue
+            var lastBestRelationValue = bestRelationValue
+            var lastBestPredictionValue = bestRelationPredictionValue
+            let j = (value! * 10000).rounded() / 10000
+            predictionMask = mlPredictionColumn <= j && mlTargetColumn == 0
+            breakMask = mlPredictionColumn <= j && mlTargetColumn != 0
+            let foundClean = mlDataTable[predictionMask].rows.count
+            let foundDirty = self.mlDataTable[breakMask].rows.count
+            print("nearestLowValue: " + String(nearestLowValue))
+            print("nearestHighValue: " + String(nearestHighValue))
+            if Double(foundClean / foundDirty) > lastBestRelationValue {
+                lastBestRelationValue = Double(foundClean / foundDirty)
+                lastBestPredictionValue = j
+            }
+            print("lastBestRelation: " + String(lastBestRelationValue))
+            if nearestHighValue - nearestLowValue > 1 {
+                if foundDirty < Int(threshold) {
+                    find(trial: (nearestHighValue + trial) / 2, nearestLowValue: trial, nearestHighValue: nearestHighValue, bestRelationValue: lastBestRelationValue, bestRelationPredictionValue: lastBestPredictionValue)
+                } else {
+                    find(trial: (trial + nearestLowValue) / 2, nearestLowValue: nearestLowValue, nearestHighValue: trial, bestRelationValue: lastBestRelationValue, bestRelationPredictionValue: lastBestPredictionValue)
+                }
+            }
+            breakMask = mlPredictionColumn <= lastBestPredictionValue && mlTargetColumn != 0
+            let bestPredictionValuePollution = self.mlDataTable[breakMask].rows.count
+            print(nearestLowValue)
+        }
         return nil
     }
     func buildMlDataTable() -> UnionResult {
@@ -164,38 +240,6 @@ class MlDataTableProvider: ObservableObject {
         }
         
         return result
-    }
-    func tableProvider(mlDataTable: MLDataTable, orderedColums: [String], selectedColumns: [Columns]?, prediction: Predictions? = nil, regressorName: String? = nil, filter: Bool? = false , returnCompletion: @escaping (ValuesTableProvider) -> () ) {
-        var result: ValuesTableProvider!
-        do {
-            let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
-            sampler.async {
-                result =  ValuesTableProvider(mlDataTable: mlDataTable, orderedColNames: orderedColums, selectedColumns: selectedColumns,  prediction: prediction, regressorName: regressorName, filter: filter)
-                DispatchQueue.main.async {
-                    self.gridItems = result.gridItems
-                    self.customColumns = result.customColumns
-                    self.numRows = self.customColumns.count > 0 ? self.customColumns[0].rows.count:0
-                    returnCompletion(result as ValuesTableProvider)
-                }
-            }
-        }
-    }
-    func tableProvider(file: Files, returnCompletion: @escaping (ValuesTableProvider) -> () ) {
-        var result: ValuesTableProvider!
-        do {
-            let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
-            sampler.async {
-                result =  ValuesTableProvider(file: file)
-                DispatchQueue.main.async {
-                    self.mlDataTable = result.mlDataTable
-                    self.gridItems = result.gridItems
-                    self.customColumns = result.customColumns
-                    self.numRows = self.customColumns.count > 0 ? self.customColumns[0].rows.count:0
-                    self.mlDataTableRaw = self.mlDataTableRaw == nil ? self.mlDataTable: self.mlDataTableRaw
-                    returnCompletion(result as ValuesTableProvider)
-                }
-            }
-        }
     }
     struct TableStatistics {
         var absolutRowCount = 0
