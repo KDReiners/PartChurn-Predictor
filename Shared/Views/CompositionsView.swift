@@ -153,65 +153,89 @@ struct CompositionsView: View {
                         .font(.title)
                         .padding(.top, 15)
                     List {
-                        VStack(alignment: .leading) {
-                            HStack {
-                                Text("All rows count")
-                                Spacer()
-                                let countNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.absolutRowCount)
-                                Text(BaseServices.intFormatter.string(from: countNumber)!)
-                            }
-                            HStack {
-                                Text("Filtered rows count")
-                                Spacer()
-                                let countNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.filteredRowCount)
-                                Text(BaseServices.intFormatter.string(from: countNumber)!)
+                        VStack {
+                            Group {
+                                Text("Table").font(.title3)
+                                HStack {
+                                    Text("All rows count")
+                                    Spacer()
+                                    let countNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.absolutRowCount)
+                                    Text(BaseServices.intFormatter.string(from: countNumber)!)
+                                }
+                                HStack {
+                                    Text("Filtered rows count")
+                                    Spacer()
+                                    let countNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.filteredRowCount)
+                                    Text(BaseServices.intFormatter.string(from: countNumber)!)
+                                }
                             }
                             if (mlDataTableProvider.tableStatistics?.targetStatistics.count)! > 0 {
                                 Divider()
                                 VStack {
-                                    HStack {
-                                        Text("TargetValue")
-                                        Spacer()
-                                        let targetNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].targetValue)
-                                        Text(BaseServices.intFormatter.string(from: targetNumber)!)
-                                    }
-                                    HStack {
-                                        Text("TargetPopulation")
-                                        Spacer()
-                                        let targetPopulationNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].targetPopulation)
-                                        Text(BaseServices.intFormatter.string(from: targetPopulationNumber)!)
-                                    }
-                                    Divider()
-                                    HStack {
-                                        Text("Targets at Optimum: ")
-                                        Spacer()
-                                        let targetsAtOptimumNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].foundTargetsAtOptimum)
-                                        Text(BaseServices.intFormatter.string(from: targetsAtOptimumNumber)!)
-                                    }
-                                    HStack {
-                                        Text("Dirties at Optimum: ")
-                                        Spacer()
-                                        let dirtiesAtOptimumNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].foundDirtiesAtOptimum)
-                                        Text(BaseServices.intFormatter.string(from: dirtiesAtOptimumNumber)!)
+                                    Group {
+                                        Text("General").font(.title3)
+                                        HStack {
+                                            Text("TargetValue")
+                                            Spacer()
+                                            let targetNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].targetValue)
+                                            Text(BaseServices.intFormatter.string(from: targetNumber)!)
+                                        }
+                                        HStack {
+                                            Text("TargetPopulation")
+                                            Spacer()
+                                            let targetPopulationNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].targetPopulation)
+                                            Text(BaseServices.intFormatter.string(from: targetPopulationNumber)!)
+                                        }
                                     }
                                     Divider()
-                                    HStack {
-                                        Text("Threshold")
-                                        Spacer()
-                                        let thresholdNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].threshold)
-                                        Text(BaseServices.intFormatter.string(from: thresholdNumber)!)
+                                    Group {
+                                        Text("Optimum").font(.title3)
+                                        HStack {
+                                            Text("Targets: ")
+                                            Spacer()
+                                            let targetsAtOptimumNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].targetsAtOptimum)
+                                            Text(BaseServices.intFormatter.string(from: targetsAtOptimumNumber)!)
+                                        }
+                                        HStack {
+                                            Text("Dirties: ")
+                                            Spacer()
+                                            let dirtiesAtOptimumNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].dirtiesAtOptimum)
+                                            Text(BaseServices.intFormatter.string(from: dirtiesAtOptimumNumber)!)
+                                        }
+                                        HStack {
+                                            Text("PredictionValue: ")
+                                            Spacer()
+                                            let predictionValueAtOptimumNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].predictionValueAtOptimum)
+                                            Text(BaseServices.doubleFormatter.string(from: predictionValueAtOptimumNumber)!)
+                                        }
                                     }
-                                    HStack {
-                                        Text("Targets at Threshold: ")
-                                        Spacer()
-                                        let targetsAtThresholdNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].foundTargetsAtThreshold)
-                                        Text(BaseServices.intFormatter.string(from: targetsAtThresholdNumber)!)
-                                    }
-                                    HStack {
-                                        Text("Dirties at Threshold: ")
-                                        Spacer()
-                                        let dirtiesAtThresholdNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].foundDirtiesAtThreshold)
-                                        Text(BaseServices.intFormatter.string(from: dirtiesAtThresholdNumber)!)
+                                    Divider()
+                                    Group {
+                                        Text("Threshold").font(.title3)
+                                        HStack {
+                                            Text("Max Dirties:")
+                                            Spacer()
+                                            let thresholdNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].threshold)
+                                            Text(BaseServices.intFormatter.string(from: thresholdNumber)!)
+                                        }
+                                        HStack {
+                                            Text("Targets: ")
+                                            Spacer()
+                                            let targetsAtThresholdNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].targetsAtThreshold)
+                                            Text(BaseServices.intFormatter.string(from: targetsAtThresholdNumber)!)
+                                        }
+                                        HStack {
+                                            Text("Dirties: ")
+                                            Spacer()
+                                            let dirtiesAtThresholdNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].dirtiesAtThreshold)
+                                            Text(BaseServices.intFormatter.string(from: dirtiesAtThresholdNumber)!)
+                                        }
+                                        HStack {
+                                            Text("PredictionValue: ")
+                                            Spacer()
+                                            let predictionValueAtThresholdNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].predictionValueAtThreshold)
+                                            Text(BaseServices.doubleFormatter.string(from: predictionValueAtThresholdNumber)!)
+                                        }
                                     }
                                     
                                 }

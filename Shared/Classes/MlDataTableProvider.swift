@@ -128,7 +128,7 @@ class MlDataTableProvider: ObservableObject {
         do {
             let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
             sampler.async {
-                var result = self.resolveTargetValues(targetValues: targetValues, predictedColumnName: predictedColumnName)
+                let result = self.resolveTargetValues(targetValues: targetValues, predictedColumnName: predictedColumnName)
                 completion(result!)
             }
         }
@@ -142,49 +142,47 @@ class MlDataTableProvider: ObservableObject {
         let  mlPredictionColumn = mlDataTable[predictedColumnName]
         let predictionTable = mlDataTable[predictionMask].sort(columnNamed: predictedColumnName, byIncreasingOrder: true)
         let targetCount = predictionTable.rows.count
-        let otherCount = self.mlDataTable.rows.count - targetCount
         let threshold = (0.1 * Double(targetCount)).rounded()
         find(trial: (targetCount / 2), nearestHighValue: targetCount, targetStatistic: &targetStatistic)
         targetStatistic.targetPopulation = targetCount
         func find(trial: Int, nearestLowValue: Int = 0, nearestHighValue: Int = 0, bestRelationValue: Double = 0, bestRelationPredictionValue: Double = 0, targetStatistic: inout TargetStatistics ){
-            var value =   predictionTable.rows[Int(trial)][predictedColumnName]?.doubleValue
-            var lastBestRelationValue = bestRelationValue
-            var lastBestPredictionValue = bestRelationPredictionValue
-            var foundTargetsAtOptimum = 0
-            var foundDirtiesAtOptimum = 0
+            let value =   predictionTable.rows[Int(trial)][predictedColumnName]?.doubleValue
+            var relationValueAtOptimum = bestRelationValue
+            ///  Values for Statistic
+            var predictionValueAtOptimum = bestRelationPredictionValue
+            var targetsAtOptimum = 0
+            var dirtiesAtOptimum = 0
+            var targetInstancesCount = 0
             let j = (value! * 10000).rounded() / 10000
             predictionMask = mlPredictionColumn <= j && mlTargetColumn == 0
             breakMask = mlPredictionColumn <= j && mlTargetColumn != 0
-            let foundClean = mlDataTable[predictionMask].rows.count
+            targetInstancesCount = mlDataTable[predictionMask].rows.count
             let foundDirty = self.mlDataTable[breakMask].rows.count
             print("nearestLowValue: " + String(nearestLowValue))
             print("nearestHighValue: " + String(nearestHighValue))
-            if Double(foundClean / foundDirty) > lastBestRelationValue {
-                foundTargetsAtOptimum = foundClean
-                foundDirtiesAtOptimum = foundDirty
-                lastBestRelationValue = Double(foundClean / foundDirty)
-                lastBestPredictionValue = j
+            if Double(targetInstancesCount / foundDirty) > relationValueAtOptimum {
+                targetsAtOptimum = targetInstancesCount
+                dirtiesAtOptimum = foundDirty
+                relationValueAtOptimum = Double(targetInstancesCount / foundDirty)
+                predictionValueAtOptimum = j
             }
             if nearestHighValue - nearestLowValue > 1 {
                 if foundDirty < Int(threshold) {
-                    find(trial: (nearestHighValue + trial) / 2, nearestLowValue: trial, nearestHighValue: nearestHighValue, bestRelationValue: lastBestRelationValue, bestRelationPredictionValue: lastBestPredictionValue, targetStatistic: &targetStatistic)
+                    find(trial: (nearestHighValue + trial) / 2, nearestLowValue: trial, nearestHighValue: nearestHighValue, bestRelationValue: relationValueAtOptimum, bestRelationPredictionValue: predictionValueAtOptimum, targetStatistic: &targetStatistic)
                 } else {
-                    find(trial: (trial + nearestLowValue) / 2, nearestLowValue: nearestLowValue, nearestHighValue: trial, bestRelationValue: lastBestRelationValue, bestRelationPredictionValue: lastBestPredictionValue, targetStatistic: &targetStatistic)
+                    find(trial: (trial + nearestLowValue) / 2, nearestLowValue: nearestLowValue, nearestHighValue: trial, bestRelationValue: relationValueAtOptimum, bestRelationPredictionValue: predictionValueAtOptimum, targetStatistic: &targetStatistic)
                 }
             } else {
                 targetStatistic.targetValue = 0
-                targetStatistic.foundTargetsAtThreshold = foundClean
-                targetStatistic.foundDirtiesAtThreshold = foundDirty
+                targetStatistic.targetsAtThreshold = targetInstancesCount
+                targetStatistic.dirtiesAtThreshold = foundDirty
+                targetStatistic.predictionValueAtThreshold = j
             }
-            breakMask = mlPredictionColumn <= lastBestPredictionValue && mlTargetColumn != 0
-
-            targetStatistic.instancesCount = foundClean
+            targetStatistic.targetInstancesCount = targetInstancesCount
             targetStatistic.threshold = threshold
-            targetStatistic.lastBestRelationValue = lastBestRelationValue
-            targetStatistic.lastBestPredictionValue = lastBestPredictionValue
-
-            targetStatistic.foundTargetsAtOptimum = foundTargetsAtOptimum
-            targetStatistic.foundDirtiesAtOptimum = foundDirtiesAtOptimum
+            targetStatistic.predictionValueAtOptimum = predictionValueAtOptimum
+            targetStatistic.targetsAtOptimum = targetsAtOptimum
+            targetStatistic.dirtiesAtOptimum = dirtiesAtOptimum
         }
         return targetStatistic
     }
@@ -265,14 +263,14 @@ class MlDataTableProvider: ObservableObject {
     struct TargetStatistics {
         var targetValue = 0
         var targetPopulation = 0
-        var instancesCount = 0
+        var targetInstancesCount = 0
         var threshold: Double = 0.00000
-        var lastBestRelationValue: Double = 0
-        var lastBestPredictionValue: Double = 0
-        var foundTargetsAtOptimum: Int = 0
-        var foundDirtiesAtOptimum: Int = 0
-        var foundTargetsAtThreshold = 0
-        var foundDirtiesAtThreshold = 0
+        var predictionValueAtOptimum: Double = 0
+        var targetsAtOptimum: Int = 0
+        var dirtiesAtOptimum: Int = 0
+        var predictionValueAtThreshold: Double = 0
+        var targetsAtThreshold = 0
+        var dirtiesAtThreshold = 0
     }
 }
 struct UnionResult {
