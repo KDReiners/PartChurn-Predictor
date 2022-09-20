@@ -15,13 +15,20 @@ public struct Trainer {
     var file: Files?
     var model: Models!
     var targetColumnName: String!
+    var timeSeriesColumnName: String?
     var regressor: MLRegressor!
     var prediction: Predictions!
     init(mlDataTableFactory: MlDataTableProvider) {
         self.mlDataTableProvider = mlDataTableFactory
         self.regressorTable = self.mlDataTableProvider.mlDataTable
         self.targetColumnName = self.mlDataTableProvider.orderedColumns.first(where: { $0.istarget == 1})?.name!
-        
+        self.timeSeriesColumnName = self.mlDataTableProvider.orderedColumns.first(where: { $0.istimeseries == 1})?.name
+        if self.timeSeriesColumnName != nil {
+            let timeSeriesColumn = self.regressorTable![timeSeriesColumnName!]
+            let seriesEnd = timeSeriesColumn.ints?.max()
+            let endMask = timeSeriesColumn < seriesEnd!
+            self.regressorTable = self.regressorTable![endMask]
+        }
     }
     init(model: Models, file: Files? = nil) {
         self.model = model
@@ -69,7 +76,7 @@ public struct Trainer {
                 }
             }()
         case "MLBoostedTreeRegressor":
-            let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 100, maxIterations: 5000, minLossReduction: 0, minChildWeight: 0.1, randomSeed: 42, stepSize: 0.3, earlyStoppingRounds: nil, rowSubsample: 1.0, columnSubsample: 1.0)
+            let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 100, maxIterations: 100, minLossReduction: 0, minChildWeight: 0.1, randomSeed: 42, stepSize: 0.3, earlyStoppingRounds: nil, rowSubsample: 1.0, columnSubsample: 1.0)
             regressor =  {
                 do {
                     return try MLRegressor.boostedTree(MLBoostedTreeRegressor(trainingData: regressorTrainingTable,
