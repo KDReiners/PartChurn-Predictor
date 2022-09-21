@@ -14,6 +14,7 @@ struct ImportView: View {
     @State var filename = "Filename"
     @State var url: URL!
     @State var showFileChooser = false
+    @State var importRunning = false
     var demoData = ["Phil Swanson"]
     @ViewBuilder
     var body: some View {
@@ -59,11 +60,12 @@ struct ImportView: View {
                     }
                 }
                 Button("Import") {
+                    importRunning = true
                     Task {
-                        await
-                        CSV_Importer.read(url: self.url, modelName: (selection?.name)!)
+                        await CSV_Importer.read(url: self.url, modelName: (selection?.name)!)
+                        importRunning = false
                     }
-                }.disabled(selection == nil)
+                }.disabled(selection == nil || importRunning == true)
                 Button("fix Relations") {
                     PersistenceController.shared.fixLooseRelations()
                 }

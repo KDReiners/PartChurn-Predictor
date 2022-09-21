@@ -78,7 +78,10 @@ class PersistenceController {
             let fetchRequest: NSFetchRequest<Values> = Values.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "idcolumn != nil")
             let fetchedResults =  try self.container.viewContext.fetch(fetchRequest)
+            var i = 1
+            print("Number of records: " + String(fetchedResults.count))
             for result in fetchedResults  as [Values] {
+                print("working on: " + String(i))
                 let idModel: NSManagedObjectID = getManagedObjectID(stringValue: result.idmodel!)
                 let idFile: NSManagedObjectID = getManagedObjectID(stringValue: result.idfile!)
                 let idColumn: NSManagedObjectID = getManagedObjectID(stringValue: result.idcolumn!)
@@ -91,6 +94,7 @@ class PersistenceController {
                 result.idfile = nil
                 result.value2column = column
                 result.idcolumn = nil
+                i += 1
             }
             do {
                 try self.container.viewContext.save()
