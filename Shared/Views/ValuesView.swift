@@ -24,6 +24,9 @@ struct ValuesView: View {
     }
     init(file: Files) {
         self.mlDataTableFactory = MlDataTableProvider()
+        self.mlDataTableFactory.orderedColumns = file.file2columns?.allObjects as? [Columns]
+        self.mlDataTableFactory.selectedColumns = self.mlDataTableFactory.orderedColumns
+        self.mlDataTableFactory.mergedColumns = self.mlDataTableFactory.orderedColumns
         self.mlDataTableFactory.updateTableProvider(file: file)
     
     }
@@ -81,10 +84,3 @@ struct ValuesView: View {
         .padding(.bottom)
     }
 }
-
-//struct ValuesView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        return ValuesView(file: FilesModel().items.first!)
-//    }
-//}
-//

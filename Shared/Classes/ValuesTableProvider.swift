@@ -40,8 +40,10 @@ class ValuesTableProvider: ObservableObject {
         self.orderedColNames = orderedColNames
         columnDataModel = ColumnsModel(columnsFilter: selectedColumns! )
         targetColumn = columnDataModel.targetColumns.first
-        predictedColumnName = "Predicted: " + (targetColumn?.name)!
-        removePreditionColumns(predictionColumName: predictedColumnName, filter: filter)
+        if targetColumn != nil {
+            predictedColumnName = "Predicted: " + (targetColumn?.name)!
+            removePreditionColumns(predictionColumName: predictedColumnName, filter: filter)
+        }
         if regressorName != nil && prediction != nil {
             self.regressorName = regressorName
             self.predistion = prediction

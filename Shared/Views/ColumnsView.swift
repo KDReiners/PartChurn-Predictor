@@ -137,9 +137,3 @@ struct ColumnsView: View {
         }
     }
 }
-
-struct ColumnsView_Previews: PreviewProvider {
-    static var previews: some View {
-        ColumnsView(file: ManagerModels().filesDataModel.items.first!, columnsViewModel: ColumnsViewModel(columns: ColumnsModel().items, file:  ManagerModels().filesDataModel.items.first!))
-    }
-}

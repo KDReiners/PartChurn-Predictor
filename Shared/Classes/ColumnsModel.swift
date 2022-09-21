@@ -27,7 +27,9 @@ public class ColumnsModel: Model<Columns> {
     }
     override public var items: [Columns] {
         get {
-            return filter == nil ? result: result.filter({ filter?.contains($0) == true })
+            var tempResult: [Columns]
+            tempResult = self.model == nil ? result: result.filter({ $0.column2model == model })
+            return filter == nil ? tempResult: tempResult.filter({ filter?.contains($0) == true })
         }
         set
         {
@@ -46,7 +48,7 @@ public class ColumnsModel: Model<Columns> {
     }
     var targetColumns: [Columns] {
         get {
-            return self.items.filter { $0.istarget == 1}
+            return self.items.filter { $0.istarget == 1 }
         }
     }
     

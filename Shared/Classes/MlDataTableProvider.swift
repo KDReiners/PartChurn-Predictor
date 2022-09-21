@@ -158,7 +158,7 @@ class MlDataTableProvider: ObservableObject {
             predictionMask = mlPredictionColumn <= j && mlTargetColumn == 0
             breakMask = mlPredictionColumn <= j && mlTargetColumn != 0
             targetInstancesCount = mlDataTable[predictionMask].rows.count
-            var foundDirty = self.mlDataTable[breakMask].rows.count
+            let foundDirty = self.mlDataTable[breakMask].rows.count
             let devisor = foundDirty == 0 ? 1: foundDirty
             print("nearestLowValue: " + String(nearestLowValue))
             print("nearestHighValue: " + String(nearestHighValue))

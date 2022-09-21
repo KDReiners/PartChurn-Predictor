@@ -110,6 +110,7 @@ struct ComposerView: View {
     func updateValuesView() {
         self.mlDataTableProvider.mlDataTableRaw = nil
         self.mlDataTableProvider.mlDataTable = self.mlDataTableProvider.buildMlDataTable().mlDataTable
+        self.mlDataTableProvider.updateTableProvider()
         self.mlDataTableProvider.loaded = false
     }
 

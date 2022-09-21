@@ -40,9 +40,3 @@ struct FilesView: View {
         managerModels.filesDataModel.deleteAllRecords(predicate: predicate)
     }
 }
-
-struct FilesView_Previews: PreviewProvider {
-    static var previews: some View {
-        FilesView(file: ManagerModels().filesDataModel.items.first!, columnsDataModel: ManagerModels().columnsDataModel)
-    }
-}

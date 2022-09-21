@@ -44,6 +44,12 @@ public struct Trainer {
         }
     }
     public mutating func createModel(regressorName: String) -> Void {
+        let columnDataModel = ColumnsModel(model: self.model )
+        let targetColumn = columnDataModel.timedependantTargetColums.first
+        let predictedColumnName = "Predicted: " + (targetColumn?.name)!
+        if self.regressorTable!.columnNames.contains(predictedColumnName) {
+            self.regressorTable!.removeColumn(named: predictedColumnName)
+        }
         let (regressorEvaluationTable, regressorTrainingTable) = regressorTable!.randomSplit(by: 0.2, seed: 5)
         switch regressorName {
         case "MLLinearRegressor":
