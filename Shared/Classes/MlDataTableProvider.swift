@@ -160,8 +160,6 @@ class MlDataTableProvider: ObservableObject {
             targetInstancesCount = mlDataTable[predictionMask].rows.count
             let foundDirty = self.mlDataTable[breakMask].rows.count
             let devisor = foundDirty == 0 ? 1: foundDirty
-            print("nearestLowValue: " + String(nearestLowValue))
-            print("nearestHighValue: " + String(nearestHighValue))
             if Double(targetInstancesCount / devisor) > relationValueAtOptimum {
                 targetsAtOptimum = targetInstancesCount
                 dirtiesAtOptimum = foundDirty
