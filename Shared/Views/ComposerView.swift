@@ -12,13 +12,15 @@ struct ComposerView: View {
     var model: Models
     @State var selectedColumnCombination: [Columns]?
     @State var selectedTimeSeriesCombination: [String]?
+    var compositionsDataModel: CompositionsModel
     var valuesView: ValuesView?
     var mlDataTableProvider: MlDataTableProvider
     var composer: FileWeaver?
     var combinator: Combinator
     var columnsDataModel: ColumnsModel?
-    init(model: Models, composer: FileWeaver, combinator: Combinator) {
+    init(model: Models, composer: FileWeaver, combinator: Combinator, compositionsDataModel: CompositionsModel) {
         self.model = model
+        self.compositionsDataModel = compositionsDataModel
         self.columnsDataModel = ColumnsModel(model: self.model)
         self.composer = composer
         self.combinator = combinator
@@ -51,7 +53,7 @@ struct ComposerView: View {
                                 }
                             }.padding(.top, 2)
                         }
-                    }
+                    }.padding()
                     .onChange(of: selectedTimeSeriesCombination) { newSelectedTimeSeriesCombination in
                         self.mlDataTableProvider.mlDataTable = composer?.mlDataTable_Base
                         if let timeSeriesRows = newSelectedTimeSeriesCombination {
@@ -85,7 +87,7 @@ struct ComposerView: View {
                             }
                             .padding(.top, 2)
                         }
-                    }
+                    }.padding()
                     .onChange(of: selectedColumnCombination) { newSelectedColumnCombination in
                         self.mlDataTableProvider.mlDataTable = composer?.mlDataTable_Base
                         self.mlDataTableProvider.selectedColumns = newSelectedColumnCombination
@@ -95,10 +97,10 @@ struct ComposerView: View {
                 }
                 HStack {
                     Button("Save Compositions") {
-                        self.combinator.storeCompositions()
+                        storeCompositions()
                     }
                     Button("Delete Compositions") {
-                        self.combinator.deleteCombinations()
+                        deleteCombinations()
                     }
                 }
                 VStack(alignment: .leading) {
@@ -113,5 +115,48 @@ struct ComposerView: View {
         self.mlDataTableProvider.updateTableProvider()
         self.mlDataTableProvider.loaded = false
     }
+    struct Combination {
+        var compositionDataModel: CompositionsModel
+        var modelsDataModel = ModelsModel()
+        var columnsDataModel = ColumnsModel()
+        var model: Models!
+        var columns = [Columns]()
+        var timeSeries: Timeseries!
+        var i: Int16 = 0
+        func saveToCoreData() {
+            let compositionEntry = self.compositionDataModel.insertRecord()
+            compositionEntry.id = UUID()
+            compositionEntry.composition2model = self.model
+            compositionEntry.composition2timeseries = timeSeries
+            for column in columns {
+                compositionEntry.addToComposition2columns(column)
+            }
+        }
+    }
+    internal func storeCompositions() {
+        let seriesEntries = self.combinator.getTimeSeriesEntries()
+        for columns in self.combinator.columnCombinations {
+            for seriesEntry in seriesEntries {
+                var combination = Combination(compositionDataModel: self.compositionsDataModel)
+                combination.model = self.model
+                combination.columns.append(contentsOf: columns)
+                combination.timeSeries = seriesEntry.timeSeries
+                combination.saveToCoreData()
+            }
+        }
+        BaseServices.save()
+    }
+    internal func deleteCombinations() {
+        let compositionDataModel = self.compositionsDataModel
+        compositionDataModel.deleteAllRecords(predicate: nil)
+        let timeseriesDataModel = TimeSeriesModel()
+        timeseriesDataModel.deleteAllRecords(predicate: nil)
+        let timeSliceModel = TimeSliceModel()
+        timeSliceModel.deleteAllRecords(predicate: nil)
+        compositionDataModel.arrayOfClusters = [CompositionsModel.Cluster]()
+        BaseServices.save()
+        
+    }
+
 
 }

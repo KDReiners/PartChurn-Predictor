@@ -54,12 +54,13 @@ struct CompositionsView: View {
                             Button("Delete") {
                                 predictionsDataModel.deleteAllRecords(predicate: nil)
                                 clusterSelection = nil
-                                predictionsDataModel.predictions(model: self.model)
+                                predictionsDataModel.arrayOfPredictions = [PredictionsModel.predictionCluster]()
                             }
                         }
                         else if compositionDataModel.arrayOfClusters.count > 0 {
                             Button("Save") {
                                 savePredictions()
+                                predictionsDataModel.predictions(model: self.model)
                             }
                         }
                     }

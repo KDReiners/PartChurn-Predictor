@@ -107,20 +107,7 @@ struct Combinator {
         }
         return result
     }
-    internal func storeCompositions() {
-        let seriesEntries = getTimeSeriesEntries()
-        for columns in columnCombinations {
-            for seriesEntry in seriesEntries {
-                var combination = Combination()
-                combination.model = self.model
-                combination.columns.append(contentsOf: columns)
-                combination.timeSeries = seriesEntry.timeSeries
-                combination.saveToCoreData()
-            }
-        }
-        BaseServices.save()
-    }
-    private func getTimeSeriesEntries() -> Set<TimeSeriesEntry> {
+    func getTimeSeriesEntries() -> Set<TimeSeriesEntry> {
         let timeSeriesDataModel = TimeSeriesModel()
         let timeSliceDataModel = TimeSliceModel()
         var result = Set<TimeSeriesEntry>()
@@ -144,34 +131,6 @@ struct Combinator {
         }
         BaseServices.save()
         return result
-    }
-    internal func deleteCombinations() {
-        let compositionDataModel = CompositionsModel()
-        compositionDataModel.deleteAllRecords(predicate: nil)
-        let timeseriesDataModel = TimeSeriesModel()
-        timeseriesDataModel.deleteAllRecords(predicate: nil)
-        let timeSliceModel = TimeSliceModel()
-        timeSliceModel.deleteAllRecords(predicate: nil)
-        BaseServices.save()
-        
-    }
-}
-struct Combination {
-    var compositionDataModel = CompositionsModel()
-    var modelsDataModel = ModelsModel()
-    var columnsDataModel = ColumnsModel()
-    var model: Models!
-    var columns = [Columns]()
-    var timeSeries: Timeseries!
-    var i: Int16 = 0
-    func saveToCoreData() {
-        let compositionEntry = compositionDataModel.insertRecord()
-        compositionEntry.id = UUID()
-        compositionEntry.composition2model = self.model
-        compositionEntry.composition2timeseries = timeSeries
-        for column in columns {
-            compositionEntry.addToComposition2columns(column)
-        }
     }
 }
 struct TimeSeriesEntry: Hashable{

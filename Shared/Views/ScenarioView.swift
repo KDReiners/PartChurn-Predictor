@@ -12,6 +12,8 @@ struct ScenarioView: View {
     /// for modelsView
     var model: Models
     var valuesViewModel = ValuesModel()
+    @ObservedObject var compositionsDataModel = CompositionsModel()
+    @ObservedObject var predictionsDataModel = PredictionsModel()
     var fileSelection: Files?
     var mlSelection: String?
     var mlAlgorithms = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor"]
@@ -32,7 +34,7 @@ struct ScenarioView: View {
             .tabItem {
                 Label("Analysis", systemImage: "tray.and.arrow.down.fill")
             }
-            ComposerView(model: model, composer: self.composer, combinator: self.combinator)
+            ComposerView(model: model, composer: self.composer, combinator: self.combinator, compositionsDataModel: compositionsDataModel)
             .tabItem {
                 Label("Composer", systemImage: "tray.and.arrow.up.fill")
             }
