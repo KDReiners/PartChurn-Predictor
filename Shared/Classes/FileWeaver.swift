@@ -94,11 +94,15 @@ internal class FileWeaver {
                 default: print("no join colums")
                 }
             }
-            allInDataTable.removeColumn(named: "COGNITIONSOURCE")
+            if allInDataTable.columnNames.contains("COGNITIONSOURCE") {
+                allInDataTable.removeColumn(named: "COGNITIONSOURCE") } else {
+                    print("CognitionSource does not have a column Cognitionsource: " + cognitionSource.name)
+                }
+            
         }
         for cognitionObject in cognitionObjects {
             guard let currentMLDataTable = cognitionObject.coreDataML?.mlDataTable else {
-                fatalError("no mldatatable found in coginition source.")
+                fatalError("no mldatatable found in cognition source.")
             }
             let joinColums = Set(allInDataTable.columnNames).intersection(currentMLDataTable.columnNames)
             switch joinColums.count {
@@ -129,8 +133,8 @@ internal class FileWeaver {
         init(columns: [Columns]) {
             self.file = columns.first?.column2file
             self.columns = columns
-            let coginitionSourceColumn = columns.filter { return $0.name == "COGNITIONSOURCE"}.first
-            self.name = getColumnPivotValue(pivotColum: coginitionSourceColumn)
+            let cognitionSourceColumn = columns.filter { return $0.name == "COGNITIONSOURCE"}.first
+            self.name = getColumnPivotValue(pivotColum: cognitionSourceColumn)
             self.valueColumns = columns.filter { return $0.name != "COGNITIONSOURCE" }
             if self.name != nil {
                 coreDataML = CoreDataML(model: file.files2model, files: file)

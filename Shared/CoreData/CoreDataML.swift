@@ -78,7 +78,7 @@ public class CoreDataML: ObservableObject {
         let count: Int = untypedValues.count
         let intTemp = untypedValues.map{Int($0.value.value!)}.filter( { return $0 != nil } )
         if intTemp.count > 0 && intTemp.count != count {
-            print("Error fuzzy DataType")
+            print("Found fuzzy DataType")
         }
         if intTemp.count == count {
             return Int.self
