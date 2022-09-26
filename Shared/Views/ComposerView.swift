@@ -117,8 +117,8 @@ struct ComposerView: View {
     }
     struct Combination {
         var compositionDataModel: CompositionsModel
-        var modelsDataModel = ModelsModel()
-        var columnsDataModel = ColumnsModel()
+//        var modelsDataModel = ModelsModel()
+//        var columnsDataModel = ColumnsModel()
         var model: Models!
         var columns = [Columns]()
         var timeSeries: Timeseries!
@@ -128,9 +128,10 @@ struct ComposerView: View {
             compositionEntry.id = UUID()
             compositionEntry.composition2model = self.model
             compositionEntry.composition2timeseries = timeSeries
-            for column in columns {
-                compositionEntry.addToComposition2columns(column)
-            }
+            compositionEntry.composition2columns = NSSet(array: columns)
+//            for column in columns {
+//                compositionEntry.addToComposition2columns(column)
+//            }
         }
     }
     internal func storeCompositions() {
