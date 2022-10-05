@@ -13,6 +13,8 @@ struct ValuesView: View {
     
     @ObservedObject var mlDataTableFactory: MlDataTableProvider
     var masterDict = Dictionary<String, String>()
+    @State var size: CGSize = .zero
+    @State var headerSize: CGSize = .zero
     struct CellIndex: Identifiable {
         let id: Int
         let colIndex: Int
@@ -35,21 +37,38 @@ struct ValuesView: View {
             Text("load table...")
         } else {
             let cells = (0..<mlDataTableFactory.numRows).flatMap{j in mlDataTableFactory.customColumns.enumerated().map{(i,c) in CellIndex(id:j + i*mlDataTableFactory.numRows, colIndex:i, rowIndex:j)}}
-            ScrollView([.vertical], showsIndicators: true) {
-                LazyVGrid(columns:mlDataTableFactory.gridItems, pinnedViews: [.sectionHeaders], content: {
-                    Section(header: stickyHeaderView) {
-                        ForEach(cells) { cellIndex in
-                            let column = mlDataTableFactory.customColumns[cellIndex.colIndex]
-                            Text(column.rows[cellIndex.rowIndex])
-                                .padding(.horizontal)
-                                .font(.body).monospacedDigit()
-                                .scaledToFit()
-                            
+            ScrollView(.horizontal, showsIndicators: true) {
+                ScrollView([.vertical], showsIndicators: true) {
+                    LazyVGrid(columns:mlDataTableFactory.gridItems, pinnedViews: [.sectionHeaders], content: {
+                        Section(header: stickyHeaderView .background(
+                            GeometryReader { geometryProxy in
+                              Color.white
+                                .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
+                            }))
+                        {
+                            ForEach(cells) { cellIndex in
+                                let column = mlDataTableFactory.customColumns[cellIndex.colIndex]
+                                Text(column.rows[cellIndex.rowIndex])
+                                    .padding(.horizontal)
+                                    .font(.body).monospacedDigit()
+                                    .scaledToFit()
+                                
+                            }
                         }
-                    }
-                })
+                    })
+                }
+                .background(.white)
+                .frame(minWidth: size.width, idealWidth: size.width * 1.2, maxWidth: size.width * 1.5)
             }
-            .background(.white)
+            .background(
+                GeometryReader { geometryProxy in
+                  Color.white
+                    .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
+                })
+            .onPreferenceChange(SizePreferenceKey.self) { newSize in
+                  print("The new child size is: \(newSize)")
+                  size = newSize
+                }
         }
         Button("Save") {
             do {
@@ -68,7 +87,7 @@ struct ValuesView: View {
                         .font(.body)
                         .padding(.horizontal)
                         .multilineTextAlignment(.center)
-                        .fixedSize(horizontal: false, vertical: true)
+                        .fixedSize(horizontal: true, vertical: true)
                 }
             }
             
@@ -83,4 +102,8 @@ struct ValuesView: View {
         .background(.white)
         .padding(.bottom)
     }
+}
+struct SizePreferenceKey: PreferenceKey {
+  static var defaultValue: CGSize = .zero
+  static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
 }
