@@ -136,7 +136,7 @@ class MlDataTableProvider: ObservableObject {
     }
     // MARK: - related statistics provider
     func resolveTargetValues(targetValues: [String: Int], predictedColumnName: String) -> TargetStatistics? {
-        let mlTargetColumn = mlDataTable["ALIVE"]
+        let mlTargetColumn = mlDataTable[predictedColumnName.replacingOccurrences(of: predictionPrefix, with: "")]
         var targetStatistic = TargetStatistics()
         var predictionMask =  mlTargetColumn == 0
         var breakMask = mlTargetColumn != 0

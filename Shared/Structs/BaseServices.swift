@@ -97,3 +97,4 @@ public struct BaseServices
         return BaseServices.homePath.appendingPathComponent(prediction.prediction2model!.name!, isDirectory: true).appendingPathComponent(regressorName + "_" + prediction.id!.uuidString + ".mlmodel")
     }
 }
+public let predictionPrefix = "Predicted: "

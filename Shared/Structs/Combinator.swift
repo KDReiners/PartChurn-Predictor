@@ -113,21 +113,22 @@ struct Combinator {
         var result = Set<TimeSeriesEntry>()
         for series in self.timeSeriesCombinations {
             let predicate = NSPredicate(format: "from == %i and  to ==%i", Int16(series.min()!), Int16(series.max()!))
-            if timeSeriesDataModel.getExistingRecord(predicate: predicate) == nil {
-                let seriesEntry = timeSeriesDataModel.insertRecord()
-                seriesEntry.from = Int16(series.min()!)
-                seriesEntry.to = Int16(series.max()!)
+            var seriesEntry = timeSeriesDataModel.getExistingRecord(predicate: predicate)
+            if seriesEntry == nil {
+                seriesEntry = timeSeriesDataModel.insertRecord()
+                seriesEntry!.from = Int16(series.min()!)
+                seriesEntry!.to = Int16(series.max()!)
                 for timeSlice in series {
                     let predicate = NSPredicate(format: "value == %i", Int16(timeSlice))
                     let found = timeSliceDataModel.getExistingRecord(predicate: predicate)
                     let timeSliceEntry = found == nil ? timeSliceDataModel.insertRecord(): found
                     timeSliceEntry!.value = Int16(timeSlice)
-                    seriesEntry.addToTimeseries2timeslices(timeSliceEntry!)
+                    seriesEntry!.addToTimeseries2timeslices(timeSliceEntry!)
                 }
-                var timeSeriesEntry = TimeSeriesEntry()
-                timeSeriesEntry.timeSeries = seriesEntry
-                result.insert(timeSeriesEntry)
             }
+            var timeSeriesEntry = TimeSeriesEntry()
+            timeSeriesEntry.timeSeries = seriesEntry
+            result.insert(timeSeriesEntry)
         }
         BaseServices.save()
         return result

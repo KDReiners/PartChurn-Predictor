@@ -96,6 +96,9 @@ struct ComposerView: View {
                     }
                 }
                 HStack {
+                    Button("Save Current Composition") {
+                        storeComposition()
+                    }.disabled(selectedColumnCombination == nil || selectedTimeSeriesCombination == nil)
                     Button("Save Compositions") {
                         storeCompositions()
                     }
@@ -128,6 +131,18 @@ struct ComposerView: View {
             compositionEntry.composition2timeseries = timeSeries
             compositionEntry.composition2columns = NSSet(array: columns)
         }
+    }
+    internal func storeComposition() {
+        let seriesLength = selectedTimeSeriesCombination![0].split(separator: ",").count
+        let seriesEntries = self.combinator.getTimeSeriesEntries().filter {$0.timeSeries.timeseries2timeslices?.count == seriesLength}
+            for seriesEntry in seriesEntries {
+                var combination = Combination(compositionDataModel: self.compositionsDataModel)
+                combination.model = self.model
+                combination.columns.append(contentsOf: selectedColumnCombination!)
+                combination.timeSeries = seriesEntry.timeSeries
+                combination.saveToCoreData()
+        }
+        BaseServices.save()
     }
     internal func storeCompositions() {
         let seriesEntries = self.combinator.getTimeSeriesEntries()
