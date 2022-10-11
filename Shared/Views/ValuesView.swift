@@ -58,7 +58,8 @@ struct ValuesView: View {
                     })
                 }
                 .background(.white)
-                .frame(minWidth: size.width, idealWidth: size.width * 1.2, maxWidth: size.width * 1.5)
+//                .frame(width: size.width + CGFloat(mlDataTableFactory.mlColumns!.count) * 120)
+                .frame(width: CGFloat(mlDataTableFactory.sizeOfHeaders()) * 12 + CGFloat(mlDataTableFactory.mlColumns!.count) * 15)
             }
             .background(
                 GeometryReader { geometryProxy in

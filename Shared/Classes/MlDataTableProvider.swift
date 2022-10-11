@@ -32,6 +32,13 @@ class MlDataTableProvider: ObservableObject {
     init() {
         self.tableStatistics = TableStatistics()
     }
+    internal func sizeOfHeaders() -> Int {
+        var result = 0
+        for column in mlColumns! {
+            result += column.count
+        }
+        return result
+    }
     // MARK: - Async Calls for CoreMl
     internal func updateTableProviderForFiltering() {
         tableProvider(mlDataTable: self.mlDataTable, orderedColums: mlColumns!, selectedColumns: mergedColumns, filter: true) { provider in
@@ -355,9 +362,6 @@ class MLTableCluster {
         self.model = columns.first?.column2model
         columnsDataModel = ColumnsModel(columnsFilter: self.columns)
     }
-    
-    
-    
     internal func construct() -> MLDataTable {
         var prePeriodsTable: MLDataTable?
         var result: MLDataTable?

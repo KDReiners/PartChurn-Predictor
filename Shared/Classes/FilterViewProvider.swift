@@ -37,6 +37,7 @@ struct TableFilterView: View {
                     .onSubmit {
                         self.mlDataTableFactory.filterMlDataTable(filterDict: filterDict)
                     }
+                    .fixedSize(horizontal: true, vertical: true)
             }
         }
     }
