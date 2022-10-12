@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21G83" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21279" systemVersion="21G115" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Algorithms" representedClassName="Algorithms" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="orderno" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="algorithm2metricValues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2algorithm" inverseEntity="Metricvalues"/>
+        <relationship name="algorithm2metricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2algorithm" inverseEntity="Metricvalues"/>
+        <relationship name="algorithm2predictionmetricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictionmetricvalues" inverseName="predictionmetricvalue2algorithm" inverseEntity="Predictionmetricvalues"/>
     </entity>
     <entity name="Columns" representedClassName="Columns" syncable="YES" codeGenerationType="class">
         <attribute name="alias" optional="YES" transient="YES" attributeType="String"/>
@@ -50,7 +51,7 @@
     </entity>
     <entity name="Metricvalues" representedClassName="Metricvalues" syncable="YES" codeGenerationType="class">
         <attribute name="value" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <relationship name="metricvalue2algorithm" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Algorithms" inverseName="algorithm2metricValues" inverseEntity="Algorithms"/>
+        <relationship name="metricvalue2algorithm" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Algorithms" inverseName="algorithm2metricvalues" inverseEntity="Algorithms"/>
         <relationship name="metricvalue2datasettype" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Datasettypes" inverseName="datasettype2metricvalues" inverseEntity="Datasettypes"/>
         <relationship name="metricvalue2metric" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Metrics" inverseName="metric2metricvalues" inverseEntity="Metrics"/>
         <relationship name="metricvalue2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2metricvalues" inverseEntity="Models"/>
@@ -66,6 +67,16 @@
         <relationship name="model2predictions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictions" inverseName="prediction2model" inverseEntity="Predictions"/>
         <relationship name="model2values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Values" inverseName="value2model" inverseEntity="Values"/>
     </entity>
+    <entity name="Predictionmetrics" representedClassName="Predictionmetrics" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="predictionmetric2prediction" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Predictions" inverseName="prediction2predictionmetrics" inverseEntity="Predictions"/>
+        <relationship name="predictionmetric2predictionmetricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictionmetricvalues" inverseName="predictionmetricvalue2predictionmetric" inverseEntity="Predictionmetricvalues"/>
+    </entity>
+    <entity name="Predictionmetricvalues" representedClassName="Predictionmetricvalues" syncable="YES" codeGenerationType="class">
+        <attribute name="value" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="predictionmetricvalue2algorithm" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Algorithms" inverseName="algorithm2predictionmetricvalues" inverseEntity="Algorithms"/>
+        <relationship name="predictionmetricvalue2predictionmetric" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Predictionmetrics" inverseName="predictionmetric2predictionmetricvalues" inverseEntity="Predictionmetrics"/>
+    </entity>
     <entity name="Predictions" representedClassName="Predictions" syncable="YES" codeGenerationType="class">
         <attribute name="columnsdepth" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="groupingpattern" optional="YES" attributeType="String"/>
@@ -74,6 +85,7 @@
         <relationship name="prediction2compositions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Compositions" inverseName="composition2predictions" inverseEntity="Compositions"/>
         <relationship name="prediction2metricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2prediction" inverseEntity="Metricvalues"/>
         <relationship name="prediction2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2predictions" inverseEntity="Models"/>
+        <relationship name="prediction2predictionmetrics" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictionmetrics" inverseName="predictionmetric2prediction" inverseEntity="Predictionmetrics"/>
     </entity>
     <entity name="Timeseries" representedClassName="Timeseries" syncable="YES" codeGenerationType="class">
         <attribute name="from" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -96,18 +108,4 @@
         <relationship name="value2file" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Files" inverseName="file2values" inverseEntity="Files"/>
         <relationship name="value2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2values" inverseEntity="Models"/>
     </entity>
-    <elements>
-        <element name="Algorithms" positionX="0" positionY="0" width="128" height="74"/>
-        <element name="Columns" positionX="0" positionY="0" width="128" height="254"/>
-        <element name="Compositions" positionX="-736.47265625" positionY="-35.12890625" width="128" height="134"/>
-        <element name="Datasettypes" positionX="-94.25390625" positionY="284.86328125" width="128" height="74"/>
-        <element name="Files" positionX="-344.2734375" positionY="374.66015625" width="128" height="89"/>
-        <element name="Metrics" positionX="-265.921875" positionY="259.66796875" width="128" height="89"/>
-        <element name="Metricvalues" positionX="-73.2265625" positionY="-92.19921875" width="128" height="119"/>
-        <element name="Models" positionX="-382.08203125" positionY="-90.27734375" width="128" height="149"/>
-        <element name="Predictions" positionX="-540" positionY="63" width="128" height="134"/>
-        <element name="Timeseries" positionX="57.18359375" positionY="307.5546875" width="128" height="103"/>
-        <element name="Timeslices" positionX="-82.50390625" positionY="416.55859375" width="128" height="59"/>
-        <element name="Values" positionX="-586.28515625" positionY="304.29296875" width="128" height="164"/>
-    </elements>
 </model>

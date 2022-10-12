@@ -191,7 +191,40 @@ class MlDataTableProvider: ObservableObject {
             targetStatistic.targetsAtOptimum = targetsAtOptimum
             targetStatistic.dirtiesAtOptimum = dirtiesAtOptimum
         }
+        store2PredictionMetrics(targetStatistic: targetStatistic)
         return targetStatistic
+    }
+    func store2PredictionMetrics(targetStatistic: TargetStatistics) -> Void {
+        let m = Mirror(reflecting: targetStatistic)
+        let properties = Array(m.children)
+        var dictOfPredictionMetrics = Dictionary<String, Double> ()
+        properties.forEach { prop in
+            dictOfPredictionMetrics[(prop.label)!] = Double(0)
+        }
+        let predictionMetricsDataModel = PredictionMetricsModel()
+        let predictionMetricValueDataModel = PredictionMetricValueModel()
+        let algorithmDataModel = AlgorithmsModel()
+        dictOfPredictionMetrics.forEach { entry in
+            var metric = predictionMetricsDataModel.items.filter { $0.name == entry.key}.first
+            if metric == nil {
+                metric = predictionMetricsDataModel.insertRecord()
+                metric?.name = entry.key
+                metric?.predictionmetric2prediction = self.prediction
+            }
+            let algorithm = algorithmDataModel.items.first(where: { $0.name == self.regressorName})
+            var valueEntry = predictionMetricValueDataModel.items.filter { $0.predictionmetricvalue2predictionmetric?.name == entry.key && $0.predictionmetricvalue2algorithm?.name == self.regressorName}.first
+            if valueEntry == nil {
+                valueEntry = predictionMetricValueDataModel.insertRecord()
+                valueEntry?.predictionmetricvalue2algorithm = algorithm
+                valueEntry?.predictionmetricvalue2predictionmetric = metric
+                let prop = properties.first(where: { $0.label == entry.key })
+                valueEntry?.value = Double((prop?.value as? Double)!)
+                
+            }
+        }
+        BaseServices.save()
+        
+        
     }
     func buildMlDataTable() -> UnionResult {
         var result: MLDataTable?

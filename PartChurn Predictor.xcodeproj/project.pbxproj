@@ -21,6 +21,10 @@
 		0A827F7528736F0400C928F2 /* CustomColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A827F7328736F0400C928F2 /* CustomColumn.swift */; };
 		0AD6C8952858D5FD00EB92FB /* BatchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */; };
 		0AD6C8962858D5FD00EB92FB /* BatchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */; };
+		0AF7289628F5BEB9006DE13A /* PredictionMetricsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF7289528F5BEB9006DE13A /* PredictionMetricsModel.swift */; };
+		0AF7289728F5BEB9006DE13A /* PredictionMetricsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF7289528F5BEB9006DE13A /* PredictionMetricsModel.swift */; };
+		0AF7289928F5BF4B006DE13A /* PredictionMetricValueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF7289828F5BF4B006DE13A /* PredictionMetricValueModel.swift */; };
+		0AF7289A28F5BF4B006DE13A /* PredictionMetricValueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF7289828F5BF4B006DE13A /* PredictionMetricValueModel.swift */; };
 		0AFCB7042850A5FA00676AF6 /* ValuesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFCB7032850A5FA00676AF6 /* ValuesView.swift */; };
 		0AFCB7052850A5FA00676AF6 /* ValuesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFCB7032850A5FA00676AF6 /* ValuesView.swift */; };
 		2D01395E287868C000AC8EBF /* ComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D01395D287868C000AC8EBF /* ComposerView.swift */; };
@@ -112,6 +116,8 @@
 		0A827F702873686A00C928F2 /* ValuesTableProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValuesTableProvider.swift; sourceTree = "<group>"; };
 		0A827F7328736F0400C928F2 /* CustomColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColumn.swift; sourceTree = "<group>"; };
 		0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchProvider.swift; sourceTree = "<group>"; };
+		0AF7289528F5BEB9006DE13A /* PredictionMetricsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionMetricsModel.swift; sourceTree = "<group>"; };
+		0AF7289828F5BF4B006DE13A /* PredictionMetricValueModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionMetricValueModel.swift; sourceTree = "<group>"; };
 		0AFCB7032850A5FA00676AF6 /* ValuesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValuesView.swift; sourceTree = "<group>"; };
 		2D01395D287868C000AC8EBF /* ComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposerView.swift; sourceTree = "<group>"; };
 		2D0139602878692500AC8EBF /* ScenarioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioView.swift; sourceTree = "<group>"; };
@@ -282,6 +288,8 @@
 				2DFE31BD282D8BA40058C3AA /* Ml_MetricKPI.swift */,
 				2DA77EE72825716A007EC3E5 /* ModelsModel.swift */,
 				2D1DB46628B3CC08005BFC2D /* PredictionsModel.swift */,
+				0AF7289528F5BEB9006DE13A /* PredictionMetricsModel.swift */,
+				0AF7289828F5BF4B006DE13A /* PredictionMetricValueModel.swift */,
 				2D867B5928AACC4B005E8B87 /* TimeSeriesModel.swift */,
 				2D867B5C28AACCB5005E8B87 /* TimeSliceModel.swift */,
 				2DA77EEA2825721B007EC3E5 /* ValuesModel.swift */,
@@ -374,7 +382,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1330;
-				LastUpgradeCheck = 1340;
+				LastUpgradeCheck = 1400;
 				TargetAttributes = {
 					2D0B855D282565BF00856BCB = {
 						CreatedOnToolsVersion = 13.3.1;
@@ -433,6 +441,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DB5E69328AD3536006DC0D2 /* CompositionsProvider.swift in Sources */,
+				0AF7289628F5BEB9006DE13A /* PredictionMetricsModel.swift in Sources */,
 				2DA77EE82825716A007EC3E5 /* ModelsModel.swift in Sources */,
 				2D867B5A28AACC4B005E8B87 /* TimeSeriesModel.swift in Sources */,
 				2DA77ED328256E8A007EC3E5 /* Model.swift in Sources */,
@@ -461,6 +470,7 @@
 				2D1DB46728B3CC08005BFC2D /* PredictionsModel.swift in Sources */,
 				2DA77EFC28258384007EC3E5 /* Extensions.swift in Sources */,
 				2DA77EEF282576AA007EC3E5 /* ImportView.swift in Sources */,
+				0AF7289928F5BF4B006DE13A /* PredictionMetricValueModel.swift in Sources */,
 				2D0139612878692500AC8EBF /* ScenarioView.swift in Sources */,
 				0A589C13286614A000D1239B /* ManagerModels.swift in Sources */,
 				2D481BA528356EA4003EBCF2 /* AlgorithmsModel.swift in Sources */,
@@ -484,6 +494,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DB5E69428AD3536006DC0D2 /* CompositionsProvider.swift in Sources */,
+				0AF7289728F5BEB9006DE13A /* PredictionMetricsModel.swift in Sources */,
 				2DA77EE92825716A007EC3E5 /* ModelsModel.swift in Sources */,
 				2D867B5B28AACC4B005E8B87 /* TimeSeriesModel.swift in Sources */,
 				2DA77ED428256E8A007EC3E5 /* Model.swift in Sources */,
@@ -512,6 +523,7 @@
 				2D1DB46828B3CC08005BFC2D /* PredictionsModel.swift in Sources */,
 				2DA77EFD28258384007EC3E5 /* Extensions.swift in Sources */,
 				2DA77EF0282576AA007EC3E5 /* ImportView.swift in Sources */,
+				0AF7289A28F5BF4B006DE13A /* PredictionMetricValueModel.swift in Sources */,
 				2D0139622878692500AC8EBF /* ScenarioView.swift in Sources */,
 				0A589C14286614A000D1239B /* ManagerModels.swift in Sources */,
 				2D481BA628356EA4003EBCF2 /* AlgorithmsModel.swift in Sources */,
@@ -566,6 +578,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -624,6 +637,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -713,6 +727,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = LSTXQY64N9;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -742,6 +757,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = LSTXQY64N9;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
