@@ -75,3 +75,11 @@ extension Double {
         return Double(string.components(separatedBy: allowedCharset.inverted).joined())
     }
 }
+extension Optional {
+    init?(from any: Any) {
+        guard let opt = any as Any? as? Self else {
+            return nil
+        }
+        self = opt
+    }
+}

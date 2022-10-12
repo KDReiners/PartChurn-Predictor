@@ -202,24 +202,30 @@ class MlDataTableProvider: ObservableObject {
             dictOfPredictionMetrics[(prop.label)!] = Double(0)
         }
         let predictionMetricsDataModel = PredictionMetricsModel()
+//        predictionMetricsDataModel.deleteAllRecords(predicate: nil)
         let predictionMetricValueDataModel = PredictionMetricValueModel()
+//        predictionMetricValueDataModel.deleteAllRecords(predicate: nil)
         let algorithmDataModel = AlgorithmsModel()
         dictOfPredictionMetrics.forEach { entry in
-            var metric = predictionMetricsDataModel.items.filter { $0.name == entry.key}.first
+            var metric = predictionMetricsDataModel.items.filter { $0.name == entry.key }.first
             if metric == nil {
                 metric = predictionMetricsDataModel.insertRecord()
                 metric?.name = entry.key
-                metric?.predictionmetric2prediction = self.prediction
             }
             let algorithm = algorithmDataModel.items.first(where: { $0.name == self.regressorName})
-            var valueEntry = predictionMetricValueDataModel.items.filter { $0.predictionmetricvalue2predictionmetric?.name == entry.key && $0.predictionmetricvalue2algorithm?.name == self.regressorName}.first
+            var valueEntry = predictionMetricValueDataModel.items.filter { $0.predictionmetricvalue2predictionmetric?.name == entry.key && $0.predictionmetricvalue2algorithm?.name == self.regressorName && $0.predictionmetricvalue2prediction == self.prediction }.first
             if valueEntry == nil {
                 valueEntry = predictionMetricValueDataModel.insertRecord()
                 valueEntry?.predictionmetricvalue2algorithm = algorithm
                 valueEntry?.predictionmetricvalue2predictionmetric = metric
-                let prop = properties.first(where: { $0.label == entry.key })
-                valueEntry?.value = Double((prop?.value as? Double)!)
-                
+                valueEntry?.predictionmetricvalue2prediction = self.prediction
+            }
+            let prop = properties.first(where: { $0.label == entry.key })
+            if prop?.value is Int {
+                valueEntry?.value = Double(prop?.value as! Int)
+            }
+            if prop?.value is Double {
+                valueEntry?.value = Double(prop?.value as! Double)
             }
         }
         BaseServices.save()

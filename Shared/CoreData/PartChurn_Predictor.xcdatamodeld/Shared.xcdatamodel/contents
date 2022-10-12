@@ -69,12 +69,13 @@
     </entity>
     <entity name="Predictionmetrics" representedClassName="Predictionmetrics" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="predictionmetric2prediction" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Predictions" inverseName="prediction2predictionmetrics" inverseEntity="Predictions"/>
+        <relationship name="predictionmetric2prediction" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictions"/>
         <relationship name="predictionmetric2predictionmetricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictionmetricvalues" inverseName="predictionmetricvalue2predictionmetric" inverseEntity="Predictionmetricvalues"/>
     </entity>
     <entity name="Predictionmetricvalues" representedClassName="Predictionmetricvalues" syncable="YES" codeGenerationType="class">
         <attribute name="value" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="predictionmetricvalue2algorithm" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Algorithms" inverseName="algorithm2predictionmetricvalues" inverseEntity="Algorithms"/>
+        <relationship name="predictionmetricvalue2prediction" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Predictions" inverseName="prediction2predictionmetricvalues" inverseEntity="Predictions"/>
         <relationship name="predictionmetricvalue2predictionmetric" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Predictionmetrics" inverseName="predictionmetric2predictionmetricvalues" inverseEntity="Predictionmetrics"/>
     </entity>
     <entity name="Predictions" representedClassName="Predictions" syncable="YES" codeGenerationType="class">
@@ -85,7 +86,7 @@
         <relationship name="prediction2compositions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Compositions" inverseName="composition2predictions" inverseEntity="Compositions"/>
         <relationship name="prediction2metricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2prediction" inverseEntity="Metricvalues"/>
         <relationship name="prediction2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2predictions" inverseEntity="Models"/>
-        <relationship name="prediction2predictionmetrics" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictionmetrics" inverseName="predictionmetric2prediction" inverseEntity="Predictionmetrics"/>
+        <relationship name="prediction2predictionmetricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictionmetricvalues" inverseName="predictionmetricvalue2prediction" inverseEntity="Predictionmetricvalues"/>
     </entity>
     <entity name="Timeseries" representedClassName="Timeseries" syncable="YES" codeGenerationType="class">
         <attribute name="from" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
