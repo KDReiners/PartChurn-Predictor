@@ -15,6 +15,8 @@
 		0A589C14286614A000D1239B /* ManagerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A589C12286614A000D1239B /* ManagerModels.swift */; };
 		0A660F34287AD1920001EF16 /* FileWeaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A660F33287AD1920001EF16 /* FileWeaver.swift */; };
 		0A660F35287AD1920001EF16 /* FileWeaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A660F33287AD1920001EF16 /* FileWeaver.swift */; };
+		0A69F24828F7CCE70062509A /* AnalysisProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A69F24728F7CCE70062509A /* AnalysisProvider.swift */; };
+		0A69F24928F7CCE70062509A /* AnalysisProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A69F24728F7CCE70062509A /* AnalysisProvider.swift */; };
 		0A827F712873686A00C928F2 /* ValuesTableProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A827F702873686A00C928F2 /* ValuesTableProvider.swift */; };
 		0A827F722873686A00C928F2 /* ValuesTableProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A827F702873686A00C928F2 /* ValuesTableProvider.swift */; };
 		0A827F7428736F0400C928F2 /* CustomColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A827F7328736F0400C928F2 /* CustomColumn.swift */; };
@@ -113,6 +115,7 @@
 		0A4C56572869862C00961D1D /* ColumnsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColumnsView.swift; sourceTree = "<group>"; };
 		0A589C12286614A000D1239B /* ManagerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerModels.swift; sourceTree = "<group>"; };
 		0A660F33287AD1920001EF16 /* FileWeaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileWeaver.swift; sourceTree = "<group>"; };
+		0A69F24728F7CCE70062509A /* AnalysisProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisProvider.swift; sourceTree = "<group>"; };
 		0A827F702873686A00C928F2 /* ValuesTableProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValuesTableProvider.swift; sourceTree = "<group>"; };
 		0A827F7328736F0400C928F2 /* CustomColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColumn.swift; sourceTree = "<group>"; };
 		0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchProvider.swift; sourceTree = "<group>"; };
@@ -300,6 +303,7 @@
 				2DFD1B3028A930810057C74A /* FilterViewProvider.swift */,
 				0A827F702873686A00C928F2 /* ValuesTableProvider.swift */,
 				2DB5E69228AD3536006DC0D2 /* CompositionsProvider.swift */,
+				0A69F24728F7CCE70062509A /* AnalysisProvider.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -444,6 +448,7 @@
 				0AF7289628F5BEB9006DE13A /* PredictionMetricsModel.swift in Sources */,
 				2DA77EE82825716A007EC3E5 /* ModelsModel.swift in Sources */,
 				2D867B5A28AACC4B005E8B87 /* TimeSeriesModel.swift in Sources */,
+				0A69F24828F7CCE70062509A /* AnalysisProvider.swift in Sources */,
 				2DA77ED328256E8A007EC3E5 /* Model.swift in Sources */,
 				0A4C56582869862C00961D1D /* ColumnsView.swift in Sources */,
 				0AFCB7042850A5FA00676AF6 /* ValuesView.swift in Sources */,
@@ -497,6 +502,7 @@
 				0AF7289728F5BEB9006DE13A /* PredictionMetricsModel.swift in Sources */,
 				2DA77EE92825716A007EC3E5 /* ModelsModel.swift in Sources */,
 				2D867B5B28AACC4B005E8B87 /* TimeSeriesModel.swift in Sources */,
+				0A69F24928F7CCE70062509A /* AnalysisProvider.swift in Sources */,
 				2DA77ED428256E8A007EC3E5 /* Model.swift in Sources */,
 				0A4C56592869862C00961D1D /* ColumnsView.swift in Sources */,
 				0AFCB7052850A5FA00676AF6 /* ValuesView.swift in Sources */,

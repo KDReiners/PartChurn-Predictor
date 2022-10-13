@@ -26,6 +26,8 @@ struct CompositionsView: View {
     
     init(model: Models, composer: FileWeaver, combinator: Combinator) {
         self.model = model
+        let automator = AnalysisProvider(model: model)
+        automator.explode()
         self.compositionDataModel = CompositionsModel(model: self.model)
         self.composer = composer
         self.combinator = combinator
@@ -36,7 +38,7 @@ struct CompositionsView: View {
         unionResult = self.mlDataTableProvider.buildMlDataTable()
         self.mlDataTableProvider.updateTableProvider()
         valuesView = ValuesView(mlDataTableProvider: self.mlDataTableProvider)
-        compositionDataModel.presentCalculationTasks()
+        compositionDataModel.retrievePredictionClusters()
         predictionsDataModel.predictions(model: self.model)
         predictionsDataModel.getTimeSeries()
     }

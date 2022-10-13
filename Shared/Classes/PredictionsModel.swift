@@ -54,7 +54,7 @@ public class PredictionsModel: Model<Predictions> {
     private func getCurrentCombinations(model: Models) {
         self.model = model
         compositionsDataModel =  CompositionsModel(model: model)
-        compositionsDataModel?.presentCalculationTasks()
+        compositionsDataModel?.retrievePredictionClusters()
     }
     internal func predictions(model: Models) {
 //      self.deleteAllRecords(predicate: nil)

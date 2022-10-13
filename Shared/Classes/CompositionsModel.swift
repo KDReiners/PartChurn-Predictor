@@ -30,7 +30,7 @@ public class CompositionsModel: Model<Compositions> {
                 if lhs.columnsdepth == rhs.columnsdepth { // <1>
                     return lhs.seriesdepth > rhs.seriesdepth
                 }
-                presentCalculationTasks()
+                retrievePredictionClusters()
                 return lhs.seriesdepth > rhs.seriesdepth // <2>
             }
              
@@ -39,7 +39,7 @@ public class CompositionsModel: Model<Compositions> {
     internal func seriesDepth(item: Compositions) -> Int {
         return item.composition2timeseries?.timeseries2timeslices?.count ?? 0
     }
-    internal func presentCalculationTasks() -> Void {
+    internal func retrievePredictionClusters() -> Void {
         for item in items.filter({$0.composition2model == model }) {
             mapCluster(composition: item)
         }
