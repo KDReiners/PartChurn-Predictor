@@ -281,6 +281,7 @@
 		2DA77EE328256F34007EC3E5 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				0A69F24728F7CCE70062509A /* AnalysisProvider.swift */,
 				2D481BA428356EA4003EBCF2 /* AlgorithmsModel.swift */,
 				2DA77EE428256F52007EC3E5 /* ColumnsModel.swift */,
 				2DBDCCF5288D6B9800CC8EDC /* CompositionsModel.swift */,
@@ -303,7 +304,6 @@
 				2DFD1B3028A930810057C74A /* FilterViewProvider.swift */,
 				0A827F702873686A00C928F2 /* ValuesTableProvider.swift */,
 				2DB5E69228AD3536006DC0D2 /* CompositionsProvider.swift */,
-				0A69F24728F7CCE70062509A /* AnalysisProvider.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
