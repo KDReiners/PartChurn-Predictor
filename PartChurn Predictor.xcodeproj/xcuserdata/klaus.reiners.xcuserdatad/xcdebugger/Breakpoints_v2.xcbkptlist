@@ -7,49 +7,33 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A2C0B2A4-52DF-4B59-BFE8-4F8A929314F4"
+            uuid = "A7CEB679-B374-44A5-A3EE-53EA21308CAC"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Shared/Classes/AnalysisProvider.swift"
+            filePath = "Shared/Classes/MlDataTableProvider.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14"
-            endingLineNumber = "14"
-            landmarkName = "init(model:)"
+            startingLineNumber = "231"
+            endingLineNumber = "231"
+            landmarkName = "store2PredictionMetrics(targetStatistic:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "563B4C5F-FDDD-4102-BF04-EAC43EF963CC"
+            uuid = "15BF9683-DC29-4C55-BB59-D7B3592315B0"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Shared/Classes/AnalysisProvider.swift"
+            filePath = "Shared/Classes/MlDataTableProvider.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "30"
-            endingLineNumber = "30"
-            landmarkName = "init(clusterSelection:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "2BB6F018-3C66-4067-885F-8825FB6254D5"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Shared/Classes/AnalysisProvider.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "22"
-            endingLineNumber = "22"
-            landmarkName = "explode()"
-            landmarkType = "7">
+            startingLineNumber = "188"
+            endingLineNumber = "188"
+            landmarkName = "find(trial:nearestLowValue:nearestHighValue:bestRelationValue:bestRelationPredictionValue:targetStatistic:)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

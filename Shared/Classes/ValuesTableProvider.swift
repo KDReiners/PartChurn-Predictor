@@ -51,6 +51,7 @@ class ValuesTableProvider: ObservableObject {
             let fileManager = FileManager.default
             if fileManager.fileExists(atPath: urlToPredictionModel!.path) {
                predictionModel = getModel(url: urlToPredictionModel!)
+                print("incoporate predictions for \(prediction!.groupingpattern!) and \(regressorName!)")
                 incorporatedPredition(selectedColumns: selectedColumns!)
             }
         } else {

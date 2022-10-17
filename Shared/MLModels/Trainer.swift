@@ -53,7 +53,7 @@ public struct Trainer {
         let (regressorEvaluationTable, regressorTrainingTable) = regressorTable!.randomSplit(by: 0.2, seed: 5)
         switch regressorName {
         case "MLLinearRegressor":
-            let defaultParams = MLLinearRegressor.ModelParameters(validation: .split(strategy: .automatic), maxIterations: 500, l1Penalty: 0, l2Penalty: 0.01, stepSize: 1.0, convergenceThreshold: 0.01, featureRescaling: true)
+            let defaultParams = MLLinearRegressor.ModelParameters(validation: .split(strategy: .automatic), maxIterations: 10, l1Penalty: 0, l2Penalty: 0.01, stepSize: 1.0, convergenceThreshold: 0.01, featureRescaling: true)
             regressor = {
                 do {
                     return try MLRegressor.linear(MLLinearRegressor(trainingData: regressorTrainingTable,
@@ -64,7 +64,7 @@ public struct Trainer {
             }()
         case "MLDecisionTreeRegressor":
             
-            let defaultParams = MLDecisionTreeRegressor.ModelParameters(validation:.split(strategy: .automatic) , maxDepth: 100, minLossReduction: 0, minChildWeight: 0.1, randomSeed: 42)
+            let defaultParams = MLDecisionTreeRegressor.ModelParameters(validation:.split(strategy: .automatic) , maxDepth: 10, minLossReduction: 0, minChildWeight: 0.1, randomSeed: 42)
             regressor = {
                 do {
                     return try MLRegressor.decisionTree(MLDecisionTreeRegressor(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
@@ -73,7 +73,7 @@ public struct Trainer {
                 }
             }()
         case "MLRandomForestRegressor":
-            let defaultParams = MLRandomForestRegressor.ModelParameters(validation: .split(strategy: .automatic), maxDepth: 100, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.1, randomSeed: 42, rowSubsample: 0.8, columnSubsample: 0.8)
+            let defaultParams = MLRandomForestRegressor.ModelParameters(validation: .split(strategy: .automatic), maxDepth: 100, maxIterations: 10, minLossReduction: 0, minChildWeight: 0.1, randomSeed: 42, rowSubsample: 0.8, columnSubsample: 0.8)
             regressor = {
                 do {
                     return try MLRegressor.randomForest(MLRandomForestRegressor(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
@@ -82,7 +82,7 @@ public struct Trainer {
                 }
             }()
         case "MLBoostedTreeRegressor":
-            let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 100, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.1, randomSeed: 42, stepSize: 0.3, earlyStoppingRounds: nil, rowSubsample: 1.0, columnSubsample: 1.0)
+            let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 100, maxIterations: 10, minLossReduction: 0, minChildWeight: 0.1, randomSeed: 42, stepSize: 0.3, earlyStoppingRounds: nil, rowSubsample: 1.0, columnSubsample: 1.0)
             regressor =  {
                 do {
                     return try MLRegressor.boostedTree(MLBoostedTreeRegressor(trainingData: regressorTrainingTable,

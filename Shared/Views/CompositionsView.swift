@@ -26,8 +26,6 @@ struct CompositionsView: View {
     
     init(model: Models, composer: FileWeaver, combinator: Combinator) {
         self.model = model
-        let automator = AnalysisProvider(model: model)
-        automator.explode()
         self.compositionDataModel = CompositionsModel(model: self.model)
         self.composer = composer
         self.combinator = combinator

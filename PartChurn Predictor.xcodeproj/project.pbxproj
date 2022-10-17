@@ -23,6 +23,8 @@
 		0A827F7528736F0400C928F2 /* CustomColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A827F7328736F0400C928F2 /* CustomColumn.swift */; };
 		0AD6C8952858D5FD00EB92FB /* BatchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */; };
 		0AD6C8962858D5FD00EB92FB /* BatchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */; };
+		0AF2F06A28FC333E0094D0F8 /* AnalysisView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF2F06928FC333E0094D0F8 /* AnalysisView.swift */; };
+		0AF2F06B28FC333E0094D0F8 /* AnalysisView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF2F06928FC333E0094D0F8 /* AnalysisView.swift */; };
 		0AF7289628F5BEB9006DE13A /* PredictionMetricsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF7289528F5BEB9006DE13A /* PredictionMetricsModel.swift */; };
 		0AF7289728F5BEB9006DE13A /* PredictionMetricsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF7289528F5BEB9006DE13A /* PredictionMetricsModel.swift */; };
 		0AF7289928F5BF4B006DE13A /* PredictionMetricValueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF7289828F5BF4B006DE13A /* PredictionMetricValueModel.swift */; };
@@ -119,6 +121,7 @@
 		0A827F702873686A00C928F2 /* ValuesTableProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValuesTableProvider.swift; sourceTree = "<group>"; };
 		0A827F7328736F0400C928F2 /* CustomColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColumn.swift; sourceTree = "<group>"; };
 		0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchProvider.swift; sourceTree = "<group>"; };
+		0AF2F06928FC333E0094D0F8 /* AnalysisView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisView.swift; sourceTree = "<group>"; };
 		0AF7289528F5BEB9006DE13A /* PredictionMetricsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionMetricsModel.swift; sourceTree = "<group>"; };
 		0AF7289828F5BF4B006DE13A /* PredictionMetricValueModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionMetricValueModel.swift; sourceTree = "<group>"; };
 		0AFCB7032850A5FA00676AF6 /* ValuesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValuesView.swift; sourceTree = "<group>"; };
@@ -320,6 +323,7 @@
 				2D01395D287868C000AC8EBF /* ComposerView.swift */,
 				2D0139602878692500AC8EBF /* ScenarioView.swift */,
 				2DB5E69528AD36DE006DC0D2 /* CompositionsView.swift */,
+				0AF2F06928FC333E0094D0F8 /* AnalysisView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -472,6 +476,7 @@
 				2D0B8567282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */,
 				2D01395E287868C000AC8EBF /* ComposerView.swift in Sources */,
 				2D1EB362283A842F00F86B6D /* CoreDataML.swift in Sources */,
+				0AF2F06A28FC333E0094D0F8 /* AnalysisView.swift in Sources */,
 				2D1DB46728B3CC08005BFC2D /* PredictionsModel.swift in Sources */,
 				2DA77EFC28258384007EC3E5 /* Extensions.swift in Sources */,
 				2DA77EEF282576AA007EC3E5 /* ImportView.swift in Sources */,
@@ -526,6 +531,7 @@
 				2D0B8568282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */,
 				2D01395F287868C000AC8EBF /* ComposerView.swift in Sources */,
 				2D1EB363283A842F00F86B6D /* CoreDataML.swift in Sources */,
+				0AF2F06B28FC333E0094D0F8 /* AnalysisView.swift in Sources */,
 				2D1DB46828B3CC08005BFC2D /* PredictionsModel.swift in Sources */,
 				2DA77EFD28258384007EC3E5 /* Extensions.swift in Sources */,
 				2DA77EF0282576AA007EC3E5 /* ImportView.swift in Sources */,
