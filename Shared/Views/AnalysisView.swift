@@ -11,8 +11,7 @@ struct AnalysisView: View {
     var analysisProvider: AnalysisProvider
     init(model: Models) {
         self.analysisProvider = AnalysisProvider(model: model)
-        PredictionMetricsModel().deleteAllRecords(predicate: nil)
-        PredictionMetricValueModel().deleteAllRecords(predicate: nil)
+
     }
     var body: some View {
         Button("Explode") {
