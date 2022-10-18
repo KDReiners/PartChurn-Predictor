@@ -52,6 +52,26 @@ class MlDataTableProvider: ObservableObject {
             }
         }
     }
+    internal func updateTableProviderForStatistics(completion: @escaping () ->()) {
+        tableProvider(mlDataTable: mlDataTableRaw, orderedColums: mlColumns!, selectedColumns: mergedColumns, prediction: prediction, regressorName: regressorName) { provider in
+            DispatchQueue.main.async {
+                self.valuesTableProvider = provider
+                self.tableStatistics?.absolutRowCount = provider.mlDataTable.rows.count
+                self.tableStatistics?.filteredRowCount = provider.mlDataTable.rows.count
+                self.mlDataTableRaw = provider.mlDataTable
+                self.mlDataTable = self.mlDataTableRaw
+                self.mlColumns = provider.orderedColNames
+                if self.filterViewProvider == nil {
+                    self.filterViewProvider = FilterViewProvider(mlDataTableFactory: self)
+                }
+                if provider.targetValues.count > 0 {
+//                    self.ableStatistics?.targetStatistics =
+                    self.updateStatisticsProvider(targetValues: provider.targetValues, predictedColumnName: provider.predictedColumnName)
+                }
+                completion()
+            }
+        }
+    }
     internal func updateTableProvider() {
         tableProvider(mlDataTable: mlDataTableRaw, orderedColums: mlColumns!, selectedColumns: mergedColumns, prediction: prediction, regressorName: regressorName) { provider in
             DispatchQueue.main.async {
@@ -229,8 +249,6 @@ class MlDataTableProvider: ObservableObject {
             }
         }
         BaseServices.save()
-        
-        
     }
     func buildMlDataTable() -> UnionResult {
         var result: MLDataTable?
@@ -341,7 +359,7 @@ class MlDataTableProvider: ObservableObject {
         var targetStatistics = [TargetStatistics]()
         
     }
-    struct TargetStatistics {
+    class TargetStatistics {
         var targetValue = 0
         var targetPopulation = 0
         var targetInstancesCount = 0

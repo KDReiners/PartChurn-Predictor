@@ -39,7 +39,9 @@ struct DirectoryView: View {
                     NavigationLink("Steps Import", destination: ImportView())
                 }
             }
-            AnalysisView(model: ModelsModel().items.first!)
+//            AnalysisView(model: ModelsModel().items.first!).onDisappear {
+//                BaseServices.save()
+//            }
         }
     }
 }
