@@ -59,7 +59,8 @@ struct ValuesView: View {
                 }
                 .background(.white)
 //                .frame(width: size.width + CGFloat(mlDataTableFactory.mlColumns!.count) * 120)
-                .frame(width: CGFloat(mlDataTableFactory.sizeOfHeaders()) * 12 + CGFloat(mlDataTableFactory.mlColumns!.count) * 15)
+//                .frame(width: CGFloat(mlDataTableFactory.sizeOfHeaders()) * 12 + CGFloat(mlDataTableFactory.mlColumns!.count) * 15)
+                .frame(width: headerSize.width)
             }
             .background(
                 GeometryReader { geometryProxy in
@@ -67,13 +68,29 @@ struct ValuesView: View {
                     .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
                 })
             .onPreferenceChange(SizePreferenceKey.self) { newSize in
-                  print("The new child size is: \(newSize)")
-                  size = newSize
-                }
+                print("The new child size is: \(newSize)")
+                size = newSize
+                let tableWidth = CGFloat(mlDataTableFactory.sizeOfHeaders()) * 12 + CGFloat(mlDataTableFactory.mlColumns!.count) * 15
+                headerSize.width = newSize.width > tableWidth ? newSize.width: tableWidth
+            }
         }
         Button("Save") {
             do {
-                try self.mlDataTableFactory.mlDataTable!.writeCSV(to: URL(fileURLWithPath:BaseServices.homePath.appendingPathComponent("Khaled.csv", isDirectory: false).path))
+//                var localUrl = URL(fileURLWithPath:BaseServices.homePath.appendingPathComponent("ChurnOutput.csv", isDirectory: false).path)
+                let savePanel = NSSavePanel()
+                savePanel.canCreateDirectories = true
+                let response = savePanel.runModal()
+                guard response == .OK, let localUrl = savePanel.url else { return }
+                try self.mlDataTableFactory.mlDataTable!.writeCSV(to: localUrl)
+                let text = try String(contentsOf: localUrl, encoding: .utf8)
+                var lines = text.components(separatedBy: .newlines)
+                for i in 0..<lines.count - 1 {
+                    lines[i] = lines[i].replacingOccurrences(of: ",", with: ";")
+                    lines[i] = lines[i].replacingOccurrences(of: ".", with: ",")
+                }
+                let result = lines.joined(separator: "\r\n")
+                try result.write(to: localUrl, atomically: true, encoding: .utf8 )
+                        
             } catch {
                 print("Error saving table")
             }

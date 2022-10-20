@@ -42,7 +42,7 @@ class MlDataTableProvider: ObservableObject {
     }
     // MARK: - Async Calls for CoreMl
     internal func updateTableProviderForFiltering() {
-        tableProvider(mlDataTable: self.mlDataTable, orderedColums: mlColumns!, selectedColumns: mergedColumns, filter: true) { provider in
+        tableProvider(mlDataTable: self.mlDataTable, orderedColums: self.customColumns.map { $0.title}, selectedColumns: mergedColumns, filter: true) { provider in
             DispatchQueue.main.async {
                 self.valuesTableProvider = provider
                 self.tableStatistics?.filteredRowCount = provider.mlDataTable.rows.count

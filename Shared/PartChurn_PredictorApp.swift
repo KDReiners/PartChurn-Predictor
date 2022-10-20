@@ -15,6 +15,7 @@ struct PartChurn_PredictorApp: App {
         WindowGroup {
             DirectoryView(modelsDataModel: managerModels.modelsDataModel, filesDataModel: managerModels.filesDataModel)
                 .environmentObject(managerModels)
+                .frame(minWidth: 1100)
         }
     }
 }
