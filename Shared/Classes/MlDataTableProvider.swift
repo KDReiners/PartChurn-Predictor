@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import CreateML
+import CoreData
 class MlDataTableProvider: ObservableObject {
     // MARK: Init
     @Published var loaded = false
@@ -215,40 +216,50 @@ class MlDataTableProvider: ObservableObject {
         return targetStatistic
     }
     func store2PredictionMetrics(targetStatistic: TargetStatistics) -> Void {
-        let m = Mirror(reflecting: targetStatistic)
-        let properties = Array(m.children)
-        var dictOfPredictionMetrics = Dictionary<String, Double> ()
-        properties.forEach { prop in
-            dictOfPredictionMetrics[(prop.label)!] = Double(0)
+        let privateContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        privateContext.persistentStoreCoordinator = PersistenceController.shared.container.viewContext.persistentStoreCoordinator
+        privateContext.perform {
+            let m = Mirror(reflecting: targetStatistic)
+            let properties = Array(m.children)
+            var dictOfPredictionMetrics = Dictionary<String, Double> ()
+            properties.forEach { prop in
+                dictOfPredictionMetrics[(prop.label)!] = Double(0)
+            }
+            let predictionMetricsDataModel = PredictionMetricsModel()
+            //        predictionMetricsDataModel.deleteAllRecords(predicate: nil)
+            let predictionMetricValueDataModel = PredictionMetricValueModel()
+            //        predictionMetricValueDataModel.deleteAllRecords(predicate: nil)
+            let algorithmDataModel = AlgorithmsModel()
+            dictOfPredictionMetrics.forEach { entry in
+                var metric = predictionMetricsDataModel.items.filter { $0.name == entry.key }.first
+                if metric == nil {
+                    metric = predictionMetricsDataModel.insertRecord()
+                    metric?.name = entry.key
+                }
+                let algorithm = algorithmDataModel.items.first(where: { $0.name == self.regressorName})
+                var valueEntry = predictionMetricValueDataModel.items.filter { $0.predictionmetricvalue2predictionmetric?.name == entry.key && $0.predictionmetricvalue2algorithm?.name == self.regressorName && $0.predictionmetricvalue2prediction == self.prediction }.first
+                if valueEntry == nil {
+                    valueEntry = predictionMetricValueDataModel.insertRecord()
+                    valueEntry?.predictionmetricvalue2algorithm = algorithm
+                    valueEntry?.predictionmetricvalue2predictionmetric = metric
+                    valueEntry?.predictionmetricvalue2prediction = self.prediction
+                }
+                let prop = properties.first(where: { $0.label == entry.key })
+                if prop?.value is Int {
+                    valueEntry?.value = Double(prop?.value as! Int)
+                }
+                if prop?.value is Double {
+                    valueEntry?.value = Double(prop?.value as! Double)
+                }
+            }
+            do {
+                if privateContext.hasChanges {
+                    try privateContext.save()
+                }
+            } catch {
+                fatalError(error.localizedDescription)
+            }
         }
-        let predictionMetricsDataModel = PredictionMetricsModel()
-//        predictionMetricsDataModel.deleteAllRecords(predicate: nil)
-        let predictionMetricValueDataModel = PredictionMetricValueModel()
-//        predictionMetricValueDataModel.deleteAllRecords(predicate: nil)
-        let algorithmDataModel = AlgorithmsModel()
-        dictOfPredictionMetrics.forEach { entry in
-            var metric = predictionMetricsDataModel.items.filter { $0.name == entry.key }.first
-            if metric == nil {
-                metric = predictionMetricsDataModel.insertRecord()
-                metric?.name = entry.key
-            }
-            let algorithm = algorithmDataModel.items.first(where: { $0.name == self.regressorName})
-            var valueEntry = predictionMetricValueDataModel.items.filter { $0.predictionmetricvalue2predictionmetric?.name == entry.key && $0.predictionmetricvalue2algorithm?.name == self.regressorName && $0.predictionmetricvalue2prediction == self.prediction }.first
-            if valueEntry == nil {
-                valueEntry = predictionMetricValueDataModel.insertRecord()
-                valueEntry?.predictionmetricvalue2algorithm = algorithm
-                valueEntry?.predictionmetricvalue2predictionmetric = metric
-                valueEntry?.predictionmetricvalue2prediction = self.prediction
-            }
-            let prop = properties.first(where: { $0.label == entry.key })
-            if prop?.value is Int {
-                valueEntry?.value = Double(prop?.value as! Int)
-            }
-            if prop?.value is Double {
-                valueEntry?.value = Double(prop?.value as! Double)
-            }
-        }
-        BaseServices.save()
     }
     func buildMlDataTable() -> UnionResult {
         var result: MLDataTable?
@@ -321,8 +332,7 @@ class MlDataTableProvider: ObservableObject {
         case MLDataValue.ValueType.int:
             let filterMask = constructFilterMask(mlColumn: mlFilterColumn, formula: formula, value: Int.parse(from: value)!)
             result = mlDataTable[filterMask]
-        case MLDataValue.ValueType.double:
-            let filterMask = constructFilterMask(mlColumn: mlFilterColumn, formula: formula, value: Double.parse(from: value)!)
+        case MLDataValue.ValueType.double:            let filterMask = constructFilterMask(mlColumn: mlFilterColumn, formula: formula, value: Double.parse(from: value)!)
             result = mlDataTable[filterMask]
         case MLDataValue.ValueType.string:
             result = mlDataTable[mlDataTable[columnName] == value]
