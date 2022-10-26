@@ -51,6 +51,7 @@ public struct Trainer {
         if self.regressorTable!.columnNames.contains(predictedColumnName) {
             self.regressorTable!.removeColumn(named: predictedColumnName)
         }
+        //        this sets aside 20% of each model’s data rows for evaluation, leaving the remaining 80% for training.
         let (regressorEvaluationTable, regressorTrainingTable) = regressorTable!.randomSplit(by: 0.2, seed: 5)
         switch regressorName {
         case "MLLinearRegressor":
@@ -83,7 +84,20 @@ public struct Trainer {
                 }
             }()
         case "MLBoostedTreeRegressor":
-            let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 200, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.01, earlyStoppingRounds: nil, rowSubsample: 1.0, columnSubsample: 1.0)
+            //            init(
+            //                validationData: MLDataTable? = nil,
+            //                maxDepth: Int = 6,
+            //                maxIterations: Int = 10,
+            //                minLossReduction: Double = 0,
+            //                minChildWeight: Double = 0.1,
+            //                randomSeed: Int = 42,
+            //                stepSize: Double = 0.3,
+            //                earlyStoppingRounds: Int? = nil,
+            //                rowSubsample: Double = 1.0,
+            //                columnSubsample: Double = 1.0
+            //            )
+
+            let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 200, maxIterations: 200, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.01, earlyStoppingRounds: nil, rowSubsample: 1.0, columnSubsample: 1.0)
             regressor =  {
                 do {
                     return try MLRegressor.boostedTree(MLBoostedTreeRegressor(trainingData: regressorTrainingTable,
