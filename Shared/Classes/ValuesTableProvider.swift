@@ -126,7 +126,8 @@ class ValuesTableProvider: ObservableObject {
         }
     }
     
-    fileprivate func insertIntoGridItems(_ columnName: String?, _ rows: inout [String]) {
+    fileprivate func insertIntoGridItems(_ columnName: String?) {
+        var rows = [String]()
         var newCustomColumn = CustomColumn(title: columnName!, alignment: .trailing)
         var newGridItem: GridItem?
         let valueType = mlDataTable[columnName!].type
@@ -157,10 +158,9 @@ class ValuesTableProvider: ObservableObject {
     }
     
     func prepareView(orderedColNames: [String]) -> Void {
-        var rows = [String]()
         self.gridItems.removeAll()
         for column in orderedColNames {
-            insertIntoGridItems(column, &rows)
+            insertIntoGridItems(column)
         }
     }
     func prepareView() -> Void {
