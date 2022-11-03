@@ -7,31 +7,65 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "7811E831-DD21-4295-A7AA-70674C8CB327"
+            uuid = "AB7E2EB0-19E1-4F48-8765-4A172B6A12E2"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Shared/Classes/MlDataTableProvider.swift"
+            filePath = "Shared/Classes/ValuesTableProvider.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "68"
-            endingLineNumber = "68"
-            landmarkName = "updateTableProviderForStatistics(completion:)"
+            startingLineNumber = "34"
+            endingLineNumber = "34"
+            landmarkName = "init(mlDataTable:orderedColNames:selectedColumns:prediction:regressorName:filter:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "9C5FDF93-4F6F-40B5-A857-DE9558844F11"
+            uuid = "175D1F6C-5540-45EB-8771-0D31731E80C2"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Shared/Classes/AnalysisProvider.swift"
+            filePath = "Shared/Classes/MlDataTableProvider.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "104"
-            endingLineNumber = "104">
+            startingLineNumber = "289"
+            endingLineNumber = "289"
+            landmarkName = "buildMlDataTable()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "175D1F6C-5540-45EB-8771-0D31731E80C2 - 4f7cae209a549f28"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PartChurn_Predictor.MlDataTableProvider.buildMlDataTable() -&gt; PartChurn_Predictor.UnionResult"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kdreiners/Documents/Swift%20Projekte/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Classes/MlDataTableProvider.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "289"
+                  endingLineNumber = "289"
+                  offsetFromSymbolStart = "2456">
+               </Location>
+               <Location
+                  uuid = "175D1F6C-5540-45EB-8771-0D31731E80C2 - 1bf94cc589213fbe"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (PartChurn_Predictor.Columns) -&gt; Swift.String in PartChurn_Predictor.MlDataTableProvider.buildMlDataTable() -&gt; PartChurn_Predictor.UnionResult"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kdreiners/Documents/Swift%20Projekte/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Classes/MlDataTableProvider.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "289"
+                  endingLineNumber = "289"
+                  offsetFromSymbolStart = "72">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -8,6 +8,7 @@
 import Foundation
 import CreateML
 import CoreML
+import CSV
 public struct Trainer {
     var mlDataTableProvider: MlDataTableProvider!
     var regressorTable: MLDataTable?
@@ -32,7 +33,36 @@ public struct Trainer {
             let seriesEnd = (timeSeriesColumn.ints?.max())!
             let endMask = timeSeriesColumn < seriesEnd
             self.regressorTable = self.regressorTable![endMask]
-            try? regressorTable?.writeCSV(to: BaseServices.homePath.appendingPathComponent("regressorTable", isDirectory: false))
+            let stream = OutputStream(toFileAtPath: "/Users/kdreiners/Library/Containers/peas.com.PartChurn-Predictor/Data/KD.csv", append: false)!
+            let csv = try! CSVWriter(stream: stream, delimiter: ";")
+            csv.beginNewRow()
+            for col in mlDataTableFactory.valuesTableProvider!.orderedColNames {
+                try? csv.write(field: col)
+            }
+            for i in 0..<(regressorTable?.rows.count)! {
+                let row = regressorTable?.rows[i]
+                csv.beginNewRow()
+                for col in mlDataTableFactory.valuesTableProvider!.orderedColNames {
+                    if regressorTable?.columnNames.contains(col) == true {
+                        let valueType = row![col]!.type
+                        switch valueType {
+                        case MLDataValue.ValueType.int:
+                            try? csv.write(field: String(row![col]!.intValue!))
+                        case MLDataValue.ValueType.double:
+                            try? csv.write(field: String(row![col]!.doubleValue!))
+                        case MLDataValue.ValueType.string:
+                            try? csv.write(field: row![col]!.stringValue!)
+                        default:
+                            print("error determining value type")
+                        }
+                    }else {
+                        print("cannot find: \(col)")
+                    }
+                }
+                
+            }
+            csv.stream.close()
+//            try? regressorTable?.writeCSV(to: BaseServices.homePath.appendingPathComponent("regressorTable", isDirectory: false))
         }
     }
     init(model: Models, file: Files? = nil) {
@@ -79,7 +109,7 @@ public struct Trainer {
                 }
             }()
         case "MLRandomForestRegressor":
-            let defaultParams = MLRandomForestRegressor.ModelParameters(validation: .split(strategy: .automatic), maxDepth: 100, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, rowSubsample: 0.8, columnSubsample: 0.8)
+            let defaultParams = MLRandomForestRegressor.ModelParameters(validation: .split(strategy: .automatic), maxDepth: 100, maxIterations: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, rowSubsample: 0.8, columnSubsample: 0.8)
             regressor = {
                 do {
                     return try MLRegressor.randomForest(MLRandomForestRegressor(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
@@ -101,7 +131,7 @@ public struct Trainer {
             //                columnSubsample: Double = 1.0
             //            )
 
-            let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 100, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.01, earlyStoppingRounds: nil, rowSubsample: 1.0, columnSubsample: 1.0)
+            let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 100, maxIterations: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.01, earlyStoppingRounds: nil, rowSubsample: 1.0, columnSubsample: 1.0)
             regressor =  {
                 do {
                     return try MLRegressor.boostedTree(MLBoostedTreeRegressor(trainingData: regressorTrainingTable,
@@ -134,8 +164,12 @@ public struct Trainer {
                                                 shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden",
                                                 version: "1.0")
         /// Speichern des trainierten Modells auf dem Schreibtisch
-        try? regressor.write(to: BaseServices.homePath.appendingPathComponent((self.mlDataTableProvider.model?.name!)!, isDirectory: true).appendingPathComponent(regressorName + "_" + self.mlDataTableProvider.prediction!.id!.uuidString + ".mlmodel"),
-                            metadata: regressorMetadata)
+        do {
+            try regressor.write(to: BaseServices.homePath.appendingPathComponent((self.mlDataTableProvider.model?.name!)!, isDirectory: true).appendingPathComponent(regressorName + "_" + self.mlDataTableProvider.prediction!.id!.uuidString + ".mlmodel"),
+                                 metadata: regressorMetadata)
+        } catch {
+            fatalError(error.localizedDescription)
+        }
     }
 }
 

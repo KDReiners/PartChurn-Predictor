@@ -30,11 +30,6 @@ class ValuesTableProvider: ObservableObject {
     init() {
         
     }
-    init( mlDataTable: MLDataTable, orderedColNames: [String], selectedColumns: [Columns]?) {
-        self.mlDataTable = mlDataTable
-        self.orderedColNames = orderedColNames
-        prepareView(orderedColNames: self.orderedColNames)
-    }
     init( mlDataTable: MLDataTable, orderedColNames: [String], selectedColumns: [Columns]?, prediction: Predictions? , regressorName: String?, filter: Bool? = false) {
         self.mlDataTable = mlDataTable
         self.orderedColNames = orderedColNames

@@ -66,7 +66,7 @@ class MlDataTableProvider: ObservableObject {
                     self.filterViewProvider = FilterViewProvider(mlDataTableFactory: self)
                 }
                 if provider.targetValues.count > 0 {
-//                    self.ableStatistics?.targetStatistics =
+                    //                    self.ableStatistics?.targetStatistics =
                     self.updateStatisticsProvider(targetValues: provider.targetValues, predictedColumnName: provider.predictedColumnName)
                 }
                 completion()
@@ -82,7 +82,7 @@ class MlDataTableProvider: ObservableObject {
                 self.mlDataTableRaw = provider.mlDataTable
                 self.mlDataTable = self.mlDataTableRaw
                 if provider.targetValues.count > 0 {
-//                    self.ableStatistics?.targetStatistics =
+                    //                    self.ableStatistics?.targetStatistics =
                     self.updateStatisticsProvider(targetValues: provider.targetValues, predictedColumnName: provider.predictedColumnName)
                 }
                 self.mlColumns = provider.orderedColNames
@@ -261,12 +261,29 @@ class MlDataTableProvider: ObservableObject {
             }
         }
     }
+    func getIndexOfMergedColumn( colName: String) -> Int {
+        var index = -1
+        var suffix = 1
+        let allowedCharset = CharacterSet
+            .decimalDigits
+            .union(CharacterSet(charactersIn: "+"))
+        var testString = colName.suffix(suffix)
+        var test = String(testString.unicodeScalars.filter(allowedCharset.contains))
+        while test.count > 0 {
+            suffix += 1
+            test = String(testString.unicodeScalars.filter(allowedCharset.contains))
+        }
+        return index
+    }
     func buildMlDataTable() -> UnionResult {
         var result: MLDataTable?
         self.filterViewProvider = nil
         mergedColumns = selectedColumns == nil ? orderedColumns: selectedColumns
         if selectedColumns != nil {
             let additions = orderedColumns.filter { $0.ispartofprimarykey == 1 || $0.istimeseries == 1 || $0.istarget == 1}
+            for col in additions {
+                let index = getIndexOfMergedColumn(colName: col.name!)
+            }
             mergedColumns.append(contentsOf: additions)
         }
         self.mlColumns = mergedColumns.map { $0.name!}
