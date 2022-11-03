@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import CoreML
 import CreateML
+import CSV
 struct ValuesView: View {
     
     @ObservedObject var mlDataTableFactory: MlDataTableProvider
@@ -30,7 +31,7 @@ struct ValuesView: View {
         self.mlDataTableFactory.selectedColumns = self.mlDataTableFactory.orderedColumns
         self.mlDataTableFactory.mergedColumns = self.mlDataTableFactory.orderedColumns
         self.mlDataTableFactory.updateTableProvider(file: file)
-    
+        
     }
     var body: some View {
         if mlDataTableFactory.loaded == false {
@@ -42,8 +43,8 @@ struct ValuesView: View {
                     LazyVGrid(columns:mlDataTableFactory.gridItems, pinnedViews: [.sectionHeaders], content: {
                         Section(header: stickyHeaderView .background(
                             GeometryReader { geometryProxy in
-                              Color.white
-                                .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
+                                Color.white
+                                    .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
                             }))
                         {
                             ForEach(cells) { cellIndex in
@@ -58,14 +59,14 @@ struct ValuesView: View {
                     })
                 }
                 .background(.white)
-//                .frame(width: size.width + CGFloat(mlDataTableFactory.mlColumns!.count) * 120)
-//                .frame(width: CGFloat(mlDataTableFactory.sizeOfHeaders()) * 12 + CGFloat(mlDataTableFactory.mlColumns!.count) * 15)
+                //                .frame(width: size.width + CGFloat(mlDataTableFactory.mlColumns!.count) * 120)
+                //                .frame(width: CGFloat(mlDataTableFactory.sizeOfHeaders()) * 12 + CGFloat(mlDataTableFactory.mlColumns!.count) * 15)
                 .frame(width: headerSize.width)
             }
             .background(
                 GeometryReader { geometryProxy in
-                  Color.white
-                    .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
+                    Color.white
+                        .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
                 })
             .onPreferenceChange(SizePreferenceKey.self) { newSize in
                 print("The new child size is: \(newSize)")
@@ -75,25 +76,14 @@ struct ValuesView: View {
             }
         }
         Button("Save") {
-            do {
-//                var localUrl = URL(fileURLWithPath:BaseServices.homePath.appendingPathComponent("ChurnOutput.csv", isDirectory: false).path)
-                let savePanel = NSSavePanel()
-                savePanel.canCreateDirectories = true
-                let response = savePanel.runModal()
-                guard response == .OK, let localUrl = savePanel.url else { return }
-                try self.mlDataTableFactory.mlDataTable!.writeCSV(to: localUrl)
-                let text = try String(contentsOf: localUrl, encoding: .utf8)
-                var lines = text.components(separatedBy: .newlines)
-                for i in 0..<lines.count - 1 {
-                    lines[i] = lines[i].replacingOccurrences(of: ",", with: ";")
-                    lines[i] = lines[i].replacingOccurrences(of: ".", with: ",")
-                }
-                let result = lines.joined(separator: "\r\n")
-                try result.write(to: localUrl, atomically: true, encoding: .utf8 )
-                        
-            } catch {
-                print("Error saving table")
-            }
+            //                var localUrl = URL(fileURLWithPath:BaseServices.homePath.appendingPathComponent("ChurnOutput.csv", isDirectory: false).path)
+            let savePanel = NSSavePanel()
+            savePanel.canCreateDirectories = true
+            let response = savePanel.runModal()
+            guard response == .OK, let localUrl = savePanel.url else { return }
+            writeCSV(url: localUrl, exportTable: mlDataTableFactory.mlDataTable)
+            
+            
         }
     }
     var stickyHeaderView: some View {
@@ -120,8 +110,44 @@ struct ValuesView: View {
         .background(.white)
         .padding(.bottom)
     }
+    private func writeCSV(url: URL, exportTable: MLDataTable) {
+        var stream: OutputStream
+        if #available(macOS 13.0, *) {
+            stream = OutputStream(toFileAtPath: url.path(), append: false)!
+        } else {
+            stream = OutputStream(toFileAtPath: url.path, append: false)!
+        }
+        let csv = try! CSVWriter(stream: stream, delimiter: ";")
+        csv.beginNewRow()
+        for col in mlDataTableFactory.valuesTableProvider!.orderedColNames {
+            try? csv.write(field: col)
+        }
+        for i in 0..<(exportTable.rows.count) {
+            let row = exportTable.rows[i]
+            csv.beginNewRow()
+            for col in mlDataTableFactory.valuesTableProvider!.orderedColNames {
+                if exportTable.columnNames.contains(col) == true {
+                    let valueType = row[col]!.type
+                    switch valueType {
+                    case MLDataValue.ValueType.int:
+                        try? csv.write(field: String(row[col]!.intValue!))
+                    case MLDataValue.ValueType.double:
+                        try? csv.write(field: String(row[col]!.doubleValue!).replacingOccurrences(of: ".", with: ","))
+                    case MLDataValue.ValueType.string:
+                        try? csv.write(field: row[col]!.stringValue!)
+                    default:
+                        print("error determining value type")
+                    }
+                }else {
+                    print("cannot find: \(col)")
+                }
+            }
+            
+        }
+        csv.stream.close()
+    }
 }
 struct SizePreferenceKey: PreferenceKey {
-  static var defaultValue: CGSize = .zero
-  static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
+    static var defaultValue: CGSize = .zero
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
 }

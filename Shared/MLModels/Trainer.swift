@@ -8,7 +8,6 @@
 import Foundation
 import CreateML
 import CoreML
-import CSV
 public struct Trainer {
     var mlDataTableProvider: MlDataTableProvider!
     var regressorTable: MLDataTable?
@@ -32,37 +31,7 @@ public struct Trainer {
             let timeSeriesColumn = self.regressorTable![timeSeriesColumnName!]
             let seriesEnd = (timeSeriesColumn.ints?.max())!
             let endMask = timeSeriesColumn < seriesEnd
-            self.regressorTable = self.regressorTable![endMask]
-            let stream = OutputStream(toFileAtPath: "/Users/kdreiners/Library/Containers/peas.com.PartChurn-Predictor/Data/KD.csv", append: false)!
-            let csv = try! CSVWriter(stream: stream, delimiter: ";")
-            csv.beginNewRow()
-            for col in mlDataTableFactory.valuesTableProvider!.orderedColNames {
-                try? csv.write(field: col)
-            }
-            for i in 0..<(regressorTable?.rows.count)! {
-                let row = regressorTable?.rows[i]
-                csv.beginNewRow()
-                for col in mlDataTableFactory.valuesTableProvider!.orderedColNames {
-                    if regressorTable?.columnNames.contains(col) == true {
-                        let valueType = row![col]!.type
-                        switch valueType {
-                        case MLDataValue.ValueType.int:
-                            try? csv.write(field: String(row![col]!.intValue!))
-                        case MLDataValue.ValueType.double:
-                            try? csv.write(field: String(row![col]!.doubleValue!))
-                        case MLDataValue.ValueType.string:
-                            try? csv.write(field: row![col]!.stringValue!)
-                        default:
-                            print("error determining value type")
-                        }
-                    }else {
-                        print("cannot find: \(col)")
-                    }
-                }
-                
-            }
-            csv.stream.close()
-//            try? regressorTable?.writeCSV(to: BaseServices.homePath.appendingPathComponent("regressorTable", isDirectory: false))
+//            self.regressorTable = self.regressorTable![endMask]
         }
     }
     init(model: Models, file: Files? = nil) {
