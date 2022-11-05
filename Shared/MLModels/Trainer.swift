@@ -25,14 +25,16 @@ public struct Trainer {
         self.mlDataTableProvider = mlDataTableFactory
         self.regressorTable = self.mlDataTableProvider.mlDataTable
         self.regressorTable!.removeColumn(named: predictedColumnName)
+        self.regressorTable!.removeColumn(named: columnDataModel.primaryKeyColumn!.name!)
         self.targetColumnName = self.mlDataTableProvider.orderedColumns.first(where: { $0.istarget == 1})?.name!
         self.timeSeriesColumnName = self.mlDataTableProvider.orderedColumns.first(where: { $0.istimeseries == 1})?.name
         if self.timeSeriesColumnName != nil {
             let timeSeriesColumn = self.regressorTable![timeSeriesColumnName!]
             let seriesEnd = (timeSeriesColumn.ints?.max())!
             let endMask = timeSeriesColumn < seriesEnd
-//            self.regressorTable = self.regressorTable![endMask]
+            self.regressorTable = self.regressorTable![endMask]
         }
+//        self.regressorTable?.removeColumn(named: columnDataModel.timeStampColumn!.name!)
     }
     init(model: Models, file: Files? = nil) {
         self.model = model
@@ -58,7 +60,7 @@ public struct Trainer {
         let (regressorEvaluationTable, regressorTrainingTable) = regressorTable!.randomSplit(by: 0.2, seed: 5)
         switch regressorName {
         case "MLLinearRegressor":
-            let defaultParams = MLLinearRegressor.ModelParameters(validation: .split(strategy: .automatic), maxIterations: 300, l1Penalty: 0, l2Penalty: 0.01, stepSize: 1.0, convergenceThreshold: 0.01, featureRescaling: true)
+            let defaultParams = MLLinearRegressor.ModelParameters(validation: .split(strategy: .automatic), maxIterations: 500, l1Penalty: 0, l2Penalty: 0.001, stepSize: 0.001, convergenceThreshold: 0.001, featureRescaling: true)
             regressor = {
                 do {
                     return try MLRegressor.linear(MLLinearRegressor(trainingData: regressorTrainingTable,
@@ -69,7 +71,7 @@ public struct Trainer {
             }()
         case "MLDecisionTreeRegressor":
             
-            let defaultParams = MLDecisionTreeRegressor.ModelParameters(validation:.split(strategy: .automatic) , maxDepth: 100, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42)
+            let defaultParams = MLDecisionTreeRegressor.ModelParameters(validation:.split(strategy: .automatic) , maxDepth: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42)
             regressor = {
                 do {
                     return try MLRegressor.decisionTree(MLDecisionTreeRegressor(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
