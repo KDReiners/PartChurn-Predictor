@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import CreateML
 struct CustomColumn: Identifiable {
     let id = UUID()
     var title: String

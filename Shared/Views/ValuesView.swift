@@ -10,12 +10,15 @@ import SwiftUI
 import CoreML
 import CreateML
 import CSV
+import Combine
 struct ValuesView: View {
     
     @ObservedObject var mlDataTableFactory: MlDataTableProvider
     var masterDict = Dictionary<String, String>()
     @State var size: CGSize = .zero
     @State var headerSize: CGSize = .zero
+    
+    
     struct CellIndex: Identifiable {
         let id: Int
         let colIndex: Int
@@ -49,11 +52,17 @@ struct ValuesView: View {
                         {
                             ForEach(cells) { cellIndex in
                                 let column = mlDataTableFactory.customColumns[cellIndex.colIndex]
+//                                let fieldValue = Binding(
+//                                    get: { Double.parse(from: column.rows[cellIndex.rowIndex].wrappedValue)! },
+//                                    set: {
+//                                        column.rows[cellIndex.rowIndex].wrappedValue = String($0)
+//                                    }
+//                                )
+//                                TextField("number", value: fieldValue, formatter: NumberFormatter())
                                 Text(column.rows[cellIndex.rowIndex])
                                     .padding(.horizontal)
                                     .font(.body).monospacedDigit()
                                     .scaledToFit()
-                                
                             }
                         }
                     })

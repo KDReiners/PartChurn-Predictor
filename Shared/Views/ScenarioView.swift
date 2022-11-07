@@ -20,9 +20,8 @@ struct ScenarioView: View {
     var mlTable: MLDataTable?
     internal var composer: FileWeaver!
     internal var combinator: Combinator!
-    init(model: Models,mlTable: MLDataTable? = nil, modelSelect: NSManagedObject?) {
+    init(model: Models, modelSelect: NSManagedObject?) {
         self.model = model
-        self.mlTable = mlTable
         if modelSelect != nil {
             self.composer = FileWeaver(model: model)
             self.combinator = Combinator(model: self.model, orderedColumns: (composer?.orderedColumns)!, mlDataTable: (composer?.mlDataTable_Base)!)

@@ -12,7 +12,9 @@ struct DirectoryView: View {
     var modelsDataModel: ModelsModel
     @ObservedObject var filesDataModel: FilesModel
     @State var modelSelect: NSManagedObject?
+    @State var predictionSelect: NSManagedObject?
     @State var fileSelect: NSManagedObjectID?
+    var activate = false
     var body: some View {
         NavigationView {
             List {
@@ -23,6 +25,13 @@ struct DirectoryView: View {
                         }
                     } else {
                         Text("No models")
+                    }
+                }
+                DisclosureGroup("Composition") {
+                    if PredictionsModel().items.count > 0 {
+                        ForEach(PredictionsModel().items, id: \.self) { item in
+                            NavigationLink(item.groupingpattern!, destination: PredictionView(prediction: $predictionSelect.wrappedValue as? Predictions), tag: item, selection: $predictionSelect)
+                        }
                     }
                 }
                 DisclosureGroup("Files") {

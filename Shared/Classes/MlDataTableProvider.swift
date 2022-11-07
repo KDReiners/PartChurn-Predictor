@@ -262,12 +262,12 @@ class MlDataTableProvider: ObservableObject {
         }
     }
     func getIndexOfMergedColumn( colName: String) -> Int {
-        var index = -1
+        let index = -1
         var suffix = 1
         let allowedCharset = CharacterSet
             .decimalDigits
             .union(CharacterSet(charactersIn: "+"))
-        var testString = colName.suffix(suffix)
+        let testString = colName.suffix(suffix)
         var test = String(testString.unicodeScalars.filter(allowedCharset.contains))
         while test.count > 0 {
             suffix += 1
@@ -282,7 +282,7 @@ class MlDataTableProvider: ObservableObject {
         if selectedColumns != nil {
             let additions = orderedColumns.filter { $0.ispartofprimarykey == 1 || $0.istimeseries == 1 || $0.istarget == 1}
             for col in additions {
-                let index = getIndexOfMergedColumn(colName: col.name!)
+                _ = getIndexOfMergedColumn(colName: col.name!)
             }
             mergedColumns.append(contentsOf: additions)
         }
