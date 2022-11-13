@@ -17,6 +17,7 @@ struct ValuesView: View {
     var masterDict = Dictionary<String, String>()
     @State var size: CGSize = .zero
     @State var headerSize: CGSize = .zero
+    @State var mlSelectedRow: MLDataTable.Row?
     
     
     struct CellIndex: Identifiable {
@@ -52,14 +53,11 @@ struct ValuesView: View {
                         {
                             ForEach(cells) { cellIndex in
                                 let column = mlDataTableFactory.customColumns[cellIndex.colIndex]
-//                                let fieldValue = Binding(
-//                                    get: { Double.parse(from: column.rows[cellIndex.rowIndex].wrappedValue)! },
-//                                    set: {
-//                                        column.rows[cellIndex.rowIndex].wrappedValue = String($0)
-//                                    }
-//                                )
-//                                TextField("number", value: fieldValue, formatter: NumberFormatter())
                                 Text(column.rows[cellIndex.rowIndex])
+                                    .onTapGesture {
+                                        print(cellIndex.rowIndex)
+                                        self.mlSelectedRow = mlDataTableFactory.mlDataTable.rows[cellIndex.rowIndex]
+                                    }
                                     .padding(.horizontal)
                                     .font(.body).monospacedDigit()
                                     .scaledToFit()
@@ -68,8 +66,6 @@ struct ValuesView: View {
                     })
                 }
                 .background(.white)
-                //                .frame(width: size.width + CGFloat(mlDataTableFactory.mlColumns!.count) * 120)
-                //                .frame(width: CGFloat(mlDataTableFactory.sizeOfHeaders()) * 12 + CGFloat(mlDataTableFactory.mlColumns!.count) * 15)
                 .frame(width: headerSize.width)
             }
             .background(

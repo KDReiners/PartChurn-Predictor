@@ -6,51 +6,101 @@
 //
 
 import SwiftUI
-
 struct PredictionView: View {
+    @ObservedObject var mlSimulationController: SimulationController
+    @State var mlDataTableProviderContext: SimulationController.MlDataTableProviderContext!
     var predictionsDataModel = PredictionsModel()
-    var prediction: Predictions!
+    var prediction: Predictions?
     @State var composer: FileWeaver!
     @State var combinator: Combinator!
     @State var clusterSelection: PredictionsModel.predictionCluster?
-    var mlDataTableProvider: MlDataTableProvider
     @State var valuesView: ValuesView?
+    @State var gridItems = [GridItem]()
+    @State var size: CGSize = .zero
+    @State var headerSize: CGSize = .zero
+    
+    struct CellIndex: Identifiable {
+        let id: Int
+        let colIndex: Int
+        let rowIndex: Int
+    }
     init(prediction: Predictions?) {
-        self.mlDataTableProvider = MlDataTableProvider()
-        guard let prediction = prediction else {
-           return
-        }
+        self.mlSimulationController = SimulationController()
         self.prediction = prediction
+       
+        
     }
+    fileprivate func createGridItems() {
+//        self.mlDataTableProviderContext!.mlDataTableProvider.mlColumns  = self.mlDataTableProvider.mergedColumns.map { $0.name!}
+        self.mlDataTableProviderContext!.mlDataTableProvider.mlColumns!.forEach { col in
+            let newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
+            self.gridItems.append(newGridItem)
+        }
+    }
+    
     var body: some View {
-        Text("Hello dear prediction").onAppear {
-            predictionsDataModel.predictions(model: self.prediction.prediction2model!)
-            predictionsDataModel.getTimeSeries()
-            clusterSelection = predictionsDataModel.arrayOfPredictions.first(where: { $0.prediction == prediction })
-            self.composer = FileWeaver(model: self.prediction.prediction2model!)
-            self.combinator = Combinator(model: self.prediction.prediction2model!, orderedColumns: (composer?.orderedColumns)!, mlDataTable: (composer?.mlDataTable_Base)!)
-            self.mlDataTableProvider.mlDataTable = composer?.mlDataTable_Base
-            self.mlDataTableProvider.orderedColumns = composer?.orderedColumns!
-            generateValuesView()
-            valuesView = ValuesView(mlDataTableProvider: self.mlDataTableProvider)
-        }
-        valuesView
-    }
-    func generateValuesView() {
-        if let timeSeriesRows = self.clusterSelection?.connectedTimeSeries {
-            var selectedTimeSeries = [[Int]]()
-            for row in timeSeriesRows {
-                let innerResult = row.components(separatedBy: ", ").map { Int($0)! }
-                selectedTimeSeries.append(innerResult)
+        
+        VStack(alignment: .leading) {
+            Text("Hello dear prediction").onAppear {
+                guard let model = self.prediction!.prediction2model else {
+                    fatalError()
+                }
+                self.mlDataTableProviderContext = SimulationController.returnFittingProviderContext(model: model)
+                guard let mlDataTableProviderContext = mlDataTableProviderContext else {
+                    fatalError()
+                }
+                guard let prediction = prediction else {
+                    fatalError()
+                }
+                self.mlDataTableProviderContext.setPrediction(prediction: prediction)
+                valuesView = ValuesView(mlDataTableProvider: mlDataTableProviderContext.mlDataTableProvider)
+                createGridItems()
             }
-            self.mlDataTableProvider.timeSeries = selectedTimeSeries
-        } else {
-            self.mlDataTableProvider.timeSeries = nil
-        }
-        self.mlDataTableProvider.mlDataTableRaw = nil
-        self.mlDataTableProvider.prediction = self.prediction
-        self.mlDataTableProvider.mlDataTable = self.mlDataTableProvider.buildMlDataTable().mlDataTable
-        self.mlDataTableProvider.updateTableProvider()
-        self.mlDataTableProvider.loaded = false
+            if self.mlDataTableProviderContext != nil {
+                let cells = (0..<1).flatMap{j in self.mlDataTableProviderContext.mlDataTableProvider.customColumns.enumerated().map{(i,c) in CellIndex(id:j + i*1, colIndex:i, rowIndex:j)}}
+                let gridItems = [GridItem(.flexible(), alignment: .leading), GridItem(.flexible(), alignment: .trailing), GridItem(.flexible()),  GridItem(.flexible(), alignment: .trailing),  GridItem(.flexible()),  GridItem(.flexible(), alignment: .trailing)]
+                ScrollView([.vertical], showsIndicators: true) {
+                    LazyVGrid(columns: gridItems) {
+                        ForEach(cells) { cellIndex in
+                            let column = self.mlDataTableProviderContext.mlDataTableProvider.customColumns[cellIndex.colIndex]
+//                                let fieldValue = Binding(
+//                                    get: { Double.parse(from: column.rows[cellIndex.rowIndex].wrappedValue)! },
+//                                    set: {
+//                                        column.rows[cellIndex.rowIndex].wrappedValue = String($0)
+//                                    }
+//                                )
+//                                TextField("number", value: fieldValue, formatter: NumberFormatter())
+                            Text(column.title)
+                                .font(.body.bold())
+                                .onTapGesture {
+                                    print(column.title)
+                                }
+                            Text("Wert")
+                            Button("Apply") {
+                                
+                            }
+                            .font(.callout)
+                            Text("Wert 2")
+                            Button("Apply") {
+                                
+                            }
+                            .font(.callout)
+                            Text("Wert 3")
+//                            Text(column.rows[cellIndex.rowIndex])
+//                                .padding(.horizontal)
+//                                .font(.body).monospacedDigit()
+//                                .scaledToFit()
+//                                .foregroundColor(.blue)
+                        }
+                    }
+                    .padding()
+                }
+                .padding()
+                .background(.white)
+            }
+            Divider()
+            valuesView
+                .padding()
+        }.padding()
     }
 }

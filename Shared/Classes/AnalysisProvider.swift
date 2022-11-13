@@ -28,7 +28,7 @@ class AnalysisProvider {
         var i = 0
         predictionsDataModel = PredictionsModel(model: self.model)
         /// Gets all predictionClusters associated with the model
-        predictionsDataModel.predictions(model: self.model)
+        predictionsDataModel.createPredictionForModel(model: self.model)
         /// Iterate through all clusters
         for cluster in predictionsDataModel.arrayOfPredictions {
             i += 1

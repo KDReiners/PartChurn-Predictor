@@ -56,7 +56,7 @@ public class PredictionsModel: Model<Predictions> {
         compositionsDataModel =  CompositionsModel(model: model)
         compositionsDataModel?.retrievePredictionClusters()
     }
-    internal func predictions(model: Models) {
+    internal func createPredictionForModel(model: Models) {
 //      self.deleteAllRecords(predicate: nil)
         self.model = model
         let foundItems = self.items.filter( { $0.prediction2model == model })

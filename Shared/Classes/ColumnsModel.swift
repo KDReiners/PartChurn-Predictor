@@ -25,6 +25,12 @@ public class ColumnsModel: Model<Columns> {
         super.init(readOnlyFields: readOnlyFields)
         self.filter = columnsFilter
     }
+    public init(columnsFilter: [Columns], model: Models) {
+        let readOnlyFields: [String] = []
+        super.init(readOnlyFields: readOnlyFields)
+        self.filter = columnsFilter
+        self.model = model
+    }
     override public var items: [Columns] {
         get {
             var tempResult: [Columns]

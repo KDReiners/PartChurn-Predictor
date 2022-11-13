@@ -37,7 +37,7 @@ struct CompositionsView: View {
         self.mlDataTableProvider.updateTableProvider()
         valuesView = ValuesView(mlDataTableProvider: self.mlDataTableProvider)
         compositionDataModel.retrievePredictionClusters()
-        predictionsDataModel.predictions(model: self.model)
+        predictionsDataModel.createPredictionForModel(model: self.model)
         predictionsDataModel.getTimeSeries()
     }
     var body: some View {
@@ -60,7 +60,7 @@ struct CompositionsView: View {
                         else if compositionDataModel.arrayOfClusters.count > 0 {
                             Button("Save") {
                                 savePredictions()
-                                predictionsDataModel.predictions(model: self.model)
+                                predictionsDataModel.createPredictionForModel(model: self.model)
                             }
                         }
                     }

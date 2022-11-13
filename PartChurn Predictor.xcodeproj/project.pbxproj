@@ -23,6 +23,10 @@
 		0A827F722873686A00C928F2 /* ValuesTableProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A827F702873686A00C928F2 /* ValuesTableProvider.swift */; };
 		0A827F7428736F0400C928F2 /* CustomColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A827F7328736F0400C928F2 /* CustomColumn.swift */; };
 		0A827F7528736F0400C928F2 /* CustomColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A827F7328736F0400C928F2 /* CustomColumn.swift */; };
+		0AD43D0A2920234700199F06 /* SimulationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD43D092920234700199F06 /* SimulationController.swift */; };
+		0AD43D0B2920234700199F06 /* SimulationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD43D092920234700199F06 /* SimulationController.swift */; };
+		0AD43D0D2921062F00199F06 /* MLTableCluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD43D0C2921062F00199F06 /* MLTableCluster.swift */; };
+		0AD43D0E2921062F00199F06 /* MLTableCluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD43D0C2921062F00199F06 /* MLTableCluster.swift */; };
 		0AD6C8952858D5FD00EB92FB /* BatchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */; };
 		0AD6C8962858D5FD00EB92FB /* BatchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */; };
 		0AF2F06A28FC333E0094D0F8 /* AnalysisView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF2F06928FC333E0094D0F8 /* AnalysisView.swift */; };
@@ -123,6 +127,8 @@
 		0A7F4E4D2917FE7B00015DB3 /* PredictionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionView.swift; sourceTree = "<group>"; };
 		0A827F702873686A00C928F2 /* ValuesTableProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValuesTableProvider.swift; sourceTree = "<group>"; };
 		0A827F7328736F0400C928F2 /* CustomColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColumn.swift; sourceTree = "<group>"; };
+		0AD43D092920234700199F06 /* SimulationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationController.swift; sourceTree = "<group>"; };
+		0AD43D0C2921062F00199F06 /* MLTableCluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLTableCluster.swift; sourceTree = "<group>"; };
 		0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchProvider.swift; sourceTree = "<group>"; };
 		0AF2F06928FC333E0094D0F8 /* AnalysisView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisView.swift; sourceTree = "<group>"; };
 		0AF7289528F5BEB9006DE13A /* PredictionMetricsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionMetricsModel.swift; sourceTree = "<group>"; };
@@ -310,6 +316,8 @@
 				2DFD1B3028A930810057C74A /* FilterViewProvider.swift */,
 				0A827F702873686A00C928F2 /* ValuesTableProvider.swift */,
 				2DB5E69228AD3536006DC0D2 /* CompositionsProvider.swift */,
+				0AD43D092920234700199F06 /* SimulationController.swift */,
+				0AD43D0C2921062F00199F06 /* MLTableCluster.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -482,6 +490,7 @@
 				2D1EB362283A842F00F86B6D /* CoreDataML.swift in Sources */,
 				0AF2F06A28FC333E0094D0F8 /* AnalysisView.swift in Sources */,
 				2D1DB46728B3CC08005BFC2D /* PredictionsModel.swift in Sources */,
+				0AD43D0A2920234700199F06 /* SimulationController.swift in Sources */,
 				2DA77EFC28258384007EC3E5 /* Extensions.swift in Sources */,
 				2DA77EEF282576AA007EC3E5 /* ImportView.swift in Sources */,
 				0AF7289928F5BF4B006DE13A /* PredictionMetricValueModel.swift in Sources */,
@@ -490,6 +499,7 @@
 				0A7F4E4E2917FE7B00015DB3 /* PredictionView.swift in Sources */,
 				2D481BA528356EA4003EBCF2 /* AlgorithmsModel.swift in Sources */,
 				2D6B0E59289EC8680016E57F /* MlDataTableProvider.swift in Sources */,
+				0AD43D0D2921062F00199F06 /* MLTableCluster.swift in Sources */,
 				2D288AC12829793B0078647E /* Trainer.swift in Sources */,
 				2DA77EEB2825721B007EC3E5 /* ValuesModel.swift in Sources */,
 				0A4C56552869750900961D1D /* FilesView.swift in Sources */,
@@ -538,6 +548,7 @@
 				2D1EB363283A842F00F86B6D /* CoreDataML.swift in Sources */,
 				0AF2F06B28FC333E0094D0F8 /* AnalysisView.swift in Sources */,
 				2D1DB46828B3CC08005BFC2D /* PredictionsModel.swift in Sources */,
+				0AD43D0B2920234700199F06 /* SimulationController.swift in Sources */,
 				2DA77EFD28258384007EC3E5 /* Extensions.swift in Sources */,
 				2DA77EF0282576AA007EC3E5 /* ImportView.swift in Sources */,
 				0AF7289A28F5BF4B006DE13A /* PredictionMetricValueModel.swift in Sources */,
@@ -546,6 +557,7 @@
 				0A7F4E4F2917FE7B00015DB3 /* PredictionView.swift in Sources */,
 				2D481BA628356EA4003EBCF2 /* AlgorithmsModel.swift in Sources */,
 				2D6B0E5A289EC8680016E57F /* MlDataTableProvider.swift in Sources */,
+				0AD43D0E2921062F00199F06 /* MLTableCluster.swift in Sources */,
 				2D288AC22829793B0078647E /* Trainer.swift in Sources */,
 				2DA77EEC2825721B007EC3E5 /* ValuesModel.swift in Sources */,
 				0A4C56562869750900961D1D /* FilesView.swift in Sources */,
