@@ -54,7 +54,7 @@ struct ValuesView: View {
                                 Text(column.rows[cellIndex.rowIndex])
                                     .onTapGesture {
                                         print(cellIndex.rowIndex)
-                                        self.mlDataTableFactory.selectedMlRow = mlDataTableFactory.mlDataTable.rows[cellIndex.rowIndex]
+                                        self.mlDataTableFactory.selectedRowIndex = cellIndex.rowIndex
                                     }
                                     .padding(.horizontal)
                                     .font(.body).monospacedDigit()

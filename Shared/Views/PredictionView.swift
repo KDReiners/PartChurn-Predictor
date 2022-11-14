@@ -36,13 +36,7 @@ struct PredictionView: View {
                             let title = column.title
                             Text(column.title)
                                 .font(.body.bold())
-                            let fieldValue = Binding(
-                                get: {
-                                    return self.mlDataTableProviderContext.mlDataTableProvider.selectedMlRow != nil ? String(self.mlDataTableProviderContext.mlDataTableProvider.selectedMlRow![column.title]!.intValue!) : ""
-                                },
-                                set: { column.rows[cellIndex.rowIndex] = String($0)
-                                })
-                            Text(fieldValue.wrappedValue)
+                            self.mlDataTableProviderContext.getView(customColumn: column, rowIndex: self.mlDataTableProvider.selectedRowIndex ?? 0, editable: true)
                             Button("Apply") {
                                 
                             }

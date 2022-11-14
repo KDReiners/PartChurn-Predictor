@@ -35,6 +35,7 @@ class SimulationController: ObservableObject {
             self.mlDataTableProvider = mlDataTableProvider
             self.mlDataTableProvider.model = model
             self.model = model
+            self.mlDataTableProvider.regressorName  = "MLBoostedTreeRegressor"
             self.composer = FileWeaver(model: self.model)
             predictionsDataModel.createPredictionForModel(model: self.model)
             self.combinator = Combinator(model: self.model, orderedColumns: (composer?.orderedColumns)!, mlDataTable: (composer?.mlDataTable_Base)!)
@@ -44,6 +45,7 @@ class SimulationController: ObservableObject {
         func setPrediction(prediction: Predictions) {
             if self.clusterSelection?.prediction != prediction {
                 self.clusterSelection = predictionsDataModel.arrayOfPredictions.first(where: { $0.prediction == prediction })
+                self.mlDataTableProvider.prediction = prediction
                 generateValuesView()
             }
         }
@@ -67,6 +69,25 @@ class SimulationController: ObservableObject {
             self.mlDataTableProvider.mlColumns!.forEach { col in
                 let newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
                 self.gridItems.append(newGridItem)
+            }
+        }
+        @ViewBuilder func getView(customColumn: CustomColumn, rowIndex: Int, editable: Bool = false) -> some View {
+            if !editable {
+                if self.mlDataTableProvider.selectedRowIndex == nil {
+                    Text(customColumn.rows[rowIndex])
+                } else {
+                    Text(customColumn.rows[rowIndex])
+                }
+            } else {
+               
+                e(customColum: customColumn, rowIndex: rowIndex)
+            }
+        }
+        struct e: View {
+            @State var customColum: CustomColumn
+            var rowIndex: Int
+            var body: some View {
+                TextField("", text: $customColum.rows[rowIndex])
             }
         }
     }

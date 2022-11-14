@@ -15,7 +15,7 @@ class MlDataTableProvider: ObservableObject {
     @Published var gridItems: [GridItem]!
     @Published var valuesTableProvider: ValuesTableProvider?
     @Published var tableStatistics: TableStatistics?
-    @Published var selectedMlRow: MLDataTable.Row?
+    @Published var selectedRowIndex: Int?
     var numRows: Int = 0
     var customColumns = [CustomColumn]()
     var mlDataTable: MLDataTable!
