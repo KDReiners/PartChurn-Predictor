@@ -30,7 +30,7 @@ struct DirectoryView: View {
                 DisclosureGroup("Composition") {
                     if PredictionsModel().items.count > 0 {
                         ForEach(PredictionsModel().items, id: \.self) { item in
-                            NavigationLink(item.groupingpattern!, destination: PredictionView(prediction: $predictionSelect.wrappedValue as? Predictions), tag: item, selection: $predictionSelect)
+                            NavigationLink(item.groupingpattern!, destination: SimulatorView(prediction: $predictionSelect.wrappedValue as? Predictions), tag: item, selection: $predictionSelect)
                         }
                     }
                 }

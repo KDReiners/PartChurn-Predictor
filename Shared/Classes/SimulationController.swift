@@ -7,9 +7,10 @@
 
 import Foundation
 import CreateML
+import SwiftUI
 class SimulationController: ObservableObject {
     static var providerContexts = [MlDataTableProviderContext]()
-    static func returnFittingProviderContext(model: Models) -> MlDataTableProviderContext {
+    static func returnFittingProviderContext(model: Models) -> MlDataTableProviderContext? {
         var result: MlDataTableProviderContext?
         result = providerContexts.filter { $0.model == model }.first
         if result == nil {
@@ -22,9 +23,9 @@ class SimulationController: ObservableObject {
         return result
         
     }
-    class MlDataTableProviderContext {
+    class MlDataTableProviderContext: ObservableObject {
         @Published var mlDataTableProvider: MlDataTableProvider
-        @Published var mlSelectedRow: MLDataTable.Row?
+        var gridItems = [GridItem]()
         var clusterSelection: PredictionsModel.predictionCluster?
         var predictionsDataModel = PredictionsModel()
         var composer: FileWeaver!
@@ -61,6 +62,12 @@ class SimulationController: ObservableObject {
             self.mlDataTableProvider.mlDataTable = self.mlDataTableProvider.buildMlDataTable().mlDataTable
             self.mlDataTableProvider.updateTableProvider()
             self.mlDataTableProvider.loaded = false
+        }
+        func createGridItems() {
+            self.mlDataTableProvider.mlColumns!.forEach { col in
+                let newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
+                self.gridItems.append(newGridItem)
+            }
         }
     }
 }

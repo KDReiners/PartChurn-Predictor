@@ -17,8 +17,8 @@
 		0A660F35287AD1920001EF16 /* FileWeaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A660F33287AD1920001EF16 /* FileWeaver.swift */; };
 		0A69F24828F7CCE70062509A /* AnalysisProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A69F24728F7CCE70062509A /* AnalysisProvider.swift */; };
 		0A69F24928F7CCE70062509A /* AnalysisProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A69F24728F7CCE70062509A /* AnalysisProvider.swift */; };
-		0A7F4E4E2917FE7B00015DB3 /* PredictionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7F4E4D2917FE7B00015DB3 /* PredictionView.swift */; };
-		0A7F4E4F2917FE7B00015DB3 /* PredictionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7F4E4D2917FE7B00015DB3 /* PredictionView.swift */; };
+		0A7F4E4E2917FE7B00015DB3 /* SimulatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7F4E4D2917FE7B00015DB3 /* SimulatorView.swift */; };
+		0A7F4E4F2917FE7B00015DB3 /* SimulatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7F4E4D2917FE7B00015DB3 /* SimulatorView.swift */; };
 		0A827F712873686A00C928F2 /* ValuesTableProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A827F702873686A00C928F2 /* ValuesTableProvider.swift */; };
 		0A827F722873686A00C928F2 /* ValuesTableProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A827F702873686A00C928F2 /* ValuesTableProvider.swift */; };
 		0A827F7428736F0400C928F2 /* CustomColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A827F7328736F0400C928F2 /* CustomColumn.swift */; };
@@ -27,6 +27,8 @@
 		0AD43D0B2920234700199F06 /* SimulationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD43D092920234700199F06 /* SimulationController.swift */; };
 		0AD43D0D2921062F00199F06 /* MLTableCluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD43D0C2921062F00199F06 /* MLTableCluster.swift */; };
 		0AD43D0E2921062F00199F06 /* MLTableCluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD43D0C2921062F00199F06 /* MLTableCluster.swift */; };
+		0AD43D102921579400199F06 /* PredictionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD43D0F2921579400199F06 /* PredictionView.swift */; };
+		0AD43D112921579400199F06 /* PredictionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD43D0F2921579400199F06 /* PredictionView.swift */; };
 		0AD6C8952858D5FD00EB92FB /* BatchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */; };
 		0AD6C8962858D5FD00EB92FB /* BatchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */; };
 		0AF2F06A28FC333E0094D0F8 /* AnalysisView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AF2F06928FC333E0094D0F8 /* AnalysisView.swift */; };
@@ -124,11 +126,12 @@
 		0A589C12286614A000D1239B /* ManagerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerModels.swift; sourceTree = "<group>"; };
 		0A660F33287AD1920001EF16 /* FileWeaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileWeaver.swift; sourceTree = "<group>"; };
 		0A69F24728F7CCE70062509A /* AnalysisProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisProvider.swift; sourceTree = "<group>"; };
-		0A7F4E4D2917FE7B00015DB3 /* PredictionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionView.swift; sourceTree = "<group>"; };
+		0A7F4E4D2917FE7B00015DB3 /* SimulatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatorView.swift; sourceTree = "<group>"; };
 		0A827F702873686A00C928F2 /* ValuesTableProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValuesTableProvider.swift; sourceTree = "<group>"; };
 		0A827F7328736F0400C928F2 /* CustomColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColumn.swift; sourceTree = "<group>"; };
 		0AD43D092920234700199F06 /* SimulationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationController.swift; sourceTree = "<group>"; };
 		0AD43D0C2921062F00199F06 /* MLTableCluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLTableCluster.swift; sourceTree = "<group>"; };
+		0AD43D0F2921579400199F06 /* PredictionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionView.swift; sourceTree = "<group>"; };
 		0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchProvider.swift; sourceTree = "<group>"; };
 		0AF2F06928FC333E0094D0F8 /* AnalysisView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisView.swift; sourceTree = "<group>"; };
 		0AF7289528F5BEB9006DE13A /* PredictionMetricsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionMetricsModel.swift; sourceTree = "<group>"; };
@@ -335,7 +338,8 @@
 				2D0139602878692500AC8EBF /* ScenarioView.swift */,
 				2DB5E69528AD36DE006DC0D2 /* CompositionsView.swift */,
 				0AF2F06928FC333E0094D0F8 /* AnalysisView.swift */,
-				0A7F4E4D2917FE7B00015DB3 /* PredictionView.swift */,
+				0A7F4E4D2917FE7B00015DB3 /* SimulatorView.swift */,
+				0AD43D0F2921579400199F06 /* PredictionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -467,6 +471,7 @@
 				0A69F24828F7CCE70062509A /* AnalysisProvider.swift in Sources */,
 				2DA77ED328256E8A007EC3E5 /* Model.swift in Sources */,
 				0A4C56582869862C00961D1D /* ColumnsView.swift in Sources */,
+				0AD43D102921579400199F06 /* PredictionView.swift in Sources */,
 				0AFCB7042850A5FA00676AF6 /* ValuesView.swift in Sources */,
 				2DA77EF828257B97007EC3E5 /* CSV_Importer.swift in Sources */,
 				2DFD1B3128A930810057C74A /* FilterViewProvider.swift in Sources */,
@@ -496,7 +501,7 @@
 				0AF7289928F5BF4B006DE13A /* PredictionMetricValueModel.swift in Sources */,
 				2D0139612878692500AC8EBF /* ScenarioView.swift in Sources */,
 				0A589C13286614A000D1239B /* ManagerModels.swift in Sources */,
-				0A7F4E4E2917FE7B00015DB3 /* PredictionView.swift in Sources */,
+				0A7F4E4E2917FE7B00015DB3 /* SimulatorView.swift in Sources */,
 				2D481BA528356EA4003EBCF2 /* AlgorithmsModel.swift in Sources */,
 				2D6B0E59289EC8680016E57F /* MlDataTableProvider.swift in Sources */,
 				0AD43D0D2921062F00199F06 /* MLTableCluster.swift in Sources */,
@@ -525,6 +530,7 @@
 				0A69F24928F7CCE70062509A /* AnalysisProvider.swift in Sources */,
 				2DA77ED428256E8A007EC3E5 /* Model.swift in Sources */,
 				0A4C56592869862C00961D1D /* ColumnsView.swift in Sources */,
+				0AD43D112921579400199F06 /* PredictionView.swift in Sources */,
 				0AFCB7052850A5FA00676AF6 /* ValuesView.swift in Sources */,
 				2DA77EF928257B97007EC3E5 /* CSV_Importer.swift in Sources */,
 				2DFD1B3228A930810057C74A /* FilterViewProvider.swift in Sources */,
@@ -554,7 +560,7 @@
 				0AF7289A28F5BF4B006DE13A /* PredictionMetricValueModel.swift in Sources */,
 				2D0139622878692500AC8EBF /* ScenarioView.swift in Sources */,
 				0A589C14286614A000D1239B /* ManagerModels.swift in Sources */,
-				0A7F4E4F2917FE7B00015DB3 /* PredictionView.swift in Sources */,
+				0A7F4E4F2917FE7B00015DB3 /* SimulatorView.swift in Sources */,
 				2D481BA628356EA4003EBCF2 /* AlgorithmsModel.swift in Sources */,
 				2D6B0E5A289EC8680016E57F /* MlDataTableProvider.swift in Sources */,
 				0AD43D0E2921062F00199F06 /* MLTableCluster.swift in Sources */,

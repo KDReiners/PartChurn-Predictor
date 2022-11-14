@@ -17,8 +17,6 @@ struct ValuesView: View {
     var masterDict = Dictionary<String, String>()
     @State var size: CGSize = .zero
     @State var headerSize: CGSize = .zero
-    @State var mlSelectedRow: MLDataTable.Row?
-    
     
     struct CellIndex: Identifiable {
         let id: Int
@@ -56,7 +54,7 @@ struct ValuesView: View {
                                 Text(column.rows[cellIndex.rowIndex])
                                     .onTapGesture {
                                         print(cellIndex.rowIndex)
-                                        self.mlSelectedRow = mlDataTableFactory.mlDataTable.rows[cellIndex.rowIndex]
+                                        self.mlDataTableFactory.selectedMlRow = mlDataTableFactory.mlDataTable.rows[cellIndex.rowIndex]
                                     }
                                     .padding(.horizontal)
                                     .font(.body).monospacedDigit()
