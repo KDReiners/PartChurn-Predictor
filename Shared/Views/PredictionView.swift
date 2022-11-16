@@ -28,30 +28,19 @@ struct PredictionView: View {
             VStack(alignment: .leading) {
                 Text("Hello dear prediction")
                 let cells = (0..<1).flatMap{j in self.mlDataTableProviderContext.mlDataTableProvider.customColumns.enumerated().map{(i,c) in CellIndex(id:j + i*1, colIndex:i, rowIndex:j)}}
-                let gridItems = [GridItem(.flexible(), alignment: .leading), GridItem(.flexible(), alignment: .trailing), GridItem(.flexible()),  GridItem(.flexible(), alignment: .trailing),  GridItem(.flexible()),  GridItem(.flexible(), alignment: .trailing)]
+                let gridItems = [GridItem(.flexible(), alignment: .leading), GridItem(.flexible(), alignment: .trailing), GridItem(.flexible()),  GridItem(.flexible(), alignment: .trailing)]
                 ScrollView([.vertical], showsIndicators: true) {
                     LazyVGrid(columns: gridItems) {
                         ForEach(cells) { cellIndex in
-                            var column = self.mlDataTableProviderContext.mlDataTableProvider.customColumns[cellIndex.colIndex]
-                            let title = column.title
+                            let column = self.mlDataTableProviderContext.mlDataTableProvider.customColumns[cellIndex.colIndex]
                             Text(column.title)
                                 .font(.body.bold())
-                            self.mlDataTableProviderContext.getView(customColumn: column, rowIndex: self.mlDataTableProvider.selectedRowIndex ?? 0, editable: true)
+                            Text(column.rows[self.mlDataTableProviderContext.mlDataTableProvider.selectedRowIndex ?? 0])
+                            self.mlDataTableProviderContext.getView(customColumn: column, rowIndex: self.mlDataTableProvider.selectedRowIndex ?? 0)
+                                .font(.callout)
                             Button("Apply") {
-                                
+                                self.mlDataTableProvider.valuesTableProvider?.predict(regressorName: "BoostedTreeRegressor", result: self.mlDataTableProvider.mlRowDictionary)
                             }
-                            .font(.callout)
-                            Text("Wert 2")
-                            Button("Apply") {
-                                
-                            }
-                            .font(.callout)
-                            Text("Wert 3")
-                            //                            Text(column.rows[cellIndex.rowIndex])
-                            //                                .padding(.horizontal)
-                            //                                .font(.body).monospacedDigit()
-                            //                                .scaledToFit()
-                            //                                .foregroundColor(.blue)
                         }
                     }
                     .padding()

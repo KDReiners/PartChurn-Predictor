@@ -16,6 +16,7 @@ class MlDataTableProvider: ObservableObject {
     @Published var valuesTableProvider: ValuesTableProvider?
     @Published var tableStatistics: TableStatistics?
     @Published var selectedRowIndex: Int?
+    @Published var mlRowDictionary = [String: MLDataValueConvertible]()
     var numRows: Int = 0
     var customColumns = [CustomColumn]()
     var mlDataTable: MLDataTable!
@@ -30,7 +31,6 @@ class MlDataTableProvider: ObservableObject {
     var filterViewProvider: FilterViewProvider!
     var prediction: Predictions?
     var regressorName: String?
-    
     init() {
         self.tableStatistics = TableStatistics()
     }
@@ -354,7 +354,8 @@ class MlDataTableProvider: ObservableObject {
         case MLDataValue.ValueType.int:
             let filterMask = constructFilterMask(mlColumn: mlFilterColumn, formula: formula, value: Int.parse(from: value)!)
             result = mlDataTable[filterMask]
-        case MLDataValue.ValueType.double:            let filterMask = constructFilterMask(mlColumn: mlFilterColumn, formula: formula, value: Double.parse(from: value)!)
+        case MLDataValue.ValueType.double:
+            let filterMask = constructFilterMask(mlColumn: mlFilterColumn, formula: formula, value: Double.parse(from: value)!)
             result = mlDataTable[filterMask]
         case MLDataValue.ValueType.string:
             result = mlDataTable[mlDataTable[columnName] == value]

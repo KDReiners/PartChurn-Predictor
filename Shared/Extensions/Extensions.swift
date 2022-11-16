@@ -83,3 +83,10 @@ extension Optional {
         self = opt
     }
 }
+extension String {
+    var preparedToDecimalNumberConversion: String {
+        split {
+            !CharacterSet(charactersIn: "\($0)").isSubset(of: CharacterSet.decimalDigits)
+        }.joined(separator: ".")
+    }
+}

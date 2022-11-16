@@ -121,7 +121,7 @@ class ValuesTableProvider: ObservableObject {
         }
     }
     
-    fileprivate func insertIntoGridItems(_ columnName: String?) {
+    func insertIntoGridItems(_ columnName: String?) {
         var rows = [String]()
         var newCustomColumn = CustomColumn(title: columnName!, alignment: .trailing)
         var newGridItem: GridItem?
@@ -221,7 +221,7 @@ class ValuesTableProvider: ObservableObject {
         models.append(newModel)
         return result!
     }
-    private func predict(regressorName: String, result: [String : MLDataValueConvertible]) -> MLFeatureProvider {
+    func predict(regressorName: String, result: [String : MLDataValueConvertible]) -> MLFeatureProvider {
         let provider: MLDictionaryFeatureProvider = {
             do {
                 return try MLDictionaryFeatureProvider(dictionary: result)
@@ -236,9 +236,9 @@ class ValuesTableProvider: ObservableObject {
                 fatalError(error.localizedDescription)
             }
         }()
+        print(prediction.featureValue(for: "N_ALIVE")!)
         return prediction
     }
-
     public func predictFromRow(regressorName: String, mlRow: MLDataTable.Row) -> MLFeatureProvider {
         var result = [String: MLDataValueConvertible]()
         for i in 0..<mlRow.keys.count {
@@ -253,6 +253,19 @@ class ValuesTableProvider: ObservableObject {
             }
         }
         return predict(regressorName: regressorName, result: result)
+    }
+    internal func convertRowToDicionary(mlRow: MLDataTable.Row) -> [String: MLDataValueConvertible] {
+        var result = [String: MLDataValueConvertible]()
+        for i in 0..<mlRow.keys.count {
+            result[mlRow.keys[i]] = mlRow.values[i].intValue
+            if  result[mlRow.keys[i]] == nil {
+                result[mlRow.keys[i]] = mlRow.values[i].doubleValue
+            }
+            if  result[mlRow.keys[i]] == nil {
+                result[mlRow.keys[i]] = mlRow.values[i].stringValue
+            }
+        }
+        return result
     }
     struct model: Identifiable {
         let id = UUID()

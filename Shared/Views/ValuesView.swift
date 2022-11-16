@@ -54,6 +54,8 @@ struct ValuesView: View {
                                 Text(column.rows[cellIndex.rowIndex])
                                     .onTapGesture {
                                         print(cellIndex.rowIndex)
+                                        self.mlDataTableFactory.mlDataTable.removeColumn(named: "Predicted: N_ALIVE")
+                                        self.mlDataTableFactory.mlRowDictionary = (self.mlDataTableFactory.valuesTableProvider?.convertRowToDicionary(mlRow: self.mlDataTableFactory.mlDataTable.rows[cellIndex.rowIndex]))!
                                         self.mlDataTableFactory.selectedRowIndex = cellIndex.rowIndex
                                     }
                                     .padding(.horizontal)
