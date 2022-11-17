@@ -13,7 +13,7 @@ import CSV
 import Combine
 struct ValuesView: View {
     
-    @ObservedObject var mlDataTableFactory: MlDataTableProvider
+    @ObservedObject var mlDataTableProvider: MlDataTableProvider
     var masterDict = Dictionary<String, String>()
     @State var size: CGSize = .zero
     @State var headerSize: CGSize = .zero
@@ -25,24 +25,24 @@ struct ValuesView: View {
     }
     
     init(mlDataTableProvider: MlDataTableProvider) {
-        self.mlDataTableFactory = mlDataTableProvider
+        self.mlDataTableProvider = mlDataTableProvider
     }
     init(file: Files) {
-        self.mlDataTableFactory = MlDataTableProvider()
-        self.mlDataTableFactory.orderedColumns = file.file2columns?.allObjects as? [Columns]
-        self.mlDataTableFactory.selectedColumns = self.mlDataTableFactory.orderedColumns
-        self.mlDataTableFactory.mergedColumns = self.mlDataTableFactory.orderedColumns
-        self.mlDataTableFactory.updateTableProvider(file: file)
+        self.mlDataTableProvider = MlDataTableProvider()
+        self.mlDataTableProvider.orderedColumns = file.file2columns?.allObjects as? [Columns]
+        self.mlDataTableProvider.selectedColumns = self.mlDataTableProvider.orderedColumns
+        self.mlDataTableProvider.mergedColumns = self.mlDataTableProvider.orderedColumns
+        self.mlDataTableProvider.updateTableProvider(file: file)
         
     }
     var body: some View {
-        if mlDataTableFactory.loaded == false {
+        if mlDataTableProvider.loaded == false {
             Text("load table...")
         } else {
-            let cells = (0..<mlDataTableFactory.numRows).flatMap{j in mlDataTableFactory.customColumns.enumerated().map{(i,c) in CellIndex(id:j + i*mlDataTableFactory.numRows, colIndex:i, rowIndex:j)}}
+            let cells = (0..<mlDataTableProvider.numRows).flatMap{j in mlDataTableProvider.customColumns.enumerated().map{(i,c) in CellIndex(id:j + i*mlDataTableProvider.numRows, colIndex:i, rowIndex:j)}}
             ScrollView(.horizontal, showsIndicators: true) {
                 ScrollView([.vertical], showsIndicators: true) {
-                    LazyVGrid(columns:mlDataTableFactory.gridItems, pinnedViews: [.sectionHeaders], content: {
+                    LazyVGrid(columns:mlDataTableProvider.gridItems, pinnedViews: [.sectionHeaders], content: {
                         Section(header: stickyHeaderView .background(
                             GeometryReader { geometryProxy in
                                 Color.white
@@ -50,13 +50,12 @@ struct ValuesView: View {
                             }))
                         {
                             ForEach(cells) { cellIndex in
-                                let column = mlDataTableFactory.customColumns[cellIndex.colIndex]
+                                let column = mlDataTableProvider.customColumns[cellIndex.colIndex]
                                 Text(column.rows[cellIndex.rowIndex])
                                     .onTapGesture {
-                                        print(cellIndex.rowIndex)
-                                        self.mlDataTableFactory.mlDataTable.removeColumn(named: "Predicted: N_ALIVE")
-                                        self.mlDataTableFactory.mlRowDictionary = (self.mlDataTableFactory.valuesTableProvider?.convertRowToDicionary(mlRow: self.mlDataTableFactory.mlDataTable.rows[cellIndex.rowIndex]))!
-                                        self.mlDataTableFactory.selectedRowIndex = cellIndex.rowIndex
+                                        self.mlDataTableProvider.mlDataTable.removeColumn(named: "Predicted: N_ALIVE")
+                                        self.mlDataTableProvider.mlRowDictionary = (self.mlDataTableProvider.valuesTableProvider?.convertRowToDicionary(mlRow: self.mlDataTableProvider.mlDataTable.rows[cellIndex.rowIndex]))!
+                                        self.mlDataTableProvider.selectedRowIndex = cellIndex.rowIndex
                                     }
                                     .padding(.horizontal)
                                     .font(.body).monospacedDigit()
@@ -76,7 +75,7 @@ struct ValuesView: View {
             .onPreferenceChange(SizePreferenceKey.self) { newSize in
                 print("The new child size is: \(newSize)")
                 size = newSize
-                let tableWidth = CGFloat(mlDataTableFactory.sizeOfHeaders()) * 12 + CGFloat(mlDataTableFactory.mlColumns!.count) * 15
+                let tableWidth = CGFloat(mlDataTableProvider.sizeOfHeaders()) * 12 + CGFloat(mlDataTableProvider.mlColumns!.count) * 15
                 headerSize.width = newSize.width > tableWidth ? newSize.width: tableWidth
             }
         }
@@ -86,15 +85,15 @@ struct ValuesView: View {
             savePanel.canCreateDirectories = true
             let response = savePanel.runModal()
             guard response == .OK, let localUrl = savePanel.url else { return }
-            writeCSV(url: localUrl, exportTable: mlDataTableFactory.mlDataTable)
+            writeCSV(url: localUrl, exportTable: mlDataTableProvider.mlDataTable)
             
             
         }
     }
     var stickyHeaderView: some View {
         VStack(spacing: 10) {
-            LazyVGrid(columns: mlDataTableFactory.gridItems) {
-                ForEach(mlDataTableFactory.customColumns) { col in
+            LazyVGrid(columns: mlDataTableProvider.gridItems) {
+                ForEach(mlDataTableProvider.customColumns) { col in
                     Text(col.title)
                         .foregroundColor(Color.blue)
                         .font(.body)
@@ -109,7 +108,7 @@ struct ValuesView: View {
                 .frame(maxWidth: .infinity)
                 .frame(maxHeight: .infinity)
                 .overlay(
-                    mlDataTableFactory.filterViewProvider.tableFilterView
+                    mlDataTableProvider.filterViewProvider.tableFilterView
                 )
         }
         .background(.white)
@@ -124,13 +123,13 @@ struct ValuesView: View {
         }
         let csv = try! CSVWriter(stream: stream, delimiter: ";")
         csv.beginNewRow()
-        for col in mlDataTableFactory.valuesTableProvider!.orderedColNames {
+        for col in mlDataTableProvider.valuesTableProvider!.orderedColNames {
             try? csv.write(field: col)
         }
         for i in 0..<(exportTable.rows.count) {
             let row = exportTable.rows[i]
             csv.beginNewRow()
-            for col in mlDataTableFactory.valuesTableProvider!.orderedColNames {
+            for col in mlDataTableProvider.valuesTableProvider!.orderedColNames {
                 if exportTable.columnNames.contains(col) == true {
                     let valueType = row[col]!.type
                     switch valueType {

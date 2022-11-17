@@ -24,7 +24,7 @@ struct ComposerView: View {
         self.columnsDataModel = ColumnsModel(model: self.model)
         self.composer = composer
         self.combinator = combinator
-        self.mlDataTableProvider = MlDataTableProvider()
+        self.mlDataTableProvider = MlDataTableProvider(model: self.model)
         self.mlDataTableProvider.mlDataTable = composer.mlDataTable_Base!
         self.mlDataTableProvider.orderedColumns = composer.orderedColumns!
         valuesView = ValuesView(mlDataTableProvider: self.mlDataTableProvider)

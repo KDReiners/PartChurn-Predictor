@@ -37,7 +37,7 @@ class ValuesTableProvider: ObservableObject {
         targetColumn = columnDataModel.targetColumns.first
         if targetColumn != nil {
             predictedColumnName = "Predicted: " + (targetColumn?.name)!
-            removePreditionColumns(predictionColumName: predictedColumnName, filter: filter)
+            removePredictionColumns(predictionColumName: predictedColumnName, filter: filter)
         }
         if regressorName != nil && prediction != nil {
             self.regressorName = regressorName
@@ -54,7 +54,7 @@ class ValuesTableProvider: ObservableObject {
         }
         prepareView(orderedColNames: self.orderedColNames)
     }
-    private func removePreditionColumns(predictionColumName: String, filter: Bool? = false) {
+    func removePredictionColumns(predictionColumName: String, filter: Bool? = false) {
         if self.mlDataTable.columnNames.contains(predictedColumnName) && filter != true {
             self.mlDataTable.removeColumn(named: predictedColumnName)
             for i in 0..<orderedColNames.count {
@@ -236,7 +236,6 @@ class ValuesTableProvider: ObservableObject {
                 fatalError(error.localizedDescription)
             }
         }()
-        print(prediction.featureValue(for: "N_ALIVE")!)
         return prediction
     }
     public func predictFromRow(regressorName: String, mlRow: MLDataTable.Row) -> MLFeatureProvider {

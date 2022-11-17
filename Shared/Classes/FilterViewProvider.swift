@@ -8,11 +8,11 @@
 import Foundation
 import SwiftUI
 class FilterViewProvider: ObservableObject {
-    var mlDataTableFactory: MlDataTableProvider
+    var mlDataTableProvider: MlDataTableProvider
     var tableFilterView: TableFilterView
-    init(mlDataTableFactory: MlDataTableProvider) {
-        self.mlDataTableFactory = mlDataTableFactory
-        tableFilterView = TableFilterView(columns: self.mlDataTableFactory.customColumns, gridItems: self.mlDataTableFactory.gridItems, mlDataTableFactory: self.mlDataTableFactory)
+    init(mlDataTableProvider: MlDataTableProvider) {
+        self.mlDataTableProvider = mlDataTableProvider
+        tableFilterView = TableFilterView(columns: self.mlDataTableProvider.customColumns, gridItems: self.mlDataTableProvider.gridItems, mlDataTableFactory: self.mlDataTableProvider)
     }
 
 }

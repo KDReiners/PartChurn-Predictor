@@ -45,7 +45,6 @@ class MLTableCluster {
         self.columns = columns
         self.model = model
         columnsDataModel = ColumnsModel(columnsFilter: self.columns, model: self.model)
-        print("columnsdataModel instatiated for table cluster")
     }
     internal func construct() -> MLDataTable {
         var prePeriodsTable: MLDataTable?

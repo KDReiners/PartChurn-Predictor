@@ -15,10 +15,9 @@ class AnalysisProvider {
     init(model: Models) {
         self.model = model
         self.fileWeaver = FileWeaver(model: model)
-        self.mlDataTableProvider = MlDataTableProvider()
+        self.mlDataTableProvider = MlDataTableProvider(model: self.model)
         self.mlDataTableProvider.mlDataTable = fileWeaver.mlDataTable_Base!
         self.mlDataTableProvider.orderedColumns = fileWeaver.orderedColumns!
-        self.mlDataTableProvider.model = self.model
         PredictionMetricsModel().deleteAllRecords(predicate: nil)
         PredictionMetricValueModel().deleteAllRecords(predicate: nil)
     }
@@ -74,7 +73,7 @@ struct Analysis {
             print("Working on algorithm: \(item.name!)")
             mlDataTableProvider.regressorName = item.name!
             mlDataTableProvider.prediction = clusterSelection.prediction
-            var trainer = Trainer(mlDataTableFactory: mlDataTableProvider)
+            var trainer = Trainer(mlDataTableProvider: mlDataTableProvider)
             trainer.createModel(regressorName: item.name!)
             let newStatistics = Statistics(mlOwnDataTableProvider: mlDataTableProvider, regressorName: item.name!)
             newStatistics.schedule()

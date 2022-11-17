@@ -18,11 +18,11 @@ public struct Trainer {
     var timeSeriesColumnName: String?
     var regressor: MLRegressor!
     var prediction: Predictions!
-    init(mlDataTableFactory: MlDataTableProvider) {
+    init(mlDataTableProvider: MlDataTableProvider) {
         let columnDataModel = ColumnsModel(model: self.model )
         let targetColumn = columnDataModel.timedependantTargetColums.first
         let predictedColumnName = "Predicted: " + (targetColumn?.name)!
-        self.mlDataTableProvider = mlDataTableFactory
+        self.mlDataTableProvider = mlDataTableProvider
         self.regressorTable = self.mlDataTableProvider.mlDataTable
         self.regressorTable!.removeColumn(named: predictedColumnName)
         self.regressorTable!.removeColumn(named: columnDataModel.primaryKeyColumn!.name!)

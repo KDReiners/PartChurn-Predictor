@@ -15,7 +15,7 @@ class SimulationController: ObservableObject {
         var result: MlDataTableProviderContext?
         result = providerContexts.filter { $0.model == model }.first
         if result == nil {
-            result = MlDataTableProviderContext(mlDataTableProvider: MlDataTableProvider(), model: model)
+            result = MlDataTableProviderContext(mlDataTableProvider: MlDataTableProvider(model: model))
             self.providerContexts.append(result!)
         }
         guard let result = result else {
@@ -34,10 +34,9 @@ class SimulationController: ObservableObject {
         var combinator: Combinator!
         var model: Models!
         var joinColums: [Columns]!
-        init(mlDataTableProvider: MlDataTableProvider, model: Models) {
+        init(mlDataTableProvider: MlDataTableProvider) {
             self.mlDataTableProvider = mlDataTableProvider
-            self.mlDataTableProvider.model = model
-            self.model = model
+            self.model = mlDataTableProvider.model
             self.columnsDataModel = ColumnsModel(model: self.model)
             self.joinColums = columnsDataModel.joinColumns
             self.mlDataTableProvider.regressorName  = "MLBoostedTreeRegressor"
@@ -51,6 +50,7 @@ class SimulationController: ObservableObject {
             if self.clusterSelection?.prediction != prediction {
                 self.clusterSelection = predictionsDataModel.arrayOfPredictions.first(where: { $0.prediction == prediction })
                 self.mlDataTableProvider.prediction = prediction
+                self.mlDataTableProvider.selectedColumns = clusterSelection?.columns
                 generateValuesView()
             }
         }
@@ -95,7 +95,8 @@ class SimulationController: ObservableObject {
         var body: some View {
             TextField("", text: $customColum.rows[rowIndex])
                 .onReceive(Just($customColum.rows[rowIndex])) { text in
-                    if mlDataTableProvider.selectedRowIndex != nil {
+                    if mlDataTableProvider.selectedRowIndex != nil
+                            && mlDataTableProvider.mlDataTable.columnNames.contains(customColum.title) == true {
                         switch mlDataTableProvider.mlDataTable[customColum.title].type {
                         case MLDataValue.ValueType.int:
                             mlDataTableProvider.mlRowDictionary[customColum.title] = Int(text.wrappedValue)

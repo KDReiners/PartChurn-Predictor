@@ -29,10 +29,9 @@ struct CompositionsView: View {
         self.compositionDataModel = CompositionsModel(model: self.model)
         self.composer = composer
         self.combinator = combinator
-        self.mlDataTableProvider = MlDataTableProvider()
+        self.mlDataTableProvider = MlDataTableProvider(model: self.model)
         self.mlDataTableProvider.mlDataTable = composer.mlDataTable_Base!
         self.mlDataTableProvider.orderedColumns = composer.orderedColumns!
-        self.mlDataTableProvider.model = self.model
         unionResult = self.mlDataTableProvider.buildMlDataTable()
         self.mlDataTableProvider.updateTableProvider()
         valuesView = ValuesView(mlDataTableProvider: self.mlDataTableProvider)
@@ -161,17 +160,17 @@ struct CompositionsView: View {
                                 HStack {
                                     Text("All rows count")
                                     Spacer()
-                                    let countNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.absolutRowCount)
+                                    let countNumber = NSNumber(value: mlDataTableProvider.tableStatistics?.absolutRowCount ?? 0)
                                     Text(BaseServices.intFormatter.string(from: countNumber)!)
                                 }
                                 HStack {
                                     Text("Filtered rows count")
                                     Spacer()
-                                    let countNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.filteredRowCount)
+                                    let countNumber = NSNumber(value: mlDataTableProvider.tableStatistics?.filteredRowCount ?? 0)
                                     Text(BaseServices.intFormatter.string(from: countNumber)!)
                                 }
                             }
-                            if (mlDataTableProvider.tableStatistics?.targetStatistics.count)! > 0 {
+                            if (mlDataTableProvider.tableStatistics?.targetStatistics.count ?? 0) > 0 {
                                 Divider()
                                 VStack {
                                     Group {
@@ -286,7 +285,7 @@ struct CompositionsView: View {
     }
     
     private func train(regressorName: String?) {
-        var trainer = Trainer(mlDataTableFactory: self.mlDataTableProvider)
+        var trainer = Trainer(mlDataTableProvider: self.mlDataTableProvider)
         trainer.createModel(regressorName: $mlSelection.wrappedValue!)
         generatePredictionView()
     }

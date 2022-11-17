@@ -17,6 +17,7 @@ class MlDataTableProvider: ObservableObject {
     @Published var tableStatistics: TableStatistics?
     @Published var selectedRowIndex: Int?
     @Published var mlRowDictionary = [String: MLDataValueConvertible]()
+    
     var numRows: Int = 0
     var customColumns = [CustomColumn]()
     var mlDataTable: MLDataTable!
@@ -34,6 +35,10 @@ class MlDataTableProvider: ObservableObject {
     init() {
         self.tableStatistics = TableStatistics()
     }
+    init(model: Models) {
+        self.tableStatistics = TableStatistics()
+        self.model = model
+    }
     internal func sizeOfHeaders() -> Int {
         var result = 0
         for column in mlColumns! {
@@ -48,7 +53,7 @@ class MlDataTableProvider: ObservableObject {
                 self.valuesTableProvider = provider
                 self.tableStatistics?.filteredRowCount = provider.mlDataTable.rows.count
                 if self.filterViewProvider == nil {
-                    self.filterViewProvider = FilterViewProvider(mlDataTableFactory: self)
+                    self.filterViewProvider = FilterViewProvider(mlDataTableProvider: self)
                 }
                 self.loaded = true
             }
@@ -64,7 +69,7 @@ class MlDataTableProvider: ObservableObject {
                 self.mlDataTable = self.mlDataTableRaw
                 self.mlColumns = provider.orderedColNames
                 if self.filterViewProvider == nil {
-                    self.filterViewProvider = FilterViewProvider(mlDataTableFactory: self)
+                    self.filterViewProvider = FilterViewProvider(mlDataTableProvider: self)
                 }
                 if provider.targetValues.count > 0 {
                     //                    self.ableStatistics?.targetStatistics =
@@ -88,7 +93,7 @@ class MlDataTableProvider: ObservableObject {
                 }
                 self.mlColumns = provider.orderedColNames
                 if self.filterViewProvider == nil {
-                    self.filterViewProvider = FilterViewProvider(mlDataTableFactory: self)
+                    self.filterViewProvider = FilterViewProvider(mlDataTableProvider: self)
                 }
                 self.loaded = true
             }
@@ -119,7 +124,7 @@ class MlDataTableProvider: ObservableObject {
                 self.valuesTableProvider = provider
                 self.tableStatistics?.absolutRowCount = provider.mlDataTable.rows.count
                 if self.filterViewProvider == nil {
-                    self.filterViewProvider = FilterViewProvider(mlDataTableFactory: self)
+                    self.filterViewProvider = FilterViewProvider(mlDataTableProvider: self)
                 }
                 self.loaded = true
             }
