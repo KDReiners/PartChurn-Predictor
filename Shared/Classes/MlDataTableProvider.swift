@@ -32,11 +32,11 @@ class MlDataTableProvider: ObservableObject {
     var filterViewProvider: FilterViewProvider!
     var prediction: Predictions?
     var regressorName: String?
-    init() {
+    init(model: Models? = nil) {
         self.tableStatistics = TableStatistics()
-    }
-    init(model: Models) {
-        self.tableStatistics = TableStatistics()
+        guard let model = model else {
+            return
+        }
         self.model = model
     }
     internal func sizeOfHeaders() -> Int {
