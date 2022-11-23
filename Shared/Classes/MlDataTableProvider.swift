@@ -16,7 +16,7 @@ class MlDataTableProvider: ObservableObject {
     @Published var valuesTableProvider: ValuesTableProvider?
     @Published var tableStatistics: TableStatistics?
     @Published var selectedRowIndex: Int?
-    @Published var mlRowDictionary = [String: MLDataValueConvertible]()
+    @State var mlRowDictionary = [String: MLDataValueConvertible]()
     
     var numRows: Int = 0
     var customColumns = [CustomColumn]()
@@ -50,6 +50,7 @@ class MlDataTableProvider: ObservableObject {
     internal func updateTableProviderForFiltering() {
         tableProvider(mlDataTable: self.mlDataTable, orderedColums: self.customColumns.map { $0.title}, selectedColumns: mergedColumns, filter: true) { provider in
             DispatchQueue.main.async {
+                provider.predictionModel = self.valuesTableProvider?.predictionModel
                 self.valuesTableProvider = provider
                 self.tableStatistics?.filteredRowCount = provider.mlDataTable.rows.count
                 if self.filterViewProvider == nil {

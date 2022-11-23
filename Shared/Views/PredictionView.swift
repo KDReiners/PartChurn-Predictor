@@ -10,7 +10,7 @@ import SwiftUI
 struct PredictionView: View {
     @ObservedObject var mlDataTableProvider: MlDataTableProvider
     var mlDataTableProviderContext: SimulationController.MlDataTableProviderContext
-    //    @State var valuesView: ValuesView?
+    @State var newPredictedValue: Double?
     struct CellIndex: Identifiable {
         let id: Int
         let colIndex: Int
@@ -26,7 +26,17 @@ struct PredictionView: View {
             Text("load table...")
         } else {
             VStack(alignment: .leading) {
-                Text("Hello dear prediction")
+                if self.mlDataTableProvider.mlRowDictionary.count > 0 {
+                    let targetColumn = self.mlDataTableProviderContext.mlDataTableProvider.customColumns.first(where: { $0.title == "Predicted: N_ALIVE"})
+                    let rowIndex = self.mlDataTableProviderContext.mlDataTableProvider.selectedRowIndex
+                    let predictedValue = targetColumn?.rows[rowIndex!]
+                    HStack() {
+                        Text("Table Prediction Value: ")
+                        Text(String(predictedValue!))
+                        Text("New PredictedValue: ")
+                        Text(String($newPredictedValue.wrappedValue ?? -99))
+                    }
+                }
                 let cells = (0..<1).flatMap{j in self.mlDataTableProviderContext.mlDataTableProvider.customColumns.enumerated().map{(i,c) in CellIndex(id:j + i*1, colIndex:i, rowIndex:j)}}
                 let gridItems = [GridItem(.flexible(), alignment: .leading), GridItem(.flexible(), alignment: .trailing), GridItem(.flexible()),  GridItem(.flexible(), alignment: .trailing)]
                 ScrollView([.vertical], showsIndicators: true) {
@@ -39,7 +49,8 @@ struct PredictionView: View {
                             self.mlDataTableProviderContext.getView(customColumn: column, rowIndex: self.mlDataTableProvider.selectedRowIndex ?? 0)
                                 .font(.callout)
                             Button("Apply") {
-                                self.mlDataTableProvider.valuesTableProvider?.predict(regressorName: "BoostedTreeRegressor", result: self.mlDataTableProvider.mlRowDictionary)
+                                let featureValue =  self.mlDataTableProvider.valuesTableProvider?.predict(regressorName: "BoostedTreeRegressor", result:    self.mlDataTableProvider.mlRowDictionary)
+                                $newPredictedValue.wrappedValue = featureValue?.featureValue(for: "N_ALIVE")?.doubleValue
                             }
                         }
                     }

@@ -10,6 +10,7 @@ import CreateML
 import SwiftUI
 import Combine
 class SimulationController: ObservableObject {
+    @State var mlRowDictionary = [String: MLDataValueConvertible]()
     static var providerContexts = [MlDataTableProviderContext]()
     static func returnFittingProviderContext(model: Models) -> MlDataTableProviderContext? {
         var result: MlDataTableProviderContext?
@@ -22,7 +23,6 @@ class SimulationController: ObservableObject {
             fatalError()
         }
         return result
-        
     }
     class MlDataTableProviderContext: ObservableObject {
         @Published var mlDataTableProvider: MlDataTableProvider
@@ -33,12 +33,10 @@ class SimulationController: ObservableObject {
         var composer: FileWeaver!
         var combinator: Combinator!
         var model: Models!
-        var joinColums: [Columns]!
         init(mlDataTableProvider: MlDataTableProvider) {
             self.mlDataTableProvider = mlDataTableProvider
             self.model = mlDataTableProvider.model
             self.columnsDataModel = ColumnsModel(model: self.model)
-            self.joinColums = columnsDataModel.joinColumns
             self.mlDataTableProvider.regressorName  = "MLBoostedTreeRegressor"
             self.composer = FileWeaver(model: self.model)
             predictionsDataModel.createPredictionForModel(model: self.model)
@@ -77,40 +75,39 @@ class SimulationController: ObservableObject {
             }
         }
         @ViewBuilder func getView(customColumn: CustomColumn, rowIndex: Int) -> some View {
-            
-            
             let column = columnsDataModel.items.first(where: { $0.ispartofprimarykey == 1 && $0.name == customColumn.title })
             if column == nil {
-                SimulationField(customColum: customColumn, mlDataTableProvider: self.mlDataTableProvider, rowIndex: rowIndex)
+                SimulationField(customColumn: customColumn, mlDataTableProvider: self.mlDataTableProvider, field: customColumn.rows[rowIndex], rowIndex: rowIndex)
             } else {
                 Text(customColumn.rows[rowIndex])
                     .foregroundColor(.gray)
             }
         }
-    }
-    struct SimulationField: View {
-        @State var customColum: CustomColumn
-        var mlDataTableProvider: MlDataTableProvider
-        var rowIndex: Int
-        var body: some View {
-            TextField("", text: $customColum.rows[rowIndex])
-                .onReceive(Just($customColum.rows[rowIndex])) { text in
-                    if mlDataTableProvider.selectedRowIndex != nil
-                            && mlDataTableProvider.mlDataTable.columnNames.contains(customColum.title) == true {
-                        switch mlDataTableProvider.mlDataTable[customColum.title].type {
-                        case MLDataValue.ValueType.int:
-                            mlDataTableProvider.mlRowDictionary[customColum.title] = Int(text.wrappedValue)
-                        case MLDataValue.ValueType.double:
-                            mlDataTableProvider.mlRowDictionary[customColum.title] = Double(text.wrappedValue.preparedToDecimalNumberConversion)
-                        case MLDataValue.ValueType.string:
-                            mlDataTableProvider.mlRowDictionary[customColum.title] = text.wrappedValue
-                        default: fatalError("Could not find valueType")
+        struct SimulationField: View {
+            var customColumn: CustomColumn
+            var mlDataTableProvider: MlDataTableProvider
+            @State var field: String
+            var rowIndex: Int
+            var body: some View {
+                TextField("", text: $field)
+                    .onReceive(Just(field)) { text in
+                        if mlDataTableProvider.selectedRowIndex != nil
+                                && mlDataTableProvider.mlDataTable.columnNames.contains(customColumn.title) == true {
+                            print(customColumn.title + " " + text)
+                            switch mlDataTableProvider.mlDataTable[customColumn.title].type {
+                            case MLDataValue.ValueType.int:
+                                self.mlDataTableProvider.mlRowDictionary[customColumn.title] = Int(text)
+                            case MLDataValue.ValueType.double:
+                                self.mlDataTableProvider.mlRowDictionary[customColumn.title] = Double(text.preparedToDecimalNumberConversion)
+                            case MLDataValue.ValueType.string:
+                                self.mlDataTableProvider.mlRowDictionary[customColumn.title] = text
+                            default: fatalError("Could not find valueType")
+                            }
                         }
                     }
-                }
+            }
         }
+        
     }
-    struct JoinCondition {
-        var Conditions: Dictionary<String, Any>
-    }
+   
 }
