@@ -54,7 +54,6 @@ struct ValuesView: View {
                                 Text(column.rows[cellIndex.rowIndex])
                                     .onTapGesture {
                                         self.mlDataTableProvider.selectedRowIndex = cellIndex.rowIndex
-                                        self.mlDataTableProvider.mlDataTable.removeColumn(named: "Predicted: N_ALIVE")
                                         self.mlDataTableProvider.mlRowDictionary = (self.mlDataTableProvider.valuesTableProvider?.convertRowToDicionary(mlRow: self.mlDataTableProvider.mlDataTable.rows[cellIndex.rowIndex]))!
                                         
                                     }

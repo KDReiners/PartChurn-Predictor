@@ -10,7 +10,6 @@ import CreateML
 import SwiftUI
 import Combine
 class SimulationController: ObservableObject {
-    @State var mlRowDictionary = [String: MLDataValueConvertible]()
     static var providerContexts = [MlDataTableProviderContext]()
     static func returnFittingProviderContext(model: Models) -> MlDataTableProviderContext? {
         var result: MlDataTableProviderContext?
@@ -74,40 +73,51 @@ class SimulationController: ObservableObject {
                 self.gridItems.append(newGridItem)
             }
         }
-        @ViewBuilder func getView(customColumn: CustomColumn, rowIndex: Int) -> some View {
-            let column = columnsDataModel.items.first(where: { $0.ispartofprimarykey == 1 && $0.name == customColumn.title })
-            if column == nil {
-                SimulationField(customColumn: customColumn, mlDataTableProvider: self.mlDataTableProvider, field: customColumn.rows[rowIndex], rowIndex: rowIndex)
-            } else {
-                Text(customColumn.rows[rowIndex])
-                    .foregroundColor(.gray)
-            }
-        }
-        struct SimulationField: View {
+        struct EditValueView: View {
             var customColumn: CustomColumn
-            var mlDataTableProvider: MlDataTableProvider
-            @State var field: String
             var rowIndex: Int
+            var mlDataTableProvider: MlDataTableProvider
+            var columnsDataModel: ColumnsModel
+            init(customColumn: CustomColumn, rowIndex: Int, mlDataTableProvider: MlDataTableProvider, columnsDataModel: ColumnsModel) {
+                self.customColumn = customColumn
+                self.rowIndex = rowIndex
+                self.mlDataTableProvider = mlDataTableProvider
+                self.columnsDataModel = columnsDataModel
+            }
             var body: some View {
-                TextField("", text: $field)
-                    .onReceive(Just(field)) { text in
-                        if mlDataTableProvider.selectedRowIndex != nil
-                                && mlDataTableProvider.mlDataTable.columnNames.contains(customColumn.title) == true {
-                            print(customColumn.title + " " + text)
+                TextField("Hier gibt es keinen Wert", text: binding(for: customColumn.title))
+            }
+            private func binding(for key: String) -> Binding<String> {
+                    return .init(
+                        get: {
+                            if mlDataTableProvider.selectedRowIndex != nil && mlDataTableProvider.mlDataTable.columnNames.contains(customColumn.title) == true {
+                                switch mlDataTableProvider.mlDataTable[customColumn.title].type {
+                                case MLDataValue.ValueType.int:
+                                    return String((self.mlDataTableProvider.mlRowDictionary[customColumn.title]?.dataValue.intValue)!)
+                                case MLDataValue.ValueType.double:
+                                    return String((self.mlDataTableProvider.mlRowDictionary[customColumn.title]?.dataValue.doubleValue)!)
+                                case MLDataValue.ValueType.string:
+                                    return (self.mlDataTableProvider.mlRowDictionary[customColumn.title]?.dataValue.stringValue)!
+                                default: return "Could not find valueType"
+                                }
+                            } else { return "" }
+                        },
+                        set: {
                             switch mlDataTableProvider.mlDataTable[customColumn.title].type {
                             case MLDataValue.ValueType.int:
-                                self.mlDataTableProvider.mlRowDictionary[customColumn.title] = Int(text)
-                            case MLDataValue.ValueType.double:
-                                self.mlDataTableProvider.mlRowDictionary[customColumn.title] = Double(text.preparedToDecimalNumberConversion)
-                            case MLDataValue.ValueType.string:
-                                self.mlDataTableProvider.mlRowDictionary[customColumn.title] = text
-                            default: fatalError("Could not find valueType")
-                            }
-                        }
-                    }
-            }
+                                var newValue: Int
+                                newValue = Int.parse(from: $0) ?? 0
+                                self.mlDataTableProvider.mlRowDictionary[customColumn.title] = newValue
+                                case MLDataValue.ValueType.double:
+                                var newValue: Double
+                                newValue = Double.parse(from: $0) ?? 0.00
+                                    self.mlDataTableProvider.mlRowDictionary[customColumn.title] = Double(String(newValue).preparedToDecimalNumberConversion)
+                                case MLDataValue.ValueType.string:
+                                    self.mlDataTableProvider.mlRowDictionary[customColumn.title] = $0
+                                default: self.mlDataTableProvider.mlRowDictionary[customColumn.title] = "Could not find valueType"
+                                }
+                        })
+                }
         }
-        
     }
-   
 }

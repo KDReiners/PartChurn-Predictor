@@ -46,7 +46,7 @@ struct PredictionView: View {
                             Text(column.title)
                                 .font(.body.bold())
                             Text(column.rows[self.mlDataTableProviderContext.mlDataTableProvider.selectedRowIndex ?? 0])
-                            self.mlDataTableProviderContext.getView(customColumn: column, rowIndex: self.mlDataTableProvider.selectedRowIndex ?? 0)
+                            SimulationController.MlDataTableProviderContext.EditValueView(customColumn: column, rowIndex: self.mlDataTableProvider.selectedRowIndex ?? 0, mlDataTableProvider: self.mlDataTableProvider, columnsDataModel: self.mlDataTableProviderContext.columnsDataModel)
                                 .font(.callout)
                             Button("Apply") {
                                 let featureValue =  self.mlDataTableProvider.valuesTableProvider?.predict(regressorName: "BoostedTreeRegressor", result:    self.mlDataTableProvider.mlRowDictionary)

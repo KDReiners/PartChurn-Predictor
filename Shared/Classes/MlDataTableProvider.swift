@@ -16,15 +16,15 @@ class MlDataTableProvider: ObservableObject {
     @Published var valuesTableProvider: ValuesTableProvider?
     @Published var tableStatistics: TableStatistics?
     @Published var selectedRowIndex: Int?
-    @State var mlRowDictionary = [String: MLDataValueConvertible]()
     
+    var mlRowDictionary = [String: MLDataValueConvertible]()
     var numRows: Int = 0
     var customColumns = [CustomColumn]()
     var mlDataTable: MLDataTable!
     var mlDataTableRaw: MLDataTable!
     var unionOfMlDataTables: [MLDataTable]?
     var orderedColumns: [Columns]!
-    var selectedColumns: [Columns]?
+    var selectedColumns: [Columns]? 
     var mergedColumns: [Columns]!
     var timeSeries: [[Int]]?
     var mlColumns: [String]?
