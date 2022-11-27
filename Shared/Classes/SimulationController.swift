@@ -78,6 +78,7 @@ class SimulationController: ObservableObject {
             var rowIndex: Int
             var mlDataTableProvider: MlDataTableProvider
             var columnsDataModel: ColumnsModel
+            @State var mlRowDictionary = [String: MLDataValueConvertible]()
             init(customColumn: CustomColumn, rowIndex: Int, mlDataTableProvider: MlDataTableProvider, columnsDataModel: ColumnsModel) {
                 self.customColumn = customColumn
                 self.rowIndex = rowIndex
@@ -85,7 +86,9 @@ class SimulationController: ObservableObject {
                 self.columnsDataModel = columnsDataModel
             }
             var body: some View {
-                TextField("Hier gibt es keinen Wert", text: binding(for: customColumn.title))
+                TextField("Hier gibt es keinen Wert", text: binding(for: customColumn.title)).onSubmit {
+                    updateRowDictionary(updateValue: $mlRowDictionary[customColumn.title].wrappedValue as! String)
+                }
             }
             private func binding(for key: String) -> Binding<String> {
                     return .init(
@@ -103,21 +106,24 @@ class SimulationController: ObservableObject {
                             } else { return "" }
                         },
                         set: {
-                            switch mlDataTableProvider.mlDataTable[customColumn.title].type {
-                            case MLDataValue.ValueType.int:
-                                var newValue: Int
-                                newValue = Int.parse(from: $0) ?? 0
-                                self.mlDataTableProvider.mlRowDictionary[customColumn.title] = newValue
-                                case MLDataValue.ValueType.double:
-                                var newValue: Double
-                                newValue = Double.parse(from: $0) ?? 0.00
-                                    self.mlDataTableProvider.mlRowDictionary[customColumn.title] = Double(String(newValue).preparedToDecimalNumberConversion)
-                                case MLDataValue.ValueType.string:
-                                    self.mlDataTableProvider.mlRowDictionary[customColumn.title] = $0
-                                default: self.mlDataTableProvider.mlRowDictionary[customColumn.title] = "Could not find valueType"
-                                }
+                            mlRowDictionary[customColumn.title] = $0
                         })
                 }
+            private func updateRowDictionary(updateValue: String) {
+                switch mlDataTableProvider.mlDataTable[customColumn.title].type {
+                case MLDataValue.ValueType.int:
+                    var newValue: Int
+                    newValue = Int.parse(from: updateValue) ?? 0
+                    self.mlDataTableProvider.mlRowDictionary[customColumn.title] = newValue
+                    case MLDataValue.ValueType.double:
+                    var newValue: Double
+                    newValue = Double.parse(from: updateValue) ?? 0.00
+                        self.mlDataTableProvider.mlRowDictionary[customColumn.title] = Double(String(newValue).preparedToDecimalNumberConversion)
+                    case MLDataValue.ValueType.string:
+                        self.mlDataTableProvider.mlRowDictionary[customColumn.title] = updateValue
+                    default: self.mlDataTableProvider.mlRowDictionary[customColumn.title] = "Could not find valueType"
+                    }
+            }
         }
     }
 }
