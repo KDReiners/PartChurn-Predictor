@@ -16,6 +16,7 @@ struct DirectoryView: View {
     @State var fileSelect: NSManagedObjectID?
     var activate = false
     var body: some View {
+        ContentView()
         NavigationView {
             List {
                 DisclosureGroup("Modelle") {
