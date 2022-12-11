@@ -46,7 +46,6 @@ class ValuesTableProvider: ObservableObject {
             let fileManager = FileManager.default
             if fileManager.fileExists(atPath: urlToPredictionModel!.path) {
                predictionModel = getModel(url: urlToPredictionModel!)
-                print("incoporate predictions for \(prediction!.groupingpattern!) and \(regressorName!)")
                 incorporatedPredition(selectedColumns: selectedColumns!)
             }
         } else {
@@ -131,23 +130,22 @@ class ValuesTableProvider: ObservableObject {
         case MLDataValue.ValueType.int:
             rows = Array.init(mlDataTable[columnName!].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.intValue!)) }))
             newCustomColumn.alignment = .trailing
-            newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
+            newGridItem = GridItem(.flexible(minimum: 100, maximum: .infinity), spacing: 0, alignment: .trailing)
         case MLDataValue.ValueType.double:
             mlDataValueFormatter.minimumFractionDigits = 4
             mlDataValueFormatter.maximumFractionDigits = 4
             mlDataValueFormatter.hasThousandSeparators = true
             rows = Array.init(mlDataTable[columnName!].map( { mlDataValueFormatter.string(from: NSNumber(value: $0.doubleValue!)) }))
             newCustomColumn.alignment = .trailing
-            newGridItem = GridItem(.flexible(),spacing: 10, alignment: .trailing)
+            newGridItem = GridItem(.flexible(minimum: 100, maximum: .infinity), spacing: 0, alignment: .trailing)
         case MLDataValue.ValueType.string:
             rows = Array.init(mlDataTable[columnName!].map( { $0.stringValue! }))
             newCustomColumn.alignment = .leading
-            newGridItem = GridItem(.flexible(),spacing: 10, alignment: .leading)
+            newGridItem = GridItem(.flexible(minimum: 100, maximum: .infinity), spacing: 0, alignment: .leading)
         default:
             print("error determing valueType")
         }
         newCustomColumn.rows.append(contentsOf: rows)
-        newGridItem = GridItem(.flexible(), spacing: 10, alignment: .trailing)
         self.customColumns.append(newCustomColumn)
         self.gridItems.append(newGridItem!)
     }

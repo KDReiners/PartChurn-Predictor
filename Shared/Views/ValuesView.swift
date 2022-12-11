@@ -38,11 +38,12 @@ struct ValuesView: View {
     var body: some View {
         if mlDataTableProvider.loaded == false {
             Text("load table...")
+                .background(.white)
         } else {
             let cells = (0..<mlDataTableProvider.numRows).flatMap{j in mlDataTableProvider.customColumns.enumerated().map{(i,c) in CellIndex(id:j + i*mlDataTableProvider.numRows, colIndex:i, rowIndex:j)}}
             ScrollView(.horizontal, showsIndicators: true) {
                 ScrollView([.vertical], showsIndicators: true) {
-                    LazyVGrid(columns:mlDataTableProvider.gridItems, pinnedViews: [.sectionHeaders], content: {
+                    LazyVGrid(columns:mlDataTableProvider.gridItems, spacing: 0, pinnedViews: [.sectionHeaders], content: {
                         Section(header: stickyHeaderView .background(
                             GeometryReader { geometryProxy in
                                 Color.white
@@ -58,8 +59,9 @@ struct ValuesView: View {
                                         
                                     }
                                     .padding(.horizontal)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: column.alignment)
                                     .font(.body).monospacedDigit()
-                                    .scaledToFit()
+                                    .background(isEvenRow(cellIndex.rowIndex) ? Color.white: Color.gray.opacity(0.1))
                             }
                         }
                     })
@@ -73,7 +75,6 @@ struct ValuesView: View {
                         .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
                 })
             .onPreferenceChange(SizePreferenceKey.self) { newSize in
-                print("The new child size is: \(newSize)")
                 size = newSize
                 let tableWidth = CGFloat(mlDataTableProvider.sizeOfHeaders()) * 12 + CGFloat(mlDataTableProvider.mlColumns!.count) * 15
                 headerSize.width = newSize.width > tableWidth ? newSize.width: tableWidth
@@ -113,6 +114,9 @@ struct ValuesView: View {
         }
         .background(.white)
         .padding(.bottom)
+    }
+    private func isEvenRow(_ index: Int) -> Bool {
+        index % 2 == 0
     }
     private func writeCSV(url: URL, exportTable: MLDataTable) {
         var stream: OutputStream

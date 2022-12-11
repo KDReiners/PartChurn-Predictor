@@ -78,6 +78,7 @@ class SimulationController: ObservableObject {
             var rowIndex: Int
             var mlDataTableProvider: MlDataTableProvider
             var columnsDataModel: ColumnsModel
+            @FocusState private var focusState: Bool
             @State var mlRowDictionary = [String: MLDataValueConvertible]()
             init(customColumn: CustomColumn, rowIndex: Int, mlDataTableProvider: MlDataTableProvider, columnsDataModel: ColumnsModel) {
                 self.customColumn = customColumn
@@ -86,9 +87,13 @@ class SimulationController: ObservableObject {
                 self.columnsDataModel = columnsDataModel
             }
             var body: some View {
-                TextField("Hier gibt es keinen Wert", text: binding(for: customColumn.title)).onSubmit {
-                    updateRowDictionary(updateValue: $mlRowDictionary[customColumn.title].wrappedValue as! String)
-                }
+                TextField("Hier gibt es keinen Wert", text: binding(for: customColumn.title))
+                    .focused($focusState)
+                    .onChange(of: focusState, perform:  { newValue in
+                        if newValue == false {
+                            updateRowDictionary(updateValue: $mlRowDictionary[customColumn.title].wrappedValue as! String)
+                        }
+                })
             }
             private func binding(for key: String) -> Binding<String> {
                     return .init(

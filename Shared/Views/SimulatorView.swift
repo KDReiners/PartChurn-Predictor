@@ -33,8 +33,10 @@ struct SimulatorView: View {
     }
     
     var body: some View {
-        PredictionView(mlDataTableProviderContext: self.mlDataTableProviderContext)
-        Divider()
-        ValuesView(mlDataTableProvider: self.mlDataTableProviderContext.mlDataTableProvider)
+        VStack(alignment: .center) {
+            PredictionView(mlDataTableProviderContext: self.mlDataTableProviderContext)
+            Divider()
+            ValuesView(mlDataTableProvider: self.mlDataTableProviderContext.mlDataTableProvider)
+        }.background(.white)
     }
 }
