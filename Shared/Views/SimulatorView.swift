@@ -7,7 +7,7 @@
 
 import SwiftUI
 struct SimulatorView: View {
-    @ObservedObject var mlSimulationController = SimulationController()
+    @EnvironmentObject var mlSimulationController: SimulationController
     var mlDataTableProviderContext: SimulationController.MlDataTableProviderContext!
     var predictionsDataModel = PredictionsModel()
     var prediction: Predictions?

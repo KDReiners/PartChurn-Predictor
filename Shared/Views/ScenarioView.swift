@@ -12,6 +12,7 @@ struct ScenarioView: View {
     /// for modelsView
     var model: Models
     var valuesViewModel = ValuesModel()
+    var mlDataTableProviderContext: SimulationController.MlDataTableProviderContext!
     @ObservedObject var compositionsDataModel = CompositionsModel()
     @ObservedObject var predictionsDataModel = PredictionsModel()
     var fileSelection: Files?
@@ -23,8 +24,11 @@ struct ScenarioView: View {
     init(model: Models, modelSelect: NSManagedObject?) {
         self.model = model
         if modelSelect != nil {
-            self.composer = FileWeaver(model: model)
-            self.combinator = Combinator(model: self.model, orderedColumns: (composer?.orderedColumns)!, mlDataTable: (composer?.mlDataTable_Base)!)
+            guard let mlDataTableProviderContext = SimulationController.returnFittingProviderContext(model: model) else {
+                fatalError("No mlDataTableProviderContext created")
+            }
+            self.composer = mlDataTableProviderContext.composer
+            self.combinator = mlDataTableProviderContext.combinator
         }
     }
     var body: some View {

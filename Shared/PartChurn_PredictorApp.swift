@@ -14,7 +14,8 @@ struct PartChurn_PredictorApp: App {
     var body: some Scene {
         WindowGroup {
             DirectoryView(modelsDataModel: managerModels.modelsDataModel, filesDataModel: managerModels.filesDataModel)
-                .environmentObject(managerModels)
+                .environmentObject(ManagerModels())
+                .environmentObject(SimulationController())
                 .frame(minWidth: 1100)
         }
     }
