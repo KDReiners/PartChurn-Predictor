@@ -47,8 +47,6 @@ public struct Trainer {
         self.file = file
         coreDataML = CoreDataML(model: model)
         regressorTable = CoreDataML(model: model).mlDataTable
-        let minorityTable = regressorTable!["N_ALIVE = 0"]
-        
         self.targetColumnName = coreDataML.targetColumns.first?.name
         guard self.targetColumnName != nil else {
             return
