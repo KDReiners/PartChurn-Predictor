@@ -24,6 +24,12 @@ public struct Trainer {
         let predictedColumnName = "Predicted: " + (targetColumn?.name)!
         self.mlDataTableProvider = mlDataTableProvider
         self.regressorTable = self.mlDataTableProvider.mlDataTable
+        let minorityColumn = regressorTable![targetColumn!.name!]
+        let minorityMask = minorityColumn == 0
+        let minorityTable = self.regressorTable![minorityMask]
+        for _ in 0..<30 {
+            regressorTable?.append(contentsOf: minorityTable)
+        }
         self.regressorTable!.removeColumn(named: predictedColumnName)
         self.regressorTable!.removeColumn(named: columnDataModel.primaryKeyColumn!.name!)
         self.targetColumnName = self.mlDataTableProvider.orderedColumns.first(where: { $0.istarget == 1})?.name!
@@ -41,6 +47,8 @@ public struct Trainer {
         self.file = file
         coreDataML = CoreDataML(model: model)
         regressorTable = CoreDataML(model: model).mlDataTable
+        let minorityTable = regressorTable!["N_ALIVE = 0"]
+        
         self.targetColumnName = coreDataML.targetColumns.first?.name
         guard self.targetColumnName != nil else {
             return
