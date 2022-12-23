@@ -91,6 +91,7 @@ class SimulationController: ObservableObject {
                     isEditing = changed
                     if isEditing == false {
                         updateRowDictionary(updateValue: $mlRowDictionary[customColumn.title].wrappedValue as! String)
+                        self.mlDataTableProvider.updateRequest = true
                     }
                 })
             }
@@ -112,6 +113,7 @@ class SimulationController: ObservableObject {
                             } else { return  mlRowDictionary[customColumn.title]?.dataValue.stringValue ?? "" }
                         },
                         set: {
+                            self
                             mlRowDictionary[customColumn.title] = $0
                         })
                 }

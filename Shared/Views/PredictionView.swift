@@ -48,6 +48,11 @@ struct PredictionView: View {
                             Text(column.rows[self.mlDataTableProviderContext.mlDataTableProvider.selectedRowIndex ?? 0])
                             SimulationController.MlDataTableProviderContext.EditValueView(customColumn: column, rowIndex: self.mlDataTableProvider.selectedRowIndex ?? 0, mlDataTableProvider: self.mlDataTableProvider, columnsDataModel: self.mlDataTableProviderContext.columnsDataModel)
                                 .font(.callout)
+                                .onChange(of: self.mlDataTableProvider.updateRequest) { request in
+                                    let featureValue =  self.mlDataTableProvider.valuesTableProvider?.predict(regressorName: "BoostedTreeRegressor", result:    self.mlDataTableProvider.mlRowDictionary)
+                                    $newPredictedValue.wrappedValue = featureValue?.featureValue(for: (self.mlDataTableProvider.valuesTableProvider?.targetColumn.name)!)?.doubleValue
+                                    self.mlDataTableProvider.updateRequest = false
+                                }
                             Button("Apply") {
                                 let featureValue =  self.mlDataTableProvider.valuesTableProvider?.predict(regressorName: "BoostedTreeRegressor", result:    self.mlDataTableProvider.mlRowDictionary)
                                 $newPredictedValue.wrappedValue = featureValue?.featureValue(for: (self.mlDataTableProvider.valuesTableProvider?.targetColumn.name)!)?.doubleValue

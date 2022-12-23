@@ -17,7 +17,7 @@ class MlDataTableProvider: ObservableObject {
     @Published var tableStatistics: TableStatistics?
     @Published var selectedRowIndex: Int?
     @Published var mlRowDictionary = [String: MLDataValueConvertible]()
-    
+    @Published var updateRequest = false
     var numRows: Int = 0
     var customColumns = [CustomColumn]()
     var mlDataTable: MLDataTable!
