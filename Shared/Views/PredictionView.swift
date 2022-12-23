@@ -27,7 +27,7 @@ struct PredictionView: View {
         } else {
             VStack(alignment: .leading) {
                 if self.mlDataTableProvider.mlRowDictionary.count > 0 {
-                    let targetColumn = self.mlDataTableProviderContext.mlDataTableProvider.customColumns.first(where: { $0.title == "Predicted: N_ALIVE"})
+                    let targetColumn = self.mlDataTableProviderContext.mlDataTableProvider.customColumns.first(where: { $0.title == self.mlDataTableProvider.valuesTableProvider?.predictedColumnName })
                     let rowIndex = self.mlDataTableProviderContext.mlDataTableProvider.selectedRowIndex
                     let predictedValue = targetColumn?.rows[rowIndex!]
                     HStack() {
@@ -50,7 +50,7 @@ struct PredictionView: View {
                                 .font(.callout)
                             Button("Apply") {
                                 let featureValue =  self.mlDataTableProvider.valuesTableProvider?.predict(regressorName: "BoostedTreeRegressor", result:    self.mlDataTableProvider.mlRowDictionary)
-                                $newPredictedValue.wrappedValue = featureValue?.featureValue(for: "N_ALIVE")?.doubleValue
+                                $newPredictedValue.wrappedValue = featureValue?.featureValue(for: (self.mlDataTableProvider.valuesTableProvider?.targetColumn.name)!)?.doubleValue
                             }
                         }
                     }
