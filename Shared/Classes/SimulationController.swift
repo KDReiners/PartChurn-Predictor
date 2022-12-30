@@ -93,7 +93,7 @@ class SimulationController: ObservableObject {
                         updateRowDictionary(updateValue: $mlRowDictionary[customColumn.title].wrappedValue as! String)
                         self.mlDataTableProvider.updateRequest = true
                     }
-                })
+                }).disabled(self.mlDataTableProvider.mlRowDictionary.count  == 0)
             }
             private func binding(for key: String) -> Binding<String> {
                     return .init(
@@ -113,7 +113,6 @@ class SimulationController: ObservableObject {
                             } else { return  mlRowDictionary[customColumn.title]?.dataValue.stringValue ?? "" }
                         },
                         set: {
-                            self
                             mlRowDictionary[customColumn.title] = $0
                         })
                 }

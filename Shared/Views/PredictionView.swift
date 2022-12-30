@@ -38,7 +38,7 @@ struct PredictionView: View {
                     }
                 }
                 let cells = (0..<1).flatMap{j in self.mlDataTableProviderContext.mlDataTableProvider.customColumns.enumerated().map{(i,c) in CellIndex(id:j + i*1, colIndex:i, rowIndex:j)}}
-                let gridItems = [GridItem(.flexible(), alignment: .leading), GridItem(.flexible(), alignment: .trailing), GridItem(.flexible()),  GridItem(.flexible(), alignment: .trailing)]
+                let gridItems = [GridItem(.flexible(), alignment: .leading), GridItem(.flexible(), alignment: .trailing), GridItem(.flexible())]
                 ScrollView([.vertical], showsIndicators: true) {
                     LazyVGrid(columns: gridItems) {
                         ForEach(cells) { cellIndex in
@@ -52,11 +52,8 @@ struct PredictionView: View {
                                     let featureValue =  self.mlDataTableProvider.valuesTableProvider?.predict(regressorName: "BoostedTreeRegressor", result:    self.mlDataTableProvider.mlRowDictionary)
                                     $newPredictedValue.wrappedValue = featureValue?.featureValue(for: (self.mlDataTableProvider.valuesTableProvider?.targetColumn.name)!)?.doubleValue
                                     self.mlDataTableProvider.updateRequest = false
+                                    $newPredictedValue.wrappedValue = featureValue?.featureValue(for: (self.mlDataTableProvider.valuesTableProvider?.targetColumn.name)!)?.doubleValue
                                 }
-                            Button("Apply") {
-                                let featureValue =  self.mlDataTableProvider.valuesTableProvider?.predict(regressorName: "BoostedTreeRegressor", result:    self.mlDataTableProvider.mlRowDictionary)
-                                $newPredictedValue.wrappedValue = featureValue?.featureValue(for: (self.mlDataTableProvider.valuesTableProvider?.targetColumn.name)!)?.doubleValue
-                            }
                         }
                     }
                     .padding()
