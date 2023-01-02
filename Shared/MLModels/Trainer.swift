@@ -27,7 +27,7 @@ public struct Trainer {
         let minorityColumn = regressorTable![targetColumn!.name!]
         let minorityMask = minorityColumn == 0
         let minorityTable = self.regressorTable![minorityMask]
-        for _ in 0..<30 {
+        for _ in 0..<500 {
             regressorTable?.append(contentsOf: minorityTable)
         }
         self.regressorTable!.removeColumn(named: predictedColumnName)
@@ -38,7 +38,7 @@ public struct Trainer {
             let timeSeriesColumn = self.regressorTable![timeSeriesColumnName!]
             let seriesEnd = (timeSeriesColumn.ints?.max())!
             let endMask = timeSeriesColumn < seriesEnd
-            self.regressorTable = self.regressorTable![endMask]
+//            self.regressorTable = self.regressorTable![endMask]
         }
 //        self.regressorTable?.removeColumn(named: columnDataModel.timeStampColumn!.name!)
     }

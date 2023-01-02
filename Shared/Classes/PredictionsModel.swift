@@ -88,7 +88,7 @@ public class PredictionsModel: Model<Predictions> {
             get {
                 var result = [String]()
                 for series in self.timeSeries.sorted(by: { $0.from < $1.from }) {
-                    let test = (series.timeseries2timeslices?.allObjects as! [Timeslices]).map( {String($0.value)}).joined(separator: ", ")
+                    let test = (series.timeseries2timeslices?.allObjects as! [Timeslices]).sorted(by: { $0.value < $1.value }).map( {String($0.value)}).joined(separator: ", ")
                     result.append(test)
                 }
                 return result
