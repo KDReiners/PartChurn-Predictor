@@ -27,7 +27,7 @@ public struct Trainer {
         let minorityColumn = regressorTable![targetColumn!.name!]
         let minorityMask = minorityColumn == 0
         let minorityTable = self.regressorTable![minorityMask]
-        for _ in 0..<500 {
+        for _ in 0..<0 {
             regressorTable?.append(contentsOf: minorityTable)
         }
         self.regressorTable!.removeColumn(named: predictedColumnName)
@@ -108,7 +108,7 @@ public struct Trainer {
             //                columnSubsample: Double = 1.0
             //            )
 
-            let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 100, maxIterations: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.01, earlyStoppingRounds: nil, rowSubsample: 1.0, columnSubsample: 1.0)
+            let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 100, maxIterations: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.1, earlyStoppingRounds: nil, rowSubsample: 1.0, columnSubsample: 1.0)
             regressor =  {
                 do {
                     return try MLRegressor.boostedTree(MLBoostedTreeRegressor(trainingData: regressorTrainingTable,
