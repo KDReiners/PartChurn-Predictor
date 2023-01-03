@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21279" systemVersion="21G115" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="21G217" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Algorithms" representedClassName="Algorithms" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="orderno" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -66,6 +66,9 @@
         <relationship name="model2metricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2model" inverseEntity="Metricvalues"/>
         <relationship name="model2predictions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictions" inverseName="prediction2model" inverseEntity="Predictions"/>
         <relationship name="model2values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Values" inverseName="value2model" inverseEntity="Values"/>
+    </entity>
+    <entity name="Modeltypes" representedClassName="Modeltypes" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String"/>
     </entity>
     <entity name="Predictionmetrics" representedClassName="Predictionmetrics" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>

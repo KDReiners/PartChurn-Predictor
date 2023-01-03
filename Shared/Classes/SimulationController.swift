@@ -11,9 +11,9 @@ import SwiftUI
 import Combine
 class SimulationController: ObservableObject {
     static var providerContexts = [MlDataTableProviderContext]()
-    static func returnFittingProviderContext(model: Models) -> MlDataTableProviderContext? {
+    static func returnFittingProviderContext(model: Models, prediction: Predictions? = nil) -> MlDataTableProviderContext? {
         var result: MlDataTableProviderContext?
-        result = providerContexts.filter { $0.model == model }.first
+        result = providerContexts.filter { $0.model == model  && $0.clusterSelection?.prediction == prediction}.first
         if result == nil {
             result = MlDataTableProviderContext(mlDataTableProvider: MlDataTableProvider(model: model))
             self.providerContexts.append(result!)

@@ -22,38 +22,35 @@ struct DirectoryView: View {
                     .opacity(1)
                     .ignoresSafeArea()
                 List {
-                    DisclosureGroup("Modelle") {
-                        if modelsDataModel.items.count > 0 {
-                            ForEach(modelsDataModel.items, id: \.self) { item in
-                                if item == modelSelect {
-                                    NavigationLink(item.name ?? "unbenanntes Modell", destination: ScenarioView(model: item, modelSelect: $modelSelect.wrappedValue), tag: item, selection: $modelSelect)
-                                } else {
-                                    NavigationLink(item.name ?? "unbenanntes Modell", destination: Text(item.name!), tag: item, selection: $modelSelect)
+                    ForEach(modelsDataModel.items, id: \.self) { model in
+                        DisclosureGroup(model.name!) {
+                            if model == modelSelect {
+                                NavigationLink(model.name ?? "unbenanntes Modell", destination: ScenarioView(model: model, modelSelect: $modelSelect.wrappedValue), tag: model, selection: $modelSelect)
+                            } else {
+                                NavigationLink(model.name!, destination: Text(model.name!), tag: model, selection: $modelSelect)
+                            }
+                            DisclosureGroup("Compositions") {
+                                let predictions = model.model2predictions?.allObjects as! [Predictions]
+                                ForEach(predictions, id: \.self) { prediction in
+                                        NavigationLink(prediction.groupingpattern!, destination: SimulatorView(prediction: $predictionSelect.wrappedValue as? Predictions), tag: prediction, selection: $predictionSelect)
+                                    
                                 }
                             }
-                        } else {
-                            Text("No models")
-                        }
-                    }
-                    DisclosureGroup("Composition") {
-                        if PredictionsModel().items.count > 0 {
-                            ForEach(PredictionsModel().items, id: \.self) { item in
-                                NavigationLink(item.groupingpattern!, destination: SimulatorView(prediction: $predictionSelect.wrappedValue as? Predictions), tag: item, selection: $predictionSelect)
+                            DisclosureGroup("Files") {
+                                let files =  model.model2files?.allObjects as! [Files]
+                                if filesDataModel.items.count > 0 {
+                                    ForEach(files, id: \.self) { file in
+                                        NavigationLink( file.name!, destination: FilesView(file: file, columnsDataModel: managerModels.columnsDataModel), tag: file, selection: $modelSelect)
+                                    }
+                                } else {
+                                    Text("No files")
+                                }
+                                
+                            }
+                            DisclosureGroup("Data Manager") {
+                                NavigationLink("Steps Import", destination: ImportView())
                             }
                         }
-                    }
-                    DisclosureGroup("Files") {
-                        if filesDataModel.items.count > 0 {
-                            ForEach(filesDataModel.items, id: \.self) { item in
-                                NavigationLink( item.name ?? "unbenanntes Modell", destination: FilesView(file: item, columnsDataModel: managerModels.columnsDataModel), tag: item, selection: $modelSelect)
-                            }
-                        } else {
-                            Text("No files")
-                        }
-                        
-                    }
-                    DisclosureGroup("Data Manager") {
-                        NavigationLink("Steps Import", destination: ImportView())
                     }
                 }
             }
