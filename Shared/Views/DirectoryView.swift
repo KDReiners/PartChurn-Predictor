@@ -29,12 +29,8 @@ struct DirectoryView: View {
                             } else {
                                 NavigationLink(model.name!, destination: Text(model.name!), tag: model, selection: $modelSelect)
                             }
-                            DisclosureGroup("Compositions") {
-                                let predictions = model.model2predictions?.allObjects as! [Predictions]
-                                ForEach(predictions, id: \.self) { prediction in
-                                        NavigationLink(prediction.groupingpattern!, destination: SimulatorView(prediction: $predictionSelect.wrappedValue as? Predictions), tag: prediction, selection: $predictionSelect)
-                                    
-                                }
+                            DisclosureGroup("Predictions") {
+                                NavigationLink("Predictions", destination: PredictionsView(model: model))
                             }
                             DisclosureGroup("Files") {
                                 let files =  model.model2files?.allObjects as! [Files]

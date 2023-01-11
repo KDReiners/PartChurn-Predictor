@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import CoreData
+import TabularData
 public class PredictionsModel: Model<Predictions> {
     @Published var result: [Predictions]!
     @Published var arrayOfPredictions = [predictionCluster]()
@@ -94,5 +96,50 @@ public class PredictionsModel: Model<Predictions> {
                 return result
             }
         }
+    }
+    func convertToJSONArray(moArray: [NSManagedObject]) -> Any {
+        var jsonArray: [[String: Any]] = []
+        var test: String = ""
+        var dict: [String: [Any]] = [:]
+        for item in moArray {
+           
+            for attribute in item.entity.attributesByName {
+                //check if value is present, then add key to dictionary so as to avoid the nil value crash
+                if let value = item.value(forKey: attribute.key) {
+                    dict[attribute.key]!.append(value)
+                }
+            }
+            jsonArray.append(dict)
+        }
+        var result = DataFrame()
+        var numOfRows = dict.values.count
+        for (key, value) in dict {
+            print(key)
+            print(value)
+        }
+//            for (key, value ) in dict {
+//                if value is Int16 {
+//                    var newColumn = Column<Int16>.init(name: key, capacity: numOfRows)
+//                    let newValue = dict[key] as! Int16
+//                    newColumn.append(newValue)
+//                    result.append(column: newColumn)
+//                }
+//                if value is String {
+//                    var newColumn = Column<String>.init(name: key, capacity: numOfRows)
+//                    let newValue = dict[key] as! String
+//                    newColumn.append(newValue)
+//                    result.append(column: newColumn)
+//
+//                }
+//                if value is UUID {
+//                    var newColumn = Column<UUID>.init(name: key, capacity: numOfRows)
+//                    let newValue = dict[key] as! UUID
+//                    newColumn.append(newValue)
+//                    result.append(column: newColumn)
+//                }
+//            }
+//            print(result)
+//        }
+        return jsonArray
     }
 }

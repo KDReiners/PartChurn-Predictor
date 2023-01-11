@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A0FC907297D9981006F778C /* PredictionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0FC906297D9981006F778C /* PredictionsView.swift */; };
+		0A0FC908297D9981006F778C /* PredictionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0FC906297D9981006F778C /* PredictionsView.swift */; };
 		0A4C56552869750900961D1D /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4C56542869750900961D1D /* FilesView.swift */; };
 		0A4C56562869750900961D1D /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4C56542869750900961D1D /* FilesView.swift */; };
 		0A4C56582869862C00961D1D /* ColumnsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4C56572869862C00961D1D /* ColumnsView.swift */; };
@@ -123,6 +125,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A0FC906297D9981006F778C /* PredictionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionsView.swift; sourceTree = "<group>"; };
 		0A4C56542869750900961D1D /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
 		0A4C56572869862C00961D1D /* ColumnsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColumnsView.swift; sourceTree = "<group>"; };
 		0A589C12286614A000D1239B /* ManagerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerModels.swift; sourceTree = "<group>"; };
@@ -344,6 +347,7 @@
 				0A7F4E4D2917FE7B00015DB3 /* SimulatorView.swift */,
 				0AD43D0F2921579400199F06 /* PredictionView.swift */,
 				2D6C24FE2934E88C00DA45B6 /* AlternateRows.swift */,
+				0A0FC906297D9981006F778C /* PredictionsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -469,6 +473,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DB5E69328AD3536006DC0D2 /* CompositionsProvider.swift in Sources */,
+				0A0FC907297D9981006F778C /* PredictionsView.swift in Sources */,
 				0AF7289628F5BEB9006DE13A /* PredictionMetricsModel.swift in Sources */,
 				2DA77EE82825716A007EC3E5 /* ModelsModel.swift in Sources */,
 				2D867B5A28AACC4B005E8B87 /* TimeSeriesModel.swift in Sources */,
@@ -529,6 +534,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DB5E69428AD3536006DC0D2 /* CompositionsProvider.swift in Sources */,
+				0A0FC908297D9981006F778C /* PredictionsView.swift in Sources */,
 				0AF7289728F5BEB9006DE13A /* PredictionMetricsModel.swift in Sources */,
 				2DA77EE92825716A007EC3E5 /* ModelsModel.swift in Sources */,
 				2D867B5B28AACC4B005E8B87 /* TimeSeriesModel.swift in Sources */,

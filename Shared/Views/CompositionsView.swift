@@ -150,9 +150,18 @@ struct CompositionsView: View {
                             
                         }
                     }
-                    Text("Resultset Statistics")
-                        .font(.title)
-                        .padding(.top, 15)
+                    HStack {
+                        Text("Resultset Statistics")
+                            .font(.title)
+                            .padding(.top, 15)
+                        Spacer()
+                        Button("Delete All") {
+                            PredictionsModel().deleteAllRecords(predicate: nil)
+                            PredictionMetricsModel().deleteAllRecords(predicate: nil)
+                            PredictionMetricValueModel().deleteAllRecords(predicate: nil)
+                        }
+                    }
+                    
                     List {
                         VStack {
                             Group {

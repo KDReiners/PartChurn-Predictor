@@ -9,6 +9,7 @@ import Foundation
 import CoreML
 import CreateML
 import SwiftUI
+import TabularData
 public class CoreDataML: ObservableObject {
     var model: Models?
     var files: Files?
