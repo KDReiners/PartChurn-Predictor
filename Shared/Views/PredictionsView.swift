@@ -6,19 +6,36 @@
 //
 
 import SwiftUI
-
 struct PredictionsView: View {
     var model: Models
-    var predictionsModel = PredictionsModel()
+    var metricsTable: [TabularDataProvider.PredictionKPI]
     init(model: Models) {
         self.model = model
-        var predictions = predictionsModel.convertToJSONArray(moArray: MetricsModel().items)
-        
+        self.metricsTable = TabularDataProvider(model: self.model).PredictionKPIS
     }
     var body: some View {
-        Text("Hallo")
+        ScrollView(.horizontal) {
+            Table(metricsTable) {
+                Group {
+                    TableColumn("GroupingPattern", value: \TabularDataProvider.PredictionKPI.groupingPattern!)
+                    TableColumn("Algorithm", value: \TabularDataProvider.PredictionKPI.algorithm!)
+                    TableColumn("DataSetType", value: \TabularDataProvider.PredictionKPI.dataSetType)
+                    TableColumn("RootMeanSquaredError", value: \TabularDataProvider.PredictionKPI.rootMeanSquaredError!)
+                    TableColumn("MaximumError", value: \TabularDataProvider.PredictionKPI.maximumError!)
+                    TableColumn("TargetInstancesCount", value: \TabularDataProvider.PredictionKPI.targetInstancesCount!)
+                    TableColumn("TargetsAtOptimum", value: \TabularDataProvider.PredictionKPI.targetsAtOptimum!)
+                    TableColumn("DirtiesAtOptimum", value: \TabularDataProvider.PredictionKPI.dirtiesAtOptimum!)
+                    TableColumn("PredictionValueAtOptimum", value: \TabularDataProvider.PredictionKPI.predictionValueAtOptimum!)
+                    TableColumn("TargetsAtThreshold", value: \TabularDataProvider.PredictionKPI.targetsAtThreshold!)
+                }
+                Group {
+                    TableColumn("DirtiesAtThreshold", value: \TabularDataProvider.PredictionKPI.dirtiesAtThreshold!)
+                    TableColumn("PredictionValueAtThreshold", value: \TabularDataProvider.PredictionKPI.predictionValueAtThreshold!)
+                }
+
+            }.frame(width: 2000)
+        }
     }
-        
 }
 
 struct PredictionsView_Previews: PreviewProvider {

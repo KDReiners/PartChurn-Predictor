@@ -261,8 +261,8 @@ struct CompositionsView: View {
                     Spacer()
                         Button("Delete all...") {
                             let metricValuesDataModel = MetricvaluesModel()
-                            let predicate = NSPredicate(format: "metricvalue2model == %@", self.model)
-                            metricValuesDataModel.deleteAllRecords(predicate: predicate)
+                
+                            metricValuesDataModel.deleteAllRecords(predicate: nil)
                         }
                     }
                     AlgorithmsModel.valueList(prediction: (clusterSelection?.prediction), algorithmName: mlSelection ?? "unbekannt")

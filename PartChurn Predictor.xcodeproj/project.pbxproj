@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0A0FC907297D9981006F778C /* PredictionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0FC906297D9981006F778C /* PredictionsView.swift */; };
 		0A0FC908297D9981006F778C /* PredictionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0FC906297D9981006F778C /* PredictionsView.swift */; };
+		0A1A2AC629805DB80078AA11 /* TabularDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A2AC529805DB80078AA11 /* TabularDataProvider.swift */; };
+		0A1A2AC729805DB80078AA11 /* TabularDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A2AC529805DB80078AA11 /* TabularDataProvider.swift */; };
 		0A4C56552869750900961D1D /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4C56542869750900961D1D /* FilesView.swift */; };
 		0A4C56562869750900961D1D /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4C56542869750900961D1D /* FilesView.swift */; };
 		0A4C56582869862C00961D1D /* ColumnsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4C56572869862C00961D1D /* ColumnsView.swift */; };
@@ -126,6 +128,7 @@
 
 /* Begin PBXFileReference section */
 		0A0FC906297D9981006F778C /* PredictionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionsView.swift; sourceTree = "<group>"; };
+		0A1A2AC529805DB80078AA11 /* TabularDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabularDataProvider.swift; sourceTree = "<group>"; };
 		0A4C56542869750900961D1D /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
 		0A4C56572869862C00961D1D /* ColumnsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColumnsView.swift; sourceTree = "<group>"; };
 		0A589C12286614A000D1239B /* ManagerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerModels.swift; sourceTree = "<group>"; };
@@ -208,6 +211,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A1A2AC429805D870078AA11 /* TabularData */ = {
+			isa = PBXGroup;
+			children = (
+				0A1A2AC529805DB80078AA11 /* TabularDataProvider.swift */,
+			);
+			name = TabularData;
+			sourceTree = "<group>";
+		};
 		2D0B854E282565BD00856BCB = {
 			isa = PBXGroup;
 			children = (
@@ -230,6 +241,7 @@
 				2D0B8556282565BD00856BCB /* PartChurn_PredictorApp.swift */,
 				2D0B8558282565BD00856BCB /* Persistence.swift */,
 				2D0B8559282565BF00856BCB /* Assets.xcassets */,
+				0A1A2AC429805D870078AA11 /* TabularData */,
 				2D1EB360283A83DA00F86B6D /* CoreData */,
 			);
 			path = Shared;
@@ -505,6 +517,7 @@
 				2D1EB362283A842F00F86B6D /* CoreDataML.swift in Sources */,
 				0AF2F06A28FC333E0094D0F8 /* AnalysisView.swift in Sources */,
 				2D1DB46728B3CC08005BFC2D /* PredictionsModel.swift in Sources */,
+				0A1A2AC629805DB80078AA11 /* TabularDataProvider.swift in Sources */,
 				0AD43D0A2920234700199F06 /* SimulationController.swift in Sources */,
 				2DA77EFC28258384007EC3E5 /* Extensions.swift in Sources */,
 				2DA77EEF282576AA007EC3E5 /* ImportView.swift in Sources */,
@@ -566,6 +579,7 @@
 				2D1EB363283A842F00F86B6D /* CoreDataML.swift in Sources */,
 				0AF2F06B28FC333E0094D0F8 /* AnalysisView.swift in Sources */,
 				2D1DB46828B3CC08005BFC2D /* PredictionsModel.swift in Sources */,
+				0A1A2AC729805DB80078AA11 /* TabularDataProvider.swift in Sources */,
 				0AD43D0B2920234700199F06 /* SimulationController.swift in Sources */,
 				2DA77EFD28258384007EC3E5 /* Extensions.swift in Sources */,
 				2DA77EF0282576AA007EC3E5 /* ImportView.swift in Sources */,

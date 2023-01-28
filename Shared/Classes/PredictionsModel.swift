@@ -97,10 +97,16 @@ public class PredictionsModel: Model<Predictions> {
             }
         }
     }
-    func convertToJSONArray(moArray: [NSManagedObject]) -> Any {
+    func convertToJSONArray(moArray: [Predictions]) -> Any {
         var jsonArray: [[String: Any]] = []
         var test: String = ""
         var dict: [String: [Any]] = [:]
+        let itemArray = moArray.map {
+            ($0.groupingpattern, $0.prediction2metricvalues?.allObjects as! [Metricvalues], $0.prediction2predictionmetricvalues?.allObjects as! [Predictionmetricvalues])
+        }
+        for item in itemArray {
+            print(item)
+        }
         for item in moArray {
            
             for attribute in item.entity.attributesByName {

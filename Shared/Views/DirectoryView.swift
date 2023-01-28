@@ -29,9 +29,8 @@ struct DirectoryView: View {
                             } else {
                                 NavigationLink(model.name!, destination: Text(model.name!), tag: model, selection: $modelSelect)
                             }
-                            DisclosureGroup("Predictions") {
-                                NavigationLink("Predictions", destination: PredictionsView(model: model))
-                            }
+                            NavigationLink("Predictions", destination: PredictionsView(model: model))
+                        
                             DisclosureGroup("Files") {
                                 let files =  model.model2files?.allObjects as! [Files]
                                 if filesDataModel.items.count > 0 {

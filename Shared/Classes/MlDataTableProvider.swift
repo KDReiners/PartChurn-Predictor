@@ -237,13 +237,14 @@ class MlDataTableProvider: ObservableObject {
             let predictionMetricValueDataModel = PredictionMetricValueModel()
             //        predictionMetricValueDataModel.deleteAllRecords(predicate: nil)
             let algorithmDataModel = AlgorithmsModel()
+            let algorithm = algorithmDataModel.items.first(where: { $0.name == self.regressorName})
+            algorithm?.addToAlgorithm2predictions(self.prediction!)
             dictOfPredictionMetrics.forEach { entry in
                 var metric = predictionMetricsDataModel.items.filter { $0.name == entry.key }.first
                 if metric == nil {
                     metric = predictionMetricsDataModel.insertRecord()
                     metric?.name = entry.key
                 }
-                let algorithm = algorithmDataModel.items.first(where: { $0.name == self.regressorName})
                 var valueEntry = predictionMetricValueDataModel.items.filter { $0.predictionmetricvalue2predictionmetric?.name == entry.key && $0.predictionmetricvalue2algorithm?.name == self.regressorName && $0.predictionmetricvalue2prediction == self.prediction }.first
                 if valueEntry == nil {
                     valueEntry = predictionMetricValueDataModel.insertRecord()
