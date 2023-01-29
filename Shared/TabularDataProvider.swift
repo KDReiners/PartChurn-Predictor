@@ -31,7 +31,6 @@ class TabularDataProvider: ObservableObject {
         var metricName: String?
         var metricValue: Double?
         var rowCount: Int?
-        var targetInstancesCount: String?
         var targetsAtOptimum: String?
         var dirtiesAtThreshold: String?
         var targetsAtThreshold: String?
@@ -51,7 +50,7 @@ class TabularDataProvider: ObservableObject {
         for prediction in predictionsDataModel.items {
             for algorithm in prediction.prediction2algorithms?.allObjects as![Algorithms] {
                 var predictionKPI = PredictionKPI()
-                for metricValue in (algorithm.algorithm2metricvalues?.allObjects as! [Metricvalues]).filter( { $0.metricvalue2datasettype?.name == "evaluation"}) {
+                for metricValue in (algorithm.algorithm2metricvalues?.allObjects as! [Metricvalues]).filter( { $0.metricvalue2datasettype?.name == "evaluation" && $0.metricvalue2prediction == prediction}) {
                     predictionKPI.groupingPattern = prediction.groupingpattern
                     predictionKPI.algorithm = algorithm.name!
                     predictionKPI.metricName = metricValue.metricvalue2metric?.name!
@@ -65,11 +64,9 @@ class TabularDataProvider: ObservableObject {
                         print("KPI not found: " + (predictionKPI.metricName ?? "no Name provided!"))
                     }
                 }
-                for predictionMetricValue in prediction.prediction2predictionmetricvalues?.allObjects as! [Predictionmetricvalues] {
+                for predictionMetricValue in (prediction.prediction2predictionmetricvalues?.allObjects as! [Predictionmetricvalues]).filter({ $0.predictionmetricvalue2algorithm == algorithm }) {
                     let predictionMetricType = predictionMetricValue.predictionmetricvalue2predictionmetric!.name!
                     switch predictionMetricType {
-                    case "targetInstancesCount":
-                        predictionKPI.targetInstancesCount = BaseServices.intFormatter.string(from:predictionMetricValue.value.toInt()! as NSNumber)
                     case "targetsAtOptimum":
                         predictionKPI.targetsAtOptimum = BaseServices.intFormatter.string(from:predictionMetricValue.value.toInt()! as NSNumber)
                     case "dirtiesAtThreshold":

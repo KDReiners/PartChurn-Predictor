@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A01CB692985AAAC00272B76 /* AlgorithmTypesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A01CB682985AAAC00272B76 /* AlgorithmTypesModel.swift */; };
+		0A01CB6A2985AAAC00272B76 /* AlgorithmTypesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A01CB682985AAAC00272B76 /* AlgorithmTypesModel.swift */; };
 		0A0FC907297D9981006F778C /* PredictionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0FC906297D9981006F778C /* PredictionsView.swift */; };
 		0A0FC908297D9981006F778C /* PredictionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0FC906297D9981006F778C /* PredictionsView.swift */; };
 		0A1A2AC629805DB80078AA11 /* TabularDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A2AC529805DB80078AA11 /* TabularDataProvider.swift */; };
@@ -127,6 +129,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A01CB682985AAAC00272B76 /* AlgorithmTypesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgorithmTypesModel.swift; sourceTree = "<group>"; };
 		0A0FC906297D9981006F778C /* PredictionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionsView.swift; sourceTree = "<group>"; };
 		0A1A2AC529805DB80078AA11 /* TabularDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabularDataProvider.swift; sourceTree = "<group>"; };
 		0A4C56542869750900961D1D /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
@@ -316,6 +319,7 @@
 			children = (
 				0A69F24728F7CCE70062509A /* AnalysisProvider.swift */,
 				2D481BA428356EA4003EBCF2 /* AlgorithmsModel.swift */,
+				0A01CB682985AAAC00272B76 /* AlgorithmTypesModel.swift */,
 				2DA77EE428256F52007EC3E5 /* ColumnsModel.swift */,
 				2DBDCCF5288D6B9800CC8EDC /* CompositionsModel.swift */,
 				2D98958D282EE4100070F475 /* DatasettypesModel.swift */,
@@ -323,8 +327,8 @@
 				2D989590282EE47F0070F475 /* MetricsModel.swift */,
 				2D9895932830321D0070F475 /* MetricvaluesModel.swift */,
 				2DFE31BD282D8BA40058C3AA /* Ml_MetricKPI.swift */,
-				2DA77EE72825716A007EC3E5 /* ModelsModel.swift */,
 				2D1DB46628B3CC08005BFC2D /* PredictionsModel.swift */,
+				2DA77EE72825716A007EC3E5 /* ModelsModel.swift */,
 				0AF7289528F5BEB9006DE13A /* PredictionMetricsModel.swift */,
 				0AF7289828F5BF4B006DE13A /* PredictionMetricValueModel.swift */,
 				2D867B5928AACC4B005E8B87 /* TimeSeriesModel.swift */,
@@ -509,6 +513,7 @@
 				2DBDCCF6288D6B9800CC8EDC /* CompositionsModel.swift in Sources */,
 				2DBDCCF9288D6C1C00CC8EDC /* Combinator.swift in Sources */,
 				0A827F712873686A00C928F2 /* ValuesTableProvider.swift in Sources */,
+				0A01CB692985AAAC00272B76 /* AlgorithmTypesModel.swift in Sources */,
 				2DA77EE528256F52007EC3E5 /* ColumnsModel.swift in Sources */,
 				2D0B856D282565BF00856BCB /* Persistence.swift in Sources */,
 				0A827F7428736F0400C928F2 /* CustomColumn.swift in Sources */,
@@ -571,6 +576,7 @@
 				2DBDCCF7288D6B9800CC8EDC /* CompositionsModel.swift in Sources */,
 				2DBDCCFA288D6C1C00CC8EDC /* Combinator.swift in Sources */,
 				0A827F722873686A00C928F2 /* ValuesTableProvider.swift in Sources */,
+				0A01CB6A2985AAAC00272B76 /* AlgorithmTypesModel.swift in Sources */,
 				2DA77EE628256F52007EC3E5 /* ColumnsModel.swift in Sources */,
 				2D0B856E282565BF00856BCB /* Persistence.swift in Sources */,
 				0A827F7528736F0400C928F2 /* CustomColumn.swift in Sources */,

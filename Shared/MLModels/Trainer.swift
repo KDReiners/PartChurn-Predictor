@@ -76,7 +76,6 @@ public struct Trainer {
                 }
             }()
         case "MLDecisionTreeRegressor":
-            
             let defaultParams = MLDecisionTreeRegressor.ModelParameters(validation:.split(strategy: .automatic) , maxDepth: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42)
             regressor = {
                 do {
