@@ -213,7 +213,6 @@ class MlDataTableProvider: ObservableObject {
                 targetStatistic.dirtiesAtThreshold = foundDirty
                 targetStatistic.predictionValueAtThreshold = j
             }
-            targetStatistic.targetInstancesCount = targetInstancesCount
             targetStatistic.threshold = threshold
             targetStatistic.predictionValueAtOptimum = predictionValueAtOptimum
             targetStatistic.targetsAtOptimum = targetsAtOptimum
@@ -239,7 +238,7 @@ class MlDataTableProvider: ObservableObject {
             let algorithmDataModel = AlgorithmsModel()
             let algorithm = algorithmDataModel.items.first(where: { $0.name == self.regressorName})
             algorithm?.addToAlgorithm2predictions(self.prediction!)
-            dictOfPredictionMetrics.forEach { entry in
+            for entry in dictOfPredictionMetrics {
                 var metric = predictionMetricsDataModel.items.filter { $0.name == entry.key }.first
                 if metric == nil {
                     metric = predictionMetricsDataModel.insertRecord()
@@ -402,7 +401,6 @@ class MlDataTableProvider: ObservableObject {
     class TargetStatistics {
         var targetValue = 0
         var targetPopulation = 0
-        var targetInstancesCount = 0
         var threshold: Double = 0.00000
         var predictionValueAtOptimum: Double = 0
         var targetsAtOptimum: Int = 0

@@ -14,6 +14,7 @@ struct PredictionsView: View {
         self.model = model
         self.metricsTable = TabularDataProvider(model: self.model).PredictionKPIS
         algorithmTypeDataModel.setUp()
+       
     }
     var body: some View {
         ScrollView(.horizontal) {
