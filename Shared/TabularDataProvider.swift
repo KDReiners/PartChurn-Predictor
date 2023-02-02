@@ -47,7 +47,7 @@ class TabularDataProvider: ObservableObject {
     }
     private func fillPredictionKPIS() -> [PredictionKPI] {
         var result = [PredictionKPI]()
-        for prediction in predictionsDataModel.items {
+        for prediction in predictionsDataModel.items.filter( { $0.prediction2model == self.model}) {
             for algorithm in prediction.prediction2algorithms?.allObjects as![Algorithms] {
                 var predictionKPI = PredictionKPI()
                 for metricValue in (algorithm.algorithm2metricvalues?.allObjects as! [Metricvalues]).filter( { $0.metricvalue2datasettype?.name == "evaluation" && $0.metricvalue2prediction == prediction}) {

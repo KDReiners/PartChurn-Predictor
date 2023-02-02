@@ -22,6 +22,7 @@ public class AlgorithmTypesModel: Model<Algorithmtypes> {
         }
     }
     internal func setUp() {
+        return
         var algorithmModel = AlgorithmsModel()
         var algorithmType: Algorithmtypes?
         var algorithmNames: [String] = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor", "MLLinearClassifier", "MLDecisionTreeClassifier", "MLRandomForestClassifier", "MLBoostedTreeClassifier"]

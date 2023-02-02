@@ -49,7 +49,7 @@ struct CSV_Importer {
         while let row = reader.next() {
             for i in 0..<columns.count {
                 let idColumn = columnsArray[i].objectID.uriRepresentation().absoluteString
-                let newEntry = coreDataProperties(predictedvalue: "", rowno: rowCount, value: row[i], idmodel: idModel!, idfile: idFile, idcolumn: idColumn)
+                let newEntry = coreDataProperties(predictedvalue: "", rowno: rowCount, value: row[i].replacingOccurrences(of: ",", with: "."), idmodel: idModel!, idfile: idFile, idcolumn: idColumn)
                 batchArray.append(newEntry)
             }
             rowCount += 1

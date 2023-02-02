@@ -112,7 +112,7 @@ public class PredictionsModel: Model<Predictions> {
             for attribute in item.entity.attributesByName {
                 //check if value is present, then add key to dictionary so as to avoid the nil value crash
                 if let value = item.value(forKey: attribute.key) {
-                    dict[attribute.key]!.append(value)
+//                    dict[attribute.key]!.append(value)
                 }
             }
             jsonArray.append(dict)
