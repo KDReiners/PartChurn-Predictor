@@ -22,26 +22,27 @@ public class AlgorithmTypesModel: Model<Algorithmtypes> {
         }
     }
     internal func setUp() {
-        return
-        var algorithmModel = AlgorithmsModel()
+        let algorithmModel = AlgorithmsModel()
         var algorithmType: Algorithmtypes?
-        var algorithmNames: [String] = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor", "MLLinearClassifier", "MLDecisionTreeClassifier", "MLRandomForestClassifier", "MLBoostedTreeClassifier"]
+        let algorithmNames: [String] = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor", "MLLinearClassifier", "MLDecisionTreeClassifier", "MLRandomForestClassifier", "MLBoostedTreeClassifier"]
         for algorithmName in algorithmNames {
-            let name = algorithmModel.items.first {$0.name == algorithmName }?.name
+            var algorithm = algorithmModel.items.first {$0.name == algorithmName }
+            let name = algorithm?.name
             if name == nil {
-                var newAlgorithm = algorithmModel.insertRecord()
-                newAlgorithm.name = algorithmName
-                if algorithmName.contains("Regressor") {
-                    algorithmType = getAlgorithmType(name: "Regressor")
-                }
-                if algorithmName.contains("Classifier") {
-                    algorithmType = getAlgorithmType(name: "Classifier")
-                }
-                newAlgorithm.algorithm2algorithmtype = algorithmType
+                algorithm = algorithmModel.insertRecord()
+                algorithm!.name = algorithmName
             }
+            if algorithmName.contains("Regressor") {
+                algorithmType = getAlgorithmType(name: "Regressor")
+            }
+            if algorithmName.contains("Classifier") {
+                algorithmType = getAlgorithmType(name: "Classifier")
+            }
+            algorithm!.algorithm2algorithmtype = algorithmType
         }
         BaseServices.save()
     }
+    
     private func getAlgorithmType(name: String) -> Algorithmtypes {
         var algorithmType: Algorithmtypes?
         algorithmType = self.items.filter { $0.name == name }.first

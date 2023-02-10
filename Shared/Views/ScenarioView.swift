@@ -17,7 +17,6 @@ struct ScenarioView: View {
     @ObservedObject var predictionsDataModel = PredictionsModel()
     var fileSelection: Files?
     var mlSelection: String?
-    var mlAlgorithms = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor"]
     var mlTable: MLDataTable?
     internal var composer: FileWeaver!
     internal var combinator: Combinator!
