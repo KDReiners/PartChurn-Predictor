@@ -40,7 +40,6 @@ public struct Trainer {
             let endMask = timeSeriesColumn < seriesEnd
             self.regressorTable = self.regressorTable![endMask]
         }
-//        self.regressorTable?.removeColumn(named: columnDataModel.timeStampColumn!.name!)
     }
     init(model: Models, file: Files? = nil) {
         self.model = model
