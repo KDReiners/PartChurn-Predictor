@@ -8,6 +8,7 @@
 import Foundation
 import CreateML
 import CoreML
+import Combine
 public struct Trainer {
     var mlDataTableProvider: MlDataTableProvider!
     var regressorTable: MLDataTable?
@@ -27,7 +28,7 @@ public struct Trainer {
         let minorityColumn = regressorTable![targetColumn!.name!]
         let minorityMask = minorityColumn == 0
         let minorityTable = self.regressorTable![minorityMask]
-        for _ in 0..<10 {
+        for _ in 0..<0 {
             regressorTable?.append(contentsOf: minorityTable)
         }
         self.regressorTable!.removeColumn(named: predictedColumnName)
@@ -69,7 +70,7 @@ public struct Trainer {
             regressor = {
                 do {
                     return try MLRegressor.linear(MLLinearRegressor(trainingData: regressorTrainingTable,
-                                                                            targetColumn: self.targetColumnName, parameters: defaultParams))
+                                                                    targetColumn: self.targetColumnName, parameters: defaultParams))
                 } catch {
                     fatalError(error.localizedDescription)
                 }
@@ -105,7 +106,7 @@ public struct Trainer {
             //                rowSubsample: Double = 1.0,
             //                columnSubsample: Double = 1.0
             //            )
-
+            
             let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 1000, maxIterations: 150, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.1, earlyStoppingRounds: nil, rowSubsample: 1.0, columnSubsample: 1.0)
             regressor =  {
                 do {
@@ -115,13 +116,36 @@ public struct Trainer {
                     fatalError(error.localizedDescription)
                 }
             }()
+        case "MLBoostedTreeClassifier":
+        doit(regressorTrainingTable: regressorTrainingTable)
         default:
             fatalError()
         }
-        writeMetrics(regressor: regressor, regressorName:  regressorName, regressorEvaluationTable: regressorEvaluationTable)
+//        writeMetrics(regressor: regressor, regressorName:  regressorName, regressorEvaluationTable: regressorEvaluationTable)
         
     }
-    
+    private func doit(regressorTrainingTable: MLDataTable) -> Void {
+        let sessionDirectory = URL(fileURLWithPath: "\(NSTemporaryDirectory())churn")
+        var subscriptions = [AnyCancellable]()
+        let defaultParams = MLBoostedTreeClassifier.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 1000, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.1, earlyStoppingRounds: nil, rowSubsample: 1.0, columnSubsample: 1.0)
+        let sessionParameters = MLTrainingSessionParameters(reportInterval: 10, checkpointInterval: 10, iterations: 100)
+        let job = try! MLBoostedTreeClassifier.train(trainingData: regressorTrainingTable, targetColumn: targetColumnName, parameters: defaultParams, sessionParameters: sessionParameters)
+        job.result.sink { result in
+            print(result)
+        }
+        receiveValue: { model in
+            try? model.write(to: sessionDirectory)
+        }
+        .store(in: &subscriptions)
+        job.progress.publisher(for: \.fractionCompleted).sink { [weak job] completed in
+            guard let job = job, let progress = MLProgress(progress: job.progress) else {
+                return
+            }
+            print("com: \(completed)")
+        }
+        .store(in: &subscriptions)
+        print ("registered subscription count: \(subscriptions.count)")
+    }
     private func writeMetrics (regressor: MLRegressor, regressorName: String, regressorEvaluationTable: MLDataTable) -> Void {
         let regressorKPI = Ml_MetricKPI()
         regressorKPI.dictOfMetrics["trainingMetrics.maximumError"]? = regressor.trainingMetrics.maximumError
@@ -146,5 +170,6 @@ public struct Trainer {
             fatalError(error.localizedDescription)
         }
     }
+        
 }
 
