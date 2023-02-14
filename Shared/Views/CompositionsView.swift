@@ -294,7 +294,8 @@ struct CompositionsView: View {
     }
     
     private func train(regressorName: String?) {
-        var trainer = Trainer(mlDataTableProvider: self.mlDataTableProvider)
+        var trainer = Trainer(mlDataTableProvider: self.mlDataTableProvider, model: self.model)
+        trainer.model = self.model
         trainer.createModel(regressorName: $mlSelection.wrappedValue!)
         generatePredictionView()
     }

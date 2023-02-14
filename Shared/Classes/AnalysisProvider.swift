@@ -73,7 +73,7 @@ struct Analysis {
             print("Working on algorithm: \(item.name!)")
             mlDataTableProvider.regressorName = item.name!
             mlDataTableProvider.prediction = clusterSelection.prediction
-            var trainer = Trainer(mlDataTableProvider: mlDataTableProvider)
+            var trainer = Trainer(mlDataTableProvider: mlDataTableProvider, model: mlDataTableProvider.model!)
             trainer.createModel(regressorName: item.name!)
             let newStatistics = Statistics(mlOwnDataTableProvider: mlDataTableProvider, regressorName: item.name!)
             newStatistics.schedule()

@@ -18,7 +18,8 @@ public struct Trainer {
     var timeSeriesColumnName: String?
     var regressor: MLRegressor!
     var prediction: Predictions!
-    init(mlDataTableProvider: MlDataTableProvider) {
+    init(mlDataTableProvider: MlDataTableProvider, model: Models) {
+        self.model = model
         let columnDataModel = ColumnsModel(model: self.model )
         let targetColumn = columnDataModel.timedependantTargetColums.first
         let predictedColumnName = "Predicted: " + (targetColumn?.name)!
@@ -84,7 +85,7 @@ public struct Trainer {
                 }
             }()
         case "MLRandomForestRegressor":
-            let defaultParams = MLRandomForestRegressor.ModelParameters(validation: .split(strategy: .automatic), maxDepth: 100, maxIterations: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, rowSubsample: 0.8, columnSubsample: 0.8)
+            let defaultParams = MLRandomForestRegressor.ModelParameters(validation: .split(strategy: .automatic), maxDepth: 1000, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, rowSubsample: 0.8, columnSubsample: 0.8)
             regressor = {
                 do {
                     return try MLRegressor.randomForest(MLRandomForestRegressor(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
