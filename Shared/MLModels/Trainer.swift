@@ -18,30 +18,32 @@ public struct Trainer {
     var targetColumnName: String!
     var timeSeriesColumnName: String?
     var regressor: MLRegressor!
+    var classifier: MLClassifier!
     var prediction: Predictions!
-    init(mlDataTableProvider: MlDataTableProvider) {
-        let columnDataModel = ColumnsModel(model: self.model )
-        let targetColumn = columnDataModel.timedependantTargetColums.first
-        let predictedColumnName = "Predicted: " + (targetColumn?.name)!
-        self.mlDataTableProvider = mlDataTableProvider
-        self.regressorTable = self.mlDataTableProvider.mlDataTable
-        let minorityColumn = regressorTable![targetColumn!.name!]
-        let minorityMask = minorityColumn == 0
-        let minorityTable = self.regressorTable![minorityMask]
-        for _ in 0..<0 {
-            regressorTable?.append(contentsOf: minorityTable)
+    init(mlDataTableProvider: MlDataTableProvider, model: Models) {
+            self.model = model
+            let columnDataModel = ColumnsModel(model: self.model )
+            let targetColumn = columnDataModel.timedependantTargetColums.first
+            let predictedColumnName = "Predicted: " + (targetColumn?.name)!
+            self.mlDataTableProvider = mlDataTableProvider
+            self.regressorTable = self.mlDataTableProvider.mlDataTable
+            let minorityColumn = regressorTable![targetColumn!.name!]
+            let minorityMask = minorityColumn == 0
+            let minorityTable = self.regressorTable![minorityMask]
+            for _ in 0..<10 {
+                regressorTable?.append(contentsOf: minorityTable)
+            }
+            self.regressorTable!.removeColumn(named: predictedColumnName)
+            self.regressorTable!.removeColumn(named: columnDataModel.primaryKeyColumn!.name!)
+            self.targetColumnName = self.mlDataTableProvider.orderedColumns.first(where: { $0.istarget == 1})?.name!
+            self.timeSeriesColumnName = self.mlDataTableProvider.orderedColumns.first(where: { $0.istimeseries == 1})?.name
+            if self.timeSeriesColumnName != nil {
+                let timeSeriesColumn = self.regressorTable![timeSeriesColumnName!]
+                let seriesEnd = (timeSeriesColumn.ints?.max())!
+                let endMask = timeSeriesColumn < seriesEnd
+                self.regressorTable = self.regressorTable![endMask]
+            }
         }
-        self.regressorTable!.removeColumn(named: predictedColumnName)
-        self.regressorTable!.removeColumn(named: columnDataModel.primaryKeyColumn!.name!)
-        self.targetColumnName = self.mlDataTableProvider.orderedColumns.first(where: { $0.istarget == 1})?.name!
-        self.timeSeriesColumnName = self.mlDataTableProvider.orderedColumns.first(where: { $0.istimeseries == 1})?.name
-        if self.timeSeriesColumnName != nil {
-            let timeSeriesColumn = self.regressorTable![timeSeriesColumnName!]
-            let seriesEnd = (timeSeriesColumn.ints?.max())!
-            let endMask = timeSeriesColumn < seriesEnd
-            self.regressorTable = self.regressorTable![endMask]
-        }
-    }
     init(model: Models, file: Files? = nil) {
         self.model = model
         self.file = file
@@ -85,7 +87,7 @@ public struct Trainer {
                 }
             }()
         case "MLRandomForestRegressor":
-            let defaultParams = MLRandomForestRegressor.ModelParameters(validation: .split(strategy: .automatic), maxDepth: 100, maxIterations: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, rowSubsample: 0.8, columnSubsample: 0.8)
+            let defaultParams = MLRandomForestRegressor.ModelParameters(validation: .split(strategy: .automatic), maxDepth: 1000, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, rowSubsample: 0.8, columnSubsample: 0.8)
             regressor = {
                 do {
                     return try MLRegressor.randomForest(MLRandomForestRegressor(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
@@ -116,12 +118,61 @@ public struct Trainer {
                     fatalError(error.localizedDescription)
                 }
             }()
+            
+        case "MLSupportVectorClassifier":
+            let defaultParams = MLSupportVectorClassifier.ModelParameters(maxIterations: 5000, penalty: 1.0, convergenceThreshold: 0.001, featureRescaling: true)
+            classifier = {
+                do {
+                    return try MLClassifier.supportVector(MLSupportVectorClassifier(trainingData: regressorTrainingTable, targetColumn: targetColumnName))
+                } catch {
+                    fatalError(error.localizedDescription)
+                }
+            }()
         case "MLBoostedTreeClassifier":
-        doit(regressorTrainingTable: regressorTrainingTable)
+            let defaultParams = MLBoostedTreeClassifier.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 6, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.1, randomSeed: 42, stepSize: 0.3, earlyStoppingRounds: nil, rowSubsample: 1.0, columnSubsample: 1.0)
+            classifier = {
+                do {
+                    return try MLClassifier.boostedTree((MLBoostedTreeClassifier(trainingData: regressorTrainingTable, targetColumn: targetColumnName, parameters: defaultParams)))
+                } catch {
+                    fatalError(error.localizedDescription)
+                }
+            }()
+        case "MLRandomForestClassifier":
+            let defaultParams = MLRandomForestClassifier.ModelParameters(validation: .split(strategy: .automatic), maxDepth: 100, maxIterations: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, rowSubsample: 0.8, columnSubsample: 0.8)
+            classifier = {
+                do {
+                    return try MLClassifier.randomForest(MLRandomForestClassifier(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
+                } catch {
+                    fatalError(error.localizedDescription)
+                }
+            }()
+        case "MLDecisionTreeClassifier":
+            
+            let defaultParams = MLDecisionTreeClassifier.ModelParameters(validation:.split(strategy: .automatic) , maxDepth: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42)
+            classifier = {
+                do {
+                    return try MLClassifier.decisionTree(MLDecisionTreeClassifier(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
+                } catch {
+                    fatalError(error.localizedDescription)
+                }
+            }()
         default:
             fatalError()
         }
-//        writeMetrics(regressor: regressor, regressorName:  regressorName, regressorEvaluationTable: regressorEvaluationTable)
+        if regressor != nil {
+            writeMetrics(regressor: regressor, regressorName:  regressorName, regressorEvaluationTable: regressorEvaluationTable)
+        }
+        if classifier != nil {
+            do {
+                let classifierMetaData = MLModelMetadata(author: "Steps.IT",
+                                                         shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden via Classifier",
+                                                         version: "1.0")
+                try classifier.write(to: BaseServices.homePath.appendingPathComponent((self.mlDataTableProvider.model?.name!)!, isDirectory: true).appendingPathComponent(regressorName + "_" + self.mlDataTableProvider.prediction!.id!.uuidString + ".mlmodel"),
+                                     metadata: classifierMetaData)
+            } catch {
+                fatalError(error.localizedDescription)
+            }
+        }
         
     }
     private func doit(regressorTrainingTable: MLDataTable) -> Void {
@@ -133,10 +184,10 @@ public struct Trainer {
         job.result.sink { result in
             print(result)
         }
-        receiveValue: { model in
-            try? model.write(to: sessionDirectory)
-        }
-        .store(in: &subscriptions)
+    receiveValue: { model in
+        try? model.write(to: sessionDirectory)
+    }
+    .store(in: &subscriptions)
         job.progress.publisher(for: \.fractionCompleted).sink { [weak job] completed in
             guard let job = job, let progress = MLProgress(progress: job.progress) else {
                 return
@@ -152,7 +203,7 @@ public struct Trainer {
         regressorKPI.dictOfMetrics["trainingMetrics.rootMeanSquaredError"]? = regressor.trainingMetrics.rootMeanSquaredError
         regressorKPI.dictOfMetrics["validationMetrics.maximumError"]? = regressor.validationMetrics.maximumError
         regressorKPI.dictOfMetrics["validationMetrics.rootMeanSquaredError"]? = regressor.validationMetrics.rootMeanSquaredError
-
+        
         /// Evaluation
         let regressorEvalutation = regressor.evaluation(on: regressorEvaluationTable)
         regressorKPI.dictOfMetrics["evaluationMetrics.maximumError"]? = regressorEvalutation.maximumError
@@ -165,11 +216,11 @@ public struct Trainer {
         /// Speichern des trainierten Modells auf dem Schreibtisch
         do {
             try regressor.write(to: BaseServices.homePath.appendingPathComponent((self.mlDataTableProvider.model?.name!)!, isDirectory: true).appendingPathComponent(regressorName + "_" + self.mlDataTableProvider.prediction!.id!.uuidString + ".mlmodel"),
-                                 metadata: regressorMetadata)
+                                metadata: regressorMetadata)
         } catch {
             fatalError(error.localizedDescription)
         }
     }
-        
+    
 }
 

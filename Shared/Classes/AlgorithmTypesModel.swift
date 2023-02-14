@@ -22,9 +22,10 @@ public class AlgorithmTypesModel: Model<Algorithmtypes> {
         }
     }
     internal func setUp() {
+        return
         let algorithmModel = AlgorithmsModel()
         var algorithmType: Algorithmtypes?
-        let algorithmNames: [String] = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor", "MLLinearClassifier", "MLDecisionTreeClassifier", "MLRandomForestClassifier", "MLBoostedTreeClassifier"]
+        let algorithmNames: [String] = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor", "MLLinearClassifier", "MLDecisionTreeClassifier", "MLRandomForestClassifier", "MLBoostedTreeClassifier","MLSupportVectorClassifier"]
         for algorithmName in algorithmNames {
             var algorithm = algorithmModel.items.first {$0.name == algorithmName }
             let name = algorithm?.name
