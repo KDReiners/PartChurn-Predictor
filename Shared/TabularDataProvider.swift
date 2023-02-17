@@ -8,9 +8,37 @@
 import Foundation
 import SwiftUI
 import CoreData
-class TabularDataProvider: ObservableObject {
+struct TextView: View {
+    var textValue: String = ""
+    var body: some View {
+        Text(textValue).frame(minHeight: 50, maxHeight: 150)
+    }
+}
+internal struct PredictionKPI: Codable, Equatable, Identifiable  {
+    var id = UUID()
+    var test = "TEST"
+    var involvedColumns: String! = ""
+    var groupingPattern: String! = ""
+    var algorithm: String! = ""
+    var metricName: String! = ""
+    var metricValue: Double! = 0.00
+    var rowCount: Int! = 0
+    var targetsAtOptimum: String! = ""
+    var dirtiesAtThreshold: String! = ""
+    var targetsAtThreshold: String! = ""
+    var targetValue: String! = ""
+    var predictionValueAtThreshold: String! = ""
+    var predictionValueAtOptimum: String! = ""
+    var dirtiesAtOptimum: String! = ""
+    var targetPopulation: String! = ""
+    var threshold: String! = ""
+    var rootMeanSquaredError: String! = ""
+    var maximumError: String! = ""
+    var dataSetType: String = "Evaluation"
+}
+internal class TabularDataProvider: ObservableObject {
     var predictionsDataModel: PredictionsModel
-    var PredictionKPIS: [PredictionKPI] {
+    internal var PredictionKPIS: [PredictionKPI] {
         get {
             if self.model.model2predictions?.count ?? 0 > 0 {
                 return fillPredictionKPIS()
@@ -19,31 +47,16 @@ class TabularDataProvider: ObservableObject {
             }
         }
     }
+    var firstNameColumn: TableColumn<PredictionKPI,Never, TextView , Text> {
+        TableColumn("Involved Columns") { col in
+            TextView(textValue: col.involvedColumns)
+        }
+        .width(min: 100, ideal: 150, max:200)
+    }
     var model: Models
-    init(model: Models) {
+               init(model: Models) {
         self.model = model
         self.predictionsDataModel = PredictionsModel(model: self.model)
-    }
-    struct PredictionKPI: Identifiable {
-        var id = UUID()
-        var groupingPattern: String?
-        var algorithm: String?
-        var metricName: String?
-        var metricValue: Double?
-        var rowCount: Int?
-        var targetsAtOptimum: String?
-        var dirtiesAtThreshold: String?
-        var targetsAtThreshold: String?
-        var targetValue: String?
-        var predictionValueAtThreshold: String?
-        var predictionValueAtOptimum: String?
-        var dirtiesAtOptimum: String?
-        var targetPopulation: String?
-        var threshold: String?
-        var rootMeanSquaredError: String?
-        var maximumError: String?
-        var dataSetType: String = "Evaluation"
-        
     }
     private func fillPredictionKPIS() -> [PredictionKPI] {
         var result = [PredictionKPI]()
@@ -51,6 +64,9 @@ class TabularDataProvider: ObservableObject {
             for algorithm in prediction.prediction2algorithms?.allObjects as![Algorithms] {
                 var predictionKPI = PredictionKPI()
                 for metricValue in (algorithm.algorithm2metricvalues?.allObjects as! [Metricvalues]).filter( { $0.metricvalue2datasettype?.name == "evaluation" && $0.metricvalue2prediction == prediction}) {
+                    var involvedColumns = ColumnsModel(model: self.model).timelessInputColumns.filter( { $0.isshown == 1 }).map( {$0.name! }).joined(separator: ", ")
+                    involvedColumns = involvedColumns + ", " + ColumnsModel(model: self.model).timedependantInputColums.filter( { $0.isshown == 1 }).map( {$0.name! }).joined(separator: ", ")
+                    predictionKPI.involvedColumns = involvedColumns
                     predictionKPI.groupingPattern = prediction.groupingpattern
                     predictionKPI.algorithm = algorithm.name!
                     predictionKPI.metricName = metricValue.metricvalue2metric?.name!

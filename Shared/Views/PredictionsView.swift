@@ -8,32 +8,33 @@
 import SwiftUI
 struct PredictionsView: View {
     var model: Models
-    var metricsTable: [TabularDataProvider.PredictionKPI]
     var algorithmTypeDataModel = AlgorithmTypesModel()
+    var tabularDataProvider: TabularDataProvider!
     init(model: Models) {
         self.model = model
-        self.metricsTable = TabularDataProvider(model: self.model).PredictionKPIS
+        self.tabularDataProvider = TabularDataProvider(model: self.model)
         algorithmTypeDataModel.setUp()
     }
     var body: some View {
         ScrollView(.horizontal) {
-            Table(metricsTable) {
+            Table(tabularDataProvider.PredictionKPIS) {
                 Group {
-                    TableColumn("Pattern", value: \TabularDataProvider.PredictionKPI.groupingPattern!)
-                    TableColumn("Algorithm", value: \TabularDataProvider.PredictionKPI.algorithm!)
-                    TableColumn("DataSetType", value: \TabularDataProvider.PredictionKPI.dataSetType)
-                    TableColumn("RootMean", value: \TabularDataProvider.PredictionKPI.rootMeanSquaredError!)
-                    TableColumn("Maximum", value: \TabularDataProvider.PredictionKPI.maximumError!)
-                    TableColumn("T->Population", value: \TabularDataProvider.PredictionKPI.targetPopulation!)
-                    TableColumn("T->Optimum", value: \TabularDataProvider.PredictionKPI.targetsAtOptimum!)
-                    TableColumn("D->Optimum", value: \TabularDataProvider.PredictionKPI.dirtiesAtOptimum!)
-                    TableColumn("PV->Optimum", value: \TabularDataProvider.PredictionKPI.predictionValueAtOptimum!)
-                    TableColumn("T->Threshold", value: \TabularDataProvider.PredictionKPI.targetsAtThreshold!)
+                    tabularDataProvider.firstNameColumn
+                    tabularDataProvider.firstNameColumn
+                    
+//                    TableColumn("DataSetType", value: \TabularDataProvider.PredictionKPI.dataSetType)
+//                    TableColumn("RootMean", value: \TabularDataProvider.PredictionKPI.rootMeanSquaredError!)
+//                    TableColumn("Maximum", value: \TabularDataProvider.PredictionKPI.maximumError!)
+//                    TableColumn("T->Population", value: \TabularDataProvider.PredictionKPI.targetPopulation!)
+//                    TableColumn("T->Optimum", value: \TabularDataProvider.PredictionKPI.targetsAtOptimum!)
+//                    TableColumn("D->Optimum", value: \TabularDataProvider.PredictionKPI.dirtiesAtOptimum!)
+//                    TableColumn("PV->Optimum", value: \TabularDataProvider.PredictionKPI.predictionValueAtOptimum!)
+//                    TableColumn("T->Threshold", value: \TabularDataProvider.PredictionKPI.targetsAtThreshold!)
                 }
-                Group {
-                    TableColumn("D->Threshold", value: \TabularDataProvider.PredictionKPI.dirtiesAtThreshold!)
-                    TableColumn("PV->Threshold", value: \TabularDataProvider.PredictionKPI.predictionValueAtThreshold!)
-                }
+//                Group {
+//                    TableColumn("D->Threshold", value: \TabularDataProvider.PredictionKPI.dirtiesAtThreshold!)
+//                    TableColumn("PV->Threshold", value: \TabularDataProvider.PredictionKPI.predictionValueAtThreshold!)
+//                }
 
             }.frame(width: 2000)
         }
