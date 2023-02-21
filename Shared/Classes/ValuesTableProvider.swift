@@ -44,6 +44,7 @@ class ValuesTableProvider: ObservableObject {
             self.regressorName = regressorName
             self.predistion = prediction
             urlToPredictionModel = BaseServices.createPredictionPath(prediction: prediction!, regressorName: regressorName!)
+            print(urlToPredictionModel)
             let fileManager = FileManager.default
             if fileManager.fileExists(atPath: urlToPredictionModel!.path) {
                predictionModel = getModel(url: urlToPredictionModel!)

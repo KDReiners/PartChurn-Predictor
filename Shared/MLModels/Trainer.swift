@@ -157,10 +157,10 @@ public struct Trainer {
                 }
             }()
         default:
-            fatalError()
+            print("not found: \(regressorName)" )
         }
         if regressor != nil {
-            writeMetrics(regressor: regressor, regressorName:  regressorName, regressorEvaluationTable: regressorEvaluationTable)
+            writeRegressorMetrics(regressor: regressor, regressorName:  regressorName, regressorEvaluationTable: regressorEvaluationTable)
         }
         if classifier != nil {
             do {
@@ -169,6 +169,7 @@ public struct Trainer {
                                                          version: "1.0")
                 try classifier.write(to: BaseServices.homePath.appendingPathComponent((self.mlDataTableProvider.model?.name!)!, isDirectory: true).appendingPathComponent(regressorName + "_" + self.mlDataTableProvider.prediction!.id!.uuidString + ".mlmodel"),
                                      metadata: classifierMetaData)
+                print("ready")
             } catch {
                 fatalError(error.localizedDescription)
             }
@@ -197,7 +198,7 @@ public struct Trainer {
         .store(in: &subscriptions)
         print ("registered subscription count: \(subscriptions.count)")
     }
-    private func writeMetrics (regressor: MLRegressor, regressorName: String, regressorEvaluationTable: MLDataTable) -> Void {
+    private func writeRegressorMetrics (regressor: MLRegressor, regressorName: String, regressorEvaluationTable: MLDataTable) -> Void {
         let regressorKPI = Ml_MetricKPI()
         regressorKPI.dictOfMetrics["trainingMetrics.maximumError"]? = regressor.trainingMetrics.maximumError
         regressorKPI.dictOfMetrics["trainingMetrics.rootMeanSquaredError"]? = regressor.trainingMetrics.rootMeanSquaredError

@@ -29,6 +29,8 @@
 		0A827F722873686A00C928F2 /* ValuesTableProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A827F702873686A00C928F2 /* ValuesTableProvider.swift */; };
 		0A827F7428736F0400C928F2 /* CustomColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A827F7328736F0400C928F2 /* CustomColumn.swift */; };
 		0A827F7528736F0400C928F2 /* CustomColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A827F7328736F0400C928F2 /* CustomColumn.swift */; };
+		0AA8C8F429A10E1500AA399F /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */; };
+		0AA8C8F529A10E1500AA399F /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */; };
 		0AD43D0A2920234700199F06 /* SimulationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD43D092920234700199F06 /* SimulationController.swift */; };
 		0AD43D0B2920234700199F06 /* SimulationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD43D092920234700199F06 /* SimulationController.swift */; };
 		0AD43D0D2921062F00199F06 /* MLTableCluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD43D0C2921062F00199F06 /* MLTableCluster.swift */; };
@@ -140,6 +142,7 @@
 		0A7F4E4D2917FE7B00015DB3 /* SimulatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatorView.swift; sourceTree = "<group>"; };
 		0A827F702873686A00C928F2 /* ValuesTableProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValuesTableProvider.swift; sourceTree = "<group>"; };
 		0A827F7328736F0400C928F2 /* CustomColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColumn.swift; sourceTree = "<group>"; };
+		0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		0AD43D092920234700199F06 /* SimulationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationController.swift; sourceTree = "<group>"; };
 		0AD43D0C2921062F00199F06 /* MLTableCluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLTableCluster.swift; sourceTree = "<group>"; };
 		0AD43D0F2921579400199F06 /* PredictionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionView.swift; sourceTree = "<group>"; };
@@ -364,6 +367,7 @@
 				0AD43D0F2921579400199F06 /* PredictionView.swift */,
 				2D6C24FE2934E88C00DA45B6 /* AlternateRows.swift */,
 				0A0FC906297D9981006F778C /* PredictionsView.swift */,
+				0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -535,6 +539,7 @@
 				0AD43D0D2921062F00199F06 /* MLTableCluster.swift in Sources */,
 				2D288AC12829793B0078647E /* Trainer.swift in Sources */,
 				2DA77EEB2825721B007EC3E5 /* ValuesModel.swift in Sources */,
+				0AA8C8F429A10E1500AA399F /* SwiftUIView.swift in Sources */,
 				0A4C56552869750900961D1D /* FilesView.swift in Sources */,
 				2D98958E282EE4100070F475 /* DatasettypesModel.swift in Sources */,
 				2DFE31BE282D8BA40058C3AA /* Ml_MetricKPI.swift in Sources */,
@@ -598,6 +603,7 @@
 				0AD43D0E2921062F00199F06 /* MLTableCluster.swift in Sources */,
 				2D288AC22829793B0078647E /* Trainer.swift in Sources */,
 				2DA77EEC2825721B007EC3E5 /* ValuesModel.swift in Sources */,
+				0AA8C8F529A10E1500AA399F /* SwiftUIView.swift in Sources */,
 				0A4C56562869750900961D1D /* FilesView.swift in Sources */,
 				2D98958F282EE4100070F475 /* DatasettypesModel.swift in Sources */,
 				2DFE31BF282D8BA40058C3AA /* Ml_MetricKPI.swift in Sources */,

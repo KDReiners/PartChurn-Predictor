@@ -42,6 +42,7 @@ struct DirectoryView: View {
                                 }
                                 
                             }
+                            NavigationLink("Automator", destination: AnalysisView(model: model))
                             DisclosureGroup("Data Manager") {
                                 NavigationLink("Steps Import", destination: ImportView())
                             }

@@ -19,9 +19,10 @@ struct PredictionsView: View {
         ScrollView(.horizontal) {
             Table(tabularDataProvider.PredictionKPIS) {
                 Group {
-                    tabularDataProvider.firstNameColumn
-                    tabularDataProvider.firstNameColumn
-                    
+                    tabularDataProvider.involvedColumns
+                    tabularDataProvider.algorithm
+                    tabularDataProvider.timeSlices
+                    tabularDataProvider.simulation
 //                    TableColumn("DataSetType", value: \TabularDataProvider.PredictionKPI.dataSetType)
 //                    TableColumn("RootMean", value: \TabularDataProvider.PredictionKPI.rootMeanSquaredError!)
 //                    TableColumn("Maximum", value: \TabularDataProvider.PredictionKPI.maximumError!)
