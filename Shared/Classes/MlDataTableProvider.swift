@@ -223,6 +223,8 @@ class MlDataTableProvider: ObservableObject {
     }
     func store2PredictionMetrics(targetStatistic: TargetStatistics) -> Void {
         let privateContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        let mainContext = PersistenceController.shared.container.viewContext
+        privateContext.parent = mainContext
         privateContext.persistentStoreCoordinator = PersistenceController.shared.container.viewContext.persistentStoreCoordinator
         privateContext.perform {
             let m = Mirror(reflecting: targetStatistic)
@@ -262,6 +264,9 @@ class MlDataTableProvider: ObservableObject {
             do {
                 if privateContext.hasChanges {
                     try privateContext.save()
+                    mainContext.performAndWait {
+                                try? mainContext.save()
+                            }
                 }
             } catch {
                 fatalError(error.localizedDescription)
