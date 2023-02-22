@@ -225,7 +225,6 @@ class MlDataTableProvider: ObservableObject {
         let privateContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         let mainContext = PersistenceController.shared.container.viewContext
         privateContext.parent = mainContext
-        privateContext.persistentStoreCoordinator = PersistenceController.shared.container.viewContext.persistentStoreCoordinator
         privateContext.perform {
             let m = Mirror(reflecting: targetStatistic)
             let properties = Array(m.children)

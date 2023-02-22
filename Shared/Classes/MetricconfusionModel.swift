@@ -28,7 +28,6 @@ public class MetricconfusionModel: Model<Metricconfusion> {
         }
         let predicate = NSPredicate(format: "ANY metricconfusion2datasettype == %@ && metricconfusion2prediction == %@", dataSetType, prediction)
         self.deleteAllRecords(predicate: predicate)
-        BaseServices.save()
         for row in table.rows {
             let newRecord = self.insertRecord()
             newRecord.addToMetricconfusion2datasettype(dataSetType)

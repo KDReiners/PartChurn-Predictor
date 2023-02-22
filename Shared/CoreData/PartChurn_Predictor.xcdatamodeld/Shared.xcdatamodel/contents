@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="21G217" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="22C65" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Algorithms" representedClassName="Algorithms" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="orderno" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="algorithm2algorithmtype" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Algorithmtypes" inverseName="algorithmtype2algorithms" inverseEntity="Algorithmtypes"/>
+        <relationship name="algorithm2metricconfusions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricconfusion" inverseName="metricconfusion2algorithm" inverseEntity="Metricconfusion"/>
+        <relationship name="algorithm2metricprecisionrecall" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricprecisionrecall" inverseName="metricprecisionrecall2algorithm" inverseEntity="Metricprecisionrecall"/>
         <relationship name="algorithm2metricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2algorithm" inverseEntity="Metricvalues"/>
         <relationship name="algorithm2predictionmetricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictionmetricvalues" inverseName="predictionmetricvalue2algorithm" inverseEntity="Predictionmetricvalues"/>
         <relationship name="algorithm2predictions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictions" inverseName="prediction2algorithms" inverseEntity="Predictions"/>
@@ -55,6 +57,7 @@
         <attribute name="count" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="predicted" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="truelabel" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="metricconfusion2algorithm" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Algorithms" inverseName="algorithm2metricconfusions" inverseEntity="Algorithms"/>
         <relationship name="metricconfusion2datasettype" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Datasettypes" inverseName="datasettype2metricconfusion" inverseEntity="Datasettypes"/>
         <relationship name="metricconfusion2prediction" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Predictions" inverseName="prediction2metricconfusion" inverseEntity="Predictions"/>
     </entity>
@@ -66,7 +69,9 @@
         <attribute name="predicted_correctly" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="predicted_this_incorrectly" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="recall" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="metricprecisionrecall2algorithm" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Algorithms" inverseName="algorithm2metricprecisionrecall" inverseEntity="Algorithms"/>
         <relationship name="metricprecisionrecall2datasettype" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Datasettypes" inverseName="datasettype2metricprecisionrecall" inverseEntity="Datasettypes"/>
+        <relationship name="metricprecisionrecall2prediction" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Predictions" inverseName="prediction2metricprecisionrecall" inverseEntity="Predictions"/>
     </entity>
     <entity name="Metrics" representedClassName="Metrics" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
@@ -113,6 +118,7 @@
         <relationship name="prediction2algorithms" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Algorithms" inverseName="algorithm2predictions" inverseEntity="Algorithms"/>
         <relationship name="prediction2compositions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Compositions" inverseName="composition2predictions" inverseEntity="Compositions"/>
         <relationship name="prediction2metricconfusion" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricconfusion" inverseName="metricconfusion2prediction" inverseEntity="Metricconfusion"/>
+        <relationship name="prediction2metricprecisionrecall" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricprecisionrecall" inverseName="metricprecisionrecall2prediction" inverseEntity="Metricprecisionrecall"/>
         <relationship name="prediction2metricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2prediction" inverseEntity="Metricvalues"/>
         <relationship name="prediction2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2predictions" inverseEntity="Models"/>
         <relationship name="prediction2predictionmetricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictionmetricvalues" inverseName="predictionmetricvalue2prediction" inverseEntity="Predictionmetricvalues"/>
