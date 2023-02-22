@@ -3,4 +3,86 @@
    uuid = "D4A33608-1954-4574-B1DA-D7BCCB7E1A6B"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5906F3BD-F581-4E0D-A318-73B16240A64B"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Shared/Views/PredictionsView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "22"
+            endingLineNumber = "22"
+            landmarkName = "body"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "5906F3BD-F581-4E0D-A318-73B16240A64B - 5e9242637cf6cd83"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; SwiftUI.TableColumn&lt;PartChurn_Predictor.PredictionsView.Test, Swift.Never, SwiftUI.Text, SwiftUI.Text&gt; in closure #1 () -&gt; SwiftUI.Group&lt;SwiftUI.TableColumn&lt;PartChurn_Predictor.PredictionsView.Test, Swift.Never, SwiftUI.Text, SwiftUI.Text&gt;&gt; in closure #1 () -&gt; &lt;&lt;opaque return type of SwiftUI.View.frame(width: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, height: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, alignment: SwiftUI.Alignment) -&gt; some&gt;&gt;.0 in PartChurn_Predictor.PredictionsView.body.getter : some"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn-Predictor/Shared/Views/PredictionsView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "28"
+                  endingLineNumber = "28"
+                  offsetFromSymbolStart = "296">
+               </Location>
+               <Location
+                  uuid = "5906F3BD-F581-4E0D-A318-73B16240A64B - 99f2c0d49ecd054b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (PartChurn_Predictor.PredictionsView.Test) -&gt; SwiftUI.Text in closure #1 () -&gt; SwiftUI.TableColumn&lt;PartChurn_Predictor.PredictionsView.Test, Swift.Never, SwiftUI.Text, SwiftUI.Text&gt; in closure #1 () -&gt; SwiftUI.Group&lt;SwiftUI.TableColumn&lt;PartChurn_Predictor.PredictionsView.Test, Swift.Never, SwiftUI.Text, SwiftUI.Text&gt;&gt; in closure #1 () -&gt; &lt;&lt;opaque return type of SwiftUI.View.frame(width: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, height: Swift.Optional&lt;CoreGraphics.CGFloat&gt;, alignment: SwiftUI.Alignment) -&gt; some&gt;&gt;.0 in PartChurn_Predictor.PredictionsView.body.getter : some"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn-Predictor/Shared/Views/PredictionsView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "29"
+                  endingLineNumber = "29"
+                  offsetFromSymbolStart = "96">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2DA294F9-9843-449A-BDCB-42659059B739"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Shared/Classes/MetricconfusionModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
+            landmarkName = "updateEntry(datasetTypeName:prediction:table:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6F7D5412-D884-4291-9D28-636A4F9B0F73"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Shared/Classes/MlDataTableProvider.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "264"
+            endingLineNumber = "264"
+            landmarkName = "store2PredictionMetrics(targetStatistic:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

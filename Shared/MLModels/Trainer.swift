@@ -8,6 +8,7 @@
 import Foundation
 import CreateML
 import CoreML
+import Combine
 public struct Trainer {
     var mlDataTableProvider: MlDataTableProvider!
     var regressorTable: MLDataTable?
@@ -17,9 +18,11 @@ public struct Trainer {
     var targetColumnName: String!
     var timeSeriesColumnName: String?
     var regressor: MLRegressor!
+    var classifier: MLClassifier!
     var prediction: Predictions!
     init(mlDataTableProvider: MlDataTableProvider, model: Models) {
         self.model = model
+        self.prediction = mlDataTableProvider.prediction
         let columnDataModel = ColumnsModel(model: self.model )
         let targetColumn = columnDataModel.timedependantTargetColums.first
         let predictedColumnName = "Predicted: " + (targetColumn?.name)!
@@ -28,7 +31,7 @@ public struct Trainer {
         let minorityColumn = regressorTable![targetColumn!.name!]
         let minorityMask = minorityColumn == 0
         let minorityTable = self.regressorTable![minorityMask]
-        for _ in 0..<10 {
+        for _ in 0..<0 {
             regressorTable?.append(contentsOf: minorityTable)
         }
         self.regressorTable!.removeColumn(named: predictedColumnName)
@@ -41,7 +44,7 @@ public struct Trainer {
             let endMask = timeSeriesColumn < seriesEnd
             self.regressorTable = self.regressorTable![endMask]
         }
-    }
+        }
     init(model: Models, file: Files? = nil) {
         self.model = model
         self.file = file
@@ -70,7 +73,7 @@ public struct Trainer {
             regressor = {
                 do {
                     return try MLRegressor.linear(MLLinearRegressor(trainingData: regressorTrainingTable,
-                                                                            targetColumn: self.targetColumnName, parameters: defaultParams))
+                                                                    targetColumn: self.targetColumnName, parameters: defaultParams))
                 } catch {
                     fatalError(error.localizedDescription)
                 }
@@ -106,8 +109,8 @@ public struct Trainer {
             //                rowSubsample: Double = 1.0,
             //                columnSubsample: Double = 1.0
             //            )
-
-            let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 1000, maxIterations: 150, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.1, earlyStoppingRounds: nil, rowSubsample: 1.0, columnSubsample: 1.0)
+            
+            let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 1000, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.1, earlyStoppingRounds: nil, rowSubsample: 1.0, columnSubsample: 1.0)
             regressor =  {
                 do {
                     return try MLRegressor.boostedTree(MLBoostedTreeRegressor(trainingData: regressorTrainingTable,
@@ -116,20 +119,100 @@ public struct Trainer {
                     fatalError(error.localizedDescription)
                 }
             }()
+            
+        case "MLSupportVectorClassifier":
+            let defaultParams = MLSupportVectorClassifier.ModelParameters(maxIterations: 5000, penalty: 1.0, convergenceThreshold: 0.001, featureRescaling: true)
+            classifier = {
+                do {
+                    return try MLClassifier.supportVector(MLSupportVectorClassifier(trainingData: regressorTrainingTable, targetColumn: targetColumnName))
+                } catch {
+                    fatalError(error.localizedDescription)
+                }
+            }()
+        case "MLBoostedTreeClassifier":
+            let defaultParams = MLBoostedTreeClassifier.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 6, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.1, randomSeed: 42, stepSize: 0.3, earlyStoppingRounds: nil, rowSubsample: 1.0, columnSubsample: 1.0)
+            classifier = {
+                do {
+                    return try MLClassifier.boostedTree((MLBoostedTreeClassifier(trainingData: regressorTrainingTable, targetColumn: targetColumnName, parameters: defaultParams)))
+                } catch {
+                    fatalError(error.localizedDescription)
+                }
+            }()
+        case "MLRandomForestClassifier":
+            let defaultParams = MLRandomForestClassifier.ModelParameters(validation: .split(strategy: .automatic), maxDepth: 100, maxIterations: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, rowSubsample: 0.8, columnSubsample: 0.8)
+            classifier = {
+                do {
+                    return try MLClassifier.randomForest(MLRandomForestClassifier(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
+                } catch {
+                    fatalError(error.localizedDescription)
+                }
+            }()
+        case "MLDecisionTreeClassifier":
+            
+            let defaultParams = MLDecisionTreeClassifier.ModelParameters(validation:.split(strategy: .automatic) , maxDepth: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42)
+            classifier = {
+                do {
+                    return try MLClassifier.decisionTree(MLDecisionTreeClassifier(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
+                } catch {
+                    fatalError(error.localizedDescription)
+                }
+            }()
         default:
-            fatalError()
+            print("not found: \(regressorName)" )
         }
-        writeMetrics(regressor: regressor, regressorName:  regressorName, regressorEvaluationTable: regressorEvaluationTable)
+        if regressor != nil {
+            writeRegressorMetrics(regressor: regressor, regressorName:  regressorName, regressorEvaluationTable: regressorEvaluationTable)
+        }
+        if classifier != nil {
+            do {
+                let classifierMetaData = MLModelMetadata(author: "Steps.IT",
+                                                         shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden via Classifier",
+                                                         version: "1.0")
+                try classifier.write(to: BaseServices.homePath.appendingPathComponent((self.mlDataTableProvider.model?.name!)!, isDirectory: true).appendingPathComponent(regressorName + "_" + self.mlDataTableProvider.prediction!.id!.uuidString + ".mlmodel"),
+                                     metadata: classifierMetaData)
+                writeClassifierMetrics(classifier: classifier, classifierEvaluationTable: regressorEvaluationTable)
+            } catch {
+                fatalError(error.localizedDescription)
+            }
+        }
         
     }
-    
-    private func writeMetrics (regressor: MLRegressor, regressorName: String, regressorEvaluationTable: MLDataTable) -> Void {
-        let regressorKPI = Ml_MetricKPI()
+    private func doit(regressorTrainingTable: MLDataTable) -> Void {
+        let sessionDirectory = URL(fileURLWithPath: "\(NSTemporaryDirectory())churn")
+        var subscriptions = [AnyCancellable]()
+        let defaultParams = MLBoostedTreeClassifier.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 1000, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.1, earlyStoppingRounds: nil, rowSubsample: 1.0, columnSubsample: 1.0)
+        let sessionParameters = MLTrainingSessionParameters(reportInterval: 10, checkpointInterval: 10, iterations: 100)
+        let job = try! MLBoostedTreeClassifier.train(trainingData: regressorTrainingTable, targetColumn: targetColumnName, parameters: defaultParams, sessionParameters: sessionParameters)
+        job.result.sink { result in
+            print(result)
+        }
+    receiveValue: { model in
+        try? model.write(to: sessionDirectory)
+    }
+    .store(in: &subscriptions)
+        job.progress.publisher(for: \.fractionCompleted).sink { [weak job] completed in
+            guard let job = job, let progress = MLProgress(progress: job.progress) else {
+                return
+            }
+            print("com: \(completed)")
+        }
+        .store(in: &subscriptions)
+        print ("registered subscription count: \(subscriptions.count)")
+    }
+    private func writeClassifierMetrics(classifier: MLClassifier, classifierEvaluationTable: MLDataTable) -> Void {
+        var metricConfusionModel = MetricconfusionModel()
+        metricConfusionModel.updateEntry(datasetTypeName: "training", prediction: prediction, table: classifier.trainingMetrics.confusion)
+        metricConfusionModel.updateEntry(datasetTypeName: "validation", prediction: prediction, table: classifier.validationMetrics.confusion)
+        let classifierEvaluation = classifier.evaluation(on: classifierEvaluationTable)
+        metricConfusionModel.updateEntry(datasetTypeName: "evaluation", prediction: prediction, table: classifierEvaluation.confusion)
+    }
+    private func writeRegressorMetrics (regressor: MLRegressor, regressorName: String, regressorEvaluationTable: MLDataTable) -> Void {
+        let regressorKPI = Ml_RegressorMetricKPI()
         regressorKPI.dictOfMetrics["trainingMetrics.maximumError"]? = regressor.trainingMetrics.maximumError
         regressorKPI.dictOfMetrics["trainingMetrics.rootMeanSquaredError"]? = regressor.trainingMetrics.rootMeanSquaredError
         regressorKPI.dictOfMetrics["validationMetrics.maximumError"]? = regressor.validationMetrics.maximumError
         regressorKPI.dictOfMetrics["validationMetrics.rootMeanSquaredError"]? = regressor.validationMetrics.rootMeanSquaredError
-
+        
         /// Evaluation
         let regressorEvalutation = regressor.evaluation(on: regressorEvaluationTable)
         regressorKPI.dictOfMetrics["evaluationMetrics.maximumError"]? = regressorEvalutation.maximumError
@@ -142,10 +225,11 @@ public struct Trainer {
         /// Speichern des trainierten Modells auf dem Schreibtisch
         do {
             try regressor.write(to: BaseServices.homePath.appendingPathComponent((self.mlDataTableProvider.model?.name!)!, isDirectory: true).appendingPathComponent(regressorName + "_" + self.mlDataTableProvider.prediction!.id!.uuidString + ".mlmodel"),
-                                 metadata: regressorMetadata)
+                                metadata: regressorMetadata)
         } catch {
             fatalError(error.localizedDescription)
         }
     }
+    
 }
 

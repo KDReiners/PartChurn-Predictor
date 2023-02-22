@@ -40,13 +40,15 @@ class ValuesTableProvider: ObservableObject {
             removePredictionColumns(predictionColumName: predictedColumnName, filter: filter)
         }
         if regressorName != nil && prediction != nil {
+            let isClassifier = (regressorName?.lowercased().contains("regressor"))! ? false: true
             self.regressorName = regressorName
             self.predistion = prediction
             urlToPredictionModel = BaseServices.createPredictionPath(prediction: prediction!, regressorName: regressorName!)
+            print(urlToPredictionModel)
             let fileManager = FileManager.default
             if fileManager.fileExists(atPath: urlToPredictionModel!.path) {
                predictionModel = getModel(url: urlToPredictionModel!)
-                incorporatedPredition(selectedColumns: selectedColumns!)
+                incorporatedPrediction(selectedColumns: selectedColumns!, isClassifier: isClassifier)
             }
         } else {
            
@@ -70,7 +72,7 @@ class ValuesTableProvider: ObservableObject {
         numCols = customColumns.count
         numRows = numCols > 0 ?customColumns[0].rows.count : 0
     }
-    private func incorporatedPredition(selectedColumns: [Columns]) {
+    private func incorporatedPrediction(selectedColumns: [Columns], isClassifier: Bool) {
         var predictionsDictionary = [String: MLDataValueConvertible]()
         let primaryKeyColumn = columnDataModel.primaryKeyColumn
         let timeStampColumn = columnDataModel.timeStampColumn
@@ -91,9 +93,14 @@ class ValuesTableProvider: ObservableObject {
             let primaryKeyValue = mlRow[(primaryKeyColumn?.name)!]?.intValue
             targetValues[String((mlRow[ (targetColumn.name!)]?.intValue)!), default: 0] += 1
             let timeStampColumnValue = (mlRow[(timeStampColumn?.name)!]?.intValue)!
-            var predictedValue = predictFromRow(regressorName: self.regressorName!, mlRow: mlRow).featureValue(for: targetColumn!.name!)?.doubleValue
-            predictedValue = (predictedValue! * 10000).rounded() / 10000
-            let newPredictionEntry = PredictionEntry(primaryKey: primaryKeyValue!, timeSeriesValue: timeStampColumnValue, predictedValue: predictedValue!)
+            var predictedValue = 0.0
+            if isClassifier {
+                predictedValue = Double(predictFromRow(regressorName: self.regressorName!, mlRow: mlRow).featureValue(for: targetColumn!.name!)!.int64Value)
+            } else {
+                predictedValue = predictFromRow(regressorName: self.regressorName!, mlRow: mlRow).featureValue(for: targetColumn!.name!)!.doubleValue
+            }
+            predictedValue = (predictedValue * 10000).rounded() / 10000
+            let newPredictionEntry = PredictionEntry(primaryKey: primaryKeyValue!, timeSeriesValue: timeStampColumnValue, predictedValue: predictedValue)
             subEntries.append(newPredictionEntry)
         }
         predictionsDictionary[primaryKeyColumn!.name!] = subEntries.map({ $0.primaryKey})
@@ -229,7 +236,8 @@ class ValuesTableProvider: ObservableObject {
         }()
         let prediction: MLFeatureProvider = {
             do {
-                return try predictionModel!.prediction(from: provider)
+                let prediction_options = MLPredictionOptions()
+                return try predictionModel!.prediction(from: provider, options: prediction_options)
             } catch {
                 fatalError(error.localizedDescription)
             }

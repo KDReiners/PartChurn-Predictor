@@ -32,7 +32,7 @@ struct PredictionView: View {
                     let predictedValue = targetColumn?.rows[rowIndex!]
                     HStack() {
                         Text("Table Prediction Value: ")
-                        Text(String(predictedValue!))
+                        Text(String(predictedValue ?? ""))
                         Text("New PredictedValue: ")
                         Text(String($newPredictedValue.wrappedValue ?? -99))
                     }

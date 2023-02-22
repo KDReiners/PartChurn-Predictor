@@ -8,7 +8,7 @@
 import Foundation
 import CreateML
 import SwiftUI
-internal class Ml_MetricKPI: ObservableObject {
+internal class Ml_RegressorMetricKPI: ObservableObject {
     internal struct section {
         var id = UUID()
         var dataSetType: String?
@@ -120,6 +120,4 @@ internal class Ml_MetricKPI: ObservableObject {
         return(datasetType, metricType)
         
     }
-    
-   
 }

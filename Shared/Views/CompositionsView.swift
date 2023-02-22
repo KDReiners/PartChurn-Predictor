@@ -22,13 +22,15 @@ struct CompositionsView: View {
     var model: Models
     var composer: FileWeaver?
     var combinator: Combinator!
-    var mlAlgorithms = ["MLLinearRegressor", "MLDecisionTreeRegressor", "MLRandomForestRegressor", "MLBoostedTreeRegressor"]
+    var availableAlgorithms = AlgorithmsModel().items.sorted(by: { $0.algorithm2algorithmtype!.name! < $1.algorithm2algorithmtype!.name! })
+    var mlAlgorithms: [String]!
     
     init(model: Models, composer: FileWeaver, combinator: Combinator) {
         self.model = model
         self.compositionDataModel = CompositionsModel(model: self.model)
         self.composer = composer
         self.combinator = combinator
+        mlAlgorithms = availableAlgorithms.map( { $0.name! })
         self.mlDataTableProvider = MlDataTableProvider(model: self.model)
         self.mlDataTableProvider.mlDataTable = composer.mlDataTable_Base!
         self.mlDataTableProvider.orderedColumns = composer.orderedColumns!
@@ -159,6 +161,8 @@ struct CompositionsView: View {
                             PredictionsModel().deleteAllRecords(predicate: nil)
                             PredictionMetricsModel().deleteAllRecords(predicate: nil)
                             PredictionMetricValueModel().deleteAllRecords(predicate: nil)
+                            MetricconfusionModel().deleteAllRecords(predicate: nil)
+                            MetricprecisionrecallModell().deleteAllRecords(predicate: nil)
                         }
                     }
                     
