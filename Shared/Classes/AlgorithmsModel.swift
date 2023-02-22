@@ -22,8 +22,8 @@ public class AlgorithmsModel: Model<Algorithms> {
             result = newValue.sorted(by: { $1.orderno > $0.orderno })
         }
     }
-    internal static func showKpis(predictions: Predictions?, algorithmName: String?) -> Ml_MetricKPI {
-        let result = Ml_MetricKPI()
+    internal static func showKpis(predictions: Predictions?, algorithmName: String?) -> Ml_RegressorMetricKPI {
+        let result = Ml_RegressorMetricKPI()
         let algorithmsModel = AlgorithmsModel()
         let metricValuesModel = MetricvaluesModel()
         guard let algorithm = algorithmsModel.items.first(where: { return  $0.name == algorithmName }) else {
@@ -40,7 +40,7 @@ public class AlgorithmsModel: Model<Algorithms> {
         
     }
     public struct valueList: View {
-        var metricStructure: Ml_MetricKPI!
+        var metricStructure: Ml_RegressorMetricKPI!
         var model: Models?
         var fileName: String?
         var algorithmName: String?

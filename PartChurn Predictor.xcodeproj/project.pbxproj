@@ -31,6 +31,12 @@
 		0A827F7528736F0400C928F2 /* CustomColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A827F7328736F0400C928F2 /* CustomColumn.swift */; };
 		0AA8C8F429A10E1500AA399F /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */; };
 		0AA8C8F529A10E1500AA399F /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */; };
+		0AC8843B29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8843A29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift */; };
+		0AC8843C29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8843A29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift */; };
+		0AC8843E29A532D800A233B9 /* MetricconfusionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8843D29A532D800A233B9 /* MetricconfusionModel.swift */; };
+		0AC8843F29A532D800A233B9 /* MetricconfusionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8843D29A532D800A233B9 /* MetricconfusionModel.swift */; };
+		0AC8844129A5344500A233B9 /* MetricprecisionrecallModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8844029A5344500A233B9 /* MetricprecisionrecallModel.swift */; };
+		0AC8844229A5344500A233B9 /* MetricprecisionrecallModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8844029A5344500A233B9 /* MetricprecisionrecallModel.swift */; };
 		0AD43D0A2920234700199F06 /* SimulationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD43D092920234700199F06 /* SimulationController.swift */; };
 		0AD43D0B2920234700199F06 /* SimulationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD43D092920234700199F06 /* SimulationController.swift */; };
 		0AD43D0D2921062F00199F06 /* MLTableCluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD43D0C2921062F00199F06 /* MLTableCluster.swift */; };
@@ -126,8 +132,8 @@
 		2DBDCCFD288EF0A500CC8EDC /* ScenarioProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBDCCFB288EF0A500CC8EDC /* ScenarioProvider.swift */; };
 		2DFD1B3128A930810057C74A /* FilterViewProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFD1B3028A930810057C74A /* FilterViewProvider.swift */; };
 		2DFD1B3228A930810057C74A /* FilterViewProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFD1B3028A930810057C74A /* FilterViewProvider.swift */; };
-		2DFE31BE282D8BA40058C3AA /* Ml_MetricKPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFE31BD282D8BA40058C3AA /* Ml_MetricKPI.swift */; };
-		2DFE31BF282D8BA40058C3AA /* Ml_MetricKPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFE31BD282D8BA40058C3AA /* Ml_MetricKPI.swift */; };
+		2DFE31BE282D8BA40058C3AA /* Ml_RegressorMetricKPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFE31BD282D8BA40058C3AA /* Ml_RegressorMetricKPI.swift */; };
+		2DFE31BF282D8BA40058C3AA /* Ml_RegressorMetricKPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFE31BD282D8BA40058C3AA /* Ml_RegressorMetricKPI.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -143,6 +149,9 @@
 		0A827F702873686A00C928F2 /* ValuesTableProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValuesTableProvider.swift; sourceTree = "<group>"; };
 		0A827F7328736F0400C928F2 /* CustomColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColumn.swift; sourceTree = "<group>"; };
 		0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
+		0AC8843A29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ml_ClassifierMetricKPI.swift; sourceTree = "<group>"; };
+		0AC8843D29A532D800A233B9 /* MetricconfusionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricconfusionModel.swift; sourceTree = "<group>"; };
+		0AC8844029A5344500A233B9 /* MetricprecisionrecallModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricprecisionrecallModel.swift; sourceTree = "<group>"; };
 		0AD43D092920234700199F06 /* SimulationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationController.swift; sourceTree = "<group>"; };
 		0AD43D0C2921062F00199F06 /* MLTableCluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLTableCluster.swift; sourceTree = "<group>"; };
 		0AD43D0F2921579400199F06 /* PredictionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionView.swift; sourceTree = "<group>"; };
@@ -191,7 +200,7 @@
 		2DBDCCF8288D6C1C00CC8EDC /* Combinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Combinator.swift; sourceTree = "<group>"; };
 		2DBDCCFB288EF0A500CC8EDC /* ScenarioProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioProvider.swift; sourceTree = "<group>"; };
 		2DFD1B3028A930810057C74A /* FilterViewProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewProvider.swift; sourceTree = "<group>"; };
-		2DFE31BD282D8BA40058C3AA /* Ml_MetricKPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ml_MetricKPI.swift; sourceTree = "<group>"; };
+		2DFE31BD282D8BA40058C3AA /* Ml_RegressorMetricKPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ml_RegressorMetricKPI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -329,7 +338,10 @@
 				2DA77EFE28266B32007EC3E5 /* FilesModel.swift */,
 				2D989590282EE47F0070F475 /* MetricsModel.swift */,
 				2D9895932830321D0070F475 /* MetricvaluesModel.swift */,
-				2DFE31BD282D8BA40058C3AA /* Ml_MetricKPI.swift */,
+				0AC8843D29A532D800A233B9 /* MetricconfusionModel.swift */,
+				0AC8844029A5344500A233B9 /* MetricprecisionrecallModel.swift */,
+				2DFE31BD282D8BA40058C3AA /* Ml_RegressorMetricKPI.swift */,
+				0AC8843A29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift */,
 				2D1DB46628B3CC08005BFC2D /* PredictionsModel.swift */,
 				2DA77EE72825716A007EC3E5 /* ModelsModel.swift */,
 				0AF7289528F5BEB9006DE13A /* PredictionMetricsModel.swift */,
@@ -521,6 +533,7 @@
 				2DA77EE528256F52007EC3E5 /* ColumnsModel.swift in Sources */,
 				2D0B856D282565BF00856BCB /* Persistence.swift in Sources */,
 				0A827F7428736F0400C928F2 /* CustomColumn.swift in Sources */,
+				0AC8843E29A532D800A233B9 /* MetricconfusionModel.swift in Sources */,
 				2D0B8567282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */,
 				2D01395E287868C000AC8EBF /* ComposerView.swift in Sources */,
 				2D1EB362283A842F00F86B6D /* CoreDataML.swift in Sources */,
@@ -530,6 +543,7 @@
 				0AD43D0A2920234700199F06 /* SimulationController.swift in Sources */,
 				2DA77EFC28258384007EC3E5 /* Extensions.swift in Sources */,
 				2DA77EEF282576AA007EC3E5 /* ImportView.swift in Sources */,
+				0AC8843B29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift in Sources */,
 				0AF7289928F5BF4B006DE13A /* PredictionMetricValueModel.swift in Sources */,
 				2D0139612878692500AC8EBF /* ScenarioView.swift in Sources */,
 				0A589C13286614A000D1239B /* ManagerModels.swift in Sources */,
@@ -542,8 +556,9 @@
 				0AA8C8F429A10E1500AA399F /* SwiftUIView.swift in Sources */,
 				0A4C56552869750900961D1D /* FilesView.swift in Sources */,
 				2D98958E282EE4100070F475 /* DatasettypesModel.swift in Sources */,
-				2DFE31BE282D8BA40058C3AA /* Ml_MetricKPI.swift in Sources */,
+				2DFE31BE282D8BA40058C3AA /* Ml_RegressorMetricKPI.swift in Sources */,
 				2DA77F022827E1DD007EC3E5 /* ModelsView.swift in Sources */,
+				0AC8844129A5344500A233B9 /* MetricprecisionrecallModel.swift in Sources */,
 				2DA77EDA28256EE5007EC3E5 /* GenericViewModel.swift in Sources */,
 				2DA77ED628256E9D007EC3E5 /* Storage.swift in Sources */,
 				2D867B5D28AACCB5005E8B87 /* TimeSliceModel.swift in Sources */,
@@ -585,6 +600,7 @@
 				2DA77EE628256F52007EC3E5 /* ColumnsModel.swift in Sources */,
 				2D0B856E282565BF00856BCB /* Persistence.swift in Sources */,
 				0A827F7528736F0400C928F2 /* CustomColumn.swift in Sources */,
+				0AC8843F29A532D800A233B9 /* MetricconfusionModel.swift in Sources */,
 				2D0B8568282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */,
 				2D01395F287868C000AC8EBF /* ComposerView.swift in Sources */,
 				2D1EB363283A842F00F86B6D /* CoreDataML.swift in Sources */,
@@ -594,6 +610,7 @@
 				0AD43D0B2920234700199F06 /* SimulationController.swift in Sources */,
 				2DA77EFD28258384007EC3E5 /* Extensions.swift in Sources */,
 				2DA77EF0282576AA007EC3E5 /* ImportView.swift in Sources */,
+				0AC8843C29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift in Sources */,
 				0AF7289A28F5BF4B006DE13A /* PredictionMetricValueModel.swift in Sources */,
 				2D0139622878692500AC8EBF /* ScenarioView.swift in Sources */,
 				0A589C14286614A000D1239B /* ManagerModels.swift in Sources */,
@@ -606,8 +623,9 @@
 				0AA8C8F529A10E1500AA399F /* SwiftUIView.swift in Sources */,
 				0A4C56562869750900961D1D /* FilesView.swift in Sources */,
 				2D98958F282EE4100070F475 /* DatasettypesModel.swift in Sources */,
-				2DFE31BF282D8BA40058C3AA /* Ml_MetricKPI.swift in Sources */,
+				2DFE31BF282D8BA40058C3AA /* Ml_RegressorMetricKPI.swift in Sources */,
 				2DA77F032827E1DD007EC3E5 /* ModelsView.swift in Sources */,
+				0AC8844229A5344500A233B9 /* MetricprecisionrecallModel.swift in Sources */,
 				2DA77EDB28256EE5007EC3E5 /* GenericViewModel.swift in Sources */,
 				2DA77ED728256E9D007EC3E5 /* Storage.swift in Sources */,
 				2D867B5E28AACCB5005E8B87 /* TimeSliceModel.swift in Sources */,

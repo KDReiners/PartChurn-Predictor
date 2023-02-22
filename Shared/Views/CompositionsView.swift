@@ -161,6 +161,8 @@ struct CompositionsView: View {
                             PredictionsModel().deleteAllRecords(predicate: nil)
                             PredictionMetricsModel().deleteAllRecords(predicate: nil)
                             PredictionMetricValueModel().deleteAllRecords(predicate: nil)
+                            MetricconfusionModel().deleteAllRecords(predicate: nil)
+                            MetricprecisionrecallModell().deleteAllRecords(predicate: nil)
                         }
                     }
                     
