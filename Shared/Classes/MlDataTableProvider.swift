@@ -223,6 +223,7 @@ class MlDataTableProvider: ObservableObject {
     }
     func store2PredictionMetrics(targetStatistic: TargetStatistics) -> Void {
         let privateContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        privateContext.automaticallyMergesChangesFromParent = true
         let mainContext = PersistenceController.shared.container.viewContext
         privateContext.parent = mainContext
         privateContext.perform {

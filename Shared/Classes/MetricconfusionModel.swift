@@ -22,15 +22,19 @@ public class MetricconfusionModel: Model<Metricconfusion> {
             result = newValue
         }
     }
-    public func updateEntry(datasetTypeName: String, prediction: Predictions, table: MLDataTable) {
+    public func updateEntry(datasetTypeName: String, prediction: Predictions, algorithmName: String, table: MLDataTable) {
         guard let dataSetType = DatasettypesModel().items.first(where: {$0.name == datasetTypeName}) else {
             return
         }
-        let predicate = NSPredicate(format: "ANY metricconfusion2datasettype == %@ && metricconfusion2prediction == %@", dataSetType, prediction)
+        guard let algorithm = AlgorithmsModel().items.first(where: {$0.name == algorithmName}) else {
+            return
+        }
+        let predicate = NSPredicate(format: "ANY metricconfusion2datasettype == %@ && metricconfusion2prediction == %@ && metricconfusion2algorithm == %@", dataSetType, prediction, algorithm)
         self.deleteAllRecords(predicate: predicate)
         for row in table.rows {
             let newRecord = self.insertRecord()
             newRecord.addToMetricconfusion2datasettype(dataSetType)
+            newRecord.metricconfusion2algorithm = algorithm
             newRecord.metricconfusion2prediction = prediction
             newRecord.truelabel = Int16(row["True Label"]?.intValue ?? 0)
             newRecord.predicted = Int16(row["Predicted"]?.intValue ?? 0)

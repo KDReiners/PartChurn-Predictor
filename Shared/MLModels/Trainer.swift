@@ -170,7 +170,7 @@ public struct Trainer {
                                                          version: "1.0")
                 try classifier.write(to: BaseServices.homePath.appendingPathComponent((self.mlDataTableProvider.model?.name!)!, isDirectory: true).appendingPathComponent(regressorName + "_" + self.mlDataTableProvider.prediction!.id!.uuidString + ".mlmodel"),
                                      metadata: classifierMetaData)
-                writeClassifierMetrics(classifier: classifier, classifierEvaluationTable: regressorEvaluationTable)
+                writeClassifierMetrics(classifier: classifier, classifierName: regressorName, classifierEvaluationTable: regressorEvaluationTable)
             } catch {
                 fatalError(error.localizedDescription)
             }
@@ -199,12 +199,12 @@ public struct Trainer {
         .store(in: &subscriptions)
         print ("registered subscription count: \(subscriptions.count)")
     }
-    private func writeClassifierMetrics(classifier: MLClassifier, classifierEvaluationTable: MLDataTable) -> Void {
-        var metricConfusionModel = MetricconfusionModel()
-        metricConfusionModel.updateEntry(datasetTypeName: "training", prediction: prediction, table: classifier.trainingMetrics.confusion)
-        metricConfusionModel.updateEntry(datasetTypeName: "validation", prediction: prediction, table: classifier.validationMetrics.confusion)
+    private func writeClassifierMetrics(classifier: MLClassifier, classifierName: String, classifierEvaluationTable: MLDataTable) -> Void {
+        let metricConfusionModel = MetricconfusionModel()
+        metricConfusionModel.updateEntry(datasetTypeName: "training", prediction: prediction, algorithmName: classifierName, table: classifier.trainingMetrics.confusion)
+        metricConfusionModel.updateEntry(datasetTypeName: "validation", prediction: prediction, algorithmName: classifierName, table: classifier.validationMetrics.confusion)
         let classifierEvaluation = classifier.evaluation(on: classifierEvaluationTable)
-        metricConfusionModel.updateEntry(datasetTypeName: "evaluation", prediction: prediction, table: classifierEvaluation.confusion)
+        metricConfusionModel.updateEntry(datasetTypeName: "evaluation", prediction: prediction, algorithmName: classifierName, table: classifierEvaluation.confusion)
     }
     private func writeRegressorMetrics (regressor: MLRegressor, regressorName: String, regressorEvaluationTable: MLDataTable) -> Void {
         let regressorKPI = Ml_RegressorMetricKPI()
