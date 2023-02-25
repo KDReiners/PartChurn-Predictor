@@ -181,6 +181,17 @@ class MlDataTableProvider: ObservableObject {
         let threshold = (0.1 * Double(targetCount)).rounded()
         find(trial: (targetCount / 2), nearestHighValue: targetCount, targetStatistic: &targetStatistic)
         targetStatistic.targetPopulation = targetCount
+        enhanceTargetStatistigs()
+        func enhanceTargetStatistigs() {
+            var truePositivesMask = mlPredictionColumn <= targetStatistic.predictionValueAtThreshold && mlTargetColumn == targetStatistic.targetValue
+            var falsePositivesMask = mlPredictionColumn <= targetStatistic.predictionValueAtThreshold && mlTargetColumn != targetStatistic.targetValue
+            var trueNegativesMask = mlPredictionColumn > targetStatistic.predictionValueAtThreshold && mlTargetColumn != targetStatistic.targetValue
+            var falseNegativesMask = mlPredictionColumn > targetStatistic.predictionValueAtThreshold && mlTargetColumn == targetStatistic.targetValue
+            targetStatistic.truePositives = mlDataTable[truePositivesMask].rows.count
+            targetStatistic.falsePositives = mlDataTable[falsePositivesMask].rows.count
+            targetStatistic.trueNegatives = mlDataTable[trueNegativesMask].rows.count
+            targetStatistic.falseNegatives = mlDataTable[falseNegativesMask].rows.count
+        }
         func find(trial: Int, nearestLowValue: Int = 0, nearestHighValue: Int = 0, bestRelationValue: Double = 0, bestRelationPredictionValue: Double = 0, targetStatistic: inout TargetStatistics ){
             let value =   predictionTable.rows[Int(trial)][predictedColumnName]?.doubleValue
             var relationValueAtOptimum = bestRelationValue
@@ -413,6 +424,10 @@ class MlDataTableProvider: ObservableObject {
         var predictionValueAtThreshold: Double = 0
         var targetsAtThreshold = 0
         var dirtiesAtThreshold = 0
+        var truePositives = 0
+        var falsePositives = 0
+        var trueNegatives = 0
+        var falseNegatives = 0
     }
 }
 struct UnionResult {

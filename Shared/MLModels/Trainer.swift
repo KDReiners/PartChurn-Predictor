@@ -44,7 +44,7 @@ public struct Trainer {
             let endMask = timeSeriesColumn < seriesEnd
             self.regressorTable = self.regressorTable![endMask]
         }
-        }
+    }
     init(model: Models, file: Files? = nil) {
         self.model = model
         self.file = file
@@ -203,7 +203,7 @@ public struct Trainer {
         let metricConfusionModel = MetricconfusionModel()
         metricConfusionModel.updateEntry(datasetTypeName: "training", prediction: prediction, algorithmName: classifierName, table: classifier.trainingMetrics.confusion)
         metricConfusionModel.updateEntry(datasetTypeName: "validation", prediction: prediction, algorithmName: classifierName, table: classifier.validationMetrics.confusion)
-        let classifierEvaluation = classifier.evaluation(on: classifierEvaluationTable)
+        let classifierEvaluation = classifier.evaluation(on: regressorTable!)
         metricConfusionModel.updateEntry(datasetTypeName: "evaluation", prediction: prediction, algorithmName: classifierName, table: classifierEvaluation.confusion)
     }
     private func writeRegressorMetrics (regressor: MLRegressor, regressorName: String, regressorEvaluationTable: MLDataTable) -> Void {
@@ -214,7 +214,7 @@ public struct Trainer {
         regressorKPI.dictOfMetrics["validationMetrics.rootMeanSquaredError"]? = regressor.validationMetrics.rootMeanSquaredError
         
         /// Evaluation
-        let regressorEvalutation = regressor.evaluation(on: regressorEvaluationTable)
+        let regressorEvalutation = regressor.evaluation(on: regressorTable!)
         regressorKPI.dictOfMetrics["evaluationMetrics.maximumError"]? = regressorEvalutation.maximumError
         regressorKPI.dictOfMetrics["evaluationMetrics.rootMeanSquaredError"]? = regressorEvalutation.rootMeanSquaredError
         /// Schreibe in CoreData
