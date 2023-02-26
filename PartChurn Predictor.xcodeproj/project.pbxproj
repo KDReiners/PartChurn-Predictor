@@ -33,8 +33,6 @@
 		0AA8C8F529A10E1500AA399F /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */; };
 		0AC8843B29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8843A29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift */; };
 		0AC8843C29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8843A29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift */; };
-		0AC8843E29A532D800A233B9 /* MetricconfusionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8843D29A532D800A233B9 /* MetricconfusionModel.swift */; };
-		0AC8843F29A532D800A233B9 /* MetricconfusionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8843D29A532D800A233B9 /* MetricconfusionModel.swift */; };
 		0AC8844129A5344500A233B9 /* MetricprecisionrecallModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8844029A5344500A233B9 /* MetricprecisionrecallModel.swift */; };
 		0AC8844229A5344500A233B9 /* MetricprecisionrecallModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8844029A5344500A233B9 /* MetricprecisionrecallModel.swift */; };
 		0AD43D0A2920234700199F06 /* SimulationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD43D092920234700199F06 /* SimulationController.swift */; };
@@ -150,7 +148,6 @@
 		0A827F7328736F0400C928F2 /* CustomColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColumn.swift; sourceTree = "<group>"; };
 		0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		0AC8843A29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ml_ClassifierMetricKPI.swift; sourceTree = "<group>"; };
-		0AC8843D29A532D800A233B9 /* MetricconfusionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricconfusionModel.swift; sourceTree = "<group>"; };
 		0AC8844029A5344500A233B9 /* MetricprecisionrecallModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricprecisionrecallModel.swift; sourceTree = "<group>"; };
 		0AD43D092920234700199F06 /* SimulationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationController.swift; sourceTree = "<group>"; };
 		0AD43D0C2921062F00199F06 /* MLTableCluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLTableCluster.swift; sourceTree = "<group>"; };
@@ -338,7 +335,6 @@
 				2DA77EFE28266B32007EC3E5 /* FilesModel.swift */,
 				2D989590282EE47F0070F475 /* MetricsModel.swift */,
 				2D9895932830321D0070F475 /* MetricvaluesModel.swift */,
-				0AC8843D29A532D800A233B9 /* MetricconfusionModel.swift */,
 				0AC8844029A5344500A233B9 /* MetricprecisionrecallModel.swift */,
 				2DFE31BD282D8BA40058C3AA /* Ml_RegressorMetricKPI.swift */,
 				0AC8843A29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift */,
@@ -533,7 +529,6 @@
 				2DA77EE528256F52007EC3E5 /* ColumnsModel.swift in Sources */,
 				2D0B856D282565BF00856BCB /* Persistence.swift in Sources */,
 				0A827F7428736F0400C928F2 /* CustomColumn.swift in Sources */,
-				0AC8843E29A532D800A233B9 /* MetricconfusionModel.swift in Sources */,
 				2D0B8567282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */,
 				2D01395E287868C000AC8EBF /* ComposerView.swift in Sources */,
 				2D1EB362283A842F00F86B6D /* CoreDataML.swift in Sources */,
@@ -600,7 +595,6 @@
 				2DA77EE628256F52007EC3E5 /* ColumnsModel.swift in Sources */,
 				2D0B856E282565BF00856BCB /* Persistence.swift in Sources */,
 				0A827F7528736F0400C928F2 /* CustomColumn.swift in Sources */,
-				0AC8843F29A532D800A233B9 /* MetricconfusionModel.swift in Sources */,
 				2D0B8568282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */,
 				2D01395F287868C000AC8EBF /* ComposerView.swift in Sources */,
 				2D1EB363283A842F00F86B6D /* CoreDataML.swift in Sources */,

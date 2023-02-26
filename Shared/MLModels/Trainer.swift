@@ -200,11 +200,7 @@ public struct Trainer {
         print ("registered subscription count: \(subscriptions.count)")
     }
     private func writeClassifierMetrics(classifier: MLClassifier, classifierName: String, classifierEvaluationTable: MLDataTable) -> Void {
-        let metricConfusionModel = MetricconfusionModel()
-        metricConfusionModel.updateEntry(datasetTypeName: "training", prediction: prediction, algorithmName: classifierName, table: classifier.trainingMetrics.confusion)
-        metricConfusionModel.updateEntry(datasetTypeName: "validation", prediction: prediction, algorithmName: classifierName, table: classifier.validationMetrics.confusion)
-        let classifierEvaluation = classifier.evaluation(on: regressorTable!)
-        metricConfusionModel.updateEntry(datasetTypeName: "evaluation", prediction: prediction, algorithmName: classifierName, table: classifierEvaluation.confusion)
+        print("to be done")
     }
     private func writeRegressorMetrics (regressor: MLRegressor, regressorName: String, regressorEvaluationTable: MLDataTable) -> Void {
         let regressorKPI = Ml_RegressorMetricKPI()
@@ -212,7 +208,6 @@ public struct Trainer {
         regressorKPI.dictOfMetrics["trainingMetrics.rootMeanSquaredError"]? = regressor.trainingMetrics.rootMeanSquaredError
         regressorKPI.dictOfMetrics["validationMetrics.maximumError"]? = regressor.validationMetrics.maximumError
         regressorKPI.dictOfMetrics["validationMetrics.rootMeanSquaredError"]? = regressor.validationMetrics.rootMeanSquaredError
-        
         /// Evaluation
         let regressorEvalutation = regressor.evaluation(on: regressorTable!)
         regressorKPI.dictOfMetrics["evaluationMetrics.maximumError"]? = regressorEvalutation.maximumError
