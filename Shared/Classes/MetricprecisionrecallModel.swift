@@ -29,10 +29,10 @@ public class MetricprecisionrecallModell: Model<Metricprecisionrecall> {
         let predicate = NSPredicate(format: " metricprecisionrecall2prediction == %@ && metricprecisionrecall2algorithm == %@", prediction, algorithm)
         self.deleteAllRecords(predicate: predicate)
         let newRecord = self.insertRecord()
-        newRecord.truepositives = Int16(targetStatistics.truePositives)
-        newRecord.truenegatives = Int16(targetStatistics.trueNegatives)
-        newRecord.falsepositives = Int16(targetStatistics.falsePositives)
-        newRecord.falsenegatives = Int16(targetStatistics.falseNegatives)
+        newRecord.truepositives = Int32(targetStatistics.truePositives)
+        newRecord.truenegatives = Int32(targetStatistics.trueNegatives)
+        newRecord.falsepositives = Int32(targetStatistics.falsePositives)
+        newRecord.falsenegatives = Int32(targetStatistics.falseNegatives)
         newRecord.metricprecisionrecall2algorithm = algorithm
         newRecord.metricprecisionrecall2prediction = prediction
         BaseServices.save()

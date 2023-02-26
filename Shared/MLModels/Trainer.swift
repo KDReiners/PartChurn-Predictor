@@ -58,7 +58,7 @@ public struct Trainer {
             return
         }
     }
-    public mutating func createModel(regressorName: String) -> Void {
+    public mutating func createModel(algorithmName: String) -> Void {
         let columnDataModel = ColumnsModel(model: self.model )
         let targetColumn = columnDataModel.timedependantTargetColums.first
         let predictedColumnName = "Predicted: " + (targetColumn?.name)!
@@ -67,7 +67,7 @@ public struct Trainer {
         }
         //        this sets aside 20% of each model’s data rows for evaluation, leaving the remaining 80% for training.
         let (regressorEvaluationTable, regressorTrainingTable) = regressorTable!.randomSplit(by: 0.2, seed: 5)
-        switch regressorName {
+        switch algorithmName {
         case "MLLinearRegressor":
             let defaultParams = MLLinearRegressor.ModelParameters(validation: .split(strategy: .automatic), maxIterations: 500, l1Penalty: 0, l2Penalty: 0.001, stepSize: 0.001, convergenceThreshold: 0.001, featureRescaling: true)
             regressor = {
@@ -158,46 +158,24 @@ public struct Trainer {
                 }
             }()
         default:
-            print("not found: \(regressorName)" )
+            print("not found: \(algorithmName)" )
         }
         if regressor != nil {
-            writeRegressorMetrics(regressor: regressor, regressorName:  regressorName, regressorEvaluationTable: regressorEvaluationTable)
+            writeRegressorMetrics(regressor: regressor, regressorName:  algorithmName, regressorEvaluationTable: regressorEvaluationTable)
         }
         if classifier != nil {
             do {
                 let classifierMetaData = MLModelMetadata(author: "Steps.IT",
                                                          shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden via Classifier",
                                                          version: "1.0")
-                try classifier.write(to: BaseServices.homePath.appendingPathComponent((self.mlDataTableProvider.model?.name!)!, isDirectory: true).appendingPathComponent(regressorName + "_" + self.mlDataTableProvider.prediction!.id!.uuidString + ".mlmodel"),
+                try classifier.write(to: BaseServices.homePath.appendingPathComponent((self.mlDataTableProvider.model?.name!)!, isDirectory: true).appendingPathComponent(algorithmName + "_" + self.mlDataTableProvider.prediction!.id!.uuidString + ".mlmodel"),
                                      metadata: classifierMetaData)
-                writeClassifierMetrics(classifier: classifier, classifierName: regressorName, classifierEvaluationTable: regressorEvaluationTable)
+                writeClassifierMetrics(classifier: classifier, classifierName: algorithmName, classifierEvaluationTable: regressorEvaluationTable)
             } catch {
                 fatalError(error.localizedDescription)
             }
         }
         
-    }
-    private func doit(regressorTrainingTable: MLDataTable) -> Void {
-        let sessionDirectory = URL(fileURLWithPath: "\(NSTemporaryDirectory())churn")
-        var subscriptions = [AnyCancellable]()
-        let defaultParams = MLBoostedTreeClassifier.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 1000, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.1, earlyStoppingRounds: nil, rowSubsample: 1.0, columnSubsample: 1.0)
-        let sessionParameters = MLTrainingSessionParameters(reportInterval: 10, checkpointInterval: 10, iterations: 100)
-        let job = try! MLBoostedTreeClassifier.train(trainingData: regressorTrainingTable, targetColumn: targetColumnName, parameters: defaultParams, sessionParameters: sessionParameters)
-        job.result.sink { result in
-            print(result)
-        }
-    receiveValue: { model in
-        try? model.write(to: sessionDirectory)
-    }
-    .store(in: &subscriptions)
-        job.progress.publisher(for: \.fractionCompleted).sink { [weak job] completed in
-            guard let job = job, let progress = MLProgress(progress: job.progress) else {
-                return
-            }
-            print("com: \(completed)")
-        }
-        .store(in: &subscriptions)
-        print ("registered subscription count: \(subscriptions.count)")
     }
     private func writeClassifierMetrics(classifier: MLClassifier, classifierName: String, classifierEvaluationTable: MLDataTable) -> Void {
         print("to be done")
