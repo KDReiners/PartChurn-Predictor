@@ -33,13 +33,13 @@ struct VerticalGridCell : View {
                     Text(cell).scaledToFit()
                 }
             }
-        }.frame(minHeight: 50, idealHeight: 100, maxHeight: 150)
+        }
     }
 }
 struct TextViewCell: View {
     var textValue: String = ""
     var body: some View {
-        Text(textValue).frame(minHeight: 50, maxHeight: 150)
+        Text(textValue)
     }
 }
 internal struct PredictionKPI: Identifiable  {
@@ -64,7 +64,7 @@ internal struct PredictionKPI: Identifiable  {
     var maximumError: String! = ""
     var dataSetType: String = "Evaluation"
 }
-internal class TabularDataProvider: ObservableObject {
+internal class PerformanceDataProvider: ObservableObject {
     var predictionsDataModel: PredictionsModel
     internal var PredictionKPIS: [PredictionKPI] {
         get {
@@ -107,25 +107,11 @@ internal class TabularDataProvider: ObservableObject {
             for algorithm in prediction.prediction2algorithms?.allObjects as![Algorithms] {
                 var predictionKPI = PredictionKPI()
                 predictionKPI.prediction = prediction
-                for metricValue in (algorithm.algorithm2metricvalues?.allObjects as! [Metricvalues]).filter( { $0.metricvalue2datasettype?.name == "evaluation" && $0.metricvalue2prediction == prediction}) {
-                    var involvedColumns = ColumnsModel(model: self.model).timelessInputColumns.filter( { $0.isshown == 1 }).map( {$0.name! }).joined(separator: ", ")
-                    involvedColumns = involvedColumns + ", " + ColumnsModel(model: self.model).timedependantInputColums.filter( { $0.isshown == 1 }).map( {$0.name! }).joined(separator: ", ")
-                    predictionKPI.involvedColumnArray.append(contentsOf: ColumnsModel(model: self.model).timelessInputColumns.filter( { $0.isshown == 1 }).map( {$0.name! }))
-                    predictionKPI.involvedColumnArray.append(contentsOf: ColumnsModel(model: self.model).timedependantInputColums.filter( { $0.isshown == 1 }).map( {$0.name! }))
-                    let composition =  (prediction.prediction2compositions?.allObjects as! [Compositions]).first!
-                    predictionKPI.timeSpan = String(composition.composition2timeseries!.to - composition.composition2timeseries!.from + 1)
-                    predictionKPI.algorithm = algorithm.name!
-                    predictionKPI.metricName = metricValue.metricvalue2metric?.name!
-                    let metricName = predictionKPI.metricName ?? "no name"
-                    switch metricName {
-                    case "rootMeanSquaredError":
-                        predictionKPI.rootMeanSquaredError = BaseServices.doubleFormatter.string(from: metricValue.value as NSNumber)!
-                    case "maximumError":
-                        predictionKPI.maximumError = BaseServices.doubleFormatter.string(from: metricValue.value as NSNumber)!
-                    default:
-                        print("KPI not found: " + (predictionKPI.metricName ?? "no Name provided!"))
-                    }
-                }
+                var involvedColumns = ColumnsModel(model: self.model).timelessInputColumns.filter( { $0.isshown == 1 }).map( {$0.name! }).joined(separator: ", ")
+                involvedColumns = involvedColumns + ", " + ColumnsModel(model: self.model).timedependantInputColums.filter( { $0.isshown == 1 }).map( {$0.name! }).joined(separator: ", ")
+                predictionKPI.involvedColumnArray.append(contentsOf: ColumnsModel(model: self.model).timelessInputColumns.filter( { $0.isshown == 1 }).map( {$0.name! }))
+                predictionKPI.involvedColumnArray.append(contentsOf: ColumnsModel(model: self.model).timedependantInputColums.filter( { $0.isshown == 1 }).map( {$0.name! }))
+                predictionKPI.algorithm = algorithm.name!
                 for predictionMetricValue in (prediction.prediction2predictionmetricvalues?.allObjects as! [Predictionmetricvalues]).filter({ $0.predictionmetricvalue2algorithm == algorithm }) {
                     let predictionMetricType = predictionMetricValue.predictionmetricvalue2predictionmetric!.name!
                     switch predictionMetricType {

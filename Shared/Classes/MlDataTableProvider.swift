@@ -183,7 +183,7 @@ class MlDataTableProvider: ObservableObject {
         targetStatistic.targetPopulation = targetCount
         enhanceTargetStatistics()
         func enhanceTargetStatistics() {
-            let metricPrecisionRecallModel = MetricprecisionrecallModell()
+//            let metricPrecisionRecallModel = MetricprecisionrecallModell()
             let truePositivesMask = mlPredictionColumn <= targetStatistic.predictionValueAtThreshold && mlTargetColumn == targetStatistic.targetValue
             let falsePositivesMask = mlPredictionColumn <= targetStatistic.predictionValueAtThreshold && mlTargetColumn != targetStatistic.targetValue
             let trueNegativesMask = mlPredictionColumn > targetStatistic.predictionValueAtThreshold && mlTargetColumn != targetStatistic.targetValue
@@ -192,7 +192,7 @@ class MlDataTableProvider: ObservableObject {
             targetStatistic.falsePositives = mlDataTable[falsePositivesMask].rows.count
             targetStatistic.trueNegatives = mlDataTable[trueNegativesMask].rows.count
             targetStatistic.falseNegatives = mlDataTable[falseNegativesMask].rows.count
-            metricPrecisionRecallModel.updateEntry(prediction: self.prediction!, algorithmName: self.regressorName!, targetStatistics: targetStatistic)
+//            metricPrecisionRecallModel.updateEntry(prediction: self.prediction!, algorithmName: self.regressorName!, targetStatistics: targetStatistic)
             
         }
         func find(trial: Int, nearestLowValue: Int = 0, nearestHighValue: Int = 0, bestRelationValue: Double = 0, bestRelationPredictionValue: Double = 0, targetStatistic: inout TargetStatistics ){

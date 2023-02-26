@@ -9,10 +9,10 @@ import SwiftUI
 struct PredictionsView: View {
     var model: Models
     var algorithmTypeDataModel = AlgorithmTypesModel()
-    var tabularDataProvider: TabularDataProvider!
+    var tabularDataProvider: PerformanceDataProvider!
     init(model: Models) {
         self.model = model
-        self.tabularDataProvider = TabularDataProvider(model: self.model)
+        self.tabularDataProvider = PerformanceDataProvider(model: self.model)
         algorithmTypeDataModel.setUp()
     }
     var body: some View {
@@ -37,7 +37,8 @@ struct PredictionsView: View {
 //                    TableColumn("PV->Threshold", value: \TabularDataProvider.PredictionKPI.predictionValueAtThreshold!)
 //                }
 
-            }.frame(width: 2000)
+            }
+            .frame(minWidth: 1500, idealWidth: 2000, maxWidth: .infinity)
         }
     }
 }
