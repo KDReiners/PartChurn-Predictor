@@ -33,8 +33,6 @@
 		0AA8C8F529A10E1500AA399F /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */; };
 		0AC8843B29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8843A29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift */; };
 		0AC8843C29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8843A29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift */; };
-		0AC8844129A5344500A233B9 /* MetricprecisionrecallModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8844029A5344500A233B9 /* MetricprecisionrecallModel.swift */; };
-		0AC8844229A5344500A233B9 /* MetricprecisionrecallModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8844029A5344500A233B9 /* MetricprecisionrecallModel.swift */; };
 		0AD43D0A2920234700199F06 /* SimulationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD43D092920234700199F06 /* SimulationController.swift */; };
 		0AD43D0B2920234700199F06 /* SimulationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD43D092920234700199F06 /* SimulationController.swift */; };
 		0AD43D0D2921062F00199F06 /* MLTableCluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD43D0C2921062F00199F06 /* MLTableCluster.swift */; };
@@ -148,7 +146,6 @@
 		0A827F7328736F0400C928F2 /* CustomColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColumn.swift; sourceTree = "<group>"; };
 		0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		0AC8843A29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ml_ClassifierMetricKPI.swift; sourceTree = "<group>"; };
-		0AC8844029A5344500A233B9 /* MetricprecisionrecallModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricprecisionrecallModel.swift; sourceTree = "<group>"; };
 		0AD43D092920234700199F06 /* SimulationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationController.swift; sourceTree = "<group>"; };
 		0AD43D0C2921062F00199F06 /* MLTableCluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLTableCluster.swift; sourceTree = "<group>"; };
 		0AD43D0F2921579400199F06 /* PredictionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionView.swift; sourceTree = "<group>"; };
@@ -335,7 +332,6 @@
 				2DA77EFE28266B32007EC3E5 /* FilesModel.swift */,
 				2D989590282EE47F0070F475 /* MetricsModel.swift */,
 				2D9895932830321D0070F475 /* MetricvaluesModel.swift */,
-				0AC8844029A5344500A233B9 /* MetricprecisionrecallModel.swift */,
 				2DFE31BD282D8BA40058C3AA /* Ml_RegressorMetricKPI.swift */,
 				0AC8843A29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift */,
 				2D1DB46628B3CC08005BFC2D /* PredictionsModel.swift */,
@@ -553,7 +549,6 @@
 				2D98958E282EE4100070F475 /* DatasettypesModel.swift in Sources */,
 				2DFE31BE282D8BA40058C3AA /* Ml_RegressorMetricKPI.swift in Sources */,
 				2DA77F022827E1DD007EC3E5 /* ModelsView.swift in Sources */,
-				0AC8844129A5344500A233B9 /* MetricprecisionrecallModel.swift in Sources */,
 				2DA77EDA28256EE5007EC3E5 /* GenericViewModel.swift in Sources */,
 				2DA77ED628256E9D007EC3E5 /* Storage.swift in Sources */,
 				2D867B5D28AACCB5005E8B87 /* TimeSliceModel.swift in Sources */,
@@ -619,7 +614,6 @@
 				2D98958F282EE4100070F475 /* DatasettypesModel.swift in Sources */,
 				2DFE31BF282D8BA40058C3AA /* Ml_RegressorMetricKPI.swift in Sources */,
 				2DA77F032827E1DD007EC3E5 /* ModelsView.swift in Sources */,
-				0AC8844229A5344500A233B9 /* MetricprecisionrecallModel.swift in Sources */,
 				2DA77EDB28256EE5007EC3E5 /* GenericViewModel.swift in Sources */,
 				2DA77ED728256E9D007EC3E5 /* Storage.swift in Sources */,
 				2D867B5E28AACCB5005E8B87 /* TimeSliceModel.swift in Sources */,

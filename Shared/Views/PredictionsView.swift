@@ -9,34 +9,31 @@ import SwiftUI
 struct PredictionsView: View {
     var model: Models
     var algorithmTypeDataModel = AlgorithmTypesModel()
-    var tabularDataProvider: PerformanceDataProvider!
+    var performanceDataProvider: PerformanceDataProvider!
     init(model: Models) {
         self.model = model
-        self.tabularDataProvider = PerformanceDataProvider(model: self.model)
+        self.performanceDataProvider = PerformanceDataProvider(model: self.model)
         algorithmTypeDataModel.setUp()
     }
     var body: some View {
         ScrollView(.horizontal) {
-            Table(tabularDataProvider.PredictionKPIS) {
+            Table(performanceDataProvider.PredictionKPIS) {
                 Group {
-                    tabularDataProvider.involvedColumns
-                    tabularDataProvider.algorithm
-                    tabularDataProvider.timeSlices
-                    tabularDataProvider.simulation
-//                    TableColumn("DataSetType", value: \TabularDataProvider.PredictionKPI.dataSetType)
-//                    TableColumn("RootMean", value: \TabularDataProvider.PredictionKPI.rootMeanSquaredError!)
-//                    TableColumn("Maximum", value: \TabularDataProvider.PredictionKPI.maximumError!)
-//                    TableColumn("T->Population", value: \TabularDataProvider.PredictionKPI.targetPopulation!)
-//                    TableColumn("T->Optimum", value: \TabularDataProvider.PredictionKPI.targetsAtOptimum!)
-//                    TableColumn("D->Optimum", value: \TabularDataProvider.PredictionKPI.dirtiesAtOptimum!)
-//                    TableColumn("PV->Optimum", value: \TabularDataProvider.PredictionKPI.predictionValueAtOptimum!)
-//                    TableColumn("T->Threshold", value: \TabularDataProvider.PredictionKPI.targetsAtThreshold!)
+                    performanceDataProvider.involvedColumns
+                    performanceDataProvider.timeSlices
+                    performanceDataProvider.algorithm
+                    performanceDataProvider.precision
+                    performanceDataProvider.recall
+                    performanceDataProvider.f1Score
+                    performanceDataProvider.specifity
                 }
-//                Group {
-//                    TableColumn("D->Threshold", value: \TabularDataProvider.PredictionKPI.dirtiesAtThreshold!)
-//                    TableColumn("PV->Threshold", value: \TabularDataProvider.PredictionKPI.predictionValueAtThreshold!)
-//                }
-
+                Group {
+                    performanceDataProvider.falseNegatives
+                    performanceDataProvider.falsePositives
+                    performanceDataProvider.trueNegatives
+                    performanceDataProvider.truePositives
+                    performanceDataProvider.simulation
+                }
             }
             .frame(minWidth: 1500, idealWidth: 2000, maxWidth: .infinity)
         }

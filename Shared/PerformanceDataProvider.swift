@@ -42,6 +42,18 @@ struct TextViewCell: View {
         Text(textValue)
     }
 }
+struct DoubleValueCell: View {
+    var value: Double = 0
+    var body: some View {
+        Text(BaseServices.doubleFormatter.string(from: NSNumber(value: value))!)
+    }
+}
+struct IntValueCell: View {
+    var value: Int = 0
+    var body: some View {
+        Text(BaseServices.intFormatter.string(from: NSNumber(value: value))!)
+    }
+}
 internal struct PredictionKPI: Identifiable  {
     var id = UUID()
     var prediction: Predictions!
@@ -63,6 +75,31 @@ internal struct PredictionKPI: Identifiable  {
     var rootMeanSquaredError: String! = ""
     var maximumError: String! = ""
     var dataSetType: String = "Evaluation"
+    var falseNegatives: Double!
+    var trueNegatives: Double!
+    var falsePositives: Double!
+    var truePositives: Double!
+    var precision: Double! {
+        get {
+            return (truePositives / (truePositives + falsePositives))
+        }
+    }
+    var recall: Double! {
+        get {
+            return (truePositives / (truePositives + falseNegatives))
+        }
+    }
+    var f1Score: Double! {
+        get {
+            return (2 * truePositives) / (2 * truePositives + falseNegatives + falsePositives)
+        }
+    }
+    var specifity: Double! {
+        get {
+            return (trueNegatives / (trueNegatives + falsePositives))
+        }
+    }
+    
 }
 internal class PerformanceDataProvider: ObservableObject {
     var predictionsDataModel: PredictionsModel
@@ -86,6 +123,46 @@ internal class PerformanceDataProvider: ObservableObject {
             TextViewCell(textValue:  row.algorithm)
         }
     }
+    var precision: TableColumn<PredictionKPI, Never, DoubleValueCell, Text> {
+        TableColumn("Precision") { row in
+            DoubleValueCell(value: row.precision)
+        }
+    }
+    var recall: TableColumn<PredictionKPI, Never, DoubleValueCell, Text> {
+        TableColumn("Recall") { row in
+            DoubleValueCell(value: row.recall)
+        }
+    }
+    var f1Score: TableColumn<PredictionKPI, Never, DoubleValueCell, Text> {
+        TableColumn("F1-Score") { row in
+            DoubleValueCell(value: row.f1Score)
+        }
+    }
+    var specifity: TableColumn<PredictionKPI, Never, DoubleValueCell, Text> {
+        TableColumn("Specifity") { row in
+            DoubleValueCell(value: row.specifity)
+        }
+    }
+    var falseNegatives: TableColumn<PredictionKPI, Never, IntValueCell, Text> {
+        TableColumn("false Negatives") { row in
+            IntValueCell(value: Int(row.falseNegatives))
+        }
+    }
+    var falsePositives: TableColumn<PredictionKPI, Never, IntValueCell, Text> {
+        TableColumn("false Positives") { row in
+            IntValueCell(value: Int(row.falsePositives))
+        }
+    }
+    var trueNegatives: TableColumn<PredictionKPI, Never, IntValueCell, Text> {
+        TableColumn("true Negatives") { row in
+            IntValueCell(value: Int(row.trueNegatives))
+        }
+    }
+    var truePositives: TableColumn<PredictionKPI, Never, IntValueCell, Text> {
+        TableColumn("true Positives") { row in
+            IntValueCell(value: Int(row.truePositives))
+        }
+    }
     var simulation: TableColumn<PredictionKPI, Never, NavigationViewCell, Text> {
         TableColumn("Link") { row in
             NavigationViewCell(prediction: row.prediction, algorithmName: row.algorithm)
@@ -107,10 +184,7 @@ internal class PerformanceDataProvider: ObservableObject {
             for algorithm in prediction.prediction2algorithms?.allObjects as![Algorithms] {
                 var predictionKPI = PredictionKPI()
                 predictionKPI.prediction = prediction
-                var involvedColumns = ColumnsModel(model: self.model).timelessInputColumns.filter( { $0.isshown == 1 }).map( {$0.name! }).joined(separator: ", ")
-                involvedColumns = involvedColumns + ", " + ColumnsModel(model: self.model).timedependantInputColums.filter( { $0.isshown == 1 }).map( {$0.name! }).joined(separator: ", ")
-                predictionKPI.involvedColumnArray.append(contentsOf: ColumnsModel(model: self.model).timelessInputColumns.filter( { $0.isshown == 1 }).map( {$0.name! }))
-                predictionKPI.involvedColumnArray.append(contentsOf: ColumnsModel(model: self.model).timedependantInputColums.filter( { $0.isshown == 1 }).map( {$0.name! }))
+                predictionKPI.involvedColumnArray = predictionsDataModel.includedColumns(prediction: prediction).map({$0.name! })
                 predictionKPI.algorithm = algorithm.name!
                 for predictionMetricValue in (prediction.prediction2predictionmetricvalues?.allObjects as! [Predictionmetricvalues]).filter({ $0.predictionmetricvalue2algorithm == algorithm }) {
                     let predictionMetricType = predictionMetricValue.predictionmetricvalue2predictionmetric!.name!
@@ -133,6 +207,14 @@ internal class PerformanceDataProvider: ObservableObject {
                         predictionKPI.targetPopulation = BaseServices.intFormatter.string(from:predictionMetricValue.value.toInt()! as NSNumber)
                     case "predictionValueAtOptimum":
                         predictionKPI.predictionValueAtOptimum =  BaseServices.doubleFormatter.string(from: predictionMetricValue.value as NSNumber)!
+                    case "falseNegatives":
+                        predictionKPI.falseNegatives = Double(predictionMetricValue.value)
+                    case "trueNegatives":
+                        predictionKPI.trueNegatives = Double(predictionMetricValue.value)
+                    case "falsePositives":
+                        predictionKPI.falsePositives = Double(predictionMetricValue.value)
+                    case "truePositives":
+                        predictionKPI.truePositives = Double(predictionMetricValue.value)
                     default:
                         print("KPI not found: " + predictionMetricType)
                     }
