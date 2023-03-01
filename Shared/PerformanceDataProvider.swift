@@ -75,10 +75,10 @@ internal struct PredictionKPI: Identifiable  {
     var rootMeanSquaredError: String! = ""
     var maximumError: String! = ""
     var dataSetType: String = "Evaluation"
-    var falseNegatives: Double!
-    var trueNegatives: Double!
-    var falsePositives: Double!
-    var truePositives: Double!
+    var falseNegatives: Double = 0.0000001
+    var trueNegatives: Double = 0.0000001
+    var falsePositives: Double = 0.0000001
+    var truePositives: Double = 0.0000001
     var precision: Double! {
         get {
             return (truePositives / (truePositives + falsePositives))
@@ -117,6 +117,16 @@ internal class PerformanceDataProvider: ObservableObject {
             VerticalGridCell(textValues: col.involvedColumnArray)
         }
         .width(min: 150, ideal: 200, max: 250)
+    }
+    var columnsCount: TableColumn<PredictionKPI, Never, TextViewCell, Text> {
+        TableColumn("Column(s) count") { row in
+            TextViewCell(textValue: "\(row.involvedColumnArray.count)")
+        }
+    }
+    var timeSlices: TableColumn<PredictionKPI, Never, TextViewCell, Text> {
+        TableColumn("TimeSlices") { row in
+            TextViewCell(textValue: row.timeSpan)
+        }
     }
     var algorithm: TableColumn<PredictionKPI, Never, TextViewCell, Text> {
         TableColumn("Algorithm") { row in
@@ -168,11 +178,7 @@ internal class PerformanceDataProvider: ObservableObject {
             NavigationViewCell(prediction: row.prediction, algorithmName: row.algorithm)
         }
     }
-    var timeSlices: TableColumn<PredictionKPI, Never, TextViewCell, Text> {
-        TableColumn("TimeSlices") { row in
-            TextViewCell(textValue: row.timeSpan)
-        }
-    }
+
     var model: Models
                init(model: Models) {
         self.model = model
@@ -186,6 +192,7 @@ internal class PerformanceDataProvider: ObservableObject {
                 predictionKPI.prediction = prediction
                 predictionKPI.involvedColumnArray = predictionsDataModel.includedColumns(prediction: prediction).map({$0.name! })
                 predictionKPI.algorithm = algorithm.name!
+                predictionKPI.timeSpan = String(prediction.seriesdepth)
                 for predictionMetricValue in (prediction.prediction2predictionmetricvalues?.allObjects as! [Predictionmetricvalues]).filter({ $0.predictionmetricvalue2algorithm == algorithm }) {
                     let predictionMetricType = predictionMetricValue.predictionmetricvalue2predictionmetric!.name!
                     switch predictionMetricType {

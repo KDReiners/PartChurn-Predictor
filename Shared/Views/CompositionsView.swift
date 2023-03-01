@@ -299,6 +299,8 @@ struct CompositionsView: View {
         var trainer = Trainer(mlDataTableProvider: self.mlDataTableProvider, model: self.model)
         trainer.model = self.model
         trainer.createModel(algorithmName: $mlSelection.wrappedValue!)
-        generatePredictionView()
+        DispatchQueue.global().sync {
+            generatePredictionView()
+        }
     }
 }

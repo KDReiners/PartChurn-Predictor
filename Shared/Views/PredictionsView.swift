@@ -20,6 +20,7 @@ struct PredictionsView: View {
             Table(performanceDataProvider.PredictionKPIS) {
                 Group {
                     performanceDataProvider.involvedColumns
+                    performanceDataProvider.columnsCount
                     performanceDataProvider.timeSlices
                     performanceDataProvider.algorithm
                     performanceDataProvider.precision

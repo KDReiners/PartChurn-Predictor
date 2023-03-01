@@ -20,6 +20,8 @@ class AnalysisProvider {
         self.mlDataTableProvider.orderedColumns = fileWeaver.orderedColumns!
         PredictionMetricsModel().deleteAllRecords(predicate: nil)
         PredictionMetricValueModel().deleteAllRecords(predicate: nil)
+        PredictionMetricsModel().deleteAllRecords(predicate: nil)
+        MetricvaluesModel().deleteAllRecords(predicate: nil)
     }
     func explode() -> Void {
         PredictionMetricsModel().deleteAllRecords(predicate: nil)
@@ -68,32 +70,36 @@ struct Analysis {
         return result
     }
     func analyse() {
-        for item in AlgorithmsModel().items {
+        for item in AlgorithmsModel().items.filter( { $0.name == "MLBoostedTreeRegressor"}) {
             let mlDataTableProvider = createTableForExplosion(fileWeaver: self.fileWeaver, clusterSelection: self.clusterSelection)
             print("Working on algorithm: \(item.name!)")
             mlDataTableProvider.regressorName = item.name!
             mlDataTableProvider.prediction = clusterSelection.prediction
             var trainer = Trainer(mlDataTableProvider: mlDataTableProvider, model: mlDataTableProvider.model!)
             trainer.createModel(algorithmName: item.name!)
-            let newStatistics = Statistics(mlOwnDataTableProvider: mlDataTableProvider, regressorName: item.name!)
-            newStatistics.schedule()
+            mlDataTableProvider.updateTableProvider()
+            mlDataTableProvider.loaded = false
         }
     }
 }
-struct Statistics {
-    var mlOwnDataTableProvider: MlDataTableProvider
-    var regressorName: String
-    init(mlOwnDataTableProvider: MlDataTableProvider, regressorName: String) {
-        self.mlOwnDataTableProvider = mlOwnDataTableProvider
-        self.mlOwnDataTableProvider.valuesTableProvider?.regressorName = regressorName
-        self.regressorName = regressorName
-    }
-    func schedule() {
-        update() {
-            print("\(regressorName) ready")
-        }
-    }
-    func update(completion: @escaping() -> ()) -> Void {
-        mlOwnDataTableProvider.updateTableProvider()
-    }
-}
+//struct Statistics {
+//    var mlOwnDataTableProvider: MlDataTableProvider
+//    var regressorName: String
+//    init(mlOwnDataTableProvider: MlDataTableProvider, regressorName: String) {
+//        self.mlOwnDataTableProvider = mlOwnDataTableProvider
+//        self.mlOwnDataTableProvider.valuesTableProvider?.regressorName = regressorName
+//        self.mlOwnDataTableProvider.updateTableProviderForStatistics {
+//           print("ready")
+//
+//        }
+//        self.regressorName = regressorName
+//    }
+//    func schedule() {
+//        update() {
+//            print("\(regressorName) ready")
+//        }
+//    }
+//    func update(completion: @escaping() -> ()) -> Void {
+//        mlOwnDataTableProvider.updateTableProvider()
+//    }
+//}

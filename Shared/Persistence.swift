@@ -43,7 +43,7 @@ class PersistenceController {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         }
-        
+//        container.viewContext.reset()
         // This sample refreshes UI by consuming store changes via persistent history tracking.
         /// - Tag: viewContextMergeParentChanges
         container.viewContext.automaticallyMergesChangesFromParent = true
