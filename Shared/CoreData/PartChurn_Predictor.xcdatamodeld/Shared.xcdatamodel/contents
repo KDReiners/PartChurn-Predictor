@@ -12,6 +12,11 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="algorithmtype2algorithms" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Algorithms" inverseName="algorithm2algorithmtype" inverseEntity="Algorithms"/>
     </entity>
+    <entity name="Categories" representedClassName="Categories" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="category2columns" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Columns" inverseName="column2category" inverseEntity="Columns"/>
+        <relationship name="category2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2categories" inverseEntity="Models"/>
+    </entity>
     <entity name="Columns" representedClassName="Columns" syncable="YES" codeGenerationType="class">
         <attribute name="alias" optional="YES" transient="YES" attributeType="String"/>
         <attribute name="datatype" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -24,6 +29,7 @@
         <attribute name="istimeseries" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="orderno" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="column2category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Categories" inverseName="category2columns" inverseEntity="Categories"/>
         <relationship name="column2compositions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Compositions" inverseName="composition2columns" inverseEntity="Compositions"/>
         <relationship name="column2file" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Files" inverseName="file2columns" inverseEntity="Files"/>
         <relationship name="column2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2columns" inverseEntity="Models"/>
@@ -66,6 +72,7 @@
     <entity name="Models" representedClassName="Models" syncable="YES" codeGenerationType="class">
         <attribute name="filepattern" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="model2categories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Categories" inverseName="category2model" inverseEntity="Categories"/>
         <relationship name="model2columns" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Columns" inverseName="column2model" inverseEntity="Columns"/>
         <relationship name="model2compositions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Compositions" inverseName="composition2model" inverseEntity="Compositions"/>
         <relationship name="model2files" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Files" inverseName="files2model" inverseEntity="Files"/>

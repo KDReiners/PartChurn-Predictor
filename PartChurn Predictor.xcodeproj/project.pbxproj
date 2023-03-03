@@ -9,6 +9,14 @@
 /* Begin PBXBuildFile section */
 		0A01CB692985AAAC00272B76 /* AlgorithmTypesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A01CB682985AAAC00272B76 /* AlgorithmTypesModel.swift */; };
 		0A01CB6A2985AAAC00272B76 /* AlgorithmTypesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A01CB682985AAAC00272B76 /* AlgorithmTypesModel.swift */; };
+		0A02736729AFEFAB00821074 /* CategoriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A02736629AFEFAB00821074 /* CategoriesModel.swift */; };
+		0A02736829AFEFAB00821074 /* CategoriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A02736629AFEFAB00821074 /* CategoriesModel.swift */; };
+		0A02736A29AFF03200821074 /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A02736929AFF03200821074 /* CategoriesView.swift */; };
+		0A02736B29AFF03200821074 /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A02736929AFF03200821074 /* CategoriesView.swift */; };
+		0A02736D29B10B6700821074 /* TestMultiselect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A02736C29B10B6700821074 /* TestMultiselect.swift */; };
+		0A02736E29B10B6700821074 /* TestMultiselect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A02736C29B10B6700821074 /* TestMultiselect.swift */; };
+		0A09CD0929B27F8B000980D2 /* PythonKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0A09CD0829B27F8B000980D2 /* PythonKit */; };
+		0A09CD0C29B27FC9000980D2 /* PythonKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0A09CD0B29B27FC9000980D2 /* PythonKit */; };
 		0A0FC907297D9981006F778C /* PredictionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0FC906297D9981006F778C /* PredictionsView.swift */; };
 		0A0FC908297D9981006F778C /* PredictionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0FC906297D9981006F778C /* PredictionsView.swift */; };
 		0A1A2AC629805DB80078AA11 /* PerformanceDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A2AC529805DB80078AA11 /* PerformanceDataProvider.swift */; };
@@ -117,9 +125,6 @@
 		2DB5E69428AD3536006DC0D2 /* CompositionsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB5E69228AD3536006DC0D2 /* CompositionsProvider.swift */; };
 		2DB5E69628AD36DE006DC0D2 /* CompositionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB5E69528AD36DE006DC0D2 /* CompositionsView.swift */; };
 		2DB5E69728AD36DE006DC0D2 /* CompositionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB5E69528AD36DE006DC0D2 /* CompositionsView.swift */; };
-		2DB5E69A28AD68B7006DC0D2 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 2DB5E69928AD68B7006DC0D2 /* Collections */; };
-		2DB5E69C28AD68B7006DC0D2 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 2DB5E69B28AD68B7006DC0D2 /* DequeModule */; };
-		2DB5E69E28AD68B7006DC0D2 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 2DB5E69D28AD68B7006DC0D2 /* OrderedCollections */; };
 		2DBDCCF6288D6B9800CC8EDC /* CompositionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBDCCF5288D6B9800CC8EDC /* CompositionsModel.swift */; };
 		2DBDCCF7288D6B9800CC8EDC /* CompositionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBDCCF5288D6B9800CC8EDC /* CompositionsModel.swift */; };
 		2DBDCCF9288D6C1C00CC8EDC /* Combinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBDCCF8288D6C1C00CC8EDC /* Combinator.swift */; };
@@ -134,6 +139,9 @@
 
 /* Begin PBXFileReference section */
 		0A01CB682985AAAC00272B76 /* AlgorithmTypesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgorithmTypesModel.swift; sourceTree = "<group>"; };
+		0A02736629AFEFAB00821074 /* CategoriesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesModel.swift; sourceTree = "<group>"; };
+		0A02736929AFF03200821074 /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
+		0A02736C29B10B6700821074 /* TestMultiselect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestMultiselect.swift; sourceTree = "<group>"; };
 		0A0FC906297D9981006F778C /* PredictionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionsView.swift; sourceTree = "<group>"; };
 		0A1A2AC529805DB80078AA11 /* PerformanceDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceDataProvider.swift; sourceTree = "<group>"; };
 		0A4C56542869750900961D1D /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
@@ -203,6 +211,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DA77EF328257710007EC3E5 /* CSV in Frameworks */,
+				0A09CD0C29B27FC9000980D2 /* PythonKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,16 +219,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DB5E69A28AD68B7006DC0D2 /* Collections in Frameworks */,
 				2DA77EF628257732007EC3E5 /* CSV in Frameworks */,
-				2DB5E69E28AD68B7006DC0D2 /* OrderedCollections in Frameworks */,
-				2DB5E69C28AD68B7006DC0D2 /* DequeModule in Frameworks */,
+				0A09CD0929B27F8B000980D2 /* PythonKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A09CD0A29B27FC9000980D2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		0A1A2AC429805D870078AA11 /* TabularData */ = {
 			isa = PBXGroup;
 			children = (
@@ -234,6 +248,7 @@
 				2D0B8553282565BD00856BCB /* Shared */,
 				2D0B8565282565BF00856BCB /* macOS */,
 				2D0B855F282565BF00856BCB /* Products */,
+				0A09CD0A29B27FC9000980D2 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -326,6 +341,7 @@
 				0A69F24728F7CCE70062509A /* AnalysisProvider.swift */,
 				2D481BA428356EA4003EBCF2 /* AlgorithmsModel.swift */,
 				0A01CB682985AAAC00272B76 /* AlgorithmTypesModel.swift */,
+				0A02736629AFEFAB00821074 /* CategoriesModel.swift */,
 				2DA77EE428256F52007EC3E5 /* ColumnsModel.swift */,
 				2DBDCCF5288D6B9800CC8EDC /* CompositionsModel.swift */,
 				2D98958D282EE4100070F475 /* DatasettypesModel.swift */,
@@ -357,6 +373,7 @@
 		2DA77EED28257693007EC3E5 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0A02736929AFF03200821074 /* CategoriesView.swift */,
 				2DA77EEE282576AA007EC3E5 /* ImportView.swift */,
 				2DA77EBD282569DC007EC3E5 /* DirectoryView.swift */,
 				2DA77F012827E1DD007EC3E5 /* ModelsView.swift */,
@@ -372,6 +389,7 @@
 				2D6C24FE2934E88C00DA45B6 /* AlternateRows.swift */,
 				0A0FC906297D9981006F778C /* PredictionsView.swift */,
 				0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */,
+				0A02736C29B10B6700821074 /* TestMultiselect.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -402,6 +420,7 @@
 			name = "PartChurn Predictor (iOS)";
 			packageProductDependencies = (
 				2DA77EF228257710007EC3E5 /* CSV */,
+				0A09CD0B29B27FC9000980D2 /* PythonKit */,
 			);
 			productName = "PartChurn Predictor (iOS)";
 			productReference = 2D0B855E282565BF00856BCB /* PartChurn Predictor.app */;
@@ -422,9 +441,7 @@
 			name = "PartChurn Predictor (macOS)";
 			packageProductDependencies = (
 				2DA77EF528257732007EC3E5 /* CSV */,
-				2DB5E69928AD68B7006DC0D2 /* Collections */,
-				2DB5E69B28AD68B7006DC0D2 /* DequeModule */,
-				2DB5E69D28AD68B7006DC0D2 /* OrderedCollections */,
+				0A09CD0829B27F8B000980D2 /* PythonKit */,
 			);
 			productName = "PartChurn Predictor (macOS)";
 			productReference = 2D0B8564282565BF00856BCB /* PartChurn Predictor.app */;
@@ -460,7 +477,7 @@
 			packageReferences = (
 				2DA77EF128257710007EC3E5 /* XCRemoteSwiftPackageReference "CSV.swift" */,
 				2DA77EF428257732007EC3E5 /* XCRemoteSwiftPackageReference "CSV.swift" */,
-				2DB5E69828AD68B7006DC0D2 /* XCRemoteSwiftPackageReference "swift-collections" */,
+				0A09CD0729B27F8B000980D2 /* XCRemoteSwiftPackageReference "PythonKit" */,
 			);
 			productRefGroup = 2D0B855F282565BF00856BCB /* Products */;
 			projectDirPath = "";
@@ -504,6 +521,7 @@
 				0A69F24828F7CCE70062509A /* AnalysisProvider.swift in Sources */,
 				2DA77ED328256E8A007EC3E5 /* Model.swift in Sources */,
 				0A4C56582869862C00961D1D /* ColumnsView.swift in Sources */,
+				0A02736A29AFF03200821074 /* CategoriesView.swift in Sources */,
 				0AD43D102921579400199F06 /* PredictionView.swift in Sources */,
 				0AFCB7042850A5FA00676AF6 /* ValuesView.swift in Sources */,
 				2D6C24FF2934E88D00DA45B6 /* AlternateRows.swift in Sources */,
@@ -516,6 +534,7 @@
 				2DA77EE128256F16007EC3E5 /* BaseServices.swift in Sources */,
 				2DA77EBE282569DC007EC3E5 /* DirectoryView.swift in Sources */,
 				0A660F34287AD1920001EF16 /* FileWeaver.swift in Sources */,
+				0A02736729AFEFAB00821074 /* CategoriesModel.swift in Sources */,
 				2D0B8569282565BF00856BCB /* PartChurn_PredictorApp.swift in Sources */,
 				2D9895942830321D0070F475 /* MetricvaluesModel.swift in Sources */,
 				2DBDCCF6288D6B9800CC8EDC /* CompositionsModel.swift in Sources */,
@@ -527,6 +546,7 @@
 				0A827F7428736F0400C928F2 /* CustomColumn.swift in Sources */,
 				2D0B8567282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */,
 				2D01395E287868C000AC8EBF /* ComposerView.swift in Sources */,
+				0A02736D29B10B6700821074 /* TestMultiselect.swift in Sources */,
 				2D1EB362283A842F00F86B6D /* CoreDataML.swift in Sources */,
 				0AF2F06A28FC333E0094D0F8 /* AnalysisView.swift in Sources */,
 				2D1DB46728B3CC08005BFC2D /* PredictionsModel.swift in Sources */,
@@ -569,6 +589,7 @@
 				0A69F24928F7CCE70062509A /* AnalysisProvider.swift in Sources */,
 				2DA77ED428256E8A007EC3E5 /* Model.swift in Sources */,
 				0A4C56592869862C00961D1D /* ColumnsView.swift in Sources */,
+				0A02736B29AFF03200821074 /* CategoriesView.swift in Sources */,
 				0AD43D112921579400199F06 /* PredictionView.swift in Sources */,
 				0AFCB7052850A5FA00676AF6 /* ValuesView.swift in Sources */,
 				2D6C25002934E88D00DA45B6 /* AlternateRows.swift in Sources */,
@@ -581,6 +602,7 @@
 				2DA77EE228256F16007EC3E5 /* BaseServices.swift in Sources */,
 				2DA77EBF282569DC007EC3E5 /* DirectoryView.swift in Sources */,
 				0A660F35287AD1920001EF16 /* FileWeaver.swift in Sources */,
+				0A02736829AFEFAB00821074 /* CategoriesModel.swift in Sources */,
 				2D0B856A282565BF00856BCB /* PartChurn_PredictorApp.swift in Sources */,
 				2D9895952830321D0070F475 /* MetricvaluesModel.swift in Sources */,
 				2DBDCCF7288D6B9800CC8EDC /* CompositionsModel.swift in Sources */,
@@ -592,6 +614,7 @@
 				0A827F7528736F0400C928F2 /* CustomColumn.swift in Sources */,
 				2D0B8568282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */,
 				2D01395F287868C000AC8EBF /* ComposerView.swift in Sources */,
+				0A02736E29B10B6700821074 /* TestMultiselect.swift in Sources */,
 				2D1EB363283A842F00F86B6D /* CoreDataML.swift in Sources */,
 				0AF2F06B28FC333E0094D0F8 /* AnalysisView.swift in Sources */,
 				2D1DB46828B3CC08005BFC2D /* PredictionsModel.swift in Sources */,
@@ -890,6 +913,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		0A09CD0729B27F8B000980D2 /* XCRemoteSwiftPackageReference "PythonKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pvieito/PythonKit";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		2DA77EF128257710007EC3E5 /* XCRemoteSwiftPackageReference "CSV.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/yaslab/CSV.swift.git";
@@ -906,17 +937,19 @@
 				kind = branch;
 			};
 		};
-		2DB5E69828AD68B7006DC0D2 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-collections.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0A09CD0829B27F8B000980D2 /* PythonKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0A09CD0729B27F8B000980D2 /* XCRemoteSwiftPackageReference "PythonKit" */;
+			productName = PythonKit;
+		};
+		0A09CD0B29B27FC9000980D2 /* PythonKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0A09CD0729B27F8B000980D2 /* XCRemoteSwiftPackageReference "PythonKit" */;
+			productName = PythonKit;
+		};
 		2DA77EF228257710007EC3E5 /* CSV */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2DA77EF128257710007EC3E5 /* XCRemoteSwiftPackageReference "CSV.swift" */;
@@ -926,21 +959,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2DA77EF428257732007EC3E5 /* XCRemoteSwiftPackageReference "CSV.swift" */;
 			productName = CSV;
-		};
-		2DB5E69928AD68B7006DC0D2 /* Collections */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2DB5E69828AD68B7006DC0D2 /* XCRemoteSwiftPackageReference "swift-collections" */;
-			productName = Collections;
-		};
-		2DB5E69B28AD68B7006DC0D2 /* DequeModule */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2DB5E69828AD68B7006DC0D2 /* XCRemoteSwiftPackageReference "swift-collections" */;
-			productName = DequeModule;
-		};
-		2DB5E69D28AD68B7006DC0D2 /* OrderedCollections */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2DB5E69828AD68B7006DC0D2 /* XCRemoteSwiftPackageReference "swift-collections" */;
-			productName = OrderedCollections;
 		};
 /* End XCSwiftPackageProductDependency section */
 

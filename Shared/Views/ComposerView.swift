@@ -10,8 +10,9 @@ import CoreMedia
 
 struct ComposerView: View {
     var model: Models
-    @State var selectedColumnCombination: [Columns]?
+    @State var selectedColumnCombination: Set<Columns> = []
     @State var selectedTimeSeriesCombination: [String]?
+    var previousSelectedColumnCombination: Set<Columns> = []
     var compositionsDataModel: CompositionsModel
     var valuesView: ValuesView?
     var mlDataTableProvider: MlDataTableProvider
@@ -54,43 +55,41 @@ struct ComposerView: View {
                             }.padding(.top, 2)
                         }
                     }.padding()
-                    .onChange(of: selectedTimeSeriesCombination) { newSelectedTimeSeriesCombination in
-                        self.mlDataTableProvider.mlDataTable = composer?.mlDataTable_Base
-                        if let timeSeriesRows = newSelectedTimeSeriesCombination {
-                            var selectedTimeSeries = [[Int]]()
-                            for row in timeSeriesRows {
-                                let innerResult = row.components(separatedBy: ", ").map { Int($0)! }
-                                selectedTimeSeries.append(innerResult)
-                            }
-                            self.mlDataTableProvider.timeSeries = selectedTimeSeries
-                        } else {
-                            self.mlDataTableProvider.timeSeries = nil
-                        }
-                        updateValuesView()
-                    }
-
-                    VStack(alignment: .leading) {
-                        Text("Column Combinations")
-                        List(combinator.scenario.columnSections, id: \.self, selection: $selectedColumnCombination) { section in
-                            Section(header: Text("Level: \(section.level)"))  {
-                                ForEach(section.columns, id: \.self) { columns in
-                                    HStack {
-                                        ForEach(columns, id: \.self) { column in
-                                            HStack {
-                                                Text(column.name!)
-                                                Spacer()
-                                            }
-                                            .contentShape(Rectangle())
-                                        }
-                                    }.onTapGesture { selectedColumnCombination = selectedColumnCombination == columns ? nil: columns }
+                        .onChange(of: selectedTimeSeriesCombination) { newSelectedTimeSeriesCombination in
+                            self.mlDataTableProvider.mlDataTable = composer?.mlDataTable_Base
+                            if let timeSeriesRows = newSelectedTimeSeriesCombination {
+                                var selectedTimeSeries = [[Int]]()
+                                for row in timeSeriesRows {
+                                    let innerResult = row.components(separatedBy: ", ").map { Int($0)! }
+                                    selectedTimeSeries.append(innerResult)
                                 }
+                                self.mlDataTableProvider.timeSeries = selectedTimeSeries
+                            } else {
+                                self.mlDataTableProvider.timeSeries = nil
                             }
-                            .padding(.top, 2)
+                            updateValuesView()
                         }
-                    }.padding()
+                    
+                    VStack(alignment: .leading) {
+                        Text("Columns ")
+                        List(combinator.includedColumns.filter( { $0.isshown == true} ), id: \.self, selection: $selectedColumnCombination) { column in
+                            Text(column.name!)
+                                .onTapGesture {
+                                    if selectedColumnCombination.contains(column) {
+                                        selectedColumnCombination.remove(column)
+                                    } else {
+                                        selectedColumnCombination.insert(column)
+                                    }
+                                }
+                        }
+                    }
+                    .onTapGesture {
+                        selectedColumnCombination.removeAll()
+                    }
+                    .padding()
                     .onChange(of: selectedColumnCombination) { newSelectedColumnCombination in
                         self.mlDataTableProvider.mlDataTable = composer?.mlDataTable_Base
-                        self.mlDataTableProvider.selectedColumns = newSelectedColumnCombination
+                        self.mlDataTableProvider.selectedColumns = Array(newSelectedColumnCombination)
                         self.mlDataTableProvider.orderedColumns = composer?.orderedColumns
                         updateValuesView()
                     }
@@ -98,7 +97,7 @@ struct ComposerView: View {
                 HStack {
                     Button("Save Current Composition") {
                         storeComposition()
-                    }.disabled(selectedColumnCombination == nil || selectedTimeSeriesCombination == nil)
+                    }.disabled(selectedColumnCombination.count == 0 || selectedTimeSeriesCombination == nil)
                     Button("Save Compositions") {
                         storeCompositions()
                     }
@@ -135,12 +134,12 @@ struct ComposerView: View {
     internal func storeComposition() {
         let seriesLength = selectedTimeSeriesCombination![0].split(separator: ",").count
         let seriesEntries = self.combinator.getTimeSeriesEntries().filter {$0.timeSeries.timeseries2timeslices?.count == seriesLength}
-            for seriesEntry in seriesEntries {
-                var combination = Combination(compositionDataModel: self.compositionsDataModel)
-                combination.model = self.model
-                combination.columns.append(contentsOf: selectedColumnCombination!)
-                combination.timeSeries = seriesEntry.timeSeries
-                combination.saveToCoreData()
+        for seriesEntry in seriesEntries {
+            var combination = Combination(compositionDataModel: self.compositionsDataModel)
+            combination.model = self.model
+            combination.columns.append(contentsOf: selectedColumnCombination)
+            combination.timeSeries = seriesEntry.timeSeries
+            combination.saveToCoreData()
         }
         BaseServices.save()
     }
@@ -168,6 +167,6 @@ struct ComposerView: View {
         BaseServices.save()
         
     }
-
-
+    
+    
 }

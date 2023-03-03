@@ -30,7 +30,7 @@ struct DirectoryView: View {
                                 NavigationLink(model.name!, destination: Text(model.name!), tag: model, selection: $modelSelect)
                             }
                             NavigationLink("Predictions", destination: PredictionsView(model: model))
-                        
+                            NavigationLink("Categories", destination: CategoriesView(model: model))
                             DisclosureGroup("Files") {
                                 let files =  model.model2files?.allObjects as! [Files]
                                 if filesDataModel.items.count > 0 {
@@ -50,9 +50,6 @@ struct DirectoryView: View {
                     }
                 }
             }
-            //            AnalysisView(model: ModelsModel().items.first!).onDisappear {
-            //                BaseServices.save()
-            //            }
         }
     }
 }
