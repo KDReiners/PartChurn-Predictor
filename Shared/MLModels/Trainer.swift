@@ -9,6 +9,8 @@ import Foundation
 import CreateML
 import CoreML
 import Combine
+import PythonKit
+
 public struct Trainer {
     var mlDataTableProvider: MlDataTableProvider!
     var regressorTable: MLDataTable?
@@ -20,6 +22,7 @@ public struct Trainer {
     var regressor: MLRegressor!
     var classifier: MLClassifier!
     var prediction: Predictions!
+    var pythonInteractor: PythonInteractor!
     init(mlDataTableProvider: MlDataTableProvider, model: Models) {
         self.model = model
         self.prediction = mlDataTableProvider.prediction
@@ -44,6 +47,23 @@ public struct Trainer {
             let endMask = timeSeriesColumn < seriesEnd
             self.regressorTable = self.regressorTable![endMask]
         }
+
+        // Define the feature you want to analyze
+        let featureToAnalyze = "number_of_bedrooms"
+
+        // Define the grid of values for the feature
+//        let featureGrid = pdp.pdp_isolate(model: model as! PythonConvertible, dataset: regressorTable! as! PythonConvertible, model_features: ["I_CUSTOMERSince"], feature: featureToAnalyze)
+
+        // Compute the partial dependence values
+//        let partialDependenceValues = featureGrid["pdp"].list
+
+        // Plot the partial dependence plot
+//        plt.plot(featureGrid["feature_values"].list, partialDependenceValues)
+//        plt.xlabel(featureToAnalyze)
+//        plt.ylabel("Predicted Price")
+//        plt.title("Partial Dependence Plot for \(featureToAnalyze)")
+//        plt.show()
+
     }
     init(model: Models, file: Files? = nil) {
         self.model = model
@@ -62,6 +82,8 @@ public struct Trainer {
         let columnDataModel = ColumnsModel(model: self.model )
         let targetColumn = columnDataModel.timedependantTargetColums.first
         let predictedColumnName = "Predicted: " + (targetColumn?.name)!
+        let modelPath = BaseServices.createPredictionPath(prediction: prediction, regressorName: algorithmName)
+        pythonInteractor = PythonInteractor(modelPath: modelPath)
         if self.regressorTable!.columnNames.contains(predictedColumnName) {
             self.regressorTable!.removeColumn(named: predictedColumnName)
         }

@@ -15,10 +15,12 @@
 		0A02736B29AFF03200821074 /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A02736929AFF03200821074 /* CategoriesView.swift */; };
 		0A02736D29B10B6700821074 /* TestMultiselect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A02736C29B10B6700821074 /* TestMultiselect.swift */; };
 		0A02736E29B10B6700821074 /* TestMultiselect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A02736C29B10B6700821074 /* TestMultiselect.swift */; };
-		0A09CD0929B27F8B000980D2 /* PythonKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0A09CD0829B27F8B000980D2 /* PythonKit */; };
-		0A09CD0C29B27FC9000980D2 /* PythonKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0A09CD0B29B27FC9000980D2 /* PythonKit */; };
+		0A09CD1029B283C7000980D2 /* PythonKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0A09CD0F29B283C7000980D2 /* PythonKit */; };
 		0A0FC907297D9981006F778C /* PredictionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0FC906297D9981006F778C /* PredictionsView.swift */; };
 		0A0FC908297D9981006F778C /* PredictionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0FC906297D9981006F778C /* PredictionsView.swift */; };
+		0A190C4E29B505A000A54734 /* libfreetype.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A190C4D29B505A000A54734 /* libfreetype.6.dylib */; };
+		0A190C5029B5093600A54734 /* PythonInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A190C4F29B5093600A54734 /* PythonInteractor.swift */; };
+		0A190C5129B5093600A54734 /* PythonInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A190C4F29B5093600A54734 /* PythonInteractor.swift */; };
 		0A1A2AC629805DB80078AA11 /* PerformanceDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A2AC529805DB80078AA11 /* PerformanceDataProvider.swift */; };
 		0A1A2AC729805DB80078AA11 /* PerformanceDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A2AC529805DB80078AA11 /* PerformanceDataProvider.swift */; };
 		0A4C56552869750900961D1D /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4C56542869750900961D1D /* FilesView.swift */; };
@@ -142,7 +144,10 @@
 		0A02736629AFEFAB00821074 /* CategoriesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesModel.swift; sourceTree = "<group>"; };
 		0A02736929AFF03200821074 /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
 		0A02736C29B10B6700821074 /* TestMultiselect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestMultiselect.swift; sourceTree = "<group>"; };
+		0A09CD0D29B28386000980D2 /* Python3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python3.framework; path = Library/Frameworks/Python3.framework; sourceTree = DEVELOPER_DIR; };
 		0A0FC906297D9981006F778C /* PredictionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionsView.swift; sourceTree = "<group>"; };
+		0A190C4D29B505A000A54734 /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.6.dylib; path = "../../../../Library/Developer/Xcode/DerivedData/PartChurn_Predictor-biceeiiduzyogfctrciteiodzyqg/Build/Products/Debug/libfreetype.6.dylib"; sourceTree = "<group>"; };
+		0A190C4F29B5093600A54734 /* PythonInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PythonInteractor.swift; sourceTree = "<group>"; };
 		0A1A2AC529805DB80078AA11 /* PerformanceDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceDataProvider.swift; sourceTree = "<group>"; };
 		0A4C56542869750900961D1D /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
 		0A4C56572869862C00961D1D /* ColumnsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColumnsView.swift; sourceTree = "<group>"; };
@@ -211,7 +216,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DA77EF328257710007EC3E5 /* CSV in Frameworks */,
-				0A09CD0C29B27FC9000980D2 /* PythonKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,8 +223,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A190C4E29B505A000A54734 /* libfreetype.6.dylib in Frameworks */,
 				2DA77EF628257732007EC3E5 /* CSV in Frameworks */,
-				0A09CD0929B27F8B000980D2 /* PythonKit in Frameworks */,
+				0A09CD1029B283C7000980D2 /* PythonKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,6 +235,8 @@
 		0A09CD0A29B27FC9000980D2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0A190C4D29B505A000A54734 /* libfreetype.6.dylib */,
+				0A09CD0D29B28386000980D2 /* Python3.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -292,6 +299,7 @@
 			isa = PBXGroup;
 			children = (
 				2D288AC02829793B0078647E /* Trainer.swift */,
+				0A190C4F29B5093600A54734 /* PythonInteractor.swift */,
 			);
 			path = MLModels;
 			sourceTree = "<group>";
@@ -420,7 +428,6 @@
 			name = "PartChurn Predictor (iOS)";
 			packageProductDependencies = (
 				2DA77EF228257710007EC3E5 /* CSV */,
-				0A09CD0B29B27FC9000980D2 /* PythonKit */,
 			);
 			productName = "PartChurn Predictor (iOS)";
 			productReference = 2D0B855E282565BF00856BCB /* PartChurn Predictor.app */;
@@ -441,7 +448,7 @@
 			name = "PartChurn Predictor (macOS)";
 			packageProductDependencies = (
 				2DA77EF528257732007EC3E5 /* CSV */,
-				0A09CD0829B27F8B000980D2 /* PythonKit */,
+				0A09CD0F29B283C7000980D2 /* PythonKit */,
 			);
 			productName = "PartChurn Predictor (macOS)";
 			productReference = 2D0B8564282565BF00856BCB /* PartChurn Predictor.app */;
@@ -521,6 +528,7 @@
 				0A69F24828F7CCE70062509A /* AnalysisProvider.swift in Sources */,
 				2DA77ED328256E8A007EC3E5 /* Model.swift in Sources */,
 				0A4C56582869862C00961D1D /* ColumnsView.swift in Sources */,
+				0A190C5029B5093600A54734 /* PythonInteractor.swift in Sources */,
 				0A02736A29AFF03200821074 /* CategoriesView.swift in Sources */,
 				0AD43D102921579400199F06 /* PredictionView.swift in Sources */,
 				0AFCB7042850A5FA00676AF6 /* ValuesView.swift in Sources */,
@@ -589,6 +597,7 @@
 				0A69F24928F7CCE70062509A /* AnalysisProvider.swift in Sources */,
 				2DA77ED428256E8A007EC3E5 /* Model.swift in Sources */,
 				0A4C56592869862C00961D1D /* ColumnsView.swift in Sources */,
+				0A190C5129B5093600A54734 /* PythonInteractor.swift in Sources */,
 				0A02736B29AFF03200821074 /* CategoriesView.swift in Sources */,
 				0AD43D112921579400199F06 /* PredictionView.swift in Sources */,
 				0AFCB7052850A5FA00676AF6 /* ValuesView.swift in Sources */,
@@ -940,12 +949,7 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		0A09CD0829B27F8B000980D2 /* PythonKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0A09CD0729B27F8B000980D2 /* XCRemoteSwiftPackageReference "PythonKit" */;
-			productName = PythonKit;
-		};
-		0A09CD0B29B27FC9000980D2 /* PythonKit */ = {
+		0A09CD0F29B283C7000980D2 /* PythonKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 0A09CD0729B27F8B000980D2 /* XCRemoteSwiftPackageReference "PythonKit" */;
 			productName = PythonKit;
