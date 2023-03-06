@@ -18,7 +18,6 @@
 		0A09CD1029B283C7000980D2 /* PythonKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0A09CD0F29B283C7000980D2 /* PythonKit */; };
 		0A0FC907297D9981006F778C /* PredictionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0FC906297D9981006F778C /* PredictionsView.swift */; };
 		0A0FC908297D9981006F778C /* PredictionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0FC906297D9981006F778C /* PredictionsView.swift */; };
-		0A190C4E29B505A000A54734 /* libfreetype.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A190C4D29B505A000A54734 /* libfreetype.6.dylib */; };
 		0A190C5029B5093600A54734 /* PythonInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A190C4F29B5093600A54734 /* PythonInteractor.swift */; };
 		0A190C5129B5093600A54734 /* PythonInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A190C4F29B5093600A54734 /* PythonInteractor.swift */; };
 		0A1A2AC629805DB80078AA11 /* PerformanceDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A2AC529805DB80078AA11 /* PerformanceDataProvider.swift */; };
@@ -223,7 +222,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A190C4E29B505A000A54734 /* libfreetype.6.dylib in Frameworks */,
 				2DA77EF628257732007EC3E5 /* CSV in Frameworks */,
 				0A09CD1029B283C7000980D2 /* PythonKit in Frameworks */,
 			);

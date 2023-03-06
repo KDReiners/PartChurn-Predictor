@@ -49,7 +49,7 @@ public struct Trainer {
         }
 
         // Define the feature you want to analyze
-        let featureToAnalyze = "number_of_bedrooms"
+//        let featureToAnalyze = "number_of_bedrooms"
 
         // Define the grid of values for the feature
 //        let featureGrid = pdp.pdp_isolate(model: model as! PythonConvertible, dataset: regressorTable! as! PythonConvertible, model_features: ["I_CUSTOMERSince"], feature: featureToAnalyze)
@@ -83,7 +83,7 @@ public struct Trainer {
         let targetColumn = columnDataModel.timedependantTargetColums.first
         let predictedColumnName = "Predicted: " + (targetColumn?.name)!
         let modelPath = BaseServices.createPredictionPath(prediction: prediction, regressorName: algorithmName)
-        pythonInteractor = PythonInteractor(modelPath: modelPath)
+//        pythonInteractor = PythonInteractor(modelPath: modelPath)
         if self.regressorTable!.columnNames.contains(predictedColumnName) {
             self.regressorTable!.removeColumn(named: predictedColumnName)
         }
