@@ -25,6 +25,7 @@ class SimulationController: ObservableObject {
     }
     class MlDataTableProviderContext: ObservableObject {
         @Published var mlDataTableProvider: MlDataTableProvider
+        var pythonInteractor: PythonInteractor!
         var gridItems = [GridItem]()
         var clusterSelection: PredictionsModel.predictionCluster?
         var predictionsDataModel = PredictionsModel()
@@ -42,6 +43,7 @@ class SimulationController: ObservableObject {
             self.combinator = Combinator(model: self.model, orderedColumns: (composer?.orderedColumns)!, mlDataTable: (composer?.mlDataTable_Base)!)
             self.mlDataTableProvider.mlDataTable = composer?.mlDataTable_Base
             self.mlDataTableProvider.orderedColumns = composer?.orderedColumns!
+            pythonInteractor = PythonInteractor(mlDataTableProvider: self.mlDataTableProvider)
         }
         func setPrediction(prediction: Predictions) {
             if self.clusterSelection?.prediction != prediction {
@@ -78,6 +80,7 @@ class SimulationController: ObservableObject {
             var rowIndex: Int
             var mlDataTableProvider: MlDataTableProvider
             var columnsDataModel: ColumnsModel
+
             @State var isEditing: Bool = false
             @State var mlRowDictionary = [String: MLDataValueConvertible]()
             init(customColumn: CustomColumn, rowIndex: Int, mlDataTableProvider: MlDataTableProvider, columnsDataModel: ColumnsModel) {
@@ -134,3 +137,4 @@ class SimulationController: ObservableObject {
         }
     }
 }
+

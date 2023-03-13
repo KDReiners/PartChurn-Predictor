@@ -35,6 +35,10 @@ struct PredictionView: View {
                         Text(String(predictedValue ?? ""))
                         Text("New PredictedValue: ")
                         Text(String($newPredictedValue.wrappedValue ?? -99))
+                        Button("Simuliere") {
+                            guard let rowIndex = rowIndex else { return }
+                            self.mlDataTableProviderContext.pythonInteractor.findneighbors(selectedRow: mlDataTableProvider.mlDataTable.rows[rowIndex])
+                        }
                     }
                 }
                 let cells = (0..<1).flatMap{j in self.mlDataTableProviderContext.mlDataTableProvider.customColumns.enumerated().map{(i,c) in CellIndex(id:j + i*1, colIndex:i, rowIndex:j)}}
@@ -63,3 +67,4 @@ struct PredictionView: View {
         }
     }
 }
+
