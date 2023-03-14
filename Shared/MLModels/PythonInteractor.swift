@@ -82,8 +82,9 @@ class PythonInteractor {
        
     }
     private func getImportances(mldataRowToAnalyze: MLDataTable.Row, compareMLDataTable: MLDataTable, prediction: Predictions) {
+        let involvedColumns = PredictionsModel(model: mlDataTableProvider.model!).includedColumns(prediction: prediction)
         let combinator = Combinator(model: mlDataTableProvider.model!, orderedColumns: mlDataTableProvider.orderedColumns, mlDataTable: mlDataTableProvider.mlDataTable)
-        let compinations = combinator.includedColumnsCombinations(source: Array(compareMLDataTable.columnNames), takenBy: 2)
+        let compinations = combinator.includedColumnsCombinations(source: Array(involvedColumns), takenBy: 1)
         var listOfChanges: [changes] = []
         var rowDict = self.mlDataTableProvider.valuesTableProvider?.convertRowToDicionary(mlRow: mldataRowToAnalyze)
         let basePrediction =  self.mlDataTableProvider.valuesTableProvider?.predict(regressorName: "MLBoostedTreeRegressor", result: rowDict!).featureValue(for: (self.mlDataTableProvider.valuesTableProvider?.targetColumn.name)!)?.doubleValue
