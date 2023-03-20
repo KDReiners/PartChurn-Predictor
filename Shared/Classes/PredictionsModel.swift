@@ -42,8 +42,11 @@ public class PredictionsModel: Model<Predictions> {
         guard let foundPrediction = self.items.first(where: {$0 == prediction }) else { return includedColumns}
         guard let foundComposition = (foundPrediction.prediction2compositions?.allObjects.first as? Compositions) else { return  includedColumns }
         guard let columns = (foundComposition.composition2columns?.allObjects as? [Columns]) else { return includedColumns }
-        includedColumns.append(contentsOf: columns.filter({$0.istimeseries == 0 && $0.isshown == 1}).sorted(by: {$0.name! < $1.name!}))
-        includedColumns.append(contentsOf: columns.filter({$0.istimeseries == 1 && $0.isshown == 1}).sorted(by: {$0.name! < $1.name!}))
+        guard let timeSeriesColumn = (prediction.prediction2model?.model2columns?.allObjects as? [Columns])?.filter( { $0.istimeseries == 1}).first else { return includedColumns}
+        guard let targetColumns = (prediction.prediction2model?.model2columns?.allObjects as? [Columns])?.filter( {$0.istarget == 1 && $0.ispartoftimeseries == 1}) else { return includedColumns}
+        includedColumns.append(contentsOf: columns.filter({$0.istimeseries == 0 && $0.isshown == 1 && $0.ispartofprimarykey == 0}).sorted(by: {$0.name! < $1.name!}))
+        includedColumns.append(contentsOf: targetColumns)
+        includedColumns.append(timeSeriesColumn)
         return includedColumns
     }
     internal func savePredictions(model: Models) {

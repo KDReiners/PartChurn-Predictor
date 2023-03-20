@@ -17,7 +17,7 @@ class PythonInteractor {
     var columnsDataModel: ColumnsModel!
     var targetColumn: Columns!
     var targetValue: Int!
-    init(mlDataTableProvider: MlDataTableProvider ) {
+    init(mlDataTableProvider: MlDataTableProvider) {
         self.mlDataTableProvider = mlDataTableProvider
         self.columnsDataModel = ColumnsModel(model: mlDataTableProvider.model)
     }
@@ -78,38 +78,87 @@ class PythonInteractor {
         }
         guard let compareTable = compareTable else { return }
         getImportances(mldataRowToAnalyze: selectedRow, compareMLDataTable: compareTable, prediction: self.mlDataTableProvider.prediction!)
-        
-       
+    }
+    private func constructCombinations(sourceCombinations: [[Columns]], baseRow: MLDataTable.Row) -> Array<Dictionary<String, Any>>! {
+        var result = [[String: Any]]()
+        for i in 0..<sourceCombinations.count {
+            var newDict: Dictionary<String, Any> = [:]
+            for columnName in sourceCombinations[i].map({ $0.name!}) {
+                newDict[columnName] = 0 // whatever value, but a value needs to be set
+                let predicate = NSPredicate(format: "SELF LIKE[c] %@ AND SELF != %@", "\(columnName)*", columnName)
+                let dependantNames = baseRow.keys.filter { predicate.evaluate(with: $0) }
+                for dependantColumnName in dependantNames {
+                    newDict[dependantColumnName] = 0 // whatever value, but a value needs to be set
+                }
+            }
+            result.append(newDict)
+        }
+        return result
     }
     private func getImportances(mldataRowToAnalyze: MLDataTable.Row, compareMLDataTable: MLDataTable, prediction: Predictions) {
-        let involvedColumns = PredictionsModel(model: mlDataTableProvider.model!).includedColumns(prediction: prediction)
+        let includedColumns = PredictionsModel(model: mlDataTableProvider.model!).includedColumns(prediction: prediction)
         let combinator = Combinator(model: mlDataTableProvider.model!, orderedColumns: mlDataTableProvider.orderedColumns, mlDataTable: mlDataTableProvider.mlDataTable)
-        let compinations = combinator.includedColumnsCombinations(source: Array(involvedColumns), takenBy: 1)
-        var listOfChanges: [changes] = []
         var rowDict = self.mlDataTableProvider.valuesTableProvider?.convertRowToDicionary(mlRow: mldataRowToAnalyze)
         let basePrediction =  self.mlDataTableProvider.valuesTableProvider?.predict(regressorName: "MLBoostedTreeRegressor", result: rowDict!).featureValue(for: (self.mlDataTableProvider.valuesTableProvider?.targetColumn.name)!)?.doubleValue
-        for key in compareMLDataTable.columnNames {
-            for row in compareMLDataTable.rows {
-                guard let masterDict = self.mlDataTableProvider.valuesTableProvider?.convertRowToDicionary(mlRow: row) else { continue }
-                let formerValue = rowDict![key]
-                let newValue = masterDict[key]
-                print("existing value for key \(key): \(formerValue!)")
-                print("new value for key \(key): \(newValue!)")
-                rowDict![key] = masterDict[key]
-                let newPrediction = self.mlDataTableProvider.valuesTableProvider?.predict(regressorName: "MLBoostedTreeRegressor", result: rowDict!).featureValue(for: (self.mlDataTableProvider.valuesTableProvider?.targetColumn.name)!)?.doubleValue
-                rowDict![key] = formerValue
-                if newPrediction != basePrediction {
-                   var newChange = changes()
-                    newChange.columnName = key
-                    newChange.formerValue = formerValue
-                    newChange.newValue = newValue
-                    newChange.basePrediction = basePrediction
-                    newChange.newPrediction = newPrediction
-                    newChange.change = newPrediction! - basePrediction!
-                    listOfChanges.append(newChange)
+        let baseDict = rowDict
+        
+        guard let transmittedKeys = rowDict?.keys else { return }
+        for key in transmittedKeys {
+            if !includedColumns.map( {$0.name! }).contains(where: { $0.range(of: key.components(separatedBy: "-")[0], options: .caseInsensitive) != nil }) {
+                rowDict!.removeValue(forKey: key)
+            }
+        }
+        for i in 1...includedColumns.count {
+            let combinations = combinator.includedColumnsCombinations(source: Array(includedColumns), takenBy: i)
+            guard let simulationBase = constructCombinations(sourceCombinations: combinations, baseRow: mldataRowToAnalyze) else {
+                return
+            }
+            for i in 0..<simulationBase.count {
+                for key in rowDict!.keys {
+                    if !simulationBase[i].keys.map({$0 }).contains(key) {
+                        let valueType = rowDict![key]?.dataValue.type
+                        switch valueType {
+                        case .int:
+                            rowDict![key] = 0
+                        case .double:
+                            rowDict![key] = 0.0
+                        case .string:
+                            rowDict![key] = ""
+                        default:
+                            print("ValueType not found")
+                        }
+                    }
                 }
             }
         }
+        
+        var listOfChanges: [changes] = []
+
+        
+        
+        
+//        for key in compareMLDataTable.columnNames {
+//            for row in compareMLDataTable.rows {
+//                guard let masterDict = self.mlDataTableProvider.valuesTableProvider?.convertRowToDicionary(mlRow: row) else { continue }
+//                let formerValue = rowDict![key]
+//                let newValue = masterDict[key]
+//                print("existing value for key \(key): \(formerValue!)")
+//                print("new value for key \(key): \(newValue!)")
+//                rowDict![key] = masterDict[key]
+//                let newPrediction = self.mlDataTableProvider.valuesTableProvider?.predict(regressorName: "MLBoostedTreeRegressor", result: rowDict!).featureValue(for: (self.mlDataTableProvider.valuesTableProvider?.targetColumn.name)!)?.doubleValue
+//                rowDict![key] = formerValue
+//                if newPrediction != basePrediction {
+//                   var newChange = changes()
+//                    newChange.columnName = key
+//                    newChange.formerValue = formerValue
+//                    newChange.newValue = newValue
+//                    newChange.basePrediction = basePrediction
+//                    newChange.newPrediction = newPrediction
+//                    newChange.change = newPrediction! - basePrediction!
+//                    listOfChanges.append(newChange)
+//                }
+//            }
+//        }
         print("Hurra")
 
     }

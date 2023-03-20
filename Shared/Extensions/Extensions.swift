@@ -102,7 +102,7 @@ extension Double {
 extension View {
     private func newWindowInternal(with title: String) -> NSWindow {
         let window = NSWindow(
-            contentRect: NSRect(x: 20, y: 20, width: 680, height: 600),
+            contentRect: NSRect(x: 20, y: 20, width: 880, height: 800),
             styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
             backing: .buffered,
             defer: false)
