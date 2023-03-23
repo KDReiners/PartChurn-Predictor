@@ -57,7 +57,7 @@ struct IntValueCell: View {
 internal struct PredictionKPI: Identifiable  {
     var id = UUID()
     var prediction: Predictions!
-    var involvedColumnArray = [String]()
+    var inputColumnsNames = [String]()
     var algorithm: String! = ""
     var timeSpan: String! = ""
     var metricName: String! = ""
@@ -114,13 +114,13 @@ internal class PerformanceDataProvider: ObservableObject {
     }
     var involvedColumns: TableColumn<PredictionKPI,Never, VerticalGridCell , Text> {
         TableColumn("Involved Columns") { col in
-            VerticalGridCell(textValues: col.involvedColumnArray)
+            VerticalGridCell(textValues: col.inputColumnsNames)
         }
         .width(min: 150, ideal: 200, max: 250)
     }
     var columnsCount: TableColumn<PredictionKPI, Never, TextViewCell, Text> {
         TableColumn("Column(s) count") { row in
-            TextViewCell(textValue: "\(row.involvedColumnArray.count)")
+            TextViewCell(textValue: "\(row.inputColumnsNames.count)")
         }
     }
     var timeSlices: TableColumn<PredictionKPI, Never, TextViewCell, Text> {
@@ -187,10 +187,12 @@ internal class PerformanceDataProvider: ObservableObject {
     private func fillPredictionKPIS() -> [PredictionKPI] {
         var result = [PredictionKPI]()
         for prediction in predictionsDataModel.items.filter( { $0.prediction2model == self.model}) {
+            let mlExplainColumnCluster = MLExplainColumnCluster(prediction: prediction)
+            let inputColumns = mlExplainColumnCluster.inputColumns.map( { $0.name! })
             for algorithm in prediction.prediction2algorithms?.allObjects as![Algorithms] {
                 var predictionKPI = PredictionKPI()
                 predictionKPI.prediction = prediction
-                predictionKPI.involvedColumnArray = predictionsDataModel.includedColumns(prediction: prediction).map({$0.name! })
+                predictionKPI.inputColumnsNames = inputColumns
                 predictionKPI.algorithm = algorithm.name!
                 predictionKPI.timeSpan = String(prediction.seriesdepth)
                 for predictionMetricValue in (prediction.prediction2predictionmetricvalues?.allObjects as! [Predictionmetricvalues]).filter({ $0.predictionmetricvalue2algorithm == algorithm }) {

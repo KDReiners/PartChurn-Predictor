@@ -39,45 +39,45 @@ class PythonInteractor {
         let sampleCount = 50
         let maxDistance = 200.00
         var compareTable: MLDataTable?
-        self.targetColumn = columnsDataModel.items.filter( { $0.istarget == 1 && $0.ispartoftimeseries == 1}).first
-        self.targetValue = determineTargetValue()
-        let minorityColumn = self.mlDataTableProvider.mlDataTable![targetColumn!.name!]
-        let majorityColumn = self.mlDataTableProvider.mlDataTableRaw![targetColumn!.name!]
-        let targetMask = minorityColumn == targetValue
-        let othersMask = majorityColumn != targetValue
-        let targetTable = self.mlDataTableProvider.mlDataTable[targetMask]
-        let othersTable = self.mlDataTableProvider.mlDataTableRaw[othersMask]
+//        self.targetColumn = columnsDataModel.items.filter( { $0.istarget == 1 && $0.ispartoftimeseries == 1}).first
+//        self.targetValue = determineTargetValue()
+//        let minorityColumn = self.mlDataTableProvider.mlDataTable![targetColumn!.name!]
+//        let majorityColumn = self.mlDataTableProvider.mlDataTableRaw![targetColumn!.name!]
+//        let targetMask = minorityColumn == targetValue
+//        let othersMask = majorityColumn != targetValue
+//        let targetTable = self.mlDataTableProvider.mlDataTable[targetMask]
+//        let othersTable = self.mlDataTableProvider.mlDataTableRaw[othersMask]
         guard let selectedRow = selectedRow else { return }
-        for i in 0..<othersTable.rows.count {
-            let distance = euclideanDistance(selectedRow, othersTable.rows[i])
-            print("Distance: \(distance ?? 0)")
-            if distance! <= maxDistance && foundRows.count < sampleCount {
-                foundRows.append(othersTable.rows[i])
-            }
-            if foundRows.count == sampleCount {
-                var dataDict: [String: MLDataValueConvertible] = [:]
-                guard let masterRow = foundRows.first else { break }
-                for key in masterRow.keys {
-                    let valueType = mlDataTableProvider.mlDataTable[key].type
-                    let columnIndex = masterRow.index(forKey: key)
-                    let columnValues = foundRows.compactMap { $0[columnIndex!].1 }
-                    switch valueType {
-                    case .double :
-                        dataDict[key] = columnValues.map { $0.doubleValue!}
-                    case .int:
-                        dataDict[key] = columnValues.map { $0.intValue!}
-                    default:
-                        print("type not found")
-                    }
-                }
-                compareTable = try! MLDataTable(dictionary: dataDict)
-                break
-
-            }
-            
-        }
-        guard let compareTable = compareTable else { return }
-        getImportances(mldataRowToAnalyze: selectedRow, compareMLDataTable: compareTable, prediction: self.mlDataTableProvider.prediction!)
+//        for i in 0..<othersTable.rows.count {
+//            let distance = euclideanDistance(selectedRow, othersTable.rows[i])
+//            print("Distance: \(distance ?? 0)")
+//            if distance! <= maxDistance && foundRows.count < sampleCount {
+//                foundRows.append(othersTable.rows[i])
+//            }
+//            if foundRows.count == sampleCount {
+//                var dataDict: [String: MLDataValueConvertible] = [:]
+//                guard let masterRow = foundRows.first else { break }
+//                for key in masterRow.keys {
+//                    let valueType = mlDataTableProvider.mlDataTable[key].type
+//                    let columnIndex = masterRow.index(forKey: key)
+//                    let columnValues = foundRows.compactMap { $0[columnIndex!].1 }
+//                    switch valueType {
+//                    case .double :
+//                        dataDict[key] = columnValues.map { $0.doubleValue!}
+//                    case .int:
+//                        dataDict[key] = columnValues.map { $0.intValue!}
+//                    default:
+//                        print("type not found")
+//                    }
+//                }
+//                compareTable = try! MLDataTable(dictionary: dataDict)
+//                break
+//
+//            }
+//
+//        }
+//        guard let compareTable = compareTable else { return }
+        getImportances(mldataRowToAnalyze: selectedRow,  prediction: self.mlDataTableProvider.prediction!, compareMLDataTable: compareTable)
     }
     private func constructCombinations(sourceCombinations: [[Columns]], baseRow: MLDataTable.Row) -> Array<Dictionary<String, Any>>! {
         var result = [[String: Any]]()
@@ -95,40 +95,32 @@ class PythonInteractor {
         }
         return result
     }
-    private func getImportances(mldataRowToAnalyze: MLDataTable.Row, compareMLDataTable: MLDataTable, prediction: Predictions) {
-        let includedColumns = PredictionsModel(model: mlDataTableProvider.model!).includedColumns(prediction: prediction)
+    private func getImportances(mldataRowToAnalyze: MLDataTable.Row,  prediction: Predictions, compareMLDataTable: MLDataTable? = nil) {
+        let mlExplainColumnCluster = MLExplainColumnCluster(prediction: prediction)
+        guard let inputColumns = mlExplainColumnCluster.inputColumns else { return }
+        guard let targetColumn = mlExplainColumnCluster.targetColumn else { return }
+        let timeSeriesColumn = mlExplainColumnCluster.timeSeriesColumn
+        
         let combinator = Combinator(model: mlDataTableProvider.model!, orderedColumns: mlDataTableProvider.orderedColumns, mlDataTable: mlDataTableProvider.mlDataTable)
         var rowDict = self.mlDataTableProvider.valuesTableProvider?.convertRowToDicionary(mlRow: mldataRowToAnalyze)
-        let basePrediction =  self.mlDataTableProvider.valuesTableProvider?.predict(regressorName: "MLBoostedTreeRegressor", result: rowDict!).featureValue(for: (self.mlDataTableProvider.valuesTableProvider?.targetColumn.name)!)?.doubleValue
-        let baseDict = rowDict
+        guard let baseDict = rowDict else { return }
         
         guard let transmittedKeys = rowDict?.keys else { return }
         for key in transmittedKeys {
-            if !includedColumns.map( {$0.name! }).contains(where: { $0.range(of: key.components(separatedBy: "-")[0], options: .caseInsensitive) != nil }) {
+            if !inputColumns.map( {$0.name! }).contains(where: { $0.range(of: key.components(separatedBy: "-")[0], options: .caseInsensitive) != nil }) && key != targetColumn.name! && key != timeSeriesColumn?.name! {
                 rowDict!.removeValue(forKey: key)
             }
         }
-        for i in 1...includedColumns.count {
-            let combinations = combinator.includedColumnsCombinations(source: Array(includedColumns), takenBy: i)
-            guard let simulationBase = constructCombinations(sourceCombinations: combinations, baseRow: mldataRowToAnalyze) else {
-                return
-            }
+        changeRowDict(rowDict: &rowDict!)
+        let basePrediction =  self.mlDataTableProvider.valuesTableProvider?.predict(regressorName: self.mlDataTableProvider.regressorName!, result: rowDict!).featureValue(for: (self.mlDataTableProvider.valuesTableProvider?.targetColumn.name)!)?.doubleValue
+        for i in 1...inputColumns.count {
+            let combinations = combinator.includedColumnsCombinations(source: Array(inputColumns), takenBy: i)
+            guard let simulationBase = constructCombinations(sourceCombinations: combinations, baseRow: mldataRowToAnalyze) else { return }
             for i in 0..<simulationBase.count {
-                for key in rowDict!.keys {
-                    if !simulationBase[i].keys.map({$0 }).contains(key) {
-                        let valueType = rowDict![key]?.dataValue.type
-                        switch valueType {
-                        case .int:
-                            rowDict![key] = 0
-                        case .double:
-                            rowDict![key] = 0.0
-                        case .string:
-                            rowDict![key] = ""
-                        default:
-                            print("ValueType not found")
-                        }
-                    }
-                }
+                changeRowDict(rowDict: &rowDict!, updateDict: baseDict, inclusionDict: simulationBase[i])
+                let newPrediction =  self.mlDataTableProvider.valuesTableProvider?.predict(regressorName: self.mlDataTableProvider.regressorName!, result: rowDict!).featureValue(for: (self.mlDataTableProvider.valuesTableProvider?.targetColumn.name)!)?.doubleValue
+                print ("\(simulationBase[i].keys.joined(separator: ",")); \(newPrediction!)")
+                changeRowDict(rowDict: &rowDict!)
             }
         }
         
@@ -159,7 +151,6 @@ class PythonInteractor {
 //                }
 //            }
 //        }
-        print("Hurra")
 
     }
     
@@ -172,7 +163,22 @@ class PythonInteractor {
         var change: Double!
     }
     
-
+    func changeRowDict(rowDict: inout [String: MLDataValueConvertible], updateDict:  [String: MLDataValueConvertible]? = nil, inclusionDict: Dictionary<String, Any>? = nil) {
+        for key in rowDict.keys {
+            let valueType = rowDict[key]?.dataValue.type
+            switch valueType {
+            case .int:
+                rowDict[key] = inclusionDict?[key] == nil ? 0:updateDict![key]
+            case .double:
+                rowDict[key] = inclusionDict?[key] == nil ? 0.0:updateDict![key]
+            case .string:
+                rowDict[key] = inclusionDict?[key] == nil ? "":updateDict![key]
+            default:
+                print("ValueType not found")
+            }
+        }
+        
+    }
     func euclideanDistance(_ row1: MLDataTable.Row, _ row2: MLDataTable.Row) -> Double? {
         // Ensure the two rows have the same number of columns
         guard row1.count == row2.count else { return nil }

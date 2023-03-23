@@ -93,7 +93,8 @@ class SimulationController: ObservableObject {
                 TextField("Hier gibt es keinen Wert", text: binding(for: customColumn.title), onEditingChanged: { (changed) in
                     isEditing = changed
                     if isEditing == false {
-                        updateRowDictionary(updateValue: $mlRowDictionary[customColumn.title].wrappedValue as! String)
+                        guard let updateValue =  $mlRowDictionary[customColumn.title].wrappedValue as? String else { return }
+                        updateRowDictionary(updateValue: updateValue)
                         self.mlDataTableProvider.updateRequest = true
                     }
                 }).disabled(self.mlDataTableProvider.mlRowDictionary.count  == 0)

@@ -39,6 +39,15 @@ struct PredictionView: View {
                             guard let rowIndex = rowIndex else { return }
                             self.mlDataTableProviderContext.pythonInteractor.findneighbors(selectedRow: mlDataTableProvider.mlDataTable.rows[rowIndex])
                         }
+                        Button("Analysiere alle") {
+                            let rowCount = mlDataTableProvider.mlDataTable.rows.count
+                            var i = 1
+                            for row in mlDataTableProvider.mlDataTable.rows {
+//                                print("working on Row: \(i) from \(rowCount)")
+                                self.mlDataTableProviderContext.pythonInteractor.findneighbors(selectedRow: row)
+                                i += 1
+                            }
+                        }
                     }
                 }
                 let cells = (0..<1).flatMap{j in self.mlDataTableProviderContext.mlDataTableProvider.customColumns.enumerated().map{(i,c) in CellIndex(id:j + i*1, colIndex:i, rowIndex:j)}}

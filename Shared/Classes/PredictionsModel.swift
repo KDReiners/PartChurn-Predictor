@@ -37,18 +37,18 @@ public class PredictionsModel: Model<Predictions> {
             }
         }
     }
-    internal func includedColumns(prediction: Predictions) -> [Columns] {
-        var includedColumns = [Columns]()
-        guard let foundPrediction = self.items.first(where: {$0 == prediction }) else { return includedColumns}
-        guard let foundComposition = (foundPrediction.prediction2compositions?.allObjects.first as? Compositions) else { return  includedColumns }
-        guard let columns = (foundComposition.composition2columns?.allObjects as? [Columns]) else { return includedColumns }
-        guard let timeSeriesColumn = (prediction.prediction2model?.model2columns?.allObjects as? [Columns])?.filter( { $0.istimeseries == 1}).first else { return includedColumns}
-        guard let targetColumns = (prediction.prediction2model?.model2columns?.allObjects as? [Columns])?.filter( {$0.istarget == 1 && $0.ispartoftimeseries == 1}) else { return includedColumns}
-        includedColumns.append(contentsOf: columns.filter({$0.istimeseries == 0 && $0.isshown == 1 && $0.ispartofprimarykey == 0}).sorted(by: {$0.name! < $1.name!}))
-        includedColumns.append(contentsOf: targetColumns)
-        includedColumns.append(timeSeriesColumn)
-        return includedColumns
-    }
+//    internal func includedColumns(prediction: Predictions) -> [Columns] {
+//        var includedColumns = [Columns]()
+//        guard let foundPrediction = self.items.first(where: {$0 == prediction }) else { return includedColumns}
+//        guard let foundComposition = (foundPrediction.prediction2compositions?.allObjects.first as? Compositions) else { return  includedColumns }
+//        guard let columns = (foundComposition.composition2columns?.allObjects as? [Columns]) else { return includedColumns }
+//        guard let timeSeriesColumn = (prediction.prediction2model?.model2columns?.allObjects as? [Columns])?.filter( { $0.istimeseries == 1}).first else { return includedColumns}
+//        guard let targetColumns = (prediction.prediction2model?.model2columns?.allObjects as? [Columns])?.filter( {$0.istarget == 1 && $0.ispartoftimeseries == 1}) else { return includedColumns}
+//        includedColumns.append(contentsOf: columns.filter({$0.istimeseries == 0 && $0.isshown == 1 && $0.ispartofprimarykey == 0}).sorted(by: {$0.name! < $1.name!}))
+//        includedColumns.append(contentsOf: targetColumns)
+//        includedColumns.append(timeSeriesColumn)
+//        return includedColumns
+//    }
     internal func savePredictions(model: Models) {
         getCurrentCombinations(model: model)
         for cluster in compositionsDataModel!.arrayOfClusters {
@@ -108,5 +108,28 @@ public class PredictionsModel: Model<Predictions> {
                 return result
             }
         }
+    }
+}
+struct MLExplainColumnCluster {
+    var prediction: Predictions!
+    var allColumns: [Columns]!
+    var inputColumns: [Columns]!
+    var timeSeriesColumn: Columns?
+    var targetColumn: Columns?
+    var partOfPrimaryKeyColumn: Columns!
+    var composition: Compositions!
+    init(prediction: Predictions)
+    {
+        self.prediction = prediction
+        composition = prediction.prediction2compositions?.allObjects.first as? Compositions
+        allColumns = composition.composition2columns?.allObjects as? [Columns]
+        inputColumns = allColumns.filter({$0.istimeseries == 0 && $0.isshown == 1 && $0.ispartofprimarykey == 0 && $0.isincluded == 1 && $0.istarget == 0})
+        timeSeriesColumn = (prediction.prediction2model?.model2columns?.allObjects as? [Columns])?.filter( { $0.istimeseries == 1}).first
+        if timeSeriesColumn != nil {
+            targetColumn = ((prediction.prediction2model?.model2columns?.allObjects as? [Columns])?.filter( {$0.istarget == 1 && $0.ispartoftimeseries == 1}).first)!
+        } else {
+            targetColumn = ((prediction.prediction2model?.model2columns?.allObjects as? [Columns])?.filter( {$0.istarget == 1 && $0.ispartoftimeseries == 0}).first)!
+        }
+        
     }
 }
