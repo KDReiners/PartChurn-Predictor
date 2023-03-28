@@ -38,15 +38,23 @@ struct PredictionView: View {
                         Button("Simuliere") {
                             guard let rowIndex = rowIndex else { return }
                             self.mlDataTableProviderContext.pythonInteractor.findneighbors(selectedRow: mlDataTableProvider.mlDataTable.rows[rowIndex])
+                            var localUrl = URL(fileURLWithPath:BaseServices.homePath.appendingPathComponent("ChurnOutput.csv", isDirectory: false).path)
+                            try? self.mlDataTableProviderContext.pythonInteractor.mlResultTable.writeCSV(to: localUrl)
                         }
                         Button("Analysiere alle") {
-                            let rowCount = mlDataTableProvider.mlDataTable.rows.count
+                            var shuffledMlDatatable = mlDataTableProvider.mlDataTable.rows.shuffled()
                             var i = 1
-                            for row in mlDataTableProvider.mlDataTable.rows {
+                            var maxRows: Int = shuffledMlDatatable.count / 5
+                            for row in shuffledMlDatatable {
 //                                print("working on Row: \(i) from \(rowCount)")
                                 self.mlDataTableProviderContext.pythonInteractor.findneighbors(selectedRow: row)
                                 i += 1
+                                if i > maxRows {
+                                    break
+                                }
                             }
+                            var localUrl = URL(fileURLWithPath:BaseServices.homePath.appendingPathComponent("ChurnOutput.csv", isDirectory: false).path)
+                            try? self.mlDataTableProviderContext.pythonInteractor.mlResultTable.writeCSV(to: localUrl)
                         }
                     }
                 }

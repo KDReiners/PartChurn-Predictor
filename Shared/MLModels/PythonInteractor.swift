@@ -17,6 +17,7 @@ class PythonInteractor {
     var columnsDataModel: ColumnsModel!
     var targetColumn: Columns!
     var targetValue: Int!
+    var mlResultTable: MLDataTable!
     init(mlDataTableProvider: MlDataTableProvider) {
         self.mlDataTableProvider = mlDataTableProvider
         self.columnsDataModel = ColumnsModel(model: mlDataTableProvider.model)
@@ -99,32 +100,57 @@ class PythonInteractor {
         let mlExplainColumnCluster = MLExplainColumnCluster(prediction: prediction)
         guard let inputColumns = mlExplainColumnCluster.inputColumns else { return }
         guard let targetColumn = mlExplainColumnCluster.targetColumn else { return }
+        guard let predictedColumnName = $mlDataTableProvider.valuesTableProvider.wrappedValue?.predictedColumnName! else { return }
         let timeSeriesColumn = mlExplainColumnCluster.timeSeriesColumn
+        let primaryKeyColumn = mlExplainColumnCluster.partOfPrimaryKeyColumn
+        
         
         let combinator = Combinator(model: mlDataTableProvider.model!, orderedColumns: mlDataTableProvider.orderedColumns, mlDataTable: mlDataTableProvider.mlDataTable)
         var rowDict = self.mlDataTableProvider.valuesTableProvider?.convertRowToDicionary(mlRow: mldataRowToAnalyze)
         guard let baseDict = rowDict else { return }
         
-        guard let transmittedKeys = rowDict?.keys else { return }
-        for key in transmittedKeys {
-            if !inputColumns.map( {$0.name! }).contains(where: { $0.range(of: key.components(separatedBy: "-")[0], options: .caseInsensitive) != nil }) && key != targetColumn.name! && key != timeSeriesColumn?.name! {
-                rowDict!.removeValue(forKey: key)
-            }
-        }
+//        guard let transmittedKeys = rowDict?.keys else { return }
+//        for key in transmittedKeys {
+//            if !inputColumns.map( {$0.name! }).contains(where: { $0.range(of: key.components(separatedBy: "-")[0], options: .caseInsensitive) != nil }) && key != targetColumn.name! && key != timeSeriesColumn?.name! {
+//                rowDict!.removeValue(forKey: key)
+//            }
+//        }
         changeRowDict(rowDict: &rowDict!)
         let basePrediction =  self.mlDataTableProvider.valuesTableProvider?.predict(regressorName: self.mlDataTableProvider.regressorName!, result: rowDict!).featureValue(for: (self.mlDataTableProvider.valuesTableProvider?.targetColumn.name)!)?.doubleValue
         for i in 1...inputColumns.count {
             let combinations = combinator.includedColumnsCombinations(source: Array(inputColumns), takenBy: i)
             guard let simulationBase = constructCombinations(sourceCombinations: combinations, baseRow: mldataRowToAnalyze) else { return }
             for i in 0..<simulationBase.count {
-                changeRowDict(rowDict: &rowDict!, updateDict: baseDict, inclusionDict: simulationBase[i])
+                var inclusionDict = simulationBase[i]
+                if  primaryKeyColumn != nil {
+                    inclusionDict[(primaryKeyColumn?.name!)!] = baseDict[(primaryKeyColumn?.name!)!]
+                }
+                if timeSeriesColumn != nil {
+                    inclusionDict[(timeSeriesColumn?.name!)!] = baseDict[(timeSeriesColumn?.name!)!]
+                }
+                inclusionDict[targetColumn.name!] = baseDict[targetColumn.name!]
+                inclusionDict[predictedColumnName] = 0.00
+                changeRowDict(rowDict: &rowDict!, updateDict: baseDict, inclusionDict: inclusionDict)
+                let level = simulationBase[i].keys.count - simulationBase[i].keys.filter({$0.contains("-")}).count
+                rowDict!["INPUTCOLUMNS"] = simulationBase[i].keys.sorted( by:  {$0 < $1}).joined(separator: "; ")
+                rowDict!["LEVEL"] = level
                 let newPrediction =  self.mlDataTableProvider.valuesTableProvider?.predict(regressorName: self.mlDataTableProvider.regressorName!, result: rowDict!).featureValue(for: (self.mlDataTableProvider.valuesTableProvider?.targetColumn.name)!)?.doubleValue
+                rowDict![predictedColumnName] = newPrediction
+                if mlResultTable == nil {
+                    mlResultTable = try? MLDataTable(dictionary: rowDict!)
+                }
+                else {
+                    mlResultTable.append(contentsOf: try! MLDataTable(dictionary: rowDict!))
+                }
+                
                 print ("\(simulationBase[i].keys.joined(separator: ",")); \(newPrediction!)")
+                print("ResultTable rows count: \(mlResultTable.rows.count)")
                 changeRowDict(rowDict: &rowDict!)
             }
         }
         
         var listOfChanges: [changes] = []
+
 
         
         
@@ -168,11 +194,11 @@ class PythonInteractor {
             let valueType = rowDict[key]?.dataValue.type
             switch valueType {
             case .int:
-                rowDict[key] = inclusionDict?[key] == nil ? 0:updateDict![key]
+                rowDict[key] = inclusionDict?[key] == nil ? 0 :updateDict![key]
             case .double:
-                rowDict[key] = inclusionDict?[key] == nil ? 0.0:updateDict![key]
+                rowDict[key] = inclusionDict?[key] == nil ? 0.0 :updateDict![key]
             case .string:
-                rowDict[key] = inclusionDict?[key] == nil ? "":updateDict![key]
+                rowDict[key] = inclusionDict?[key] == nil ? "" :updateDict![key]
             default:
                 print("ValueType not found")
             }

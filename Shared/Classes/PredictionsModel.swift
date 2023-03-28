@@ -130,6 +130,7 @@ struct MLExplainColumnCluster {
         } else {
             targetColumn = ((prediction.prediction2model?.model2columns?.allObjects as? [Columns])?.filter( {$0.istarget == 1 && $0.ispartoftimeseries == 0}).first)!
         }
-        
+        partOfPrimaryKeyColumn = ((prediction.prediction2model?.model2columns?.allObjects as? [Columns])?.filter( { $0.ispartofprimarykey == 1}).first)!
     }
+        
 }
