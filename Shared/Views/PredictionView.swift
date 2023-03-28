@@ -44,7 +44,7 @@ struct PredictionView: View {
                         Button("Analysiere alle") {
                             var shuffledMlDatatable = mlDataTableProvider.mlDataTable.rows.shuffled()
                             var i = 1
-                            var maxRows: Int = shuffledMlDatatable.count / 5
+                            var maxRows: Int = shuffledMlDatatable.count / 1
                             for row in shuffledMlDatatable {
 //                                print("working on Row: \(i) from \(rowCount)")
                                 self.mlDataTableProviderContext.pythonInteractor.findneighbors(selectedRow: row)
