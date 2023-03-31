@@ -38,13 +38,13 @@ struct PredictionView: View {
                         Button("Simuliere") {
                             guard let rowIndex = rowIndex else { return }
                             self.mlDataTableProviderContext.pythonInteractor.findneighbors(selectedRow: mlDataTableProvider.mlDataTable.rows[rowIndex])
-                            var localUrl = URL(fileURLWithPath:BaseServices.homePath.appendingPathComponent("ChurnOutput.csv", isDirectory: false).path)
+                            let localUrl = URL(fileURLWithPath:BaseServices.homePath.appendingPathComponent("ChurnOutput.csv", isDirectory: false).path)
                             try? self.mlDataTableProviderContext.pythonInteractor.mlResultTable.writeCSV(to: localUrl)
                         }
                         Button("Analysiere alle") {
-                            var shuffledMlDatatable = mlDataTableProvider.mlDataTable.rows.shuffled()
+                            let shuffledMlDatatable = mlDataTableProvider.mlDataTable.rows.shuffled()
                             var i = 1
-                            var maxRows: Int = shuffledMlDatatable.count / 1
+                            let maxRows: Int = shuffledMlDatatable.count / 1
                             for row in shuffledMlDatatable {
 //                                print("working on Row: \(i) from \(rowCount)")
                                 self.mlDataTableProviderContext.pythonInteractor.findneighbors(selectedRow: row)
@@ -53,7 +53,7 @@ struct PredictionView: View {
                                     break
                                 }
                             }
-                            var localUrl = URL(fileURLWithPath:BaseServices.homePath.appendingPathComponent("ChurnOutput.csv", isDirectory: false).path)
+                            let localUrl = URL(fileURLWithPath:BaseServices.homePath.appendingPathComponent("ChurnOutput.csv", isDirectory: false).path)
                             try? self.mlDataTableProviderContext.pythonInteractor.mlResultTable.writeCSV(to: localUrl)
                         }
                     }

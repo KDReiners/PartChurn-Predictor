@@ -7,24 +7,8 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "2271787D-C2DF-4854-942E-F0BD15747D0A"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Shared/Views/PredictionView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "51"
-            endingLineNumber = "51"
-            landmarkName = "body"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "C92E1B8E-B4FA-4186-A6E5-7F36D32A95C3"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Shared/MLModels/PythonInteractor.swift"
@@ -48,14 +32,14 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "135"
                   endingLineNumber = "135"
-                  offsetFromSymbolStart = "8276">
+                  offsetFromSymbolStart = "8072">
                </Location>
                <Location
-                  uuid = "C92E1B8E-B4FA-4186-A6E5-7F36D32A95C3 - 2dcf09121f5f89ce"
+                  uuid = "C92E1B8E-B4FA-4186-A6E5-7F36D32A95C3 - 52393bdb5514d6b9"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "PartChurn_Predictor.PythonInteractor.getImportances(mldataRowToAnalyze: CreateML.MLDataTable.Row, prediction: PartChurn_Predictor.Predictions, compareMLDataTable: Swift.Optional&lt;CreateML.MLDataTable&gt;) -&gt; ()"
+                  symbolName = "closure #2 (Swift.String, Swift.String) -&gt; Swift.Bool in PartChurn_Predictor.PythonInteractor.getImportances(mldataRowToAnalyze: CreateML.MLDataTable.Row, prediction: PartChurn_Predictor.Predictions, compareMLDataTable: Swift.Optional&lt;CreateML.MLDataTable&gt;) -&gt; ()"
                   moduleName = "PartChurn Predictor"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/kdreiners/Documents/Swift%20Projekte/PartChurn%20Analysis/PartChurn%20Predictor/Shared/MLModels/PythonInteractor.swift"
@@ -63,22 +47,7 @@
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "135"
                   endingLineNumber = "135"
-                  offsetFromSymbolStart = "9468">
-               </Location>
-               <Location
-                  uuid = "C92E1B8E-B4FA-4186-A6E5-7F36D32A95C3 - 2dcf09121f5f89ce"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "PartChurn_Predictor.PythonInteractor.getImportances(mldataRowToAnalyze: CreateML.MLDataTable.Row, prediction: PartChurn_Predictor.Predictions, compareMLDataTable: Swift.Optional&lt;CreateML.MLDataTable&gt;) -&gt; ()"
-                  moduleName = "PartChurn Predictor"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/kdreiners/Documents/Swift%20Projekte/PartChurn%20Analysis/PartChurn%20Predictor/Shared/MLModels/PythonInteractor.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "135"
-                  endingLineNumber = "135"
-                  offsetFromSymbolStart = "12888">
+                  offsetFromSymbolStart = "72">
                </Location>
             </Locations>
          </BreakpointContent>
