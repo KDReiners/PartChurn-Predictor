@@ -145,9 +145,7 @@
 		0A02736629AFEFAB00821074 /* CategoriesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesModel.swift; sourceTree = "<group>"; };
 		0A02736929AFF03200821074 /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
 		0A02736C29B10B6700821074 /* TestMultiselect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestMultiselect.swift; sourceTree = "<group>"; };
-		0A09CD0D29B28386000980D2 /* Python3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python3.framework; path = Library/Frameworks/Python3.framework; sourceTree = DEVELOPER_DIR; };
 		0A0FC906297D9981006F778C /* PredictionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionsView.swift; sourceTree = "<group>"; };
-		0A190C4D29B505A000A54734 /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.6.dylib; path = "../../../../Library/Developer/Xcode/DerivedData/PartChurn_Predictor-biceeiiduzyogfctrciteiodzyqg/Build/Products/Debug/libfreetype.6.dylib"; sourceTree = "<group>"; };
 		0A190C4F29B5093600A54734 /* PythonInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PythonInteractor.swift; sourceTree = "<group>"; };
 		0A1A2AC529805DB80078AA11 /* PerformanceDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceDataProvider.swift; sourceTree = "<group>"; };
 		0A4C56542869750900961D1D /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
@@ -236,8 +234,6 @@
 		0A09CD0A29B27FC9000980D2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0A190C4D29B505A000A54734 /* libfreetype.6.dylib */,
-				0A09CD0D29B28386000980D2 /* Python3.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
