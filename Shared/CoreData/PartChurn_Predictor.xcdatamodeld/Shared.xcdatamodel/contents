@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="22C65" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="21G217" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Algorithms" representedClassName="Algorithms" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="orderno" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -19,7 +19,7 @@
     </entity>
     <entity name="Columns" representedClassName="Columns" syncable="YES" codeGenerationType="class">
         <attribute name="alias" optional="YES" transient="YES" attributeType="String"/>
-        <attribute name="datatype" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="datatype" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="decimalpoint" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO"/>
         <attribute name="isincluded" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO"/>
         <attribute name="ispartofprimarykey" optional="YES" attributeType="Boolean" defaultValueString="0" usesScalarValueType="NO"/>
@@ -28,7 +28,7 @@
         <attribute name="istarget" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO"/>
         <attribute name="istimeseries" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <attribute name="orderno" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="orderno" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="column2category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Categories" inverseName="category2columns" inverseEntity="Categories"/>
         <relationship name="column2compositions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Compositions" inverseName="composition2columns" inverseEntity="Compositions"/>
         <relationship name="column2file" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Files" inverseName="file2columns" inverseEntity="Files"/>
@@ -94,10 +94,10 @@
         <relationship name="predictionmetricvalue2predictionmetric" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Predictionmetrics" inverseName="predictionmetric2predictionmetricvalues" inverseEntity="Predictionmetrics"/>
     </entity>
     <entity name="Predictions" representedClassName="Predictions" syncable="YES" codeGenerationType="class">
-        <attribute name="columnsdepth" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="columnsdepth" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="groupingpattern" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="seriesdepth" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="seriesdepth" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="prediction2algorithms" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Algorithms" inverseName="algorithm2predictions" inverseEntity="Algorithms"/>
         <relationship name="prediction2compositions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Compositions" inverseName="composition2predictions" inverseEntity="Compositions"/>
         <relationship name="prediction2metricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2prediction" inverseEntity="Metricvalues"/>
@@ -105,13 +105,13 @@
         <relationship name="prediction2predictionmetricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictionmetricvalues" inverseName="predictionmetricvalue2prediction" inverseEntity="Predictionmetricvalues"/>
     </entity>
     <entity name="Timeseries" representedClassName="Timeseries" syncable="YES" codeGenerationType="class">
-        <attribute name="from" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="to" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="from" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="to" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="timeseries2compositions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Compositions" inverseName="composition2timeseries" inverseEntity="Compositions"/>
         <relationship name="timeseries2timeslices" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Timeslices" inverseName="timeslice2timeseries" inverseEntity="Timeslices"/>
     </entity>
     <entity name="Timeslices" representedClassName="Timeslices" syncable="YES" codeGenerationType="class">
-        <attribute name="value" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="value" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="timeslice2timeseries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Timeseries" inverseName="timeseries2timeslices" inverseEntity="Timeseries"/>
     </entity>
     <entity name="Values" representedClassName="Values" syncable="YES" codeGenerationType="class">

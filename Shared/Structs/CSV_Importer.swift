@@ -32,7 +32,7 @@ struct CSV_Importer {
         let reader = try! CSVReader(stream: stream!, hasHeaderRow: true, delimiter: ";")
         let columns = reader.headerRow!
         if !columnsViewModel.items.contains(where: { $0.column2model == model && $0.column2file?.name == url.lastPathComponent }) {
-            var i: Int16 = 0
+            var i: Int32 = 0
             columns.forEach { column in
                 let newColumn = columnsViewModel.insertRecord()
                 newColumn.name = column

@@ -41,7 +41,7 @@ struct Combinator {
         }
         scenario = ScenarioProvider(includedColumns: columnCombinations, timeSeries: timeSeriesCombinations, baseTable: mlDataTable)
     }
-    func timeSeriesColumnCombinations(depth: Int? = 2) -> [[Int]] {
+    func timeSeriesColumnCombinations(depth: Int? = 12) -> [[Int]] {
         var result: [[Int]] = []
         for i in 0...series!.count - 1 {
             var combination: [Int] = []
@@ -112,17 +112,17 @@ struct Combinator {
         let timeSliceDataModel = TimeSliceModel()
         var result = Set<TimeSeriesEntry>()
         for series in self.timeSeriesCombinations {
-            let predicate = NSPredicate(format: "from == %i and  to ==%i", Int16(series.min()!), Int16(series.max()!))
+            let predicate = NSPredicate(format: "from == %i and  to ==%i", Int32(series.min()!), Int32(series.max()!))
             var seriesEntry = timeSeriesDataModel.getExistingRecord(predicate: predicate)
             if seriesEntry == nil {
                 seriesEntry = timeSeriesDataModel.insertRecord()
-                seriesEntry!.from = Int16(series.min()!)
-                seriesEntry!.to = Int16(series.max()!)
+                seriesEntry!.from = Int32(series.min()!)
+                seriesEntry!.to = Int32(series.max()!)
                 for timeSlice in series {
-                    let predicate = NSPredicate(format: "value == %i", Int16(timeSlice))
+                    let predicate = NSPredicate(format: "value == %i", Int32(timeSlice))
                     let found = timeSliceDataModel.getExistingRecord(predicate: predicate)
                     let timeSliceEntry = found == nil ? timeSliceDataModel.insertRecord(): found
-                    timeSliceEntry!.value = Int16(timeSlice)
+                    timeSliceEntry!.value = Int32(timeSlice)
                     seriesEntry!.addToTimeseries2timeslices(timeSliceEntry!)
                 }
             }

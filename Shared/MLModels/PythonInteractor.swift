@@ -9,9 +9,8 @@ import Foundation
 import PythonKit
 import CoreML
 import CreateML
-
-
 import SwiftUI
+
 class PythonInteractor {
     @ObservedObject var mlDataTableProvider: MlDataTableProvider
     var columnsDataModel: ColumnsModel!

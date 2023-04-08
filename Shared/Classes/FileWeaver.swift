@@ -46,13 +46,13 @@ internal class FileWeaver {
             for mlDataColumnName in allInDataTable.columnNames {
                 if mlDataColumnName == column.name && !result.contains(where: { $0.name == mlDataColumnName}) {
                     i += 1
-                    column.orderno = Int16(i)
+                    column.orderno = Int32(i)
                     result.append(column)
                 }
             }
         }
         let targetColumn = allColumns.first(where:  {$0.istarget == 1})
-        targetColumn?.orderno = Int16(result.count + 1)
+        targetColumn?.orderno = Int32(result.count + 1)
         BaseServices.save()
         return result
         

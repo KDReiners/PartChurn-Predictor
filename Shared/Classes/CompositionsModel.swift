@@ -56,7 +56,7 @@ public class CompositionsModel: Model<Compositions> {
             let groupingPattern = "TimeSlices count \(seriesDepth)" + " Columns count \(composition.composition2columns!.count)"
             cluster?.groupingPattern = groupingPattern
             cluster?.timeSeries.append(composition.composition2timeseries!)
-            cluster?.seriesDepth = Int16(seriesDepth)
+            cluster?.seriesDepth = Int32(seriesDepth)
             cluster?.compositions.append(composition)
             arrayOfClusters.append(cluster!)
         } else {
@@ -76,7 +76,7 @@ public class CompositionsModel: Model<Compositions> {
         var compositions = [Compositions]()
         var groupingPattern: String?
         var columns = [Columns]()
-        var seriesDepth: Int16!
+        var seriesDepth: Int32!
         var timeSeries = [Timeseries]()
     }
 }

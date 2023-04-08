@@ -55,8 +55,8 @@ public class PredictionsModel: Model<Predictions> {
             let newPrediction = self.insertRecord()
             newPrediction.id = UUID()
             newPrediction.groupingpattern = cluster.groupingPattern
-            newPrediction.seriesdepth = Int16(cluster.seriesDepth)
-            newPrediction.columnsdepth = Int16(cluster.columns.count)
+            newPrediction.seriesdepth = Int32(cluster.seriesDepth)
+            newPrediction.columnsdepth = Int32(cluster.columns.count)
             newPrediction.prediction2model = model
             for composition in cluster.compositions {
                 
@@ -79,8 +79,8 @@ public class PredictionsModel: Model<Predictions> {
             newPredictionPresenatation.prediction = item
             newPredictionPresenatation.id = item.id!
             newPredictionPresenatation.groupingPattern = item.groupingpattern
-            newPredictionPresenatation.seriesDepth = Int16(item.seriesdepth)
-            newPredictionPresenatation.columnsDepth = Int16(item.columnsdepth)
+            newPredictionPresenatation.seriesDepth = Int32(item.seriesdepth)
+            newPredictionPresenatation.columnsDepth = Int32(item.columnsdepth)
             let composition = (item.prediction2compositions!.allObjects.first as! Compositions)
             newPredictionPresenatation.columns.append(contentsOf: composition.composition2columns?.allObjects as! [Columns])
             for composition in item.prediction2compositions!.allObjects as! [Compositions] {
@@ -96,7 +96,7 @@ public class PredictionsModel: Model<Predictions> {
         }
     }
     internal class predictionCluster: CompositionsModel.Cluster {
-        var columnsDepth: Int16!
+        var columnsDepth: Int32!
         var prediction: Predictions!
         var connectedTimeSeries: [String] {
             get {

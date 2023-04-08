@@ -122,7 +122,7 @@ struct ComposerView: View {
         var model: Models!
         var columns = [Columns]()
         var timeSeries: Timeseries!
-        var i: Int16 = 0
+        var i: Int32 = 0
         func saveToCoreData() {
             let compositionEntry = self.compositionDataModel.insertRecord()
             compositionEntry.id = UUID()

@@ -15,7 +15,7 @@ public struct BaseServices
         case cognitionSource = 1
         case cognitionObject = 2
     }
-    internal enum columnDataTypes: Int16, CaseIterable {
+    internal enum columnDataTypes: Int32, CaseIterable {
         case Int = 0
         case Double = 1
         case String = 2

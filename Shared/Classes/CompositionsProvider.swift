@@ -27,8 +27,8 @@ class CompositionsProvider: ObservableObject {
         var rawData: [CompositionsViewEntry]?
         for composition in compositions {
             rawData = rawData == nil ? [CompositionsViewEntry](): rawData
-            let seriesDepth = Int16(composition.composition2timeseries?.timeseries2timeslices?.count ?? 0)
-            let columnsDepth = Int16(composition.composition2columns?.count ?? 0)
+            let seriesDepth = Int32(composition.composition2timeseries?.timeseries2timeslices?.count ?? 0)
+            let columnsDepth = Int32(composition.composition2columns?.count ?? 0)
             let groupPattern = "\(seriesDepth)" + "_" + "\(columnsDepth)"
             let entry = CompositionsViewEntry(composition: composition, seriesDepth: seriesDepth, columnsDepth: columnsDepth, groupPattern: groupPattern)
             rawData?.append(entry)
@@ -53,7 +53,7 @@ struct CompositionsViewEntry: Comparable {
     }
     
     var composition: Compositions
-    var seriesDepth: Int16
-    var columnsDepth: Int16
+    var seriesDepth: Int32
+    var columnsDepth: Int32
     var groupPattern: String
 }

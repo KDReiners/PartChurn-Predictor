@@ -7,6 +7,8 @@
 
 import SwiftUI
 import CoreData
+import PythonKit
+
 struct DirectoryView: View {
     @EnvironmentObject var managerModels: ManagerModels
     var modelsDataModel: ModelsModel
@@ -50,6 +52,15 @@ struct DirectoryView: View {
                     }
                 }
             }
+        }.onAppear {
+            
+//            // Create a Python object representing the sys module
+//            let sys = Python.import("sys")
+//            print(sys.executable)
+//            let numpy = Python.import("numpy")
+
+            // Print the version of Python being used by PythonKit
+//            print(sys.version)
         }
     }
 }
