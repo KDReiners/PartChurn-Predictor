@@ -15,7 +15,7 @@ internal class FileWeaver {
     var model: Models
     var files: NSSet!
     var mlDataTable_Base: MLDataTable!
-    var columnsDataModel = ColumnsModel()
+    var columnsDataModel: ColumnsModel
     var allColumns: [Columns]
     var orderedColumns: [Columns]!
     var timeBasedColumns: [String]
@@ -27,6 +27,7 @@ internal class FileWeaver {
     var cognitionObjects = [CognitionObject]()
     init(model: Models)
     {
+        self.columnsDataModel = ColumnsModel(model: model)
         self.allColumns = Array(model.model2columns?.allObjects as! [Columns]).sorted(by: { $0.orderno < $1.orderno})
         self.model = model
         self.files = model.model2files
@@ -101,8 +102,10 @@ internal class FileWeaver {
             
         }
         for cognitionObject in cognitionObjects {
-            guard let currentMLDataTable = cognitionObject.coreDataML?.mlDataTable else {
-                fatalError("no mldatatable found in cognition source.")
+            var currentMLDataTable: MLDataTable!
+            currentMLDataTable = cognitionObject.coreDataML?.mlDataTable
+            if currentMLDataTable == nil {
+                break
             }
             let joinColums = Set(allInDataTable.columnNames).intersection(currentMLDataTable.columnNames)
             switch joinColums.count {
@@ -112,6 +115,14 @@ internal class FileWeaver {
             case 2:
                 joinParam1 = Array(joinColums)[0]
                 joinParam2 = Array(joinColums)[1]
+                let timeBaseColumnName = columnsDataModel.timeStampColumn?.name
+                let newColumn = currentMLDataTable![timeBaseColumnName!].map {
+                    self.addOrSubtractMonths($0.intValue!, months: -2 )
+                }
+                if timeBaseColumnName != nil {
+                    currentMLDataTable.removeColumn(named: timeBaseColumnName!)
+                    currentMLDataTable.addColumn(newColumn, named: timeBaseColumnName!)
+                }
                 allInDataTable = allInDataTable.join(with: currentMLDataTable, on: joinParam1, joinParam2, type: .inner)
             default: print("no join colums")
             }
@@ -123,6 +134,35 @@ internal class FileWeaver {
     static func getColumnPivotValue(pivotColum: Columns?) ->String? {
         return FileWeaver.valuesDataModel.items.filter { $0.value2column == pivotColum}.first?.value
     }
+    func addOrSubtractMonths(_ value: Int, months: Int) -> Int {
+        // Extract the year and month components
+        let year = value / 100
+        let month = value % 100
+        
+        // Convert the year and month components to a Date object
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy/MM"
+        let dateString = String(format: "%04d/%02d", year, month)
+        guard let date = dateFormatter.date(from: dateString) else {
+            return value
+        }
+        
+        // Add or subtract the specified number of months
+        let calendar = Calendar.current
+        guard let newDate = calendar.date(byAdding: .month, value: months, to: date) else {
+            return value
+        }
+        
+        // Extract the year and month components from the new date
+        let newYear = calendar.component(.year, from: newDate)
+        let newMonth = calendar.component(.month, from: newDate)
+        
+        // Combine the year and month components into a new integer value
+        let newValue = newYear * 100 + newMonth
+        
+        return newValue
+    }
+
     internal struct CognitionSource: Identifiable {
         var id = UUID()
         var name: String!

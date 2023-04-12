@@ -97,7 +97,7 @@ class PersistenceController {
                 i += 1
             }
             do {
-                try self.container.viewContext.save()
+                try BaseServices.save()
             } catch {
                 fatalError("error while saving viewContext")
             }

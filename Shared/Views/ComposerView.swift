@@ -112,6 +112,7 @@ struct ComposerView: View {
         }
     }
     func updateValuesView() {
+        return
         self.mlDataTableProvider.mlDataTableRaw = nil
         self.mlDataTableProvider.mlDataTable = self.mlDataTableProvider.buildMlDataTable().mlDataTable
         self.mlDataTableProvider.updateTableProvider()
