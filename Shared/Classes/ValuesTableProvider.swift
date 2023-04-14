@@ -44,7 +44,6 @@ class ValuesTableProvider: ObservableObject {
             self.regressorName = regressorName
             self.predistion = prediction
             urlToPredictionModel = BaseServices.createPredictionPath(prediction: prediction!, regressorName: regressorName!)
-            print(urlToPredictionModel)
             let fileManager = FileManager.default
             if fileManager.fileExists(atPath: urlToPredictionModel!.path) {
                predictionModel = getModel(url: urlToPredictionModel!)
@@ -89,6 +88,18 @@ class ValuesTableProvider: ObservableObject {
             joinParam2 = Array(joinColumns)[1].name!
         default: print("no join colums")
         }
+        let arry = convertDataTableToDictionary(mlDataTable)
+        let provider = try! MLArrayBatchProvider(dictionary: arry)
+        let predictions = try! predictionModel?.predictions(from: provider, options: MLPredictionOptions())
+        var predictedValues = [Double]()
+        for i in 0..<(predictions?.count ?? 0) {
+            predictedValues.append((predictions?.features(at: i).featureValue(for: targetColumn.name!)!.doubleValue)!)
+        }
+        let newColumn = MLDataColumn(predictedValues)
+        mlDataTable.addColumn(newColumn, named: predictedColumnName)
+        self.orderedColNames.append(predictedColumnName)
+        targetValues[targetColumn.name!] = 0
+        return
         for mlRow in mlDataTable.rows {
             let primaryKeyValue = mlRow[(primaryKeyColumn?.name)!]?.intValue
             targetValues[String((mlRow[ (targetColumn.name!)]?.intValue)!), default: 0] += 1
@@ -225,6 +236,24 @@ class ValuesTableProvider: ObservableObject {
         let newModel = model(model: result!, url: url)
         models.append(newModel)
         return result!
+    }
+    func convertDataTableToDictionary(_ dataTable: MLDataTable) -> [String: [Any]] {
+        var dictionary = [String: [Any]]()
+        for columnName in dataTable.columnNames {
+            let rows = dataTable[columnName]
+            switch dataTable[columnName].type {
+            case .int:
+                dictionary[columnName] = Array(rows.map { $0.intValue })
+            case .double:
+                dictionary[columnName] = Array(rows.map { $0.doubleValue })
+            case .string:
+                dictionary[columnName] = Array(rows.map { $0.stringValue })
+            default:
+                print("ValueType not found")
+            }
+
+        }
+        return dictionary
     }
     func predict(regressorName: String, result: [String : MLDataValueConvertible]) -> MLFeatureProvider {
         let provider: MLDictionaryFeatureProvider = {
