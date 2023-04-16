@@ -72,24 +72,10 @@ class ValuesTableProvider: ObservableObject {
         numRows = numCols > 0 ?customColumns[0].rows.count : 0
     }
     private func incorporatedPrediction(selectedColumns: [Columns], isClassifier: Bool) {
-        var predictionsDictionary = [String: MLDataValueConvertible]()
         let primaryKeyColumn = columnDataModel.primaryKeyColumn
         let timeStampColumn = columnDataModel.timeStampColumn
-        let joinColumns = columnDataModel.joinColumns
-        var joinParam1: String = ""
-        var joinParam2: String = ""
-        var subEntries = Array<PredictionEntry>()
-        var joinTable: MLDataTable!
-        switch joinColumns.count {
-        case 1:
-            joinParam1 = Array(joinColumns)[0].name!
-        case 2:
-            joinParam1 = Array(joinColumns)[0].name!
-            joinParam2 = Array(joinColumns)[1].name!
-        default: print("no join colums")
-        }
-        let arry = convertDataTableToDictionary(mlDataTable)
-        let provider = try! MLArrayBatchProvider(dictionary: arry)
+        let tableDictionary = convertDataTableToDictionary(mlDataTable)
+        let provider = try! MLArrayBatchProvider(dictionary: tableDictionary)
         let predictions = try! predictionModel?.predictions(from: provider, options: MLPredictionOptions())
         var predictedValues = [Double]()
         for i in 0..<(predictions?.count ?? 0) {
@@ -99,33 +85,6 @@ class ValuesTableProvider: ObservableObject {
         mlDataTable.addColumn(newColumn, named: predictedColumnName)
         self.orderedColNames.append(predictedColumnName)
         targetValues[targetColumn.name!] = 0
-        return
-        for mlRow in mlDataTable.rows {
-            let primaryKeyValue = mlRow[(primaryKeyColumn?.name)!]?.intValue
-            targetValues[String((mlRow[ (targetColumn.name!)]?.intValue)!), default: 0] += 1
-            let timeStampColumnValue = (mlRow[(timeStampColumn?.name)!]?.intValue)!
-            var predictedValue = 0.0
-            if isClassifier {
-                predictedValue = Double(predictFromRow(regressorName: self.regressorName!, mlRow: mlRow).featureValue(for: targetColumn!.name!)!.int64Value)
-            } else {
-                predictedValue = predictFromRow(regressorName: self.regressorName!, mlRow: mlRow).featureValue(for: targetColumn!.name!)!.doubleValue
-            }
-            predictedValue = (predictedValue * 10000).rounded() / 10000
-            let newPredictionEntry = PredictionEntry(primaryKey: primaryKeyValue!, timeSeriesValue: timeStampColumnValue, predictedValue: predictedValue)
-            subEntries.append(newPredictionEntry)
-        }
-        predictionsDictionary[primaryKeyColumn!.name!] = subEntries.map({ $0.primaryKey})
-        predictionsDictionary[timeStampColumn!.name!] = subEntries.map({ $0.timeSeriesValue})
-        predictionsDictionary[predictedColumnName] = subEntries.map({ $0.predictedValue})
-        joinTable = try? MLDataTable(dictionary: predictionsDictionary)
-        switch joinColumns.count {
-        case 1:
-            mlDataTable = mlDataTable.join(with: joinTable, on: joinParam1)
-        case 2:
-            mlDataTable = mlDataTable.join(with: joinTable, on: joinParam1, joinParam2, type: .inner)
-        default: print("no join columns")
-        }
-        self.orderedColNames.append(predictedColumnName)
     }
     struct PredictionEntry: Hashable {
         var primaryKey: Int
@@ -137,7 +96,6 @@ class ValuesTableProvider: ObservableObject {
             }
         }
     }
-    
     func insertIntoGridItems(_ columnName: String?) {
         var rows = [String]()
         var newCustomColumn = CustomColumn(title: columnName!, alignment: .trailing)
@@ -272,21 +230,6 @@ class ValuesTableProvider: ObservableObject {
             }
         }()
         return prediction
-    }
-    public func predictFromRow(regressorName: String, mlRow: MLDataTable.Row) -> MLFeatureProvider {
-        var result = [String: MLDataValueConvertible]()
-        for i in 0..<mlRow.keys.count {
-            if mlRow.keys[i] != "ALIVE" {
-                result[mlRow.keys[i]] = mlRow.values[i].intValue
-                if  result[mlRow.keys[i]] == nil {
-                    result[mlRow.keys[i]] = mlRow.values[i].doubleValue
-                }
-                if  result[mlRow.keys[i]] == nil {
-                    result[mlRow.keys[i]] = mlRow.values[i].stringValue
-                }
-            }
-        }
-        return predict(regressorName: regressorName, result: result)
     }
     internal func convertRowToDicionary(mlRow: MLDataTable.Row) -> [String: MLDataValueConvertible] {
         var result = [String: MLDataValueConvertible]()
