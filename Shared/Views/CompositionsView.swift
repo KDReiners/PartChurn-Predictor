@@ -13,7 +13,7 @@ struct CompositionsView: View {
     @ObservedObject var valuesTableProvider = ValuesTableProvider()
     @ObservedObject var mlDataTableProvider: MlDataTableProvider
     @State var mlSelection: String? = nil
-    @State var clusterSelection: PredictionsModel.predictionCluster?
+    @State var clusterSelection: PredictionsModel.PredictionCluster?
     @State var selectedColumnCombination: [Columns]?
     @State var selectedTimeSeriesCombination: [String]?
     @State var selectedLookAhead = 0
@@ -58,7 +58,7 @@ struct CompositionsView: View {
                             Button("Delete") {
                                 predictionsDataModel.deleteAllRecords(predicate: nil)
                                 clusterSelection = nil
-                                predictionsDataModel.arrayOfPredictions = [PredictionsModel.predictionCluster]()
+                                predictionsDataModel.arrayOfPredictions = [PredictionsModel.PredictionCluster]()
                             }
                         }
                         else if compositionDataModel.arrayOfClusters.count > 0 {
@@ -104,7 +104,7 @@ struct CompositionsView: View {
                             VStack(alignment: .leading) {
                                 Text("Look Ahead")
                                     .font(.title)
-                                PredictionsModel.predictionCluster.LookAheadView(maxLookAhead: $maxLookAhead)
+                                PredictionsModel.PredictionCluster.LookAheadView(maxLookAhead: $maxLookAhead)
                             }
                         }
                         Text("Columns")

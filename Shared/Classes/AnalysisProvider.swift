@@ -39,14 +39,14 @@ class AnalysisProvider {
     }
 }
 struct Analysis {
-    var clusterSelection: PredictionsModel.predictionCluster
+    var clusterSelection: PredictionsModel.PredictionCluster
     var fileWeaver: FileWeaver
-    init(clusterSelection: PredictionsModel.predictionCluster, fileWeaver: FileWeaver) {
+    init(clusterSelection: PredictionsModel.PredictionCluster, fileWeaver: FileWeaver) {
         self.fileWeaver = fileWeaver
         self.clusterSelection = clusterSelection
         analyse()
     }
-    func createTableForExplosion(fileWeaver: FileWeaver, clusterSelection: PredictionsModel.predictionCluster) -> MlDataTableProvider{
+    func createTableForExplosion(fileWeaver: FileWeaver, clusterSelection: PredictionsModel.PredictionCluster) -> MlDataTableProvider{
         let result = MlDataTableProvider()
         result.mlDataTable = fileWeaver.mlDataTable_Base!
         result.orderedColumns = fileWeaver.orderedColumns!

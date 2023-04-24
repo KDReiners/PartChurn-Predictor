@@ -10,7 +10,7 @@ import CoreData
 import TabularData
 public class PredictionsModel: Model<Predictions> {
     @Published var result: [Predictions]!
-    @Published var arrayOfPredictions = [predictionCluster]()
+    @Published var arrayOfPredictions = [PredictionCluster]()
     @Published var timeSeriesSelections = [String]()
     private var model: Models?
     private var compositionsDataModel: CompositionsModel?
@@ -75,7 +75,7 @@ public class PredictionsModel: Model<Predictions> {
         self.model = model
         let foundItems = self.items.filter( { $0.prediction2model == model })
         for item in foundItems {
-            let newPredictionPresenatation = predictionCluster()
+            let newPredictionPresenatation = PredictionCluster()
             newPredictionPresenatation.prediction = item
             newPredictionPresenatation.id = item.id!
             newPredictionPresenatation.groupingPattern = item.groupingpattern
@@ -95,7 +95,7 @@ public class PredictionsModel: Model<Predictions> {
             self.timeSeriesSelections.append(prediction.timeSeries.map( { String($0.from)}).joined(separator: ", "))
         }
     }
-    internal class predictionCluster: CompositionsModel.Cluster {
+    internal class PredictionCluster: CompositionsModel.Cluster {
         var columnsDepth: Int32!
         var prediction: Predictions!
         var connectedTimeSeries: [String] {

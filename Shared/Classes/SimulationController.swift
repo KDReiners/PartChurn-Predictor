@@ -27,7 +27,7 @@ class SimulationController: ObservableObject {
         @Published var mlDataTableProvider: MlDataTableProvider
         var pythonInteractor: PythonInteractor!
         var gridItems = [GridItem]()
-        var clusterSelection: PredictionsModel.predictionCluster?
+        var clusterSelection: PredictionsModel.PredictionCluster?
         var predictionsDataModel = PredictionsModel()
         var columnsDataModel:  ColumnsModel!
         var composer: FileWeaver!
