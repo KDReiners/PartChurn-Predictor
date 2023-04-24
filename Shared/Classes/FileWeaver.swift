@@ -117,7 +117,7 @@ internal class FileWeaver {
                 joinParam2 = Array(joinColums)[1]
                 let timeBaseColumnName = columnsDataModel.timeStampColumn?.name
                 let newColumn = currentMLDataTable![timeBaseColumnName!].map {
-                    self.addOrSubtractMonths($0.intValue!, months: -2 )
+                    self.addOrSubtractMonths($0.intValue!, months: 0)
                 }
                 if timeBaseColumnName != nil {
                     currentMLDataTable.removeColumn(named: timeBaseColumnName!)

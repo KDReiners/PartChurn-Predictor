@@ -44,7 +44,7 @@ public struct Trainer {
         if self.timeSeriesColumnName != nil {
             let timeSeriesColumn = self.regressorTable![timeSeriesColumnName!]
             let seriesEnd = (timeSeriesColumn.ints?.max())!
-            let endMask = timeSeriesColumn <= 202212
+            let endMask = timeSeriesColumn <= 202205
             self.regressorTable = self.regressorTable![endMask]
         }
 

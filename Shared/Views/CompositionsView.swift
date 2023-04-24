@@ -16,7 +16,10 @@ struct CompositionsView: View {
     @State var clusterSelection: PredictionsModel.predictionCluster?
     @State var selectedColumnCombination: [Columns]?
     @State var selectedTimeSeriesCombination: [String]?
-
+    @State var selectedLookAhead = 0
+    @State var maxLookAhead = 0
+    
+    var highestFrom: Int?
     var valuesView: ValuesView?
     var unionResult: UnionResult!
     var model: Models
@@ -90,10 +93,19 @@ struct CompositionsView: View {
                 
                 VStack(alignment: .leading) {
                     if predictionsDataModel.arrayOfPredictions.count > 0 && clusterSelection != nil {
-                        Text("Timeseries")
-                            .font(.title)
-                        List((clusterSelection?.timeSeries.sorted(by: { $0.from < $1.from }))!, id: \.self) { series in
-                            Text(String(series.from) + " - " + String(series.to))
+                        HStack(alignment: .center) {
+                            VStack(alignment: .leading) {
+                                Text("Timeseries")
+                                    .font(.title)
+                                List((clusterSelection?.timeSeries.sorted(by: { $0.from < $1.from }))!, id: \.self) { series in
+                                    Text(String(series.from) + " - " + String(series.to))
+                                }
+                            }
+                            VStack(alignment: .leading) {
+                                Text("Look Ahead")
+                                    .font(.title)
+                                PredictionsModel.predictionCluster.LookAheadView(maxLookAhead: $maxLookAhead)
+                            }
                         }
                         Text("Columns")
                             .font(.title)
@@ -104,6 +116,7 @@ struct CompositionsView: View {
                     }
                 }
                 .onChange(of: clusterSelection) { newClusterSelection in
+                    maxLookAhead = clusterSelection?.maxLookAhead ?? 0
                     self.mlDataTableProvider.selectedColumns = newClusterSelection?.columns
                     if let timeSeriesRows = newClusterSelection?.connectedTimeSeries {
                         var selectedTimeSeries = [[Int]]()
@@ -112,6 +125,8 @@ struct CompositionsView: View {
                             selectedTimeSeries.append(innerResult)
                         }
                         self.mlDataTableProvider.timeSeries = selectedTimeSeries
+                        
+                        
                     } else {
                         self.mlDataTableProvider.timeSeries = nil
                     }

@@ -69,7 +69,6 @@ struct ComposerView: View {
                             }
                             updateValuesView()
                         }
-                    
                     VStack(alignment: .leading) {
                         Text("Columns ")
                         List(combinator.includedColumns.filter( { $0.isshown == true} ), id: \.self, selection: $selectedColumnCombination) { column in

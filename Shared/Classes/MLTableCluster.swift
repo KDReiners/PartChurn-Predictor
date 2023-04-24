@@ -51,7 +51,6 @@ class MLTableCluster {
         var result: MLDataTable?
         let columnNames = columns.map({ $0.name! })
         for i in 0..<tables.count - 1 {
-            
             let suffix = -tables.count + 1 + i
             for column in tables[i].columnNames {
                 if !columnNames.contains(column) {

@@ -4,7 +4,7 @@
 //
 //  Created by Klaus-Dieter Reiners on 22.08.22.
 //
-
+import SwiftUI
 import Foundation
 import CoreData
 import TabularData
@@ -37,18 +37,18 @@ public class PredictionsModel: Model<Predictions> {
             }
         }
     }
-//    internal func includedColumns(prediction: Predictions) -> [Columns] {
-//        var includedColumns = [Columns]()
-//        guard let foundPrediction = self.items.first(where: {$0 == prediction }) else { return includedColumns}
-//        guard let foundComposition = (foundPrediction.prediction2compositions?.allObjects.first as? Compositions) else { return  includedColumns }
-//        guard let columns = (foundComposition.composition2columns?.allObjects as? [Columns]) else { return includedColumns }
-//        guard let timeSeriesColumn = (prediction.prediction2model?.model2columns?.allObjects as? [Columns])?.filter( { $0.istimeseries == 1}).first else { return includedColumns}
-//        guard let targetColumns = (prediction.prediction2model?.model2columns?.allObjects as? [Columns])?.filter( {$0.istarget == 1 && $0.ispartoftimeseries == 1}) else { return includedColumns}
-//        includedColumns.append(contentsOf: columns.filter({$0.istimeseries == 0 && $0.isshown == 1 && $0.ispartofprimarykey == 0}).sorted(by: {$0.name! < $1.name!}))
-//        includedColumns.append(contentsOf: targetColumns)
-//        includedColumns.append(timeSeriesColumn)
-//        return includedColumns
-//    }
+    //    internal func includedColumns(prediction: Predictions) -> [Columns] {
+    //        var includedColumns = [Columns]()
+    //        guard let foundPrediction = self.items.first(where: {$0 == prediction }) else { return includedColumns}
+    //        guard let foundComposition = (foundPrediction.prediction2compositions?.allObjects.first as? Compositions) else { return  includedColumns }
+    //        guard let columns = (foundComposition.composition2columns?.allObjects as? [Columns]) else { return includedColumns }
+    //        guard let timeSeriesColumn = (prediction.prediction2model?.model2columns?.allObjects as? [Columns])?.filter( { $0.istimeseries == 1}).first else { return includedColumns}
+    //        guard let targetColumns = (prediction.prediction2model?.model2columns?.allObjects as? [Columns])?.filter( {$0.istarget == 1 && $0.ispartoftimeseries == 1}) else { return includedColumns}
+    //        includedColumns.append(contentsOf: columns.filter({$0.istimeseries == 0 && $0.isshown == 1 && $0.ispartofprimarykey == 0}).sorted(by: {$0.name! < $1.name!}))
+    //        includedColumns.append(contentsOf: targetColumns)
+    //        includedColumns.append(timeSeriesColumn)
+    //        return includedColumns
+    //    }
     internal func savePredictions(model: Models) {
         getCurrentCombinations(model: model)
         for cluster in compositionsDataModel!.arrayOfClusters {
@@ -71,7 +71,7 @@ public class PredictionsModel: Model<Predictions> {
         compositionsDataModel?.retrievePredictionClusters()
     }
     internal func createPredictionForModel(model: Models) {
-//      self.deleteAllRecords(predicate: nil)
+        //      self.deleteAllRecords(predicate: nil)
         self.model = model
         let foundItems = self.items.filter( { $0.prediction2model == model })
         for item in foundItems {
@@ -84,7 +84,7 @@ public class PredictionsModel: Model<Predictions> {
             let composition = (item.prediction2compositions!.allObjects.first as! Compositions)
             newPredictionPresenatation.columns.append(contentsOf: composition.composition2columns?.allObjects as! [Columns])
             for composition in item.prediction2compositions!.allObjects as! [Compositions] {
-//                newPredictionPresenatation.columns.append(contentsOf: composition.composition2columns?.allObjects as! [Columns])
+                //                newPredictionPresenatation.columns.append(contentsOf: composition.composition2columns?.allObjects as! [Columns])
                 newPredictionPresenatation.timeSeries.append(composition.composition2timeseries!)
             }
             arrayOfPredictions.append(newPredictionPresenatation)
@@ -108,6 +108,51 @@ public class PredictionsModel: Model<Predictions> {
                 return result
             }
         }
+        var minTimeSeries: Int32? {
+            return timeSeries.min(by: { $0.from < $1.from })?.from
+        }
+        var maxTimeSeries: Int32? {
+            return timeSeries.max(by: { $0.from < $1.from })?.from
+        }
+        var maxLookAhead: Int {
+            return Int(maxTimeSeries ?? 0) - Int(minTimeSeries ?? 0)
+        }
+        internal struct LookAheadView: View {
+            @State private var selectedLookAhead: Int?
+            @Binding internal var maxLookAhead: Int
+            
+            var body: some View {
+                List(selection: $selectedLookAhead) {
+                    ForEach(0..<maxLookAhead, id: \.self) { number in
+                        Row(number: number, selectedNumber: $selectedLookAhead)
+                    }
+                }
+                .listStyle(PlainListStyle())
+            }
+        }
+        struct Row: View {
+            let number: Int
+            @Binding var selectedNumber: Int?
+            
+            var body: some View {
+                Button(action: {
+                    selectedNumber = selectedNumber == number ? nil: number
+                }) {
+                    HStack {
+                        Text("\(number)")
+                            .foregroundColor(.primary)
+                        Spacer()
+                        if selectedNumber == number {
+                            Image(systemName: "checkmark")
+                                .foregroundColor(.white)
+                        }
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(PlainButtonStyle())
+            }
+        }
+        
     }
 }
 struct MLExplainColumnCluster {
@@ -132,5 +177,5 @@ struct MLExplainColumnCluster {
         }
         partOfPrimaryKeyColumn = ((prediction.prediction2model?.model2columns?.allObjects as? [Columns])?.filter( { $0.ispartofprimarykey == 1}).first)!
     }
-        
+    
 }
