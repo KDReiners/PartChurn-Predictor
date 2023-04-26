@@ -16,7 +16,7 @@ struct CompositionsView: View {
     @State var clusterSelection: PredictionsModel.PredictionCluster?
     @State var selectedColumnCombination: [Columns]?
     @State var selectedTimeSeriesCombination: [String]?
-    @State var selectedLookAhead = 0
+    @State var selectedLookAhead: Int? = 0
     @State var maxLookAhead = 0
     
     var highestFrom: Int?
@@ -104,7 +104,7 @@ struct CompositionsView: View {
                             VStack(alignment: .leading) {
                                 Text("Look Ahead")
                                     .font(.title)
-                                PredictionsModel.PredictionCluster.LookAheadView(maxLookAhead: $maxLookAhead)
+                                PredictionsModel.PredictionCluster.LookAheadView(selectedLookAhead: $selectedLookAhead, maxLookAhead: $maxLookAhead)
                             }
                         }
                         Text("Columns")
@@ -114,6 +114,9 @@ struct CompositionsView: View {
                             Text(column.name!)
                         }
                     }
+                }
+                .onChange(of: selectedLookAhead) { newLookAhead in
+                    print("selected lookahead didchange")
                 }
                 .onChange(of: clusterSelection) { newClusterSelection in
                     maxLookAhead = clusterSelection?.maxLookAhead ?? 0

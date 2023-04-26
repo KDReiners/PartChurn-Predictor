@@ -118,7 +118,7 @@ public class PredictionsModel: Model<Predictions> {
             return Int(maxTimeSeries ?? 0) - Int(minTimeSeries ?? 0)
         }
         internal struct LookAheadView: View {
-            @State private var selectedLookAhead: Int?
+            @Binding internal var selectedLookAhead: Int?
             @Binding internal var maxLookAhead: Int
             
             var body: some View {
