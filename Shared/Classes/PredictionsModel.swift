@@ -83,7 +83,7 @@ public class PredictionsModel: Model<Predictions> {
             self.timeSeriesSelections.append(prediction.timeSeries.map( { String($0.from)}).joined(separator: ", "))
         }
     }
-    internal class PredictionCluster: CompositionsModel.Cluster {
+    internal class PredictionCluster: CompositionsModel.CompositionCluster {
         var columnsDepth: Int32!
         var prediction: Predictions!
         var connectedTimeSeries: [String] {

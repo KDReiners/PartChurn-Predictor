@@ -8,7 +8,7 @@
 import Foundation
 public class CompositionsModel: Model<Compositions> {
     @Published var result: [Compositions]!
-    @Published var arrayOfClusters = [Cluster]()
+    @Published var arrayOfClusters = [CompositionCluster]()
     private var model: Models?
     public init() {
         let readOnlyFields: [String] = []
@@ -51,7 +51,7 @@ public class CompositionsModel: Model<Compositions> {
             && seriesDepth == $0.seriesDepth
         }).first
         if cluster == nil {
-            cluster = Cluster()
+            cluster = CompositionCluster()
             cluster!.columns.append(contentsOf: ((composition.composition2columns?.allObjects as? [Columns])!))
             let groupingPattern = "TimeSlices count \(seriesDepth)" + " Columns count \(composition.composition2columns!.count)"
             cluster?.groupingPattern = groupingPattern
@@ -65,8 +65,8 @@ public class CompositionsModel: Model<Compositions> {
         }
     }
         
-    internal class Cluster: Hashable {
-        static func == (lhs: CompositionsModel.Cluster, rhs: CompositionsModel.Cluster) -> Bool {
+    internal class CompositionCluster: Hashable {
+        static func == (lhs: CompositionsModel.CompositionCluster, rhs: CompositionsModel.CompositionCluster) -> Bool {
             return lhs.id == rhs.id
         }
         func hash(into hasher: inout Hasher) {
