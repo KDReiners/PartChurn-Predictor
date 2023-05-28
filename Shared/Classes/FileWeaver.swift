@@ -21,12 +21,15 @@ internal class FileWeaver {
     var timeBasedColumns: [String]
     var primaryKeyColumns: [String]
     var allInDataTable = MLDataTable()
-    
+    var modelObjectID: NSManagedObjectID!
+    var modelStoreURL: URL!
     static var valuesDataModel = ValuesModel()
     var cognitionSources = [CognitionSource]()
     var cognitionObjects = [CognitionObject]()
     init(model: Models)
     {
+        self.modelObjectID = model.objectID
+        modelStoreURL = BaseServices.homePath.appendingPathComponent(model.name!)
         self.columnsDataModel = ColumnsModel(model: model)
         self.allColumns = Array(model.model2columns?.allObjects as! [Columns]).sorted(by: { $0.orderno < $1.orderno})
         self.model = model
@@ -37,8 +40,15 @@ internal class FileWeaver {
         self.primaryKeyColumns = Array(model.model2columns?.allObjects as! [Columns]).filter({ $0.ispartofprimarykey == 1 }).map( {
             $0.name!
         })
-        examine()
-        self.mlDataTable_Base = compose()
+        self.mlDataTable_Base = loadMLDataTableFromJson(filePath: modelStoreURL)
+        if self.mlDataTable_Base != nil {
+            self.allInDataTable = self.mlDataTable_Base
+            self.orderedColumns = orderColumns(allColumns: self.allColumns)
+        } else {
+            examine()
+            self.mlDataTable_Base = compose()
+            saveMLDataTableToJson(mlDataTable: self.mlDataTable_Base, filePath: modelStoreURL)
+        }
     }
     private func orderColumns(allColumns: [Columns]) -> [Columns] {
         var result = [Columns]()
