@@ -40,14 +40,14 @@ internal class FileWeaver {
         self.primaryKeyColumns = Array(model.model2columns?.allObjects as! [Columns]).filter({ $0.ispartofprimarykey == 1 }).map( {
             $0.name!
         })
-        self.mlDataTable_Base = loadMLDataTableFromJson(filePath: modelStoreURL)
+        self.mlDataTable_Base = BaseServices.loadMLDataTableFromJson(filePath: modelStoreURL)
         if self.mlDataTable_Base != nil {
             self.allInDataTable = self.mlDataTable_Base
             self.orderedColumns = orderColumns(allColumns: self.allColumns)
         } else {
             examine()
             self.mlDataTable_Base = compose()
-            saveMLDataTableToJson(mlDataTable: self.mlDataTable_Base, filePath: modelStoreURL)
+            BaseServices.saveMLDataTableToJson(mlDataTable: self.mlDataTable_Base, filePath: modelStoreURL)
         }
     }
     private func orderColumns(allColumns: [Columns]) -> [Columns] {

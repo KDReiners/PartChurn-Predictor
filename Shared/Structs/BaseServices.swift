@@ -8,6 +8,7 @@
 import Foundation
 import OSLog
 import CoreData
+import CreateML
 public struct BaseServices
 {
     internal enum cognitionTypes: Int {
@@ -95,6 +96,23 @@ public struct BaseServices
     }
     public static func createPredictionPath(prediction: Predictions, regressorName: String) -> URL {
         return BaseServices.homePath.appendingPathComponent(prediction.prediction2model!.name!, isDirectory: true).appendingPathComponent(regressorName + "_" + prediction.id!.uuidString + ".mlmodel")
+    }
+    // Funktion zum Speichern der MLDATATable in JSON
+    public static func saveMLDataTableToJson(mlDataTable: MLDataTable, filePath: URL) {
+        try? mlDataTable.write(to: filePath)
+        let newTable = loadMLDataTableFromJson(filePath: filePath)
+        print(newTable!)
+    }
+
+    // Funktion zum Laden der MLDATATable aus JSON
+    public static func loadMLDataTableFromJson(filePath: URL) -> MLDataTable? {
+        var result: MLDataTable?
+        do {
+            result  = try MLDataTable(contentsOf: filePath)
+        } catch {
+            print("No model is stored yet.")
+        }
+        return result;
     }
 }
 public let predictionPrefix = "Predicted: "

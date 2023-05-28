@@ -301,7 +301,7 @@ class MlDataTableProvider: ObservableObject {
         }
         return index
     }
-    func buildMlDataTable() -> UnionResult {
+    func buildMlDataTable() throws -> UnionResult {
         var result: MLDataTable?
         self.filterViewProvider = nil
         mergedColumns = selectedColumns == nil ? orderedColumns: selectedColumns
@@ -313,10 +313,12 @@ class MlDataTableProvider: ObservableObject {
             mergedColumns.append(contentsOf: additions)
         }
         self.mlColumns = mergedColumns.map { $0.name!}
+        
         let timeSeriesColumn = self.orderedColumns.filter { $0.istimeseries == 1 }
         if timeSeriesColumn.count > 0 {
             let  mlTimeSeriesColumn = mlDataTable[(timeSeriesColumn.first?.name)!]
             if let timeSeries = timeSeries {
+                // hier kommt der Zugriff auf die gespeicherte MLDatatable hin
                 for timeSlices in timeSeries {
                     let newCluster = MLTableCluster(columns: mergedColumns, model: self.model!)
                     for timeSlice in timeSlices.sorted(by: { $0 < $1 }) {

@@ -37,7 +37,7 @@ struct CompositionsView: View {
         self.mlDataTableProvider = MlDataTableProvider(model: self.model)
         self.mlDataTableProvider.mlDataTable = composer.mlDataTable_Base!
         self.mlDataTableProvider.orderedColumns = composer.orderedColumns!
-        unionResult = self.mlDataTableProvider.buildMlDataTable()
+        unionResult = try? self.mlDataTableProvider.buildMlDataTable()
         self.mlDataTableProvider.updateTableProvider()
         valuesView = ValuesView(mlDataTableProvider: self.mlDataTableProvider)
         compositionDataModel.retrievePredictionClusters()
@@ -300,7 +300,7 @@ struct CompositionsView: View {
     func generateValuesView() {
         self.mlDataTableProvider.mlDataTableRaw = nil
         mlSelection = clusterSelection?.prediction == nil ? nil: mlSelection
-        self.mlDataTableProvider.mlDataTable = self.mlDataTableProvider.buildMlDataTable().mlDataTable
+        self.mlDataTableProvider.mlDataTable = try? self.mlDataTableProvider.buildMlDataTable().mlDataTable
         self.mlDataTableProvider.updateTableProvider()
         self.mlDataTableProvider.loaded = false
     }

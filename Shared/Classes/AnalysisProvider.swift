@@ -65,7 +65,7 @@ struct Analysis {
             result.timeSeries = nil
         }
         result.mlDataTableRaw = nil
-        result.mlDataTable = result.buildMlDataTable().mlDataTable
+        result.mlDataTable = try? result.buildMlDataTable().mlDataTable
         result.updateTableProvider()
         return result
     }

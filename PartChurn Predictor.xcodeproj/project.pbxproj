@@ -40,8 +40,6 @@
 		0AA4508729C89F3C003EF476 /* MLExplainEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA4508529C89F3C003EF476 /* MLExplainEntry.swift */; };
 		0AA8C8F429A10E1500AA399F /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */; };
 		0AA8C8F529A10E1500AA399F /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */; };
-		0AC6E4202A225E000005F5CA /* JsonProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC6E41F2A225E000005F5CA /* JsonProvider.swift */; };
-		0AC6E4212A225E000005F5CA /* JsonProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC6E41F2A225E000005F5CA /* JsonProvider.swift */; };
 		0AC8843B29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8843A29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift */; };
 		0AC8843C29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8843A29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift */; };
 		0AD43D0A2920234700199F06 /* SimulationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD43D092920234700199F06 /* SimulationController.swift */; };
@@ -157,7 +155,6 @@
 		0A827F7328736F0400C928F2 /* CustomColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColumn.swift; sourceTree = "<group>"; };
 		0AA4508529C89F3C003EF476 /* MLExplainEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLExplainEntry.swift; sourceTree = "<group>"; };
 		0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
-		0AC6E41F2A225E000005F5CA /* JsonProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonProvider.swift; sourceTree = "<group>"; };
 		0AC8843A29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ml_ClassifierMetricKPI.swift; sourceTree = "<group>"; };
 		0AD43D092920234700199F06 /* SimulationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationController.swift; sourceTree = "<group>"; };
 		0AD43D0C2921062F00199F06 /* MLTableCluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLTableCluster.swift; sourceTree = "<group>"; };
@@ -337,7 +334,6 @@
 				2DA77EF728257B97007EC3E5 /* CSV_Importer.swift */,
 				0A827F7328736F0400C928F2 /* CustomColumn.swift */,
 				2DA77EDD28256F09007EC3E5 /* EntityAttributeInfo.swift */,
-				0AC6E41F2A225E000005F5CA /* JsonProvider.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";
@@ -536,7 +532,6 @@
 				0AD6C8952858D5FD00EB92FB /* BatchProvider.swift in Sources */,
 				2DB5E69628AD36DE006DC0D2 /* CompositionsView.swift in Sources */,
 				2DA77EDE28256F09007EC3E5 /* EntityAttributeInfo.swift in Sources */,
-				0AC6E4202A225E000005F5CA /* JsonProvider.swift in Sources */,
 				2DBDCCFC288EF0A500CC8EDC /* ScenarioProvider.swift in Sources */,
 				2DA77EE128256F16007EC3E5 /* BaseServices.swift in Sources */,
 				2DA77EBE282569DC007EC3E5 /* DirectoryView.swift in Sources */,
@@ -606,7 +601,6 @@
 				0AD6C8962858D5FD00EB92FB /* BatchProvider.swift in Sources */,
 				2DB5E69728AD36DE006DC0D2 /* CompositionsView.swift in Sources */,
 				2DA77EDF28256F09007EC3E5 /* EntityAttributeInfo.swift in Sources */,
-				0AC6E4212A225E000005F5CA /* JsonProvider.swift in Sources */,
 				2DBDCCFD288EF0A500CC8EDC /* ScenarioProvider.swift in Sources */,
 				2DA77EE228256F16007EC3E5 /* BaseServices.swift in Sources */,
 				2DA77EBF282569DC007EC3E5 /* DirectoryView.swift in Sources */,

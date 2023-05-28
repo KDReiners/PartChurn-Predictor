@@ -7,17 +7,17 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "27EBF89A-CB3D-47E2-AB47-1826F405BCC6"
-            shouldBeEnabled = "No"
+            uuid = "8FE74413-4417-4B1A-950B-7FC3802A1AD3"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Shared/Views/CompositionsView.swift"
+            filePath = "Shared/Classes/MlDataTableProvider.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "136"
-            endingLineNumber = "136"
-            landmarkName = "body"
-            landmarkType = "24">
+            startingLineNumber = "306"
+            endingLineNumber = "306"
+            landmarkName = "buildMlDataTable()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

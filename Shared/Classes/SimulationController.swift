@@ -65,7 +65,7 @@ class SimulationController: ObservableObject {
                 self.mlDataTableProvider.timeSeries = nil
             }
             self.mlDataTableProvider.mlDataTableRaw = nil
-            self.mlDataTableProvider.mlDataTable = self.mlDataTableProvider.buildMlDataTable().mlDataTable
+            self.mlDataTableProvider.mlDataTable = try? self.mlDataTableProvider.buildMlDataTable().mlDataTable
             self.mlDataTableProvider.updateTableProvider()
             self.mlDataTableProvider.loaded = false
         }
