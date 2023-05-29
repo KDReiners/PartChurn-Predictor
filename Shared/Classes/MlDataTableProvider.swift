@@ -317,33 +317,42 @@ class MlDataTableProvider: ObservableObject {
         let timeSeriesColumn = self.orderedColumns.filter { $0.istimeseries == 1 }
         if timeSeriesColumn.count > 0 {
             let  mlTimeSeriesColumn = mlDataTable[(timeSeriesColumn.first?.name)!]
+            let newCluster = MLTableCluster(columns: mergedColumns, model: self.model!)
             if let timeSeries = timeSeries {
-                // hier kommt der Zugriff auf die gespeicherte MLDatatable hin
-                for timeSlices in timeSeries {
-                    let newCluster = MLTableCluster(columns: mergedColumns, model: self.model!)
-                    for timeSlice in timeSlices.sorted(by: { $0 < $1 }) {
-                        
-                        let timeSeriesMask = mlTimeSeriesColumn == timeSlice
-                        let newMlDataTable = self.mlDataTable[timeSeriesMask]
-                        newCluster.tables.append(newMlDataTable)
-                        
-                        if unionOfMlDataTables == nil {
-                            unionOfMlDataTables = [newMlDataTable] } else {
-                                unionOfMlDataTables?.append(newMlDataTable)
-                            }
-                    }
-                    if result == nil {
-                        if newCluster.columnsDataModel.model != nil {
-                            result = newCluster.construct()
-                            self.mlColumns = newCluster.orderedColumns
-                        } else {
-                            print("newClusters columnsdataMode not correctly instantiated")
+                let predictionURL = BaseServices.homePath.appendingPathComponent((prediction?.prediction2model?.name)!).appendingPathComponent((prediction?.objectID.uriRepresentation().lastPathComponent)!);
+                let loadedTable = BaseServices.loadMLDataTableFromJson(filePath: predictionURL);
+                if loadedTable == nil {
+                    for timeSlices in timeSeries {
+                        let newCluster = MLTableCluster(columns: mergedColumns, model: self.model!)
+                        for timeSlice in timeSlices.sorted(by: { $0 < $1 }) {
+                            
+                            let timeSeriesMask = mlTimeSeriesColumn == timeSlice
+                            let newMlDataTable = self.mlDataTable[timeSeriesMask]
+                            newCluster.tables.append(newMlDataTable)
+                            
+                            if unionOfMlDataTables == nil {
+                                unionOfMlDataTables = [newMlDataTable] } else {
+                                    unionOfMlDataTables?.append(newMlDataTable)
+                                }
                         }
-                    } else {
-                        result?.append(contentsOf: newCluster.construct())
+                        if result == nil {
+                            if newCluster.columnsDataModel.model != nil {
+                                result = newCluster.construct()
+                                self.mlColumns = newCluster.orderedColumns
+                            } else {
+                                print("newClusters columnsdataMode not correctly instantiated")
+                            }
+                        } else {
+                            result?.append(contentsOf: newCluster.construct())
+                        }
                     }
+                    self.mlDataTable = result?.dropMissing()
+                    BaseServices.saveMLDataTableToJson(mlDataTable: self.mlDataTable, filePath: predictionURL)
+                    
+                } else {
+                    self.mlDataTable = loadedTable;
+                    self.mlColumns = self.mlDataTable.columnNames.map { $0 };
                 }
-                self.mlDataTable = result?.dropMissing()
             }
         }
         let unionResult = UnionResult(mlDataTable: self.mlDataTable, mlColumns:self.mlColumns!)

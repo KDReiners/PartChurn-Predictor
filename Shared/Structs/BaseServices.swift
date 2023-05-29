@@ -110,7 +110,7 @@ public struct BaseServices
         do {
             result  = try MLDataTable(contentsOf: filePath)
         } catch {
-            print("No model is stored yet.")
+            print("No object is stored yet.")
         }
         return result;
     }

@@ -47,23 +47,6 @@ public struct Trainer {
             let endMask = timeSeriesColumn <= 202205
             self.regressorTable = self.regressorTable![endMask]
         }
-
-        // Define the feature you want to analyze
-//        let featureToAnalyze = "number_of_bedrooms"
-
-        // Define the grid of values for the feature
-//        let featureGrid = pdp.pdp_isolate(model: model as! PythonConvertible, dataset: regressorTable! as! PythonConvertible, model_features: ["I_CUSTOMERSince"], feature: featureToAnalyze)
-
-        // Compute the partial dependence values
-//        let partialDependenceValues = featureGrid["pdp"].list
-
-        // Plot the partial dependence plot
-//        plt.plot(featureGrid["feature_values"].list, partialDependenceValues)
-//        plt.xlabel(featureToAnalyze)
-//        plt.ylabel("Predicted Price")
-//        plt.title("Partial Dependence Plot for \(featureToAnalyze)")
-//        plt.show()
-
     }
     init(model: Models, file: Files? = nil) {
         self.model = model
