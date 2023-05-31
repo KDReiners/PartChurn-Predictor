@@ -118,6 +118,17 @@ class ValuesTableProvider: ObservableObject {
             rows = Array.init(mlDataTable[columnName!].map( { $0.stringValue! }))
             newCustomColumn.alignment = .leading
             newGridItem = GridItem(.flexible(minimum: 100, maximum: .infinity), spacing: 0, alignment: .leading)
+        case MLDataValue.ValueType.sequence:
+            let packedColumn = mlDataTable[columnName!]
+            for rowIndex in 0..<packedColumn.count {
+                if let sequence = packedColumn[rowIndex].sequenceValue {
+                    let values = sequence.compactMap { $0.intValue }
+                    let innerArrayString = values.map(String.init).joined(separator: ", ")
+                    print(innerArrayString)
+                }
+            }
+        newCustomColumn.alignment = .leading
+        newGridItem = GridItem(.flexible(minimum: 100, maximum: .infinity), spacing: 0, alignment: .leading)
         default:
             print("error determing valueType")
         }
@@ -125,10 +136,24 @@ class ValuesTableProvider: ObservableObject {
         self.customColumns.append(newCustomColumn)
         self.gridItems.append(newGridItem!)
     }
-    
+    func averageValue<T: Sequence>(sequence: T) -> String where T.Element ==  Int {
+            var sum: Int = 0
+            var count: Int = 0
+            
+            for element in sequence {
+                sum += element
+                count += 1
+            }
+            
+            guard count != 0 else {
+                return "0"
+            }
+            
+            return String(sum / count)
+        }
     func prepareView(orderedColNames: [String]) -> Void {
         self.gridItems.removeAll()
-        for column in orderedColNames {
+        for column in self.mlDataTable.columnNames {
             insertIntoGridItems(column)
         }
     }

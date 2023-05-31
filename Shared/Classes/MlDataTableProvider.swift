@@ -347,6 +347,36 @@ class MlDataTableProvider: ObservableObject {
                         }
                     }
                     self.mlDataTable = result?.dropMissing()
+                    var packedTable = MLDataTable()
+                    var valuesArray: [Int] = []
+                    func zipArrays<T>(_ arrays: [[T]]) -> AnySequence<[T]> {
+                        let maxLength = arrays.map { $0.count }.max() ?? 0
+                        return AnySequence((0..<maxLength).map { index in
+                            return arrays.compactMap { $0.indices.contains(index) ? $0[index] : nil }
+                        })
+                    }
+                    let column1 = mlDataTable["I_MAINTENANCE"]
+                    let column2 = mlDataTable["I_MAINTENANCE-1"]
+                    let column3 = mlDataTable["I_MAINTENANCE-2"]
+                    let column1Values = (0..<column1.count).compactMap { column1[$0].intValue }
+                    let column2Values = (0..<column2.count).compactMap { column2[$0].intValue }
+                    let column3Values = (0..<column3.count).compactMap { column3[$0].intValue }
+                    let all = [column1Values, column2Values, column3Values]
+                    let result = zipArrays(all)
+                    let column = MLDataColumn(result)
+                    packedTable.addColumn(column, named: "")
+                    for originalName in self.orderedColumns.map({ $0.name }) {
+                        let filteredColumns = self.mlDataTable.columnNames.filter { $0.hasPrefix(originalName!) }
+                        if filteredColumns.count > 1 {
+                            for i in 0..<filteredColumns.count {
+                                if i == 0 {
+                                    packedTable = mlDataTable.pack(columnsNamed: filteredColumns[i], to: "\(originalName!).PACKED")
+                                } else {
+                                    packedTable = packedTable.pack(columnsNamed:  "\(originalName!).PACKED", filteredColumns[i], to: "\(originalName!).PACKED")
+                                }
+                            }
+                        }
+                    }
                     BaseServices.saveMLDataTableToJson(mlDataTable: self.mlDataTable, filePath: predictionURL)
                     
                 } else {
