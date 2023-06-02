@@ -7,92 +7,111 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "35B108B4-5940-4955-AA32-620079E3242C"
-            shouldBeEnabled = "Yes"
+            uuid = "1BC9292D-93BF-4226-996B-D497D08AFB36"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Shared/Classes/MlDataTableProvider.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "368"
-            endingLineNumber = "368"
+            startingLineNumber = "367"
+            endingLineNumber = "367"
             landmarkName = "buildMlDataTable()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "451500A6-2101-405A-85C0-E218B17957C4"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Shared/Classes/ValuesTableProvider.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "122"
+            endingLineNumber = "122"
+            landmarkName = "insertIntoGridItems(_:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "35B108B4-5940-4955-AA32-620079E3242C - eca9b8eb320b8984"
+                  uuid = "451500A6-2101-405A-85C0-E218B17957C4 - 2b2e03a993a3319c"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "PartChurn_Predictor.MlDataTableProvider.buildMlDataTable() throws -&gt; PartChurn_Predictor.UnionResult"
+                  symbolName = "PartChurn_Predictor.ValuesTableProvider.insertIntoGridItems(Swift.Optional&lt;Swift.String&gt;) -&gt; ()"
                   moduleName = "PartChurn Predictor"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn-Predictor/Shared/Classes/MlDataTableProvider.swift"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn-Predictor/Shared/Classes/ValuesTableProvider.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "364"
-                  endingLineNumber = "364"
-                  offsetFromSymbolStart = "11920">
+                  startingLineNumber = "122"
+                  endingLineNumber = "122"
+                  offsetFromSymbolStart = "5808">
                </Location>
                <Location
-                  uuid = "35B108B4-5940-4955-AA32-620079E3242C - eca9b8eb320b89e7"
+                  uuid = "451500A6-2101-405A-85C0-E218B17957C4 - 2b2e03a993a3319c"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "PartChurn_Predictor.MlDataTableProvider.buildMlDataTable() throws -&gt; PartChurn_Predictor.UnionResult"
+                  symbolName = "PartChurn_Predictor.ValuesTableProvider.insertIntoGridItems(Swift.Optional&lt;Swift.String&gt;) -&gt; ()"
                   moduleName = "PartChurn Predictor"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn-Predictor/Shared/Classes/MlDataTableProvider.swift"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn-Predictor/Shared/Classes/ValuesTableProvider.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "367"
-                  endingLineNumber = "367"
-                  offsetFromSymbolStart = "11700">
+                  startingLineNumber = "122"
+                  endingLineNumber = "122"
+                  offsetFromSymbolStart = "5840">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "155BCA53-E292-4A6C-9C1E-54B33C728C23"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Shared/Classes/ValuesTableProvider.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "123"
+            endingLineNumber = "123"
+            landmarkName = "insertIntoGridItems(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "155BCA53-E292-4A6C-9C1E-54B33C728C23 - 2b2e03a993a331bb"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PartChurn_Predictor.ValuesTableProvider.insertIntoGridItems(Swift.Optional&lt;Swift.String&gt;) -&gt; ()"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn-Predictor/Shared/Classes/ValuesTableProvider.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "123"
+                  endingLineNumber = "123"
+                  offsetFromSymbolStart = "6084">
                </Location>
                <Location
-                  uuid = "35B108B4-5940-4955-AA32-620079E3242C - 6a9c82fc6e936982"
+                  uuid = "155BCA53-E292-4A6C-9C1E-54B33C728C23 - 9052c24145deae62"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #8 (PartChurn_Predictor.Columns) -&gt; Swift.Optional&lt;Swift.String&gt; in PartChurn_Predictor.MlDataTableProvider.buildMlDataTable() throws -&gt; PartChurn_Predictor.UnionResult"
+                  symbolName = "closure #4 (CreateML.MLDataValue) -&gt; Swift.Optional&lt;Swift.Int&gt; in PartChurn_Predictor.ValuesTableProvider.insertIntoGridItems(Swift.Optional&lt;Swift.String&gt;) -&gt; ()"
                   moduleName = "PartChurn Predictor"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn-Predictor/Shared/Classes/MlDataTableProvider.swift"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn-Predictor/Shared/Classes/ValuesTableProvider.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "367"
-                  endingLineNumber = "367"
-                  offsetFromSymbolStart = "36">
-               </Location>
-               <Location
-                  uuid = "35B108B4-5940-4955-AA32-620079E3242C - eca9b8eb320b8900"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "PartChurn_Predictor.MlDataTableProvider.buildMlDataTable() throws -&gt; PartChurn_Predictor.UnionResult"
-                  moduleName = "PartChurn Predictor"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn-Predictor/Shared/Classes/MlDataTableProvider.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "368"
-                  endingLineNumber = "368"
-                  offsetFromSymbolStart = "11956">
-               </Location>
-               <Location
-                  uuid = "35B108B4-5940-4955-AA32-620079E3242C - 6a9c82fc6e936965"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #8 (PartChurn_Predictor.Columns) -&gt; Swift.Optional&lt;Swift.String&gt; in PartChurn_Predictor.MlDataTableProvider.buildMlDataTable() throws -&gt; PartChurn_Predictor.UnionResult"
-                  moduleName = "PartChurn Predictor"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn-Predictor/Shared/Classes/MlDataTableProvider.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "368"
-                  endingLineNumber = "368"
-                  offsetFromSymbolStart = "36">
+                  startingLineNumber = "123"
+                  endingLineNumber = "123"
+                  offsetFromSymbolStart = "120">
                </Location>
             </Locations>
          </BreakpointContent>

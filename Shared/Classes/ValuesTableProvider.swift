@@ -72,8 +72,6 @@ class ValuesTableProvider: ObservableObject {
         numRows = numCols > 0 ?customColumns[0].rows.count : 0
     }
     private func incorporatedPrediction(selectedColumns: [Columns], isClassifier: Bool) {
-        let primaryKeyColumn = columnDataModel.primaryKeyColumn
-        let timeStampColumn = columnDataModel.timeStampColumn
         let tableDictionary = convertDataTableToDictionary(mlDataTable)
         let provider = try! MLArrayBatchProvider(dictionary: tableDictionary)
         let predictions = try! predictionModel?.predictions(from: provider, options: MLPredictionOptions())
@@ -124,7 +122,8 @@ class ValuesTableProvider: ObservableObject {
                 if let sequence = packedColumn[rowIndex].sequenceValue {
                     let values = sequence.compactMap { $0.intValue }
                     let innerArrayString = values.map(String.init).joined(separator: ", ")
-                    print(innerArrayString)
+                    print("\(columnName!)" + " " + "\(innerArrayString)" + ": \(innerArrayString.components(separatedBy: ",").count)")
+                    rows.append(innerArrayString)
                 }
             }
         newCustomColumn.alignment = .leading

@@ -301,6 +301,12 @@ class MlDataTableProvider: ObservableObject {
         }
         return index
     }
+    func zipArrays<T>(_ arrays: [[T]]) -> AnySequence<[T]> {
+        let maxLength = arrays.map { $0.count }.max() ?? 0
+        return AnySequence((0..<maxLength).map { index in
+            return arrays.compactMap { $0.indices.contains(index) ? $0[index] : nil }
+        })
+    }
     func buildMlDataTable() throws -> UnionResult {
         var result: MLDataTable?
         self.filterViewProvider = nil
@@ -317,7 +323,6 @@ class MlDataTableProvider: ObservableObject {
         let timeSeriesColumn = self.orderedColumns.filter { $0.istimeseries == 1 }
         if timeSeriesColumn.count > 0 {
             let  mlTimeSeriesColumn = mlDataTable[(timeSeriesColumn.first?.name)!]
-            let newCluster = MLTableCluster(columns: mergedColumns, model: self.model!)
             if let timeSeries = timeSeries {
                 let predictionURL = BaseServices.homePath.appendingPathComponent((prediction?.prediction2model?.name)!).appendingPathComponent((prediction?.objectID.uriRepresentation().lastPathComponent)!);
                 let loadedTable = BaseServices.loadMLDataTableFromJson(filePath: predictionURL);
@@ -347,36 +352,35 @@ class MlDataTableProvider: ObservableObject {
                         }
                     }
                     self.mlDataTable = result?.dropMissing()
-                    var packedTable = MLDataTable()
-                    var valuesArray: [Int] = []
-                    func zipArrays<T>(_ arrays: [[T]]) -> AnySequence<[T]> {
-                        let maxLength = arrays.map { $0.count }.max() ?? 0
-                        return AnySequence((0..<maxLength).map { index in
-                            return arrays.compactMap { $0.indices.contains(index) ? $0[index] : nil }
-                        })
-                    }
-                    let column1 = mlDataTable["I_MAINTENANCE"]
-                    let column2 = mlDataTable["I_MAINTENANCE-1"]
-                    let column3 = mlDataTable["I_MAINTENANCE-2"]
-                    let column1Values = (0..<column1.count).compactMap { column1[$0].intValue }
-                    let column2Values = (0..<column2.count).compactMap { column2[$0].intValue }
-                    let column3Values = (0..<column3.count).compactMap { column3[$0].intValue }
-                    let all = [column1Values, column2Values, column3Values]
-                    let result = zipArrays(all)
-                    let column = MLDataColumn(result)
-                    packedTable.addColumn(column, named: "")
+                    var columnsArray: [[PackedValue]] = []
+                    
                     for originalName in self.orderedColumns.map({ $0.name }) {
                         let filteredColumns = self.mlDataTable.columnNames.filter { $0.hasPrefix(originalName!) }
+                        
                         if filteredColumns.count > 1 {
+                            var packedColumnName: String = ""
                             for i in 0..<filteredColumns.count {
-                                if i == 0 {
-                                    packedTable = mlDataTable.pack(columnsNamed: filteredColumns[i], to: "\(originalName!).PACKED")
-                                } else {
-                                    packedTable = packedTable.pack(columnsNamed:  "\(originalName!).PACKED", filteredColumns[i], to: "\(originalName!).PACKED")
+                                if filteredColumns.count > 1 {
+                                    packedColumnName = filteredColumns[i]
+                                    let packColumn = mlDataTable[packedColumnName]
+                                    let packValues = (0..<packColumn.count).compactMap { index -> PackedValue? in
+                                        return PackedValue(from: packColumn[index])
+                                    }
+                                    columnsArray.append(packValues)
                                 }
                             }
+                            if filteredColumns.count > 1 {
+                                mlDataTable.removeColumn(named: packedColumnName)
+                                let result = zipArrays(columnsArray)
+                                let newColumn = MLDataColumn(result)
+                                self.mlDataTable.addColumn(newColumn, named: "\(originalName!).Packed")
+                                columnsArray.removeAll()
+                            }
+                            
+                        
                         }
                     }
+
                     BaseServices.saveMLDataTableToJson(mlDataTable: self.mlDataTable, filePath: predictionURL)
                     
                 } else {
