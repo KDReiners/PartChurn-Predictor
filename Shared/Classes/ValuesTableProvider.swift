@@ -96,6 +96,8 @@ class ValuesTableProvider: ObservableObject {
     }
     func insertIntoGridItems(_ columnName: String?) {
         var rows = [String]()
+        var sequences: MLDataColumn<CreateML.MLDataValue.SequenceType>?
+//        var sequences: MLDataValue
         var newCustomColumn = CustomColumn(title: columnName!, alignment: .trailing)
         var newGridItem: GridItem?
         let valueType = mlDataTable[columnName!].type
@@ -118,20 +120,18 @@ class ValuesTableProvider: ObservableObject {
             newGridItem = GridItem(.flexible(minimum: 100, maximum: .infinity), spacing: 0, alignment: .leading)
         case MLDataValue.ValueType.sequence:
             let packedColumn = mlDataTable[columnName!]
-            for rowIndex in 0..<packedColumn.count {
-                if let sequence = packedColumn[rowIndex].sequenceValue {
-                    let values = sequence.compactMap { $0.intValue }
-                    let innerArrayString = values.map(String.init).joined(separator: ", ")
-                    print("\(columnName!)" + " " + "\(innerArrayString)" + ": \(innerArrayString.components(separatedBy: ",").count)")
-                    rows.append(innerArrayString)
-                }
-            }
-        newCustomColumn.alignment = .leading
-        newGridItem = GridItem(.flexible(minimum: 100, maximum: .infinity), spacing: 0, alignment: .leading)
+            sequences = packedColumn.map { $0.sequenceValue }
+            newCustomColumn.alignment = .leading
+            newGridItem = GridItem(.flexible(minimum: 100, maximum: .infinity), spacing: 0, alignment: .leading)
         default:
             print("error determing valueType")
         }
-        newCustomColumn.rows.append(contentsOf: rows)
+        if rows.count > 0 {
+            newCustomColumn.rows.append(contentsOf: rows)
+        }
+        if sequences != nil {
+            newCustomColumn.sequence = sequences
+        }
         self.customColumns.append(newCustomColumn)
         self.gridItems.append(newGridItem!)
     }
@@ -151,8 +151,62 @@ class ValuesTableProvider: ObservableObject {
             return String(sum / count)
         }
     func prepareView(orderedColNames: [String]) -> Void {
+        var groups: [String: [TimeColumn]] = [:]
+        for columnName in orderedColNames {
+            let timeSeriesColumnNameRegex = "^(\\w+)-\\d+$"
+            let timeSeriesIndexRegex = "\\d+"
+            let baseRegexPattern = "[A-Za-z_]+"
+            let regexPattern = "-\\d+"
+            if columnName.range(of: timeSeriesColumnNameRegex, options: .regularExpression) != nil {
+                var newTimeColumn = TimeColumn()
+                if let range = columnName.range(of: timeSeriesIndexRegex, options: .regularExpression) {
+                    newTimeColumn.timeIndex = Int(columnName[range.lowerBound..<range.upperBound])
+                }
+                if let range = columnName.range(of: baseRegexPattern, options: .regularExpression) {
+                    let baseColumnName = String(columnName[range.lowerBound..<range.upperBound])
+                    newTimeColumn.baseColumnName = baseColumnName
+                    if groups[columnName] == nil {
+                        groups[columnName] = []
+                    }
+                    groups[columnName]?.append(newTimeColumn)
+                    if !groups.contains(where: {$0.key == baseColumnName}) {
+                        newTimeColumn.timeIndex = 0
+                        newTimeColumn.baseColumnName = baseColumnName
+                        groups[baseColumnName] = []
+                        groups[baseColumnName]?.append(newTimeColumn)
+                    }
+                }
+            }
+        }
+        let groupArray = groups.map { ($0.key, $0.value) }
+        
+        let sortingClosure: ((String, [TimeColumn]), (String, [TimeColumn])) -> Bool = { tuple1, tuple2 in
+            let baseColumnName1 = tuple1.1.first?.baseColumnName ?? ""
+            let baseColumnName2 = tuple2.1.first?.baseColumnName ?? ""
+            
+            if baseColumnName1 == baseColumnName2 {
+                let timeColumns1 = tuple1.1
+                let timeColumns2 = tuple2.1
+
+                    let sortedTimeColumns1 = timeColumns1.sorted { $0.timeIndex ?? 0 < $1.timeIndex ?? 0 && $0.baseColumnName == baseColumnName1 }
+                    let sortedTimeColumns2 = timeColumns2.sorted { $0.timeIndex ?? 0 < $1.timeIndex ?? 0 && $0.baseColumnName == baseColumnName2 }
+
+                return sortedTimeColumns1.first?.timeIndex ?? 0 < sortedTimeColumns2.first?.timeIndex ?? 0
+            } else {
+                return baseColumnName1<baseColumnName2
+            }
+            
+        }
+        let sortedGroupArray = groupArray.sorted(by: sortingClosure)
+        let test = sortedGroupArray.map( {$0.0})
+        print(orderedColNames)
         self.gridItems.removeAll()
-        for column in self.mlDataTable.columnNames {
+        for column in orderedColNames {
+            if !test.contains(where: { $0 == column }) {
+                insertIntoGridItems(column)
+            }
+        }
+        for column in test {
             insertIntoGridItems(column)
         }
     }

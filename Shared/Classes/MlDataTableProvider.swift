@@ -89,7 +89,6 @@ class MlDataTableProvider: ObservableObject {
                 self.mlDataTableRaw = provider.mlDataTable
                 self.mlDataTable = self.mlDataTableRaw
                 if provider.targetValues.count > 0 {
-                    //                    self.ableStatistics?.targetStatistics =
                     self.updateStatisticsProvider(targetValues: provider.targetValues, predictedColumnName: provider.predictedColumnName)
                 }
                 self.mlColumns = provider.orderedColNames
@@ -370,7 +369,7 @@ class MlDataTableProvider: ObservableObject {
                                 }
                             }
                             if filteredColumns.count > 1 {
-                                mlDataTable.removeColumn(named: packedColumnName)
+//                                mlDataTable.removeColumn(named: packedColumnName)
                                 let result = zipArrays(columnsArray)
                                 let newColumn = MLDataColumn(result)
                                 self.mlDataTable.addColumn(newColumn, named: "\(originalName!).Packed")

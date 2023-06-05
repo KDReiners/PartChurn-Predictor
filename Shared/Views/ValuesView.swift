@@ -52,16 +52,22 @@ struct ValuesView: View {
                         {
                             ForEach(cells) { cellIndex in
                                 let column = mlDataTableProvider.customColumns[cellIndex.colIndex]
-                                Text(column.rows[cellIndex.rowIndex])
-                                    .onTapGesture {
-                                        self.mlDataTableProvider.selectedRowIndex = cellIndex.rowIndex
-                                        self.mlDataTableProvider.mlRowDictionary = (self.mlDataTableProvider.valuesTableProvider?.convertRowToDicionary(mlRow: self.mlDataTableProvider.mlDataTable.rows[cellIndex.rowIndex]))!
-                                        
-                                    }
-                                    .padding(.horizontal)
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: column.alignment)
-                                    .font(.body).monospacedDigit()
-                                    .background(isEvenRow(cellIndex.rowIndex) ? Color.white: Color.gray.opacity(0.1))
+                                if column.rows.count > 0 {
+                                    Text(column.rows[cellIndex.rowIndex])
+                                        .onTapGesture {
+                                            self.mlDataTableProvider.selectedRowIndex = cellIndex.rowIndex
+                                            self.mlDataTableProvider.mlRowDictionary = (self.mlDataTableProvider.valuesTableProvider?.convertRowToDicionary(mlRow: self.mlDataTableProvider.mlDataTable.rows[cellIndex.rowIndex]))!
+                                            
+                                        }
+                                        .padding(.horizontal)
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: column.alignment)
+                                        .font(.body).monospacedDigit()
+                                        .background(isEvenRow(cellIndex.rowIndex) ? Color.white: Color.gray.opacity(0.1))
+                                }
+                                if let sequence = column.sequence {
+                                    GridItemView(sequence: sequence, rowIndex: cellIndex.rowIndex)
+//                                    Text("")
+                                }
                             }
                         }
                     })

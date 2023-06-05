@@ -16,6 +16,8 @@
 		0A09CD1029B283C7000980D2 /* PythonKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0A09CD0F29B283C7000980D2 /* PythonKit */; };
 		0A0FC907297D9981006F778C /* PredictionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0FC906297D9981006F778C /* PredictionsView.swift */; };
 		0A0FC908297D9981006F778C /* PredictionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0FC906297D9981006F778C /* PredictionsView.swift */; };
+		0A13902C2A2CCCD700680122 /* TimeColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A13902B2A2CCCD700680122 /* TimeColumn.swift */; };
+		0A13902D2A2CCCD700680122 /* TimeColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A13902B2A2CCCD700680122 /* TimeColumn.swift */; };
 		0A190C5029B5093600A54734 /* PythonInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A190C4F29B5093600A54734 /* PythonInteractor.swift */; };
 		0A190C5129B5093600A54734 /* PythonInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A190C4F29B5093600A54734 /* PythonInteractor.swift */; };
 		0A1A2AC629805DB80078AA11 /* PerformanceDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A2AC529805DB80078AA11 /* PerformanceDataProvider.swift */; };
@@ -147,6 +149,7 @@
 		0A02736629AFEFAB00821074 /* CategoriesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesModel.swift; sourceTree = "<group>"; };
 		0A02736929AFF03200821074 /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
 		0A0FC906297D9981006F778C /* PredictionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionsView.swift; sourceTree = "<group>"; };
+		0A13902B2A2CCCD700680122 /* TimeColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeColumn.swift; sourceTree = "<group>"; };
 		0A190C4F29B5093600A54734 /* PythonInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PythonInteractor.swift; sourceTree = "<group>"; };
 		0A1A2AC529805DB80078AA11 /* PerformanceDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceDataProvider.swift; sourceTree = "<group>"; };
 		0A4C56542869750900961D1D /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
@@ -341,6 +344,7 @@
 				0A827F7328736F0400C928F2 /* CustomColumn.swift */,
 				2DA77EDD28256F09007EC3E5 /* EntityAttributeInfo.swift */,
 				0AC6E4222A28F02C0005F5CA /* PackedValue.swift */,
+				0A13902B2A2CCCD700680122 /* TimeColumn.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";
@@ -546,6 +550,7 @@
 				0A660F34287AD1920001EF16 /* FileWeaver.swift in Sources */,
 				0A02736729AFEFAB00821074 /* CategoriesModel.swift in Sources */,
 				2D0B8569282565BF00856BCB /* PartChurn_PredictorApp.swift in Sources */,
+				0A13902C2A2CCCD700680122 /* TimeColumn.swift in Sources */,
 				2D9895942830321D0070F475 /* MetricvaluesModel.swift in Sources */,
 				2DBDCCF6288D6B9800CC8EDC /* CompositionsModel.swift in Sources */,
 				2DBDCCF9288D6C1C00CC8EDC /* Combinator.swift in Sources */,
@@ -617,6 +622,7 @@
 				0A660F35287AD1920001EF16 /* FileWeaver.swift in Sources */,
 				0A02736829AFEFAB00821074 /* CategoriesModel.swift in Sources */,
 				2D0B856A282565BF00856BCB /* PartChurn_PredictorApp.swift in Sources */,
+				0A13902D2A2CCCD700680122 /* TimeColumn.swift in Sources */,
 				2D9895952830321D0070F475 /* MetricvaluesModel.swift in Sources */,
 				2DBDCCF7288D6B9800CC8EDC /* CompositionsModel.swift in Sources */,
 				2DBDCCFA288D6C1C00CC8EDC /* Combinator.swift in Sources */,

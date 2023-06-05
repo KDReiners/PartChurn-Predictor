@@ -24,11 +24,11 @@ class MLTableCluster {
             if columnsDataModel.timeStampColumn != nil {
                 result.append(columnsDataModel.timeStampColumn!.name!)
             }
+            for column in columnsDataModel.timedependantInputColums {
             for i in 0..<tables.count - 1 {
                 let suffix = -tables.count + 1 + i
-                for column in columnsDataModel.timedependantInputColums {
-                    let newName = column.name! + String(suffix)
-                    result.append(newName)
+                let newName = column.name! + String(suffix)
+                result.append(newName)
                 }
             }
             for column in columnsDataModel.timedependantInputColums {
