@@ -429,7 +429,7 @@ class MlDataTableProvider: ObservableObject {
         case MLDataValue.ValueType.string:
             result = mlDataTable[mlDataTable[columnName] == value]
         default:
-            print("error")
+            print("unknown columnType.")
         }
         
         return result

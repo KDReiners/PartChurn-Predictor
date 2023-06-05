@@ -34,7 +34,6 @@ class AnalysisProvider {
         for cluster in predictionsDataModel.arrayOfPredictions {
             i += 1
             _ = Analysis(clusterSelection: cluster, fileWeaver: self.fileWeaver)
-            print(cluster.groupingPattern!)
         }
     }
 }
@@ -72,7 +71,6 @@ struct Analysis {
     func analyse() {
         for item in AlgorithmsModel().items.filter( { $0.name == "MLBoostedTreeRegressor"}) {
             let mlDataTableProvider = createTableForExplosion(fileWeaver: self.fileWeaver, clusterSelection: self.clusterSelection)
-            print("Working on algorithm: \(item.name!)")
             mlDataTableProvider.regressorName = item.name!
             mlDataTableProvider.prediction = clusterSelection.prediction
             var trainer = Trainer(mlDataTableProvider: mlDataTableProvider, model: mlDataTableProvider.model!)

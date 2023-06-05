@@ -79,7 +79,6 @@ class PersistenceController {
             fetchRequest.predicate = NSPredicate(format: "idcolumn != nil")
             let fetchedResults =  try self.container.viewContext.fetch(fetchRequest)
             var i = 1
-            print("Number of records: " + String(fetchedResults.count))
             for result in fetchedResults  as [Values] {
                 print("working on: " + String(i))
                 let idModel: NSManagedObjectID = getManagedObjectID(stringValue: result.idmodel!)

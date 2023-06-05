@@ -54,38 +54,29 @@ class ColumnsViewModel: ObservableObject {
         private func resolve() {
             self.columnInfoText = setInfoType
             let pattern = column.istimeseries!.stringValue + column.ispartofprimarykey!.stringValue + column.isshown!.stringValue
-            print("Pattern: \(pattern)")
             switch pattern {
                 /// no values
             case "000":
                 self.disable_istimeseries = false
                 self.disable_ispartofprimarykey = false
                 self.disable_isshown = false
-                print("nothing is set")
             case "001":
                 self.disable_istimeseries = false
                 self.disable_ispartofprimarykey = false
                 self.disable_isshown = false
-                print("isShown")
             case "010":
-                print("isPartOfPrimaryKey")
                 self.disable_istimeseries = true
                 self.disable_isshown = false
                 self.disable_ispartofprimarykey = false
-                
             case "011":
-                print("isShown & isPartOfPrimaryKey")
                 self.disable_istimeseries = true
                 self.disable_isshown = false
                 self.disable_ispartofprimarykey = false
             case "100":
-                print("timeSeries")
                 self.column.isshown = 1
                 self.disable_ispartofprimarykey = true
                 self.disable_isshown = true
-                
             case "101":
-                print("timeseries and is shown is set")
                 self.disable_isshown = true
                 self.disable_ispartofprimarykey = true
             case "110":

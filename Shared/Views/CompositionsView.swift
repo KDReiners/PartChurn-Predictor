@@ -116,7 +116,6 @@ struct CompositionsView: View {
                     }
                 }
                 .onChange(of: selectedLookAhead) { newLookAhead in
-                    print("selected lookahead didchange")
                 }
                 .onChange(of: clusterSelection) { newClusterSelection in
                     maxLookAhead = clusterSelection?.maxLookAhead ?? 0
