@@ -8,9 +8,10 @@ struct GridItemView: View {
             if let values = sequence?.extractValues(rowIndex: rowIndex!) {
                 ForEach(values, id: \.self) { value in
                     Text(value.convertedToStringValue)
+                    Spacer()
                 }
             }
-        }
+        } .background(BaseServices.isEvenRow(rowIndex!) ? Color.white: Color.gray.opacity(0.1))
     }
 }
 

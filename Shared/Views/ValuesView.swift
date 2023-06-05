@@ -66,7 +66,6 @@ struct ValuesView: View {
                                 }
                                 if let sequence = column.sequence {
                                     GridItemView(sequence: sequence, rowIndex: cellIndex.rowIndex)
-//                                    Text("")
                                 }
                             }
                         }

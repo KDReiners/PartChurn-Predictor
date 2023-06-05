@@ -113,5 +113,8 @@ public struct BaseServices
         }
         return result;
     }
+    public static func isEvenRow(_ index: Int) -> Bool {
+        index % 2 == 0
+    }
 }
 public let predictionPrefix = "Predicted: "

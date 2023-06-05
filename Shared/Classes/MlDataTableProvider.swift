@@ -354,8 +354,22 @@ class MlDataTableProvider: ObservableObject {
                     var columnsArray: [[PackedValue]] = []
                     
                     for originalName in self.orderedColumns.map({ $0.name }) {
-                        let filteredColumns = self.mlDataTable.columnNames.filter { $0.hasPrefix(originalName!) }
-                        
+                        let filteredColumnsUnsorted = self.mlDataTable.columnNames.filter { $0.hasPrefix(originalName!) }
+                        let filteredColumns = filteredColumnsUnsorted.sorted { (str1, str2) -> Bool in
+                            let suffix1 = str1.components(separatedBy: "-").last ?? ""
+                            let suffix2 = str2.components(separatedBy: "-").last ?? ""
+                            if suffix1 == suffix2 {
+                                    return str1 > str2 // If the suffix is the same, sort lexicographically
+                                }
+
+                                if suffix1 == "" {
+                                    return true // Empty suffix comes first
+                                } else if suffix2 == "" {
+                                    return false // Empty suffix comes first
+                                }
+
+                                return suffix1 > suffix2
+                        }
                         if filteredColumns.count > 1 {
                             var packedColumnName: String = ""
                             for i in 0..<filteredColumns.count {

@@ -8,32 +8,21 @@
 import Foundation
 import CreateML
 struct PackedValue: MLDataValueConvertible, Hashable {
+    let id: UUID
     func hash(into hasher: inout Hasher) {
-        if let hashableValue = value as? AnyHashable  {
-            hasher.combine(hashableValue)
-        } else {
-            hasher.combine(ObjectIdentifier(value as AnyObject))
-        }
-    }
-    static func ==(lhs: PackedValue, rhs: PackedValue) -> Bool {
-        if let lhsValue = lhs.value as? Int, let rhsValue = rhs.value as? Int {
-            return lhsValue == rhsValue
-        } else if let lhsValue = lhs.value as? Double, let rhsValue = rhs.value as? Double {
-            return lhsValue == rhsValue
-        } else if let lhsValue = lhs.value as? String, let rhsValue = rhs.value as? String {
-            return lhsValue == rhsValue
-        } else {
-            return false
-        }
-    }
+         hasher.combine(id)
+     }
+     
+     static func ==(lhs: PackedValue, rhs: PackedValue) -> Bool {
+         return lhs.id == rhs.id
+     }
     init() {
+        id = UUID()
         value = 0 // Set the default value for the `value` property
         dataValue = MLDataValue.int(0)
         convertedToStringValue = ""
     }
-    
     var dataValue: MLDataValue
-    
     static var dataValueType: MLDataValue.ValueType {
         return .int
     }
@@ -42,6 +31,7 @@ struct PackedValue: MLDataValueConvertible, Hashable {
     var convertedToStringValue: String
     
     init?(from dataValue: MLDataValue) {
+        id = UUID()
         self.convertedToStringValue = ""
         if let intValue = dataValue.intValue {
             self.value = intValue
