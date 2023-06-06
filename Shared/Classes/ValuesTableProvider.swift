@@ -206,9 +206,9 @@ class ValuesTableProvider: ObservableObject {
                 insertIntoGridItems(column)
             }
         }
-        for column in test {
-            insertIntoGridItems(column)
-        }
+//        for column in test {
+//            insertIntoGridItems(column)
+//        }
     }
     func prepareView() -> Void {
         var rows = [String]()

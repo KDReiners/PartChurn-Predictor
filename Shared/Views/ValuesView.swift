@@ -62,7 +62,7 @@ struct ValuesView: View {
                                         .padding(.horizontal)
                                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: column.alignment)
                                         .font(.body).monospacedDigit()
-                                        .background(isEvenRow(cellIndex.rowIndex) ? Color.white: Color.gray.opacity(0.1))
+                                        .background(BaseServices.isEvenRow(cellIndex.rowIndex) ? Color.white: Color.gray.opacity(0.1))
                                 }
                                 if let sequence = column.sequence {
                                     GridItemView(sequence: sequence, rowIndex: cellIndex.rowIndex)
@@ -119,9 +119,6 @@ struct ValuesView: View {
         }
         .background(.white)
         .padding(.bottom)
-    }
-    private func isEvenRow(_ index: Int) -> Bool {
-        index % 2 == 0
     }
     private func writeCSV(url: URL, exportTable: MLDataTable) {
         var stream: OutputStream
