@@ -7,111 +7,47 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "1BC9292D-93BF-4226-996B-D497D08AFB36"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Shared/Classes/MlDataTableProvider.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "380"
-            endingLineNumber = "380"
-            landmarkName = "buildMlDataTable()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "5ED9F00A-FA5B-47CB-9021-67BB0FA7D285"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Shared/Views/GridItemSequenceView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "26"
-            endingLineNumber = "26"
-            landmarkName = "extractValues(rowIndex:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "00A46E99-C782-4DD9-814B-C582B676C2B2"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Shared/Classes/ValuesTableProvider.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "194"
-            endingLineNumber = "194"
-            landmarkName = "prepareView(orderedColNames:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "C3D66E07-9C32-448A-8E5E-D9DB864C5A02"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Shared/Classes/ValuesTableProvider.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "206"
-            endingLineNumber = "206"
-            landmarkName = "prepareView(orderedColNames:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "3A7D5DF6-1984-4A55-8174-61721C9A750F"
+            uuid = "5AF53AC7-8A14-4BC9-A361-61B643088FF0"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Shared/Views/ValuesView.swift"
+            filePath = "Shared/Structs/SQLHelper.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "124"
-            endingLineNumber = "124"
-            landmarkName = "writeCSV(url:exportTable:)"
+            startingLineNumber = "12"
+            endingLineNumber = "12"
+            landmarkName = "runSQLCommand()"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "3A7D5DF6-1984-4A55-8174-61721C9A750F - 40756c3544a31aab"
+                  uuid = "5AF53AC7-8A14-4BC9-A361-61B643088FF0 - c9da623cf1de4cc"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "PartChurn_Predictor.ValuesView.isEvenRow(Swift.Int) -&gt; Swift.Bool"
+                  symbolName = "PartChurn_Predictor.SQLHelper.runSQLCommand() -&gt; ()"
                   moduleName = "PartChurn Predictor"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn-Predictor/Shared/Views/ValuesView.swift"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn-Predictor/Shared/Structs/SQLHelper.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "124"
-                  endingLineNumber = "124"
-                  offsetFromSymbolStart = "68">
+                  startingLineNumber = "12"
+                  endingLineNumber = "12"
+                  offsetFromSymbolStart = "284">
                </Location>
                <Location
-                  uuid = "3A7D5DF6-1984-4A55-8174-61721C9A750F - 31285dbcd077f86c"
+                  uuid = "5AF53AC7-8A14-4BC9-A361-61B643088FF0 - c9da623cf1de4cc"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "PartChurn_Predictor.ValuesView.writeCSV(url: Foundation.URL, exportTable: CreateML.MLDataTable) -&gt; ()"
+                  symbolName = "PartChurn_Predictor.SQLHelper.runSQLCommand() -&gt; ()"
                   moduleName = "PartChurn Predictor"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn-Predictor/Shared/Views/ValuesView.swift"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn-Predictor/Shared/Structs/SQLHelper.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "125"
-                  endingLineNumber = "125"
-                  offsetFromSymbolStart = "252">
+                  startingLineNumber = "12"
+                  endingLineNumber = "12"
+                  offsetFromSymbolStart = "324">
                </Location>
             </Locations>
          </BreakpointContent>
