@@ -95,11 +95,7 @@ class PersistenceController {
                 result.idcolumn = nil
                 i += 1
             }
-            do {
-                try BaseServices.save()
-            } catch {
-                fatalError("error while saving viewContext")
-            }
+           BaseServices.save()
         } catch {
             fatalError(error.localizedDescription)
         }

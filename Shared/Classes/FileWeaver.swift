@@ -26,10 +26,12 @@ internal class FileWeaver {
     static var valuesDataModel = ValuesModel()
     var cognitionSources = [CognitionSource]()
     var cognitionObjects = [CognitionObject]()
-    init(model: Models)
+    var lookAhead: Int = 0
+    init(model: Models, lookAhead: Int = 0)
     {
+        self.lookAhead = lookAhead
         self.modelObjectID = model.objectID
-        modelStoreURL = BaseServices.homePath.appendingPathComponent(model.name!)
+        modelStoreURL = BaseServices.homePath.appendingPathComponent(model.name!).appendingPathComponent("LookAhead: \(lookAhead)")
         self.columnsDataModel = ColumnsModel(model: model)
         self.allColumns = Array(model.model2columns?.allObjects as! [Columns]).sorted(by: { $0.orderno < $1.orderno})
         self.model = model
@@ -127,7 +129,7 @@ internal class FileWeaver {
                 joinParam2 = Array(joinColums)[1]
                 let timeBaseColumnName = columnsDataModel.timeStampColumn?.name
                 let newColumn = currentMLDataTable![timeBaseColumnName!].map {
-                    self.addOrSubtractMonths($0.intValue!, months: 0)
+                    self.addOrSubtractMonths(baseValue: $0.intValue!, months: self.lookAhead)
                 }
                 if timeBaseColumnName != nil {
                     currentMLDataTable.removeColumn(named: timeBaseColumnName!)
@@ -144,23 +146,23 @@ internal class FileWeaver {
     static func getColumnPivotValue(pivotColum: Columns?) ->String? {
         return FileWeaver.valuesDataModel.items.filter { $0.value2column == pivotColum}.first?.value
     }
-    func addOrSubtractMonths(_ value: Int, months: Int) -> Int {
+    func addOrSubtractMonths(baseValue: Int, months: Int) -> Int {
         // Extract the year and month components
-        let year = value / 100
-        let month = value % 100
+        let year = baseValue / 100
+        let month = baseValue % 100
         
         // Convert the year and month components to a Date object
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy/MM"
         let dateString = String(format: "%04d/%02d", year, month)
         guard let date = dateFormatter.date(from: dateString) else {
-            return value
+            return baseValue
         }
         
         // Add or subtract the specified number of months
         let calendar = Calendar.current
-        guard let newDate = calendar.date(byAdding: .month, value: months, to: date) else {
-            return value
+        guard let newDate = calendar.date(byAdding: .month, value: -months, to: date) else {
+            return baseValue
         }
         
         // Extract the year and month components from the new date
@@ -169,7 +171,8 @@ internal class FileWeaver {
         
         // Combine the year and month components into a new integer value
         let newValue = newYear * 100 + newMonth
-        
+        print("BaseValue: \(baseValue)")
+        print("NewValue: \(newValue)")
         return newValue
     }
 

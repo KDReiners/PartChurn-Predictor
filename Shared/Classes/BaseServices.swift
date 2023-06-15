@@ -100,7 +100,6 @@ public struct BaseServices
     // Funktion zum Speichern der MLDATATable in JSON
     public static func saveMLDataTableToJson(mlDataTable: MLDataTable, filePath: URL) {
         try? mlDataTable.write(to: filePath)
-        let newTable = loadMLDataTableFromJson(filePath: filePath)
     }
 
     // Funktion zum Laden der MLDATATable aus JSON

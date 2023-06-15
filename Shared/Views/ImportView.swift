@@ -60,7 +60,7 @@ struct ImportView: View {
                     }
                 }
                 Button("SQL Server Import") {
-                    var sqlHelper = SQLHelper()
+                    let sqlHelper = SQLHelper()
                     sqlHelper.runSQLCommand()
                     
                 }

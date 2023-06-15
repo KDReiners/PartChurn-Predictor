@@ -52,7 +52,8 @@ struct DirectoryView: View {
                     }
                 }
             }
-        }.onAppear {
+        }
+        .onAppear {
             
 //            // Create a Python object representing the sys module
 //            let sys = Python.import("sys")

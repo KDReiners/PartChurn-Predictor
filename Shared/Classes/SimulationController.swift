@@ -11,11 +11,11 @@ import SwiftUI
 import Combine
 class SimulationController: ObservableObject {
     static var providerContexts = [MlDataTableProviderContext]()
-    static func returnFittingProviderContext(model: Models, prediction: Predictions? = nil, algorithmName: String? = nil) -> MlDataTableProviderContext? {
+    static func returnFittingProviderContext(model: Models, lookAhead: Int,  prediction: Predictions? = nil, algorithmName: String? = nil) -> MlDataTableProviderContext? {
         var result: MlDataTableProviderContext?
-        result = providerContexts.filter { $0.model == model  && $0.clusterSelection?.prediction == prediction}.first
+        result = providerContexts.filter { $0.model == model  && $0.clusterSelection?.prediction == prediction && $0.lookAhead == lookAhead}.first
         if result == nil {
-            result = MlDataTableProviderContext(mlDataTableProvider: MlDataTableProvider(model: model), algorithmName: algorithmName)
+            result = MlDataTableProviderContext(mlDataTableProvider: MlDataTableProvider(model: model), algorithmName: algorithmName, lookAhead: lookAhead)
             self.providerContexts.append(result!)
         }
         guard let result = result else {
@@ -33,12 +33,14 @@ class SimulationController: ObservableObject {
         var composer: FileWeaver!
         var combinator: Combinator!
         var model: Models!
-        init(mlDataTableProvider: MlDataTableProvider, algorithmName: String? = nil) {
+        var lookAhead: Int!
+        init(mlDataTableProvider: MlDataTableProvider, algorithmName: String? = nil, lookAhead: Int) {
+            self.lookAhead = lookAhead
             self.mlDataTableProvider = mlDataTableProvider
             self.model = mlDataTableProvider.model
             self.columnsDataModel = ColumnsModel(model: self.model)
             self.mlDataTableProvider.regressorName  = algorithmName
-            self.composer = FileWeaver(model: self.model)
+            self.composer = FileWeaver(model: self.model, lookAhead: self.lookAhead)
             predictionsDataModel.createPredictionForModel(model: self.model)
             self.combinator = Combinator(model: self.model, orderedColumns: (composer?.orderedColumns)!, mlDataTable: (composer?.mlDataTable_Base)!)
             self.mlDataTableProvider.mlDataTable = composer?.mlDataTable_Base

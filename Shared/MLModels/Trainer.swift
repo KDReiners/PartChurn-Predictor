@@ -44,7 +44,7 @@ public struct Trainer {
         if self.timeSeriesColumnName != nil {
             let timeSeriesColumn = self.regressorTable![timeSeriesColumnName!]
             let seriesEnd = (timeSeriesColumn.ints?.max())!
-            let endMask = timeSeriesColumn <= 202205
+            let endMask = timeSeriesColumn < seriesEnd
             self.regressorTable = self.regressorTable![endMask]
         }
     }
@@ -65,8 +65,6 @@ public struct Trainer {
         let columnDataModel = ColumnsModel(model: self.model )
         let targetColumn = columnDataModel.timedependantTargetColums.first
         let predictedColumnName = "Predicted: " + (targetColumn?.name)!
-        let modelPath = BaseServices.createPredictionPath(prediction: prediction, regressorName: algorithmName)
-//        pythonInteractor = PythonInteractor(modelPath: modelPath)
         if self.regressorTable!.columnNames.contains(predictedColumnName) {
             self.regressorTable!.removeColumn(named: predictedColumnName)
         }
@@ -116,7 +114,7 @@ public struct Trainer {
             let defaultParams = MLSupportVectorClassifier.ModelParameters(maxIterations: 5000, penalty: 1.0, convergenceThreshold: 0.001, featureRescaling: true)
             classifier = {
                 do {
-                    return try MLClassifier.supportVector(MLSupportVectorClassifier(trainingData: regressorTrainingTable, targetColumn: targetColumnName))
+                    return try MLClassifier.supportVector(MLSupportVectorClassifier(trainingData: regressorTrainingTable, targetColumn: targetColumnName, parameters: defaultParams))
                 } catch {
                     fatalError(error.localizedDescription)
                 }

@@ -156,7 +156,6 @@ class ValuesTableProvider: ObservableObject {
             let timeSeriesColumnNameRegex = "^(\\w+)-\\d+$"
             let timeSeriesIndexRegex = "\\d+"
             let baseRegexPattern = "[A-Za-z_]+"
-            let regexPattern = "-\\d+"
             if columnName.range(of: timeSeriesColumnNameRegex, options: .regularExpression) != nil {
                 var newTimeColumn = TimeColumn()
                 if let range = columnName.range(of: timeSeriesIndexRegex, options: .regularExpression) {
@@ -206,9 +205,9 @@ class ValuesTableProvider: ObservableObject {
                 insertIntoGridItems(column)
             }
         }
-//        for column in test {
-//            insertIntoGridItems(column)
-//        }
+        for column in test {
+            insertIntoGridItems(column)
+        }
     }
     func prepareView() -> Void {
         var rows = [String]()

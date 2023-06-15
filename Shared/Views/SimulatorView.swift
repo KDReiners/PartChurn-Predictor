@@ -25,7 +25,7 @@ struct SimulatorView: View {
         guard let model = prediction.prediction2model else {
             fatalError("No model connected to prediction.")
         }
-        guard let mlDataTableProviderContext = SimulationController.returnFittingProviderContext(model: model, prediction: prediction, algorithmName: algorithmName) else {
+        guard let mlDataTableProviderContext = SimulationController.returnFittingProviderContext(model: model, lookAhead: 0, prediction: prediction, algorithmName: algorithmName) else {
             fatalError("No mlDataTableProviderContext created")
         }
         self.model = model

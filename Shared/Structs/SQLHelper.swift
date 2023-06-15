@@ -31,11 +31,11 @@ struct SQLHelper {
             "-S",
             "EUDE82TAASQL003", // The name of your SQL Server
             "-U",
-            "yourUsername", // Your username for the SQL Server
+            "Klaus.Reiners", // Your username for the SQL Server
             "-P",
-            "yourPassword", // Your password for the SQL Server
+            "ple@seword10", // Your password for the SQL Server
             "-Q",
-            "SELECT * FROM yourTable" // Your SQL query
+            "SELECT * FROM wac.sao.customer_m" // Your SQL query
         ]
         
         let outputPipe = Pipe()

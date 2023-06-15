@@ -35,27 +35,6 @@ struct PredictionView: View {
                         Text(String(predictedValue ?? ""))
                         Text("New PredictedValue: ")
                         Text(String($newPredictedValue.wrappedValue ?? -99))
-                        Button("Simuliere") {
-                            guard let rowIndex = rowIndex else { return }
-                            self.mlDataTableProviderContext.pythonInteractor.findneighbors(selectedRow: mlDataTableProvider.mlDataTable.rows[rowIndex])
-                            let localUrl = URL(fileURLWithPath:BaseServices.homePath.appendingPathComponent("ChurnOutput.csv", isDirectory: false).path)
-                            try? self.mlDataTableProviderContext.pythonInteractor.mlResultTable.writeCSV(to: localUrl)
-                        }
-                        Button("Analysiere alle") {
-                            let shuffledMlDatatable = mlDataTableProvider.mlDataTable.rows.shuffled()
-                            var i = 1
-                            let maxRows: Int = shuffledMlDatatable.count / 1
-                            for row in shuffledMlDatatable {
-//                                print("working on Row: \(i) from \(rowCount)")
-                                self.mlDataTableProviderContext.pythonInteractor.findneighbors(selectedRow: row)
-                                i += 1
-                                if i > maxRows {
-                                    break
-                                }
-                            }
-                            let localUrl = URL(fileURLWithPath:BaseServices.homePath.appendingPathComponent("ChurnOutput.csv", isDirectory: false).path)
-                            try? self.mlDataTableProviderContext.pythonInteractor.mlResultTable.writeCSV(to: localUrl)
-                        }
                     }
                 }
                 let cells = (0..<1).flatMap{j in self.mlDataTableProviderContext.mlDataTableProvider.customColumns.enumerated().map{(i,c) in CellIndex(id:j + i*1, colIndex:i, rowIndex:j)}}

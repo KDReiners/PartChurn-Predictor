@@ -19,6 +19,7 @@ class MlDataTableProvider: ObservableObject {
     @Published var mlRowDictionary = [String: MLDataValueConvertible]()
     @Published var updateRequest = false
     var numRows: Int = 0
+    var columnsDataModel: ColumnsModel!
     var customColumns = [CustomColumn]()
     var mlDataTable: MLDataTable!
     var mlDataTableRaw: MLDataTable!
@@ -38,6 +39,7 @@ class MlDataTableProvider: ObservableObject {
             return
         }
         self.model = model
+        self.columnsDataModel = ColumnsModel(model: self.model)
     }
     internal func sizeOfHeaders() -> Int {
         var result = 0
@@ -306,7 +308,7 @@ class MlDataTableProvider: ObservableObject {
             return arrays.compactMap { $0.indices.contains(index) ? $0[index] : nil }
         })
     }
-    func buildMlDataTable() throws -> UnionResult {
+    func buildMlDataTable(lookAhead: Int = 0) throws -> UnionResult {
         var result: MLDataTable?
         self.filterViewProvider = nil
         mergedColumns = selectedColumns == nil ? orderedColumns: selectedColumns
@@ -323,7 +325,7 @@ class MlDataTableProvider: ObservableObject {
         if timeSeriesColumn.count > 0 {
             let  mlTimeSeriesColumn = mlDataTable[(timeSeriesColumn.first?.name)!]
             if let timeSeries = timeSeries {
-                let predictionURL = BaseServices.homePath.appendingPathComponent((prediction?.prediction2model?.name)!).appendingPathComponent((prediction?.objectID.uriRepresentation().lastPathComponent)!);
+                let predictionURL = BaseServices.homePath.appendingPathComponent((prediction?.prediction2model?.name)!).appendingPathComponent("LookAhead: \(lookAhead)").appendingPathComponent((prediction?.objectID.uriRepresentation().lastPathComponent)!);
                 let loadedTable = BaseServices.loadMLDataTableFromJson(filePath: predictionURL);
                 if loadedTable == nil {
                     for timeSlices in timeSeries {
@@ -351,48 +353,48 @@ class MlDataTableProvider: ObservableObject {
                         }
                     }
                     self.mlDataTable = result?.dropMissing()
-                    var columnsArray: [[PackedValue]] = []
+//                    var columnsArray: [[PackedValue]] = []
                     
-                    for originalName in self.orderedColumns.map({ $0.name }) {
-                        let filteredColumnsUnsorted = self.mlDataTable.columnNames.filter { $0.hasPrefix(originalName!) }
-                        let filteredColumns = filteredColumnsUnsorted.sorted { (str1, str2) -> Bool in
-                            let suffix1 = str1.components(separatedBy: "-").last ?? ""
-                            let suffix2 = str2.components(separatedBy: "-").last ?? ""
-                            if suffix1 == suffix2 {
-                                    return str1 > str2 // If the suffix is the same, sort lexicographically
-                                }
-
-                                if suffix1 == "" {
-                                    return true // Empty suffix comes first
-                                } else if suffix2 == "" {
-                                    return false // Empty suffix comes first
-                                }
-
-                                return suffix1 > suffix2
-                        }
-                        if filteredColumns.count > 1 {
-                            var packedColumnName: String = ""
-                            for i in 0..<filteredColumns.count {
-                                if filteredColumns.count > 1 {
-                                    packedColumnName = filteredColumns[i]
-                                    let packColumn = mlDataTable[packedColumnName]
-                                    let packValues = (0..<packColumn.count).compactMap { index -> PackedValue? in
-                                        return PackedValue(from: packColumn[index])
-                                    }
-                                    columnsArray.append(packValues)
-                                }
-                            }
-                            if filteredColumns.count > 1 {
-//                                mlDataTable.removeColumn(named: packedColumnName)
-                                let result = zipArrays(columnsArray)
-                                let newColumn = MLDataColumn(result)
-                                self.mlDataTable.addColumn(newColumn, named: "\(originalName!).Packed")
-                                columnsArray.removeAll()
-                            }
-                            
-                        
-                        }
-                    }
+//                    for originalName in self.orderedColumns.map({ $0.name }) {
+//                        let filteredColumnsUnsorted = self.mlDataTable.columnNames.filter { $0.hasPrefix(originalName!) }
+//                        let filteredColumns = filteredColumnsUnsorted.sorted { (str1, str2) -> Bool in
+//                            let suffix1 = str1.components(separatedBy: "-").last ?? ""
+//                            let suffix2 = str2.components(separatedBy: "-").last ?? ""
+//                            if suffix1 == suffix2 {
+//                                    return str1 > str2 // If the suffix is the same, sort lexicographically
+//                                }
+//
+//                                if suffix1 == "" {
+//                                    return true // Empty suffix comes first
+//                                } else if suffix2 == "" {
+//                                    return false // Empty suffix comes first
+//                                }
+//
+//                                return suffix1 > suffix2
+//                        }
+//                        if filteredColumns.count > 1 {
+//                            var packedColumnName: String = ""
+//                            for i in 0..<filteredColumns.count {
+//                                if filteredColumns.count > 1 {
+//                                    packedColumnName = filteredColumns[i]
+//                                    let packColumn = mlDataTable[packedColumnName]
+//                                    let packValues = (0..<packColumn.count).compactMap { index -> PackedValue? in
+//                                        return PackedValue(from: packColumn[index])
+//                                    }
+//                                    columnsArray.append(packValues)
+//                                }
+//                            }
+//                            if filteredColumns.count > 1 {
+////                                mlDataTable.removeColumn(named: packedColumnName)
+//                                let result = zipArrays(columnsArray)
+//                                let newColumn = MLDataColumn(result)
+//                                self.mlDataTable.addColumn(newColumn, named: "\(originalName!).Packed")
+//                                columnsArray.removeAll()
+//                            }
+//                            
+//                        
+//                        }
+//                    }
 
                     BaseServices.saveMLDataTableToJson(mlDataTable: self.mlDataTable, filePath: predictionURL)
                     
@@ -468,7 +470,18 @@ class MlDataTableProvider: ObservableObject {
         }
         return result
     }
-    
+    func mlDataTable2Dictionary() -> [[String: Any]] {
+        var result = [[String: Any]]()
+        for row in self.mlDataTable.rows {
+            var rowDictionary: [String: Any] = [:]
+            for (columnIndex, columnName) in self.mlDataTable.columnNames.enumerated() {
+                let value = row[columnIndex]
+                rowDictionary[columnName] = value
+            }
+            result.append(rowDictionary)
+        }
+        return result
+    }
     struct TableStatistics {
         var absolutRowCount = 0
         var filteredRowCount = 0

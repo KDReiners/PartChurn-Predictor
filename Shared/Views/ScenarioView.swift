@@ -23,16 +23,14 @@ struct ScenarioView: View {
     init(model: Models, modelSelect: NSManagedObject?) {
         self.model = model
         if modelSelect != nil {
-            guard let mlDataTableProviderContext = SimulationController.returnFittingProviderContext(model: model) else {
-                fatalError("No mlDataTableProviderContext created")
-            }
+            self.mlDataTableProviderContext = SimulationController.returnFittingProviderContext(model: model, lookAhead: 0)
             self.composer = mlDataTableProviderContext.composer
             self.combinator = mlDataTableProviderContext.combinator
         }
     }
     var body: some View {
         TabView {
-            CompositionsView(model: self.model, composer: self.composer, combinator: self.combinator)
+            CompositionsView( mlDataTableProviderContext: self.mlDataTableProviderContext)
             .tabItem {
                 Label("Analysis", systemImage: "tray.and.arrow.down.fill")
             }

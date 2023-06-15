@@ -18,7 +18,7 @@ struct CompositionsView: View {
     @State var selectedTimeSeriesCombination: [String]?
     @State var selectedLookAhead: Int? = 0
     @State var maxLookAhead = 0
-    
+    @State var mlDataTableProviderContext: SimulationController.MlDataTableProviderContext!
     var highestFrom: Int?
     var valuesView: ValuesView?
     var unionResult: UnionResult!
@@ -28,16 +28,16 @@ struct CompositionsView: View {
     var availableAlgorithms = AlgorithmsModel().items.sorted(by: { $0.algorithm2algorithmtype!.name! < $1.algorithm2algorithmtype!.name! })
     var mlAlgorithms: [String]!
     
-    init(model: Models, composer: FileWeaver, combinator: Combinator) {
-        self.model = model
+    init(mlDataTableProviderContext: SimulationController.MlDataTableProviderContext!) {
+        self.model = mlDataTableProviderContext.model!
         self.compositionDataModel = CompositionsModel(model: self.model)
-        self.composer = composer
-        self.combinator = combinator
+        self.combinator = mlDataTableProviderContext.combinator
+        self.composer = mlDataTableProviderContext.composer
         mlAlgorithms = availableAlgorithms.map( { $0.name! })
-        self.mlDataTableProvider = MlDataTableProvider(model: self.model)
-        self.mlDataTableProvider.mlDataTable = composer.mlDataTable_Base!
-        self.mlDataTableProvider.orderedColumns = composer.orderedColumns!
-        unionResult = try? self.mlDataTableProvider.buildMlDataTable()
+        self.mlDataTableProvider =  mlDataTableProviderContext.mlDataTableProvider
+        self.mlDataTableProvider.mlDataTable = mlDataTableProviderContext.mlDataTableProvider.mlDataTable
+        self.mlDataTableProvider.orderedColumns = mlDataTableProviderContext.composer.orderedColumns
+        unionResult = try? self.mlDataTableProvider.buildMlDataTable(lookAhead: 0)
         self.mlDataTableProvider.updateTableProvider()
         valuesView = ValuesView(mlDataTableProvider: self.mlDataTableProvider)
         compositionDataModel.retrievePredictionClusters()
@@ -116,6 +116,9 @@ struct CompositionsView: View {
                     }
                 }
                 .onChange(of: selectedLookAhead) { newLookAhead in
+                    $mlDataTableProviderContext.wrappedValue = SimulationController.returnFittingProviderContext(model: self.model, lookAhead: newLookAhead ?? 0)
+                    self.mlDataTableProvider.mlDataTable = mlDataTableProviderContext.mlDataTableProvider.mlDataTable
+                    generateValuesView()
                 }
                 .onChange(of: clusterSelection) { newClusterSelection in
                     maxLookAhead = clusterSelection?.maxLookAhead ?? 0
@@ -299,7 +302,7 @@ struct CompositionsView: View {
     func generateValuesView() {
         self.mlDataTableProvider.mlDataTableRaw = nil
         mlSelection = clusterSelection?.prediction == nil ? nil: mlSelection
-        self.mlDataTableProvider.mlDataTable = try? self.mlDataTableProvider.buildMlDataTable().mlDataTable
+      self.mlDataTableProvider.mlDataTable = try? self.mlDataTableProvider.buildMlDataTable(lookAhead: selectedLookAhead ?? 0).mlDataTable
         self.mlDataTableProvider.updateTableProvider()
         self.mlDataTableProvider.loaded = false
     }

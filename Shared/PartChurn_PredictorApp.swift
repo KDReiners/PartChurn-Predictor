@@ -27,6 +27,8 @@ struct PartChurn_PredictorApp: App {
                 .environmentObject(ManagerModels())
                 .environmentObject(SimulationController())
                 .frame(minWidth: 1100)
+        }.commands {
+            SidebarCommands() // 1
         }
     }
 }

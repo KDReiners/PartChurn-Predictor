@@ -14,7 +14,7 @@ class AnalysisProvider {
     var fileWeaver: FileWeaver!
     init(model: Models) {
         self.model = model
-        self.fileWeaver = FileWeaver(model: model)
+        self.fileWeaver = FileWeaver(model: model, lookAhead: 0)
         self.mlDataTableProvider = MlDataTableProvider(model: self.model)
         self.mlDataTableProvider.mlDataTable = fileWeaver.mlDataTable_Base!
         self.mlDataTableProvider.orderedColumns = fileWeaver.orderedColumns!

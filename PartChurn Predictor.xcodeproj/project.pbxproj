@@ -340,7 +340,6 @@
 			isa = PBXGroup;
 			children = (
 				0AA4508529C89F3C003EF476 /* MLExplainEntry.swift */,
-				2DA77EE028256F16007EC3E5 /* BaseServices.swift */,
 				0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */,
 				2DBDCCF8288D6C1C00CC8EDC /* Combinator.swift */,
 				2DA77EF728257B97007EC3E5 /* CSV_Importer.swift */,
@@ -383,6 +382,7 @@
 				0A827F702873686A00C928F2 /* ValuesTableProvider.swift */,
 				2DB5E69228AD3536006DC0D2 /* CompositionsProvider.swift */,
 				0AD43D092920234700199F06 /* SimulationController.swift */,
+				2DA77EE028256F16007EC3E5 /* BaseServices.swift */,
 				0AD43D0C2921062F00199F06 /* MLTableCluster.swift */,
 			);
 			path = Classes;
