@@ -73,7 +73,7 @@ struct Analysis {
             let mlDataTableProvider = createTableForExplosion(fileWeaver: self.fileWeaver, clusterSelection: self.clusterSelection)
             mlDataTableProvider.regressorName = item.name!
             mlDataTableProvider.prediction = clusterSelection.prediction
-            var trainer = Trainer(mlDataTableProvider: mlDataTableProvider, model: mlDataTableProvider.model!)
+            var trainer = Trainer(mlDataTableProvider: mlDataTableProvider, model: mlDataTableProvider.model!, dataPath: BaseServices.homePath)
             trainer.createModel(algorithmName: item.name!)
             mlDataTableProvider.updateTableProvider()
             mlDataTableProvider.loaded = false

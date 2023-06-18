@@ -23,9 +23,12 @@ public struct Trainer {
     var classifier: MLClassifier!
     var prediction: Predictions!
     var pythonInteractor: PythonInteractor!
-    init(mlDataTableProvider: MlDataTableProvider, model: Models) {
+    var dataPath: URL
+    var modelContextPath: URL!
+    init(mlDataTableProvider: MlDataTableProvider, model: Models, dataPath: URL) {
         self.model = model
         self.prediction = mlDataTableProvider.prediction
+        self.dataPath = dataPath.appendingPathComponent((prediction?.objectID.uriRepresentation().lastPathComponent)!)
         let columnDataModel = ColumnsModel(model: self.model )
         let targetColumn = columnDataModel.timedependantTargetColums.first
         let predictedColumnName = "Predicted: " + (targetColumn?.name)!
@@ -48,20 +51,9 @@ public struct Trainer {
             self.regressorTable = self.regressorTable![endMask]
         }
     }
-    init(model: Models, file: Files? = nil) {
-        self.model = model
-        self.file = file
-        coreDataML = CoreDataML(model: model)
-        regressorTable = CoreDataML(model: model).mlDataTable
-        self.targetColumnName = coreDataML.targetColumns.first?.name
-        guard self.targetColumnName != nil else {
-            return
-        }
-        guard regressorTable != nil else {
-            return
-        }
-    }
     public mutating func createModel(algorithmName: String) -> Void {
+        self.modelContextPath =
+        self.dataPath.appendingPathComponent(algorithmName + "_" + self.mlDataTableProvider.prediction!.id!.uuidString + ".mlmodel")
         let columnDataModel = ColumnsModel(model: self.model )
         let targetColumn = columnDataModel.timedependantTargetColums.first
         let predictedColumnName = "Predicted: " + (targetColumn?.name)!
@@ -158,8 +150,7 @@ public struct Trainer {
                 let classifierMetaData = MLModelMetadata(author: "Steps.IT",
                                                          shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden via Classifier",
                                                          version: "1.0")
-                try classifier.write(to: BaseServices.homePath.appendingPathComponent((self.mlDataTableProvider.model?.name!)!, isDirectory: true).appendingPathComponent(algorithmName + "_" + self.mlDataTableProvider.prediction!.id!.uuidString + ".mlmodel"),
-                                     metadata: classifierMetaData)
+                try classifier.write(to: modelContextPath, metadata: classifierMetaData)
                 writeClassifierMetrics(classifier: classifier, classifierName: algorithmName, classifierEvaluationTable: regressorEvaluationTable)
             } catch {
                 fatalError(error.localizedDescription)
@@ -187,7 +178,7 @@ public struct Trainer {
                                                 version: "1.0")
         /// Speichern des trainierten Modells auf dem Schreibtisch
         do {
-            try regressor.write(to: BaseServices.homePath.appendingPathComponent((self.mlDataTableProvider.model?.name!)!, isDirectory: true).appendingPathComponent(regressorName + "_" + self.mlDataTableProvider.prediction!.id!.uuidString + ".mlmodel"),
+            try regressor.write(to: modelContextPath,
                                 metadata: regressorMetadata)
         } catch {
             fatalError(error.localizedDescription)

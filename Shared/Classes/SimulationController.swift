@@ -34,12 +34,13 @@ class SimulationController: ObservableObject {
         var combinator: Combinator!
         var model: Models!
         var lookAhead: Int!
+        var dataPath: URL
         init(mlDataTableProvider: MlDataTableProvider, algorithmName: String? = nil, lookAhead: Int) {
             self.lookAhead = lookAhead
             self.mlDataTableProvider = mlDataTableProvider
             self.model = mlDataTableProvider.model
             self.columnsDataModel = ColumnsModel(model: self.model)
-            self.mlDataTableProvider.regressorName  = algorithmName
+            self.dataPath = BaseServices.homePath.appendingPathComponent(model.name!).appendingPathComponent("LookAhead: \(lookAhead)")
             self.composer = FileWeaver(model: self.model, lookAhead: self.lookAhead)
             predictionsDataModel.createPredictionForModel(model: self.model)
             self.combinator = Combinator(model: self.model, orderedColumns: (composer?.orderedColumns)!, mlDataTable: (composer?.mlDataTable_Base)!)

@@ -27,6 +27,7 @@ public struct BaseServices
             return FileManager.default.homeDirectoryForCurrentUser
         }
     }
+    
     /// let constructors
     
     public static let logger = {

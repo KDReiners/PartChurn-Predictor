@@ -7,18 +7,22 @@
 
 import SwiftUI
 
+
+
 struct CompositionsView: View {
     @ObservedObject var compositionDataModel: CompositionsModel
     @ObservedObject var predictionsDataModel = PredictionsModel()
     @ObservedObject var valuesTableProvider = ValuesTableProvider()
     @ObservedObject var mlDataTableProvider: MlDataTableProvider
+    
+    @State var mlDataTableProviderContext: SimulationController.MlDataTableProviderContext!
     @State var mlSelection: String? = nil
     @State var clusterSelection: PredictionsModel.PredictionCluster?
     @State var selectedColumnCombination: [Columns]?
     @State var selectedTimeSeriesCombination: [String]?
     @State var selectedLookAhead: Int? = 0
     @State var maxLookAhead = 0
-    @State var mlDataTableProviderContext: SimulationController.MlDataTableProviderContext!
+    
     var highestFrom: Int?
     var valuesView: ValuesView?
     var unionResult: UnionResult!
@@ -27,14 +31,24 @@ struct CompositionsView: View {
     var combinator: Combinator!
     var availableAlgorithms = AlgorithmsModel().items.sorted(by: { $0.algorithm2algorithmtype!.name! < $1.algorithm2algorithmtype!.name! })
     var mlAlgorithms: [String]!
-    
-    init(mlDataTableProviderContext: SimulationController.MlDataTableProviderContext!) {
+    var dataPath: URL
+    var dataContext: DataContext!
+    class DataContext {
+        var mlDataTableProviderContext: SimulationController.MlDataTableProviderContext
+        init (mlDataTableProviderContext: SimulationController.MlDataTableProviderContext) {
+            self.mlDataTableProviderContext = mlDataTableProviderContext
+        }
+    }
+    init(mlDataTableProviderContext: SimulationController.MlDataTableProviderContext) {
+        dataContext = DataContext(mlDataTableProviderContext: mlDataTableProviderContext)
+        dataPath = mlDataTableProviderContext.dataPath
         self.model = mlDataTableProviderContext.model!
         self.compositionDataModel = CompositionsModel(model: self.model)
         self.combinator = mlDataTableProviderContext.combinator
         self.composer = mlDataTableProviderContext.composer
         mlAlgorithms = availableAlgorithms.map( { $0.name! })
         self.mlDataTableProvider =  mlDataTableProviderContext.mlDataTableProvider
+        self.mlDataTableProviderContext = mlDataTableProviderContext
         self.mlDataTableProvider.mlDataTable = mlDataTableProviderContext.mlDataTableProvider.mlDataTable
         self.mlDataTableProvider.orderedColumns = mlDataTableProviderContext.composer.orderedColumns
         unionResult = try? self.mlDataTableProvider.buildMlDataTable(lookAhead: 0)
@@ -116,8 +130,8 @@ struct CompositionsView: View {
                     }
                 }
                 .onChange(of: selectedLookAhead) { newLookAhead in
-                    $mlDataTableProviderContext.wrappedValue = SimulationController.returnFittingProviderContext(model: self.model, lookAhead: newLookAhead ?? 0)
-                    self.mlDataTableProvider.mlDataTable = mlDataTableProviderContext.mlDataTableProvider.mlDataTable
+                    dataContext.mlDataTableProviderContext = SimulationController.returnFittingProviderContext(model: self.model, lookAhead: newLookAhead ?? 0)!
+                    self.mlDataTableProvider.mlDataTable = dataContext.mlDataTableProviderContext.mlDataTableProvider.mlDataTable
                     generateValuesView()
                 }
                 .onChange(of: clusterSelection) { newClusterSelection in
@@ -140,7 +154,7 @@ struct CompositionsView: View {
                     self.mlDataTableProvider.selectedColumns = newClusterSelection?.columns
                     self.mlDataTableProvider.prediction = newClusterSelection?.prediction
                     generateValuesView()
-
+                    
                 }
                 .frame(minWidth: 160)
                 .padding()
@@ -278,12 +292,12 @@ struct CompositionsView: View {
                 .padding()
                 VStack(alignment: .leading) {
                     HStack(alignment: .center) {
-                    Text("Algorithmus KPI")
-                        .font(.title)
-                    Spacer()
+                        Text("Algorithmus KPI")
+                            .font(.title)
+                        Spacer()
                         Button("Delete all...") {
                             let metricValuesDataModel = MetricvaluesModel()
-                
+                            
                             metricValuesDataModel.deleteAllRecords(predicate: nil)
                         }
                     }
@@ -299,10 +313,18 @@ struct CompositionsView: View {
             }.padding()
         }
     }
+    private func train(regressorName: String?) {
+        var trainer = Trainer(mlDataTableProvider: self.mlDataTableProvider, model: self.model, dataPath: self.dataContext.mlDataTableProviderContext.dataPath)
+        trainer.model = self.model
+        trainer.createModel(algorithmName: $mlSelection.wrappedValue!)
+        DispatchQueue.global().sync {
+            generatePredictionView()
+        }
+    }
     func generateValuesView() {
         self.mlDataTableProvider.mlDataTableRaw = nil
         mlSelection = clusterSelection?.prediction == nil ? nil: mlSelection
-      self.mlDataTableProvider.mlDataTable = try? self.mlDataTableProvider.buildMlDataTable(lookAhead: selectedLookAhead ?? 0).mlDataTable
+        self.mlDataTableProvider.mlDataTable = try? self.mlDataTableProvider.buildMlDataTable(lookAhead: selectedLookAhead ?? 0).mlDataTable
         self.mlDataTableProvider.updateTableProvider()
         self.mlDataTableProvider.loaded = false
     }
@@ -314,13 +336,6 @@ struct CompositionsView: View {
         self.mlDataTableProvider.updateTableProvider()
         self.mlDataTableProvider.loaded = false
     }
-    
-    private func train(regressorName: String?) {
-        var trainer = Trainer(mlDataTableProvider: self.mlDataTableProvider, model: self.model)
-        trainer.model = self.model
-        trainer.createModel(algorithmName: $mlSelection.wrappedValue!)
-        DispatchQueue.global().sync {
-            generatePredictionView()
-        }
-    }
 }
+
+
