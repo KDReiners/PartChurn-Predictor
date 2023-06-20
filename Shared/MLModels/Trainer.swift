@@ -23,16 +23,16 @@ public struct Trainer {
     var classifier: MLClassifier!
     var prediction: Predictions!
     var pythonInteractor: PythonInteractor!
-    var dataPath: URL
     var modelContextPath: URL!
-    init(mlDataTableProvider: MlDataTableProvider, model: Models, dataPath: URL) {
-        self.model = model
-        self.prediction = mlDataTableProvider.prediction
-        self.dataPath = dataPath.appendingPathComponent((prediction?.objectID.uriRepresentation().lastPathComponent)!)
+    var mlDataTableProviderContext: SimulationController.MlDataTableProviderContext
+    init(mlDataProviderContext: SimulationController.MlDataTableProviderContext) {
+        self.mlDataTableProviderContext = mlDataProviderContext
+        self.model = mlDataProviderContext.model
+        self.prediction = mlDataProviderContext.mlDataTableProvider.prediction
         let columnDataModel = ColumnsModel(model: self.model )
         let targetColumn = columnDataModel.timedependantTargetColums.first
         let predictedColumnName = "Predicted: " + (targetColumn?.name)!
-        self.mlDataTableProvider = mlDataTableProvider
+        self.mlDataTableProvider = mlDataProviderContext.mlDataTableProvider
         self.regressorTable = self.mlDataTableProvider.mlDataTable
         let minorityColumn = regressorTable![targetColumn!.name!]
         let minorityMask = minorityColumn == 0
@@ -52,8 +52,11 @@ public struct Trainer {
         }
     }
     public mutating func createModel(algorithmName: String) -> Void {
+        guard let predictionPath = self.mlDataTableProviderContext.predictonPath else {
+            return
+        }
         self.modelContextPath =
-        self.dataPath.appendingPathComponent(algorithmName + "_" + self.mlDataTableProvider.prediction!.id!.uuidString + ".mlmodel")
+        predictionPath.appendingPathComponent(algorithmName + "_" + (self.mlDataTableProviderContext.clusterSelection?.prediction!.id!.uuidString)! + ".mlmodel")
         let columnDataModel = ColumnsModel(model: self.model )
         let targetColumn = columnDataModel.timedependantTargetColums.first
         let predictedColumnName = "Predicted: " + (targetColumn?.name)!
@@ -172,7 +175,8 @@ public struct Trainer {
         regressorKPI.dictOfMetrics["evaluationMetrics.maximumError"]? = regressorEvalutation.maximumError
         regressorKPI.dictOfMetrics["evaluationMetrics.rootMeanSquaredError"]? = regressorEvalutation.rootMeanSquaredError
         /// Schreibe in CoreData
-        regressorKPI.postMetric(prediction: self.mlDataTableProvider.prediction!, algorithmName: self.mlDataTableProvider.regressorName!)
+        /// KDR todo
+//        regressorKPI.postMetric(prediction: self.mlDataTableProvider.prediction!, algorithmName: self.mlDataTableProvider.regressorName!)
         let regressorMetadata = MLModelMetadata(author: "Steps.IT",
                                                 shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden",
                                                 version: "1.0")

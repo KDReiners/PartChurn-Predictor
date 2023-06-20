@@ -31,7 +31,6 @@ struct CompositionsView: View {
     var combinator: Combinator!
     var availableAlgorithms = AlgorithmsModel().items.sorted(by: { $0.algorithm2algorithmtype!.name! < $1.algorithm2algorithmtype!.name! })
     var mlAlgorithms: [String]!
-    var dataPath: URL
     var dataContext: DataContext!
     class DataContext {
         var mlDataTableProviderContext: SimulationController.MlDataTableProviderContext
@@ -41,7 +40,6 @@ struct CompositionsView: View {
     }
     init(mlDataTableProviderContext: SimulationController.MlDataTableProviderContext) {
         dataContext = DataContext(mlDataTableProviderContext: mlDataTableProviderContext)
-        dataPath = mlDataTableProviderContext.dataPath
         self.model = mlDataTableProviderContext.model!
         self.compositionDataModel = CompositionsModel(model: self.model)
         self.combinator = mlDataTableProviderContext.combinator
@@ -130,13 +128,14 @@ struct CompositionsView: View {
                     }
                 }
                 .onChange(of: selectedLookAhead) { newLookAhead in
-                    dataContext.mlDataTableProviderContext = SimulationController.returnFittingProviderContext(model: self.model, lookAhead: newLookAhead ?? 0)!
+                    dataContext.mlDataTableProviderContext = SimulationController.returnFittingProviderContext(model: self.model, lookAhead: newLookAhead ?? 0, prediction: clusterSelection?.prediction)!
                     self.mlDataTableProvider.mlDataTable = dataContext.mlDataTableProviderContext.mlDataTableProvider.mlDataTable
                     generateValuesView()
                 }
                 .onChange(of: clusterSelection) { newClusterSelection in
                     maxLookAhead = clusterSelection?.maxLookAhead ?? 0
                     self.mlDataTableProvider.selectedColumns = newClusterSelection?.columns
+                    dataContext.mlDataTableProviderContext.clusterSelection = newClusterSelection
                     if let timeSeriesRows = newClusterSelection?.connectedTimeSeries {
                         var selectedTimeSeries = [[Int]]()
                         for row in timeSeriesRows {
@@ -164,7 +163,7 @@ struct CompositionsView: View {
                             .font(.title)
                         Spacer()
                         Button("Train..") {
-                            train(regressorName: mlSelection)
+                            train(regressorName: mlSelection, mlDataTableProviderContext: dataContext.mlDataTableProviderContext)
                         }
                         .disabled(mlSelection == nil || clusterSelection == nil)
                     }.frame(minWidth: 230)
@@ -313,8 +312,9 @@ struct CompositionsView: View {
             }.padding()
         }
     }
-    private func train(regressorName: String?) {
-        var trainer = Trainer(mlDataTableProvider: self.mlDataTableProvider, model: self.model, dataPath: self.dataContext.mlDataTableProviderContext.dataPath)
+    private func train(regressorName: String?, mlDataTableProviderContext: SimulationController.MlDataTableProviderContext) {
+        self.mlDataTableProviderContext = mlDataTableProviderContext
+        var trainer = Trainer(mlDataProviderContext: self.mlDataTableProviderContext)
         trainer.model = self.model
         trainer.createModel(algorithmName: $mlSelection.wrappedValue!)
         DispatchQueue.global().sync {

@@ -15,7 +15,7 @@ class SimulationController: ObservableObject {
         var result: MlDataTableProviderContext?
         result = providerContexts.filter { $0.model == model  && $0.clusterSelection?.prediction == prediction && $0.lookAhead == lookAhead}.first
         if result == nil {
-            result = MlDataTableProviderContext(mlDataTableProvider: MlDataTableProvider(model: model), algorithmName: algorithmName, lookAhead: lookAhead)
+            result = MlDataTableProviderContext(mlDataTableProvider: MlDataTableProvider(model: model), prediction: prediction,  algorithmName: algorithmName, lookAhead: lookAhead)
             self.providerContexts.append(result!)
         }
         guard let result = result else {
@@ -35,7 +35,14 @@ class SimulationController: ObservableObject {
         var model: Models!
         var lookAhead: Int!
         var dataPath: URL
-        init(mlDataTableProvider: MlDataTableProvider, algorithmName: String? = nil, lookAhead: Int) {
+        var predictonPath: URL? {
+            if let prediction = self.clusterSelection?.prediction {
+                return dataPath.appendingPathComponent(prediction.objectID.uriRepresentation().lastPathComponent)
+            } else {
+                return nil
+            }
+        }
+        init(mlDataTableProvider: MlDataTableProvider,  prediction: Predictions?, algorithmName: String? = nil, lookAhead: Int) {
             self.lookAhead = lookAhead
             self.mlDataTableProvider = mlDataTableProvider
             self.model = mlDataTableProvider.model
@@ -46,14 +53,17 @@ class SimulationController: ObservableObject {
             self.combinator = Combinator(model: self.model, orderedColumns: (composer?.orderedColumns)!, mlDataTable: (composer?.mlDataTable_Base)!)
             self.mlDataTableProvider.mlDataTable = composer?.mlDataTable_Base
             self.mlDataTableProvider.orderedColumns = composer?.orderedColumns!
-            pythonInteractor = PythonInteractor(mlDataTableProvider: self.mlDataTableProvider)
+            if prediction != nil {
+                self.clusterSelection = predictionsDataModel.arrayOfPredictions.first(where: { $0.prediction == prediction })
+            }
         }
         func setPrediction(prediction: Predictions) {
             if self.clusterSelection?.prediction != prediction {
                 self.clusterSelection = predictionsDataModel.arrayOfPredictions.first(where: { $0.prediction == prediction })
                 self.mlDataTableProvider.prediction = prediction
                 self.mlDataTableProvider.selectedColumns = clusterSelection?.columns
-                generateValuesView()
+                /// KDR
+//                generateValuesView()
             }
         }
         func generateValuesView() {
