@@ -34,12 +34,14 @@ class SimulationController: ObservableObject {
         var combinator: Combinator!
         var model: Models!
         var lookAhead: Int!
-        var dataPath: URL
-        var predictonPath: URL? {
-            if let prediction = self.clusterSelection?.prediction {
-                return dataPath.appendingPathComponent(prediction.objectID.uriRepresentation().lastPathComponent)
-            } else {
-                return nil
+        var lookAheadPath: URL? {
+            get {
+                var result: URL? = nil
+                if let prediction = clusterSelection?.prediction {
+                    let lookAhead = PredictionsModel(model: self.model!).returnLookAhead(prediction: prediction, lookAhead: lookAhead)
+                    result = BaseServices.homePath.appendingPathComponent((prediction.prediction2model?.name)!).appendingPathComponent(lookAhead.objectID.uriRepresentation().lastPathComponent);
+                }
+                return result
             }
         }
         init(mlDataTableProvider: MlDataTableProvider,  prediction: Predictions?, algorithmName: String? = nil, lookAhead: Int) {
@@ -47,7 +49,6 @@ class SimulationController: ObservableObject {
             self.mlDataTableProvider = mlDataTableProvider
             self.model = mlDataTableProvider.model
             self.columnsDataModel = ColumnsModel(model: self.model)
-            self.dataPath = BaseServices.homePath.appendingPathComponent(model.name!).appendingPathComponent("LookAhead: \(lookAhead)")
             self.composer = FileWeaver(model: self.model, lookAhead: self.lookAhead)
             predictionsDataModel.createPredictionForModel(model: self.model)
             self.combinator = Combinator(model: self.model, orderedColumns: (composer?.orderedColumns)!, mlDataTable: (composer?.mlDataTable_Base)!)

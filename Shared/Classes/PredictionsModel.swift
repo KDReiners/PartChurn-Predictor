@@ -53,6 +53,23 @@ public class PredictionsModel: Model<Predictions> {
         }
         BaseServices.save()
     }
+    internal func returnLookAhead(prediction: Predictions, lookAhead: Int) -> Lookaheads {
+        var result: Lookaheads?
+        if let lookAheads = prediction.prediction2lookaheads?.allObjects as? [Lookaheads] {
+            result = lookAheads.first(where: { $0.lookahead == lookAhead})
+        }
+        if result == nil{
+            let newLookAhead = LookaheadsModel().insertRecord()
+            newLookAhead.lookaheadt2prediction = prediction
+            newLookAhead.lookahead = Int32(lookAhead)
+            BaseServices.save()
+            result = newLookAhead
+        }
+        guard let result = result else {
+            fatalError("LookAhead could not be found!")
+        }
+        return result
+    }
     private func getCurrentCombinations(model: Models) {
         self.model = model
         compositionsDataModel =  CompositionsModel(model: model)

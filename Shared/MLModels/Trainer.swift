@@ -52,11 +52,6 @@ public struct Trainer {
         }
     }
     public mutating func createModel(algorithmName: String) -> Void {
-        guard let predictionPath = self.mlDataTableProviderContext.predictonPath else {
-            return
-        }
-        self.modelContextPath =
-        predictionPath.appendingPathComponent(algorithmName + "_" + (self.mlDataTableProviderContext.clusterSelection?.prediction!.id!.uuidString)! + ".mlmodel")
         let columnDataModel = ColumnsModel(model: self.model )
         let targetColumn = columnDataModel.timedependantTargetColums.first
         let predictedColumnName = "Predicted: " + (targetColumn?.name)!
@@ -182,7 +177,7 @@ public struct Trainer {
                                                 version: "1.0")
         /// Speichern des trainierten Modells auf dem Schreibtisch
         do {
-            try regressor.write(to: modelContextPath,
+            try regressor.write(to: mlDataTableProviderContext.lookAheadPath!,
                                 metadata: regressorMetadata)
         } catch {
             fatalError(error.localizedDescription)

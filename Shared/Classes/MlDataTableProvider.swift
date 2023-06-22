@@ -325,7 +325,8 @@ class MlDataTableProvider: ObservableObject {
         if timeSeriesColumn.count > 0 {
             let  mlTimeSeriesColumn = mlDataTable[(timeSeriesColumn.first?.name)!]
             if let timeSeries = timeSeries {
-                let predictionURL = BaseServices.homePath.appendingPathComponent((prediction?.prediction2model?.name)!).appendingPathComponent("LookAhead: \(lookAhead)").appendingPathComponent((prediction?.objectID.uriRepresentation().lastPathComponent)!);
+                let lookAhead = PredictionsModel(model: self.model!).returnLookAhead(prediction: prediction!, lookAhead: lookAhead)
+                let predictionURL = BaseServices.homePath.appendingPathComponent((prediction?.prediction2model?.name)!).appendingPathComponent(lookAhead.objectID.uriRepresentation().lastPathComponent);
                 let loadedTable = BaseServices.loadMLDataTableFromJson(filePath: predictionURL);
                 if loadedTable == nil {
                     for timeSlices in timeSeries {

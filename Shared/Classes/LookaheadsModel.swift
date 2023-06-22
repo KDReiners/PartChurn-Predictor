@@ -8,13 +8,13 @@
 import Foundation
 import CoreData
 import SwiftUI
-public class CategoriesModel: Model<Categories> {
-    @Published var result: [Categories]!
+public class LookaheadsModel: Model<Lookaheads> {
+    @Published var result: [Lookaheads]!
     public init() {
         let readOnlyFields: [String] = []
         super.init(readOnlyFields: readOnlyFields)
     }
-    override public var items: [Categories] {
+    override public var items: [Lookaheads] {
         get {
             return result
         }

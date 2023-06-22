@@ -14,7 +14,6 @@ class ValuesTableProvider: ObservableObject {
     var coreDataML: CoreDataML!
     var mlDataTable: MLDataTable!
     var models = [model]()
-    var urlToPredictionModel: URL?
     var predictionModel: MLModel?
     var customColumns = [CustomColumn]()
     var gridItems = [GridItem]()
@@ -43,12 +42,6 @@ class ValuesTableProvider: ObservableObject {
             let isClassifier = (regressorName?.lowercased().contains("regressor"))! ? false: true
             self.regressorName = regressorName
             self.predistion = prediction
-            urlToPredictionModel = BaseServices.createPredictionPath(prediction: prediction!, regressorName: regressorName!)
-            let fileManager = FileManager.default
-            if fileManager.fileExists(atPath: urlToPredictionModel!.path) {
-               predictionModel = getModel(url: urlToPredictionModel!)
-                incorporatedPrediction(selectedColumns: selectedColumns!, isClassifier: isClassifier)
-            }
         } else {
            
         }
