@@ -14,7 +14,7 @@ struct CompositionsView: View {
     @ObservedObject var predictionsDataModel = PredictionsModel()
     @ObservedObject var valuesTableProvider = ValuesTableProvider()
     @ObservedObject var mlDataTableProvider: MlDataTableProvider
-    
+    @ObservedObject var dataContext: DataContext
     @State var mlDataTableProviderContext: SimulationController.MlDataTableProviderContext!
     @State var mlSelection: String? = nil
     @State var clusterSelection: PredictionsModel.PredictionCluster?
@@ -31,15 +31,14 @@ struct CompositionsView: View {
     var combinator: Combinator!
     var availableAlgorithms = AlgorithmsModel().items.sorted(by: { $0.algorithm2algorithmtype!.name! < $1.algorithm2algorithmtype!.name! })
     var mlAlgorithms: [String]!
-    var dataContext: DataContext!
-    class DataContext {
-        var mlDataTableProviderContext: SimulationController.MlDataTableProviderContext
+    class DataContext: ObservableObject {
+        @Published var mlDataTableProviderContext: SimulationController.MlDataTableProviderContext
         init (mlDataTableProviderContext: SimulationController.MlDataTableProviderContext) {
             self.mlDataTableProviderContext = mlDataTableProviderContext
         }
     }
     init(mlDataTableProviderContext: SimulationController.MlDataTableProviderContext) {
-        dataContext = DataContext(mlDataTableProviderContext: mlDataTableProviderContext)
+        self.dataContext = DataContext(mlDataTableProviderContext: mlDataTableProviderContext)
         self.model = mlDataTableProviderContext.model!
         self.compositionDataModel = CompositionsModel(model: self.model)
         self.combinator = mlDataTableProviderContext.combinator
@@ -49,7 +48,7 @@ struct CompositionsView: View {
         self.mlDataTableProviderContext = mlDataTableProviderContext
         self.mlDataTableProvider.mlDataTable = mlDataTableProviderContext.mlDataTableProvider.mlDataTable
         self.mlDataTableProvider.orderedColumns = mlDataTableProviderContext.composer.orderedColumns
-        unionResult = try? self.mlDataTableProvider.buildMlDataTable(lookAhead: 0)
+        self.unionResult = try? self.mlDataTableProvider.buildMlDataTable(lookAhead: 0)
         self.mlDataTableProvider.updateTableProvider()
         valuesView = ValuesView(mlDataTableProvider: self.mlDataTableProvider)
         compositionDataModel.retrievePredictionClusters()
@@ -129,7 +128,23 @@ struct CompositionsView: View {
                 }
                 .onChange(of: selectedLookAhead) { newLookAhead in
                     dataContext.mlDataTableProviderContext = SimulationController.returnFittingProviderContext(model: self.model, lookAhead: newLookAhead ?? 0, prediction: clusterSelection?.prediction)!
-                    self.mlDataTableProvider.mlDataTable = dataContext.mlDataTableProviderContext.mlDataTableProvider.mlDataTable
+//                    self.mlDataTableProvider.selectedColumns = dataContext.mlDataTableProviderContext.mlDataTableProvider.selectedColumns
+                    if let timeSeriesRows = dataContext.mlDataTableProviderContext.clusterSelection?.connectedTimeSeries {
+                        var selectedTimeSeries = [[Int]]()
+                        for row in timeSeriesRows {
+                            let innerResult = row.components(separatedBy: ", ").map { Int($0)! }
+                            selectedTimeSeries.append(innerResult)
+                        }
+                        self.mlDataTableProvider.timeSeries = selectedTimeSeries
+                        
+                        
+                    } else {
+                        self.mlDataTableProvider.timeSeries = nil
+                    }
+                    self.mlDataTableProvider.mlDataTable = try? self.mlDataTableProvider.buildMlDataTable(lookAhead: selectedLookAhead ?? 0).mlDataTable
+                    self.mlDataTableProvider.orderedColumns = dataContext.mlDataTableProviderContext.mlDataTableProvider.orderedColumns!
+//                    self.mlDataTableProvider.selectedColumns = dataContext.mlDataTableProviderContext.mlDataTableProvider.selectedColumns
+                    self.mlDataTableProvider.prediction = dataContext.mlDataTableProviderContext.clusterSelection?.prediction
                     generateValuesView()
                 }
                 .onChange(of: clusterSelection) { newClusterSelection in

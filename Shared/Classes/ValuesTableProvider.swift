@@ -13,7 +13,7 @@ import CreateML
 class ValuesTableProvider: ObservableObject {
     var coreDataML: CoreDataML!
     var mlDataTable: MLDataTable!
-    var models = [model]()
+    var models = [loadedModel]()
     var predictionModel: MLModel?
     var customColumns = [CustomColumn]()
     var gridItems = [GridItem]()
@@ -34,17 +34,7 @@ class ValuesTableProvider: ObservableObject {
         self.orderedColNames = orderedColNames
         columnDataModel = ColumnsModel(columnsFilter: selectedColumns! )
         targetColumn = columnDataModel.targetColumns.first
-        if targetColumn != nil {
-            predictedColumnName = "Predicted: " + (targetColumn?.name)!
-            removePredictionColumns(predictionColumName: predictedColumnName, filter: filter)
-        }
-        if regressorName != nil && prediction != nil {
-            let isClassifier = (regressorName?.lowercased().contains("regressor"))! ? false: true
-            self.regressorName = regressorName
-            self.predistion = prediction
-        } else {
-           
-        }
+       
         prepareView(orderedColNames: self.orderedColNames)
     }
     func removePredictionColumns(predictionColumName: String, filter: Bool? = false) {
@@ -190,15 +180,14 @@ class ValuesTableProvider: ObservableObject {
             
         }
         let sortedGroupArray = groupArray.sorted(by: sortingClosure)
-        let test = sortedGroupArray.map( {$0.0})
-        print(orderedColNames)
+        let timeBasedColumns = sortedGroupArray.map( {$0.0})
         self.gridItems.removeAll()
         for column in orderedColNames {
-            if !test.contains(where: { $0 == column }) {
+            if !timeBasedColumns.contains(where: { $0 == column }) {
                 insertIntoGridItems(column)
             }
         }
-        for column in test {
+        for column in timeBasedColumns {
             insertIntoGridItems(column)
         }
     }
@@ -261,7 +250,7 @@ class ValuesTableProvider: ObservableObject {
             }()
             
         }
-        let newModel = model(model: result!, url: url)
+        let newModel = loadedModel(model: result!, url: url)
         models.append(newModel)
         return result!
     }
@@ -314,7 +303,7 @@ class ValuesTableProvider: ObservableObject {
         }
         return result
     }
-    struct model: Identifiable {
+    struct loadedModel: Identifiable {
         let id = UUID()
         var model: MLModel
         var path: String?

@@ -175,7 +175,7 @@ public struct Trainer {
         let regressorMetadata = MLModelMetadata(author: "Steps.IT",
                                                 shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden",
                                                 version: "1.0")
-        /// Speichern des trainierten Modells auf dem Schreibtisch
+
         do {
             try regressor.write(to: mlDataTableProviderContext.lookAheadPath!,
                                 metadata: regressorMetadata)

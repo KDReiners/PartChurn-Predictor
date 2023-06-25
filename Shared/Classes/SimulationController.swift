@@ -25,6 +25,7 @@ class SimulationController: ObservableObject {
     }
     class MlDataTableProviderContext: ObservableObject {
         @Published var mlDataTableProvider: MlDataTableProvider
+        @Published var lookAhead: Int!
         var pythonInteractor: PythonInteractor!
         var gridItems = [GridItem]()
         var clusterSelection: PredictionsModel.PredictionCluster?
@@ -33,7 +34,7 @@ class SimulationController: ObservableObject {
         var composer: FileWeaver!
         var combinator: Combinator!
         var model: Models!
-        var lookAhead: Int!
+
         var lookAheadPath: URL? {
             get {
                 var result: URL? = nil
@@ -46,6 +47,11 @@ class SimulationController: ObservableObject {
         }
         init(mlDataTableProvider: MlDataTableProvider,  prediction: Predictions?, algorithmName: String? = nil, lookAhead: Int) {
             self.lookAhead = lookAhead
+            if prediction != nil {
+                predictionsDataModel.createPredictionForModel(model: prediction!.prediction2model!)
+                self.clusterSelection = predictionsDataModel.arrayOfPredictions.first(where: { $0.prediction == prediction })
+            }
+            self.clusterSelection?.prediction = prediction
             self.mlDataTableProvider = mlDataTableProvider
             self.model = mlDataTableProvider.model
             self.columnsDataModel = ColumnsModel(model: self.model)
@@ -54,9 +60,8 @@ class SimulationController: ObservableObject {
             self.combinator = Combinator(model: self.model, orderedColumns: (composer?.orderedColumns)!, mlDataTable: (composer?.mlDataTable_Base)!)
             self.mlDataTableProvider.mlDataTable = composer?.mlDataTable_Base
             self.mlDataTableProvider.orderedColumns = composer?.orderedColumns!
-            if prediction != nil {
-                self.clusterSelection = predictionsDataModel.arrayOfPredictions.first(where: { $0.prediction == prediction })
-            }
+            self.mlDataTableProvider.prediction = prediction
+            
         }
         func setPrediction(prediction: Predictions) {
             if self.clusterSelection?.prediction != prediction {

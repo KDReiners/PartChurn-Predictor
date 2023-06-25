@@ -54,7 +54,7 @@ public class ColumnsModel: Model<Columns> {
     }
     var targetColumns: [Columns] {
         get {
-            return self.items.filter { $0.istarget == 1 }
+            return self.items.filter { $0.istarget == 1 && $0.isshown == 1 && $0.istimeseries == 0}
         }
     }
     

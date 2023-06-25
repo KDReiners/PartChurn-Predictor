@@ -7,16 +7,64 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "4C33489D-4EDE-4955-AFB5-357C516CFFF1"
+            uuid = "8D818589-5274-4077-A141-6C24358A285A"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Shared/Classes/ValuesTableProvider.swift"
+            filePath = "Shared/Classes/SimulationController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "44"
-            endingLineNumber = "44"
-            landmarkName = "init(mlDataTable:orderedColNames:selectedColumns:prediction:regressorName:filter:)"
+            startingLineNumber = "86"
+            endingLineNumber = "86"
+            landmarkName = "generateValuesView()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "8D818589-5274-4077-A141-6C24358A285A - 9c88f5b129da04f4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PartChurn_Predictor.SimulationController.MlDataTableProviderContext.generateValuesView() -&gt; ()"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn-Predictor/Shared/Classes/SimulationController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "85"
+                  endingLineNumber = "85"
+                  offsetFromSymbolStart = "1328">
+               </Location>
+               <Location
+                  uuid = "8D818589-5274-4077-A141-6C24358A285A - 9c88f5b129da04d3"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PartChurn_Predictor.SimulationController.MlDataTableProviderContext.generateValuesView() -&gt; ()"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn-Predictor/Shared/Classes/SimulationController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "86"
+                  endingLineNumber = "86"
+                  offsetFromSymbolStart = "1328">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7775734A-D11C-452A-81C8-33563CCC8C79"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Shared/Views/CompositionsView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
+            landmarkName = "init(mlDataTableProviderContext:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

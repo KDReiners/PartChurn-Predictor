@@ -405,6 +405,11 @@ class MlDataTableProvider: ObservableObject {
                 }
             }
         }
+        if let mlColumns = self.mlColumns, let selectedColumns = self.selectedColumns, let prediction = self.prediction, let regressorName = self.regressorName {
+            let predictor = PredictionsProvider(mlDataTable: self.mlDataTable, orderedColNames: mlColumns, selectedColumns: selectedColumns, prediction: prediction, regressorName: regressorName, lookAhead: lookAhead)
+            self.mlDataTable = predictor.mlDataTable
+            self.mlColumns = predictor.orderedColNames
+        }
         let unionResult = UnionResult(mlDataTable: self.mlDataTable, mlColumns:self.mlColumns!)
         self.mlDataTableRaw = mlDataTableRaw == nil ? mlDataTable: self.mlDataTableRaw
         return unionResult

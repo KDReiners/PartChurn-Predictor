@@ -34,6 +34,10 @@
 		0A660F35287AD1920001EF16 /* FileWeaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A660F33287AD1920001EF16 /* FileWeaver.swift */; };
 		0A69F24828F7CCE70062509A /* AnalysisProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A69F24728F7CCE70062509A /* AnalysisProvider.swift */; };
 		0A69F24928F7CCE70062509A /* AnalysisProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A69F24728F7CCE70062509A /* AnalysisProvider.swift */; };
+		0A69F9332A474EA500A95F46 /* PredictionsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A69F9322A474EA500A95F46 /* PredictionsProvider.swift */; };
+		0A69F9342A474EA500A95F46 /* PredictionsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A69F9322A474EA500A95F46 /* PredictionsProvider.swift */; };
+		0A69F9362A4758C100A95F46 /* LoadedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A69F9352A4758C100A95F46 /* LoadedModel.swift */; };
+		0A69F9372A4758C100A95F46 /* LoadedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A69F9352A4758C100A95F46 /* LoadedModel.swift */; };
 		0A7F4E4E2917FE7B00015DB3 /* SimulatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7F4E4D2917FE7B00015DB3 /* SimulatorView.swift */; };
 		0A7F4E4F2917FE7B00015DB3 /* SimulatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7F4E4D2917FE7B00015DB3 /* SimulatorView.swift */; };
 		0A827F712873686A00C928F2 /* ValuesTableProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A827F702873686A00C928F2 /* ValuesTableProvider.swift */; };
@@ -160,6 +164,8 @@
 		0A589C12286614A000D1239B /* ManagerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerModels.swift; sourceTree = "<group>"; };
 		0A660F33287AD1920001EF16 /* FileWeaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileWeaver.swift; sourceTree = "<group>"; };
 		0A69F24728F7CCE70062509A /* AnalysisProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisProvider.swift; sourceTree = "<group>"; };
+		0A69F9322A474EA500A95F46 /* PredictionsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionsProvider.swift; sourceTree = "<group>"; };
+		0A69F9352A4758C100A95F46 /* LoadedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadedModel.swift; sourceTree = "<group>"; };
 		0A7F4E4D2917FE7B00015DB3 /* SimulatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatorView.swift; sourceTree = "<group>"; };
 		0A827F702873686A00C928F2 /* ValuesTableProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValuesTableProvider.swift; sourceTree = "<group>"; };
 		0A827F7328736F0400C928F2 /* CustomColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColumn.swift; sourceTree = "<group>"; };
@@ -375,15 +381,16 @@
 				2D867B5C28AACCB5005E8B87 /* TimeSliceModel.swift */,
 				2DA77EEA2825721B007EC3E5 /* ValuesModel.swift */,
 				0A589C12286614A000D1239B /* ManagerModels.swift */,
+				2D6B0E58289EC8680016E57F /* MlDataTableProvider.swift */,
 				0A660F33287AD1920001EF16 /* FileWeaver.swift */,
 				2DBDCCFB288EF0A500CC8EDC /* ScenarioProvider.swift */,
-				2D6B0E58289EC8680016E57F /* MlDataTableProvider.swift */,
 				2DFD1B3028A930810057C74A /* FilterViewProvider.swift */,
 				0A827F702873686A00C928F2 /* ValuesTableProvider.swift */,
 				2DB5E69228AD3536006DC0D2 /* CompositionsProvider.swift */,
 				0AD43D092920234700199F06 /* SimulationController.swift */,
 				2DA77EE028256F16007EC3E5 /* BaseServices.swift */,
 				0AD43D0C2921062F00199F06 /* MLTableCluster.swift */,
+				0A69F9322A474EA500A95F46 /* PredictionsProvider.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -408,6 +415,7 @@
 				0A0FC906297D9981006F778C /* PredictionsView.swift */,
 				0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */,
 				0AC6E4252A2A48D80005F5CA /* GridItemSequenceView.swift */,
+				0A69F9352A4758C100A95F46 /* LoadedModel.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -565,6 +573,7 @@
 				2D0B856D282565BF00856BCB /* Persistence.swift in Sources */,
 				0A827F7428736F0400C928F2 /* CustomColumn.swift in Sources */,
 				2D0B8567282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */,
+				0A69F9362A4758C100A95F46 /* LoadedModel.swift in Sources */,
 				2D01395E287868C000AC8EBF /* ComposerView.swift in Sources */,
 				2D1EB362283A842F00F86B6D /* CoreDataML.swift in Sources */,
 				0AF2F06A28FC333E0094D0F8 /* AnalysisView.swift in Sources */,
@@ -586,6 +595,7 @@
 				2DA77EEB2825721B007EC3E5 /* ValuesModel.swift in Sources */,
 				0AA8C8F429A10E1500AA399F /* SwiftUIView.swift in Sources */,
 				0A4C56552869750900961D1D /* FilesView.swift in Sources */,
+				0A69F9332A474EA500A95F46 /* PredictionsProvider.swift in Sources */,
 				0AC6E4232A28F02C0005F5CA /* PackedValue.swift in Sources */,
 				2D98958E282EE4100070F475 /* DatasettypesModel.swift in Sources */,
 				2DFE31BE282D8BA40058C3AA /* Ml_RegressorMetricKPI.swift in Sources */,
@@ -638,6 +648,7 @@
 				2D0B856E282565BF00856BCB /* Persistence.swift in Sources */,
 				0A827F7528736F0400C928F2 /* CustomColumn.swift in Sources */,
 				2D0B8568282565BF00856BCB /* PartChurn_Predictor.xcdatamodeld in Sources */,
+				0A69F9372A4758C100A95F46 /* LoadedModel.swift in Sources */,
 				2D01395F287868C000AC8EBF /* ComposerView.swift in Sources */,
 				2D1EB363283A842F00F86B6D /* CoreDataML.swift in Sources */,
 				0AF2F06B28FC333E0094D0F8 /* AnalysisView.swift in Sources */,
@@ -659,6 +670,7 @@
 				2DA77EEC2825721B007EC3E5 /* ValuesModel.swift in Sources */,
 				0AA8C8F529A10E1500AA399F /* SwiftUIView.swift in Sources */,
 				0A4C56562869750900961D1D /* FilesView.swift in Sources */,
+				0A69F9342A474EA500A95F46 /* PredictionsProvider.swift in Sources */,
 				0AC6E4242A28F02C0005F5CA /* PackedValue.swift in Sources */,
 				2D98958F282EE4100070F475 /* DatasettypesModel.swift in Sources */,
 				2DFE31BF282D8BA40058C3AA /* Ml_RegressorMetricKPI.swift in Sources */,

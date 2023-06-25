@@ -31,7 +31,7 @@ internal class FileWeaver {
     {
         self.lookAhead = lookAhead
         self.modelObjectID = model.objectID
-        modelStoreURL = BaseServices.homePath.appendingPathComponent(model.name!)
+        modelStoreURL =  BaseServices.homePath.appendingPathComponent(model.name!).appendingPathComponent("\(lookAhead)")
         self.columnsDataModel = ColumnsModel(model: model)
         self.allColumns = Array(model.model2columns?.allObjects as! [Columns]).sorted(by: { $0.orderno < $1.orderno})
         self.model = model
