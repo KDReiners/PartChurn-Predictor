@@ -13,26 +13,23 @@ struct CompositionsView: View {
     @ObservedObject var compositionDataModel: CompositionsModel
     @ObservedObject var predictionsDataModel = PredictionsModel()
     @ObservedObject var valuesTableProvider = ValuesTableProvider()
-    @ObservedObject var mlDataTableProvider: MlDataTableProvider
     @ObservedObject var dataContext: DataContext
-    @State var mlDataTableProviderContext: SimulationController.MlDataTableProviderContext!
     @State var mlSelection: String? = nil
     @State var clusterSelection: PredictionsModel.PredictionCluster?
     @State var selectedColumnCombination: [Columns]?
     @State var selectedTimeSeriesCombination: [String]?
     @State var selectedLookAhead: Int? = 0
     @State var maxLookAhead = 0
+    @State var unionResult: UnionResult!
+    @State var valuesView: ValuesView? = nil
     
     var highestFrom: Int?
-    var valuesView: ValuesView?
-    var unionResult: UnionResult!
     var model: Models
-    var composer: FileWeaver?
-    var combinator: Combinator!
     var availableAlgorithms = AlgorithmsModel().items.sorted(by: { $0.algorithm2algorithmtype!.name! < $1.algorithm2algorithmtype!.name! })
     var mlAlgorithms: [String]!
+    
     class DataContext: ObservableObject {
-        @Published var mlDataTableProviderContext: SimulationController.MlDataTableProviderContext
+        var mlDataTableProviderContext: SimulationController.MlDataTableProviderContext
         init (mlDataTableProviderContext: SimulationController.MlDataTableProviderContext) {
             self.mlDataTableProviderContext = mlDataTableProviderContext
         }
@@ -41,19 +38,14 @@ struct CompositionsView: View {
         self.dataContext = DataContext(mlDataTableProviderContext: mlDataTableProviderContext)
         self.model = mlDataTableProviderContext.model!
         self.compositionDataModel = CompositionsModel(model: self.model)
-        self.combinator = mlDataTableProviderContext.combinator
-        self.composer = mlDataTableProviderContext.composer
-        mlAlgorithms = availableAlgorithms.map( { $0.name! })
-        self.mlDataTableProvider =  mlDataTableProviderContext.mlDataTableProvider
-        self.mlDataTableProviderContext = mlDataTableProviderContext
-        self.mlDataTableProvider.mlDataTable = mlDataTableProviderContext.mlDataTableProvider.mlDataTable
-        self.mlDataTableProvider.orderedColumns = mlDataTableProviderContext.composer.orderedColumns
-        self.unionResult = try? self.mlDataTableProvider.buildMlDataTable(lookAhead: 0)
-        self.mlDataTableProvider.updateTableProvider()
-        valuesView = ValuesView(mlDataTableProvider: self.mlDataTableProvider)
+        self.mlAlgorithms = availableAlgorithms.map( { $0.name! })
+        valuesView = ValuesView(mlDataTableProvider: dataContext.mlDataTableProviderContext.mlDataTableProvider)
+        self.unionResult = try? dataContext.mlDataTableProviderContext.mlDataTableProvider.buildMlDataTable(lookAhead: 0)
+        dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider()
         compositionDataModel.retrievePredictionClusters()
         predictionsDataModel.createPredictionForModel(model: self.model)
         predictionsDataModel.getTimeSeries()
+        generateValuesView()
     }
     var body: some View {
         VStack {
@@ -135,21 +127,21 @@ struct CompositionsView: View {
                             let innerResult = row.components(separatedBy: ", ").map { Int($0)! }
                             selectedTimeSeries.append(innerResult)
                         }
-                        self.mlDataTableProvider.timeSeries = selectedTimeSeries
+                        dataContext.mlDataTableProviderContext.mlDataTableProvider.timeSeries = selectedTimeSeries
                         
                         
                     } else {
-                        self.mlDataTableProvider.timeSeries = nil
+                        dataContext.mlDataTableProviderContext.mlDataTableProvider.timeSeries = nil
                     }
-                    self.mlDataTableProvider.mlDataTable = try? self.mlDataTableProvider.buildMlDataTable(lookAhead: selectedLookAhead ?? 0).mlDataTable
-                    self.mlDataTableProvider.orderedColumns = dataContext.mlDataTableProviderContext.mlDataTableProvider.orderedColumns!
+                    self.dataContext.mlDataTableProviderContext.mlDataTableProvider.mlDataTable = try? self.dataContext.mlDataTableProviderContext.mlDataTableProvider.buildMlDataTable(lookAhead: selectedLookAhead ?? 0).mlDataTable
+                    self.dataContext.mlDataTableProviderContext.mlDataTableProvider.orderedColumns = dataContext.mlDataTableProviderContext.mlDataTableProvider.orderedColumns!
 //                    self.mlDataTableProvider.selectedColumns = dataContext.mlDataTableProviderContext.mlDataTableProvider.selectedColumns
-                    self.mlDataTableProvider.prediction = dataContext.mlDataTableProviderContext.clusterSelection?.prediction
+                    self.dataContext.mlDataTableProviderContext.mlDataTableProvider.prediction = dataContext.mlDataTableProviderContext.clusterSelection?.prediction
                     generateValuesView()
                 }
                 .onChange(of: clusterSelection) { newClusterSelection in
                     maxLookAhead = clusterSelection?.maxLookAhead ?? 0
-                    self.mlDataTableProvider.selectedColumns = newClusterSelection?.columns
+                    dataContext.mlDataTableProviderContext.mlDataTableProvider.selectedColumns = newClusterSelection?.columns
                     dataContext.mlDataTableProviderContext.clusterSelection = newClusterSelection
                     if let timeSeriesRows = newClusterSelection?.connectedTimeSeries {
                         var selectedTimeSeries = [[Int]]()
@@ -157,18 +149,18 @@ struct CompositionsView: View {
                             let innerResult = row.components(separatedBy: ", ").map { Int($0)! }
                             selectedTimeSeries.append(innerResult)
                         }
-                        self.mlDataTableProvider.timeSeries = selectedTimeSeries
+                        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.timeSeries = selectedTimeSeries
                         
                         
                     } else {
-                        self.mlDataTableProvider.timeSeries = nil
+                        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.timeSeries = nil
                     }
-                    self.mlDataTableProvider.mlDataTable = composer?.mlDataTable_Base
-                    self.mlDataTableProvider.orderedColumns = composer?.orderedColumns!
-                    self.mlDataTableProvider.selectedColumns = newClusterSelection?.columns
-                    self.mlDataTableProvider.prediction = newClusterSelection?.prediction
+                    self.dataContext.mlDataTableProviderContext.mlDataTableProvider.mlDataTable = self.dataContext.mlDataTableProviderContext.composer?.mlDataTable_Base
+                    self.dataContext.mlDataTableProviderContext.mlDataTableProvider.orderedColumns = self.dataContext.mlDataTableProviderContext.composer?.orderedColumns!
+                    self.dataContext.mlDataTableProviderContext.mlDataTableProvider.selectedColumns = newClusterSelection?.columns
+                    self.dataContext.mlDataTableProviderContext.mlDataTableProvider.prediction = newClusterSelection?.prediction
+                    self.selectedLookAhead = nil 
                     generateValuesView()
-                    
                 }
                 .frame(minWidth: 160)
                 .padding()
@@ -195,7 +187,7 @@ struct CompositionsView: View {
                         }
                         .frame(minWidth: 250)
                         .onChange(of: mlSelection) { newSelection in
-                            self.mlDataTableProvider.regressorName = newSelection
+                            self.dataContext.mlDataTableProviderContext.mlDataTableProvider.regressorName = newSelection
                             generatePredictionView()
                             
                         }
@@ -219,17 +211,17 @@ struct CompositionsView: View {
                                 HStack {
                                     Text("All rows count")
                                     Spacer()
-                                    let countNumber = NSNumber(value: mlDataTableProvider.tableStatistics?.absolutRowCount ?? 0)
+                                    let countNumber = NSNumber(value: dataContext.mlDataTableProviderContext.mlDataTableProvider.tableStatistics?.absolutRowCount ?? 0)
                                     Text(BaseServices.intFormatter.string(from: countNumber)!)
                                 }
                                 HStack {
                                     Text("Filtered rows count")
                                     Spacer()
-                                    let countNumber = NSNumber(value: mlDataTableProvider.tableStatistics?.filteredRowCount ?? 0)
+                                    let countNumber = NSNumber(value: dataContext.mlDataTableProviderContext.mlDataTableProvider.tableStatistics?.filteredRowCount ?? 0)
                                     Text(BaseServices.intFormatter.string(from: countNumber)!)
                                 }
                             }
-                            if (mlDataTableProvider.tableStatistics?.targetStatistics.count ?? 0) > 0 {
+                            if (dataContext.mlDataTableProviderContext.mlDataTableProvider.tableStatistics?.targetStatistics.count ?? 0) > 0 {
                                 Divider()
                                 VStack {
                                     Group {
@@ -237,13 +229,13 @@ struct CompositionsView: View {
                                         HStack {
                                             Text("TargetValue")
                                             Spacer()
-                                            let targetNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].targetValue)
+                                            let targetNumber = NSNumber(value: dataContext.mlDataTableProviderContext.mlDataTableProvider.tableStatistics!.targetStatistics[0].targetValue)
                                             Text(BaseServices.intFormatter.string(from: targetNumber)!)
                                         }
                                         HStack {
                                             Text("TargetPopulation")
                                             Spacer()
-                                            let targetPopulationNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].targetPopulation)
+                                            let targetPopulationNumber = NSNumber(value: dataContext.mlDataTableProviderContext.mlDataTableProvider.tableStatistics!.targetStatistics[0].targetPopulation)
                                             Text(BaseServices.intFormatter.string(from: targetPopulationNumber)!)
                                         }
                                     }
@@ -253,19 +245,19 @@ struct CompositionsView: View {
                                         HStack {
                                             Text("Targets: ")
                                             Spacer()
-                                            let targetsAtOptimumNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].targetsAtOptimum)
+                                            let targetsAtOptimumNumber = NSNumber(value: dataContext.mlDataTableProviderContext.mlDataTableProvider.tableStatistics!.targetStatistics[0].targetsAtOptimum)
                                             Text(BaseServices.intFormatter.string(from: targetsAtOptimumNumber)!)
                                         }
                                         HStack {
                                             Text("Dirties: ")
                                             Spacer()
-                                            let dirtiesAtOptimumNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].dirtiesAtOptimum)
+                                            let dirtiesAtOptimumNumber = NSNumber(value: dataContext.mlDataTableProviderContext.mlDataTableProvider.tableStatistics!.targetStatistics[0].dirtiesAtOptimum)
                                             Text(BaseServices.intFormatter.string(from: dirtiesAtOptimumNumber)!)
                                         }
                                         HStack {
                                             Text("PredictionValue: ")
                                             Spacer()
-                                            let predictionValueAtOptimumNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].predictionValueAtOptimum)
+                                            let predictionValueAtOptimumNumber = NSNumber(value: dataContext.mlDataTableProviderContext.mlDataTableProvider.tableStatistics!.targetStatistics[0].predictionValueAtOptimum)
                                             Text(BaseServices.doubleFormatter.string(from: predictionValueAtOptimumNumber)!)
                                         }
                                     }
@@ -275,25 +267,25 @@ struct CompositionsView: View {
                                         HStack {
                                             Text("Max Dirties:")
                                             Spacer()
-                                            let thresholdNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].threshold)
+                                            let thresholdNumber = NSNumber(value: dataContext.mlDataTableProviderContext.mlDataTableProvider.tableStatistics!.targetStatistics[0].threshold)
                                             Text(BaseServices.intFormatter.string(from: thresholdNumber)!)
                                         }
                                         HStack {
                                             Text("Targets: ")
                                             Spacer()
-                                            let targetsAtThresholdNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].targetsAtThreshold)
+                                            let targetsAtThresholdNumber = NSNumber(value: dataContext.mlDataTableProviderContext.mlDataTableProvider.tableStatistics!.targetStatistics[0].targetsAtThreshold)
                                             Text(BaseServices.intFormatter.string(from: targetsAtThresholdNumber)!)
                                         }
                                         HStack {
                                             Text("Dirties: ")
                                             Spacer()
-                                            let dirtiesAtThresholdNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].dirtiesAtThreshold)
+                                            let dirtiesAtThresholdNumber = NSNumber(value: dataContext.mlDataTableProviderContext.mlDataTableProvider.tableStatistics!.targetStatistics[0].dirtiesAtThreshold)
                                             Text(BaseServices.intFormatter.string(from: dirtiesAtThresholdNumber)!)
                                         }
                                         HStack {
                                             Text("PredictionValue: ")
                                             Spacer()
-                                            let predictionValueAtThresholdNumber = NSNumber(value: mlDataTableProvider.tableStatistics!.targetStatistics[0].predictionValueAtThreshold)
+                                            let predictionValueAtThresholdNumber = NSNumber(value: dataContext.mlDataTableProviderContext.mlDataTableProvider.tableStatistics!.targetStatistics[0].predictionValueAtThreshold)
                                             Text(BaseServices.doubleFormatter.string(from: predictionValueAtThresholdNumber)!)
                                         }
                                     }
@@ -323,13 +315,15 @@ struct CompositionsView: View {
             }
             Divider()
             VStack(alignment: .leading) {
-                valuesView
+                self.valuesView
             }.padding()
+        }.onAppear {
+            generateValuesView()
         }
     }
     private func train(regressorName: String?, mlDataTableProviderContext: SimulationController.MlDataTableProviderContext) {
-        self.mlDataTableProviderContext = mlDataTableProviderContext
-        var trainer = Trainer(mlDataProviderContext: self.mlDataTableProviderContext)
+        self.dataContext.mlDataTableProviderContext = mlDataTableProviderContext
+        var trainer = Trainer(mlDataProviderContext: self.dataContext.mlDataTableProviderContext)
         trainer.model = self.model
         trainer.createModel(algorithmName: $mlSelection.wrappedValue!)
         DispatchQueue.global().sync {
@@ -337,19 +331,20 @@ struct CompositionsView: View {
         }
     }
     func generateValuesView() {
-        self.mlDataTableProvider.mlDataTableRaw = nil
+        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.mlDataTableRaw = nil
         mlSelection = clusterSelection?.prediction == nil ? nil: mlSelection
-        self.mlDataTableProvider.mlDataTable = try? self.mlDataTableProvider.buildMlDataTable(lookAhead: selectedLookAhead ?? 0).mlDataTable
-        self.mlDataTableProvider.updateTableProvider()
-        self.mlDataTableProvider.loaded = false
+        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.mlDataTable = try? self.dataContext.mlDataTableProviderContext.mlDataTableProvider.buildMlDataTable(lookAhead: selectedLookAhead ?? 0).mlDataTable
+        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider()
+        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.loaded = false
+        self.valuesView = ValuesView(mlDataTableProvider: dataContext.mlDataTableProviderContext.mlDataTableProvider)
     }
     func savePredictions() {
         predictionsDataModel.savePredictions(model: self.model)
     }
     fileprivate func generatePredictionView() {
-        self.mlDataTableProvider.filterViewProvider = nil
-        self.mlDataTableProvider.updateTableProvider()
-        self.mlDataTableProvider.loaded = false
+        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.filterViewProvider = nil
+        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider()
+        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.loaded = false
     }
 }
 
