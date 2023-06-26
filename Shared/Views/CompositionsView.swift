@@ -120,7 +120,7 @@ struct CompositionsView: View {
                 }
                 .onChange(of: selectedLookAhead) { newLookAhead in
                     dataContext.mlDataTableProviderContext = SimulationController.returnFittingProviderContext(model: self.model, lookAhead: newLookAhead ?? 0, prediction: clusterSelection?.prediction)!
-//                    self.mlDataTableProvider.selectedColumns = dataContext.mlDataTableProviderContext.mlDataTableProvider.selectedColumns
+////                    self.mlDataTableProvider.selectedColumns = dataContext.mlDataTableProviderContext.mlDataTableProvider.selectedColumns
                     if let timeSeriesRows = dataContext.mlDataTableProviderContext.clusterSelection?.connectedTimeSeries {
                         var selectedTimeSeries = [[Int]]()
                         for row in timeSeriesRows {
@@ -128,15 +128,15 @@ struct CompositionsView: View {
                             selectedTimeSeries.append(innerResult)
                         }
                         dataContext.mlDataTableProviderContext.mlDataTableProvider.timeSeries = selectedTimeSeries
-                        
-                        
+
+
                     } else {
                         dataContext.mlDataTableProviderContext.mlDataTableProvider.timeSeries = nil
                     }
                     self.dataContext.mlDataTableProviderContext.mlDataTableProvider.mlDataTable = try? self.dataContext.mlDataTableProviderContext.mlDataTableProvider.buildMlDataTable(lookAhead: selectedLookAhead ?? 0).mlDataTable
-                    self.dataContext.mlDataTableProviderContext.mlDataTableProvider.orderedColumns = dataContext.mlDataTableProviderContext.mlDataTableProvider.orderedColumns!
-//                    self.mlDataTableProvider.selectedColumns = dataContext.mlDataTableProviderContext.mlDataTableProvider.selectedColumns
-                    self.dataContext.mlDataTableProviderContext.mlDataTableProvider.prediction = dataContext.mlDataTableProviderContext.clusterSelection?.prediction
+//                    self.dataContext.mlDataTableProviderContext.mlDataTableProvider.orderedColumns = dataContext.mlDataTableProviderContext.mlDataTableProvider.orderedColumns!
+////                    self.mlDataTableProvider.selectedColumns = dataContext.mlDataTableProviderContext.mlDataTableProvider.selectedColumns
+//                    self.dataContext.mlDataTableProviderContext.mlDataTableProvider.prediction = dataContext.mlDataTableProviderContext.clusterSelection?.prediction
                     generateValuesView()
                 }
                 .onChange(of: clusterSelection) { newClusterSelection in
@@ -159,7 +159,7 @@ struct CompositionsView: View {
                     self.dataContext.mlDataTableProviderContext.mlDataTableProvider.orderedColumns = self.dataContext.mlDataTableProviderContext.composer?.orderedColumns!
                     self.dataContext.mlDataTableProviderContext.mlDataTableProvider.selectedColumns = newClusterSelection?.columns
                     self.dataContext.mlDataTableProviderContext.mlDataTableProvider.prediction = newClusterSelection?.prediction
-                    self.selectedLookAhead = nil 
+                    self.selectedLookAhead = nil
                     generateValuesView()
                 }
                 .frame(minWidth: 160)
