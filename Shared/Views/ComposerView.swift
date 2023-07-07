@@ -113,7 +113,7 @@ struct ComposerView: View {
     func updateValuesView() {
         self.mlDataTableProvider.mlDataTableRaw = nil
         self.mlDataTableProvider.mlDataTable = try? self.mlDataTableProvider.buildMlDataTable().mlDataTable
-        self.mlDataTableProvider.updateTableProvider()
+        self.mlDataTableProvider.updateTableProvider(caller: "composerView.upateValuesView")
         self.mlDataTableProvider.loaded = false
     }
     struct Combination {

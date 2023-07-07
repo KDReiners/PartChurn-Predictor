@@ -84,7 +84,7 @@ class MlDataTableProvider: ObservableObject {
             }
         }
     }
-    internal func updateTableProvider(lookAheadChanged: Bool = false) {
+    internal func updateTableProvider(caller: String, lookAheadChanged: Bool = false) {
         tableProvider(mlDataTable: mlDataTableRaw, orderedColums: mlColumns!, selectedColumns: mergedColumns, prediction: prediction, regressorName: regressorName) { provider in
             DispatchQueue.main.async {
                 self.valuesTableProvider = provider

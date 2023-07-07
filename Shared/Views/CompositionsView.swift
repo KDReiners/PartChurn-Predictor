@@ -36,7 +36,7 @@ struct CompositionsView: View {
         self.dataContext.mlDataTableProviderContext.mlDataTableProvider.delegate = self.dataContext
         valuesView = ValuesView(mlDataTableProvider: dataContext.mlDataTableProviderContext.mlDataTableProvider)
         self.unionResult = try? dataContext.mlDataTableProviderContext.mlDataTableProvider.buildMlDataTable(lookAhead: 0)
-        dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider()
+        dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider(caller: "compositionsView.init")
         compositionDataModel.retrievePredictionClusters()
         predictionsDataModel.createPredictionForModel(model: self.model)
         predictionsDataModel.getTimeSeries()
@@ -116,7 +116,6 @@ struct CompositionsView: View {
                 .onChange(of: selectedLookAhead) { newLookAhead in
                     dataContext.mlDataTableProviderContext = SimulationController.returnFittingProviderContext(model: self.model, lookAhead: newLookAhead ?? 0, prediction: clusterSelection?.prediction)!
                     self.dataContext.mlDataTableProviderContext.mlDataTableProvider.delegate = self.dataContext
-////                    self.mlDataTableProvider.selectedColumns = dataContext.mlDataTableProviderContext.mlDataTableProvider.selectedColumns
                     if let timeSeriesRows = dataContext.mlDataTableProviderContext.clusterSelection?.connectedTimeSeries {
                         var selectedTimeSeries = [[Int]]()
                         for row in timeSeriesRows {
@@ -125,15 +124,15 @@ struct CompositionsView: View {
                         }
                         dataContext.mlDataTableProviderContext.mlDataTableProvider.timeSeries = selectedTimeSeries
 
-
                     } else {
                         dataContext.mlDataTableProviderContext.mlDataTableProvider.timeSeries = nil
                     }
-                    self.dataContext.mlDataTableProviderContext.mlDataTableProvider.mlDataTable = try? self.dataContext.mlDataTableProviderContext.mlDataTableProvider.buildMlDataTable(lookAhead: selectedLookAhead ?? 0).mlDataTable
-                    self.dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider(lookAheadChanged: true)
-//                    self.dataContext.mlDataTableProviderContext.mlDataTableProvider.orderedColumns = dataContext.mlDataTableProviderContext.mlDataTableProvider.orderedColumns!
-////                    self.mlDataTableProvider.selectedColumns = dataContext.mlDataTableProviderContext.mlDataTableProvider.selectedColumns
-//                    self.dataContext.mlDataTableProviderContext.mlDataTableProvider.prediction = dataContext.mlDataTableProviderContext.clusterSelection?.prediction
+                    self.dataContext.mlDataTableProviderContext.mlDataTableProvider.mlDataTable = try? self.dataContext.mlDataTableProviderContext.mlDataTableProvider.buildMlDataTable(lookAhead: newLookAhead ?? 0).mlDataTable
+                    self.dataContext.mlDataTableProviderContext.setPrediction(prediction: (clusterSelection?.prediction)!)
+                    self.dataContext.mlDataTableProviderContext.mlDataTableProvider.selectedColumns = clusterSelection?.columns
+                    self.dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider(caller: "compositionsView.changeOfSelectedLookAhead", lookAheadChanged: true)
+                   
+
                     generateValuesView()
                 }
                 .onChange(of: clusterSelection) { newClusterSelection in
@@ -330,7 +329,7 @@ struct CompositionsView: View {
         self.dataContext.mlDataTableProviderContext.mlDataTableProvider.mlDataTableRaw = nil
         mlSelection = clusterSelection?.prediction == nil ? nil: mlSelection
         self.dataContext.mlDataTableProviderContext.mlDataTableProvider.mlDataTable = try? self.dataContext.mlDataTableProviderContext.mlDataTableProvider.buildMlDataTable(lookAhead: selectedLookAhead ?? 0).mlDataTable
-        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider()
+        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider(caller: "compositionsView.generateValuesView")
         self.dataContext.mlDataTableProviderContext.mlDataTableProvider.loaded = false
         self.valuesView = ValuesView(mlDataTableProvider: dataContext.mlDataTableProviderContext.mlDataTableProvider)
     }
@@ -339,7 +338,7 @@ struct CompositionsView: View {
     }
     fileprivate func generatePredictionView() {
         self.dataContext.mlDataTableProviderContext.mlDataTableProvider.filterViewProvider = nil
-        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider()
+        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider(caller: "compositionsView.generatePredictionView")
         self.dataContext.mlDataTableProviderContext.mlDataTableProvider.loaded = false
     }
 }

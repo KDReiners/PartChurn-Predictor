@@ -85,7 +85,7 @@ class SimulationController: ObservableObject {
             }
             self.mlDataTableProvider.mlDataTableRaw = nil
             self.mlDataTableProvider.mlDataTable = try? self.mlDataTableProvider.buildMlDataTable().mlDataTable
-            self.mlDataTableProvider.updateTableProvider()
+            self.mlDataTableProvider.updateTableProvider(caller: "simulationController.generateValuesView")
             self.mlDataTableProvider.loaded = false
         }
         func createGridItems() {
