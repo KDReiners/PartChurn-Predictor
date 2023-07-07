@@ -84,7 +84,7 @@ class MlDataTableProvider: ObservableObject {
             }
         }
     }
-    internal func updateTableProvider() {
+    internal func updateTableProvider(lookAheadChanged: Bool = false) {
         tableProvider(mlDataTable: mlDataTableRaw, orderedColums: mlColumns!, selectedColumns: mergedColumns, prediction: prediction, regressorName: regressorName) { provider in
             DispatchQueue.main.async {
                 self.valuesTableProvider = provider
@@ -100,6 +100,7 @@ class MlDataTableProvider: ObservableObject {
                     self.filterViewProvider = FilterViewProvider(mlDataTableProvider: self)
                 }
                 self.loaded = true
+                self.delegate?.asyncOperationDidFinish(withResult: self)
             }
         }
     }
