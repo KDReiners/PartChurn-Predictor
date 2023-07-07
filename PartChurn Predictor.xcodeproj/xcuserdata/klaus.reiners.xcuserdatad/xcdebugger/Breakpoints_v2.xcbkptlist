@@ -14,8 +14,8 @@
             filePath = "Shared/Classes/SimulationController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "86"
-            endingLineNumber = "86"
+            startingLineNumber = "88"
+            endingLineNumber = "88"
             landmarkName = "generateValuesView()"
             landmarkType = "7">
             <Locations>
@@ -63,6 +63,21 @@
                   startingLineNumber = "86"
                   endingLineNumber = "86"
                   offsetFromSymbolStart = "1328">
+               </Location>
+               <Location
+                  uuid = "8D818589-5274-4077-A141-6C24358A285A - a1c6fc7d0d77926c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PartChurn_Predictor.SimulationController.MlDataTableProviderContext.generateValuesView() -&gt; ()"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Classes/SimulationController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "88"
+                  endingLineNumber = "88"
+                  offsetFromSymbolStart = "1528">
                </Location>
             </Locations>
          </BreakpointContent>

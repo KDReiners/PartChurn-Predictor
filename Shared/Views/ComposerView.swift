@@ -29,7 +29,6 @@ struct ComposerView: View {
         self.mlDataTableProvider.mlDataTable = composer.mlDataTable_Base!
         self.mlDataTableProvider.orderedColumns = composer.orderedColumns!
         valuesView = ValuesView(mlDataTableProvider: self.mlDataTableProvider)
-        updateValuesView()
     }
     var body: some View {
         HStack(spacing: 50) {
@@ -108,12 +107,16 @@ struct ComposerView: View {
                     valuesView
                 }.padding(.horizontal)
             }
+        }.onAppear {
+            updateValuesView()
         }
     }
     func updateValuesView() {
+        let callingFunction = #function
+        let className = String(describing: type(of: self))
         self.mlDataTableProvider.mlDataTableRaw = nil
         self.mlDataTableProvider.mlDataTable = try? self.mlDataTableProvider.buildMlDataTable().mlDataTable
-        self.mlDataTableProvider.updateTableProvider(caller: "composerView.upateValuesView")
+        self.mlDataTableProvider.updateTableProvider(callingFunction: callingFunction, className: className)
         self.mlDataTableProvider.loaded = false
     }
     struct Combination {

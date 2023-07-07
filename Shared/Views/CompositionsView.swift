@@ -36,10 +36,8 @@ struct CompositionsView: View {
         self.dataContext.mlDataTableProviderContext.mlDataTableProvider.delegate = self.dataContext
         valuesView = ValuesView(mlDataTableProvider: dataContext.mlDataTableProviderContext.mlDataTableProvider)
         self.unionResult = try? dataContext.mlDataTableProviderContext.mlDataTableProvider.buildMlDataTable(lookAhead: 0)
-        dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider(caller: "compositionsView.init")
         compositionDataModel.retrievePredictionClusters()
         predictionsDataModel.createPredictionForModel(model: self.model)
-        generateValuesView()
     }
     var body: some View {
         VStack {
@@ -115,22 +113,7 @@ struct CompositionsView: View {
                 .onChange(of: selectedLookAhead) { newLookAhead in
                     dataContext.mlDataTableProviderContext = SimulationController.returnFittingProviderContext(model: self.model, lookAhead: newLookAhead ?? 0, prediction: clusterSelection?.prediction)!
                     self.dataContext.mlDataTableProviderContext.mlDataTableProvider.delegate = self.dataContext
-//                    if let timeSeriesRows = dataContext.mlDataTableProviderContext.clusterSelection?.connectedTimeSeries {
-//                        var selectedTimeSeries = [[Int]]()
-//                        for row in timeSeriesRows {
-//                            let innerResult = row.components(separatedBy: ", ").map { Int($0)! }
-//                            selectedTimeSeries.append(innerResult)
-//                        }
-//                        dataContext.mlDataTableProviderContext.mlDataTableProvider.timeSeries = selectedTimeSeries
-//
-//                    } else {
-//                        dataContext.mlDataTableProviderContext.mlDataTableProvider.timeSeries = nil
-//                    }
                     self.dataContext.mlDataTableProviderContext.mlDataTableProvider.selectedColumns = clusterSelection?.columns
-//                    self.dataContext.mlDataTableProviderContext.mlDataTableProvider.mlDataTableRaw = try? self.dataContext.mlDataTableProviderContext.mlDataTableProvider.buildMlDataTable(lookAhead: newLookAhead ?? 0 ).mlDataTable
-//                    self.dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider(caller: "compositionsView.changeOfSelectedLookAhead", lookAheadChanged: true)
-                   
-
                     generateValuesView()
                 }
                 .onChange(of: clusterSelection) { newClusterSelection in
@@ -324,6 +307,8 @@ struct CompositionsView: View {
         }
     }
     func generateValuesView() {
+        let callingFunction = #function
+        let className = String(describing: type(of: self))
         self.dataContext.mlDataTableProviderContext.mlDataTableProvider.mlDataTableRaw = nil
         if clusterSelection?.connectedTimeSeries != nil {
             self.dataContext.mlDataTableProviderContext.mlDataTableProvider.timeSeries = clusterSelection?.selectedTimeSeries
@@ -332,7 +317,7 @@ struct CompositionsView: View {
         }
         mlSelection = clusterSelection?.prediction == nil ? nil: mlSelection
         self.dataContext.mlDataTableProviderContext.mlDataTableProvider.mlDataTable = try? self.dataContext.mlDataTableProviderContext.mlDataTableProvider.buildMlDataTable(lookAhead: selectedLookAhead ?? 0).mlDataTable
-        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider(caller: "compositionsView.generateValuesView")
+        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider(callingFunction: callingFunction, className: className)
         self.dataContext.mlDataTableProviderContext.mlDataTableProvider.loaded = false
         self.valuesView = ValuesView(mlDataTableProvider: dataContext.mlDataTableProviderContext.mlDataTableProvider)
     }
@@ -340,8 +325,10 @@ struct CompositionsView: View {
         predictionsDataModel.savePredictions(model: self.model)
     }
     fileprivate func generatePredictionView() {
+        let callingFunction = #function
+        let className = String(describing: type(of: self))
         self.dataContext.mlDataTableProviderContext.mlDataTableProvider.filterViewProvider = nil
-        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider(caller: "compositionsView.generatePredictionView")
+        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider(callingFunction: callingFunction, className: className)
         self.dataContext.mlDataTableProviderContext.mlDataTableProvider.loaded = false
     }
 }

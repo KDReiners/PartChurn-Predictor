@@ -73,6 +73,8 @@ class SimulationController: ObservableObject {
             }
         }
         func generateValuesView() {
+            let callingFunction = #function
+            let className = String(describing: type(of: self))
             if let timeSeriesRows = self.clusterSelection?.connectedTimeSeries {
                 var selectedTimeSeries = [[Int]]()
                 for row in timeSeriesRows {
@@ -85,7 +87,7 @@ class SimulationController: ObservableObject {
             }
             self.mlDataTableProvider.mlDataTableRaw = nil
             self.mlDataTableProvider.mlDataTable = try? self.mlDataTableProvider.buildMlDataTable().mlDataTable
-            self.mlDataTableProvider.updateTableProvider(caller: "simulationController.generateValuesView")
+            self.mlDataTableProvider.updateTableProvider(callingFunction: callingFunction, className: className)
             self.mlDataTableProvider.loaded = false
         }
         func createGridItems() {
