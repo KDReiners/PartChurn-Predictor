@@ -14,6 +14,6 @@ public protocol GenericViewModel: ObservableObject {
     var readOnlyAttributes: Array<EntityAttributeInfo> { get }
     var readWriteAttributes: Array<EntityAttributeInfo> { get }
 }
-
-
-
+protocol AsyncOperationDelegate: AnyObject {
+    func asyncOperationDidFinish<T>(withResult result: T)
+}

@@ -82,6 +82,8 @@
 		2D0B856E282565BF00856BCB /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B8558282565BD00856BCB /* Persistence.swift */; };
 		2D0B856F282565BF00856BCB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D0B8559282565BF00856BCB /* Assets.xcassets */; };
 		2D0B8570282565BF00856BCB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D0B8559282565BF00856BCB /* Assets.xcassets */; };
+		2D0EAF2E2A5807E5006512CE /* DataContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0EAF2D2A5807E5006512CE /* DataContext.swift */; };
+		2D0EAF2F2A5807E5006512CE /* DataContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0EAF2D2A5807E5006512CE /* DataContext.swift */; };
 		2D1DB46728B3CC08005BFC2D /* PredictionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D1DB46628B3CC08005BFC2D /* PredictionsModel.swift */; };
 		2D1DB46828B3CC08005BFC2D /* PredictionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D1DB46628B3CC08005BFC2D /* PredictionsModel.swift */; };
 		2D1EB362283A842F00F86B6D /* CoreDataML.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D1EB361283A842F00F86B6D /* CoreDataML.swift */; };
@@ -191,6 +193,7 @@
 		2D0B855E282565BF00856BCB /* PartChurn Predictor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PartChurn Predictor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D0B8564282565BF00856BCB /* PartChurn Predictor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PartChurn Predictor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D0B8566282565BF00856BCB /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
+		2D0EAF2D2A5807E5006512CE /* DataContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataContext.swift; sourceTree = "<group>"; };
 		2D1DB46628B3CC08005BFC2D /* PredictionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionsModel.swift; sourceTree = "<group>"; };
 		2D1EB361283A842F00F86B6D /* CoreDataML.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataML.swift; sourceTree = "<group>"; };
 		2D288AC02829793B0078647E /* Trainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trainer.swift; sourceTree = "<group>"; };
@@ -391,6 +394,7 @@
 				2DA77EE028256F16007EC3E5 /* BaseServices.swift */,
 				0AD43D0C2921062F00199F06 /* MLTableCluster.swift */,
 				0A69F9322A474EA500A95F46 /* PredictionsProvider.swift */,
+				2D0EAF2D2A5807E5006512CE /* DataContext.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -602,6 +606,7 @@
 				2DA77F022827E1DD007EC3E5 /* ModelsView.swift in Sources */,
 				2DA77EDA28256EE5007EC3E5 /* GenericViewModel.swift in Sources */,
 				2DA77ED628256E9D007EC3E5 /* Storage.swift in Sources */,
+				2D0EAF2E2A5807E5006512CE /* DataContext.swift in Sources */,
 				2D867B5D28AACCB5005E8B87 /* TimeSliceModel.swift in Sources */,
 				2D989591282EE47F0070F475 /* MetricsModel.swift in Sources */,
 				2DA77EFF28266B32007EC3E5 /* FilesModel.swift in Sources */,
@@ -677,6 +682,7 @@
 				2DA77F032827E1DD007EC3E5 /* ModelsView.swift in Sources */,
 				2DA77EDB28256EE5007EC3E5 /* GenericViewModel.swift in Sources */,
 				2DA77ED728256E9D007EC3E5 /* Storage.swift in Sources */,
+				2D0EAF2F2A5807E5006512CE /* DataContext.swift in Sources */,
 				2D867B5E28AACCB5005E8B87 /* TimeSliceModel.swift in Sources */,
 				2D989592282EE47F0070F475 /* MetricsModel.swift in Sources */,
 				2DA77F0028266B32007EC3E5 /* FilesModel.swift in Sources */,

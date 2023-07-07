@@ -18,6 +18,8 @@ class MlDataTableProvider: ObservableObject {
     @Published var selectedRowIndex: Int?
     @Published var mlRowDictionary = [String: MLDataValueConvertible]()
     @Published var updateRequest = false
+    
+    weak var delegate: AsyncOperationDelegate?
     var numRows: Int = 0
     var columnsDataModel: ColumnsModel!
     var customColumns = [CustomColumn]()
@@ -129,6 +131,7 @@ class MlDataTableProvider: ObservableObject {
                     self.filterViewProvider = FilterViewProvider(mlDataTableProvider: self)
                 }
                 self.loaded = true
+                self.delegate?.asyncOperationDidFinish(withResult: self)
             }
         }
     }

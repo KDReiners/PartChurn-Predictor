@@ -28,17 +28,12 @@ struct CompositionsView: View {
     var availableAlgorithms = AlgorithmsModel().items.sorted(by: { $0.algorithm2algorithmtype!.name! < $1.algorithm2algorithmtype!.name! })
     var mlAlgorithms: [String]!
     
-    class DataContext: ObservableObject {
-        var mlDataTableProviderContext: SimulationController.MlDataTableProviderContext
-        init (mlDataTableProviderContext: SimulationController.MlDataTableProviderContext) {
-            self.mlDataTableProviderContext = mlDataTableProviderContext
-        }
-    }
     init(mlDataTableProviderContext: SimulationController.MlDataTableProviderContext) {
         self.dataContext = DataContext(mlDataTableProviderContext: mlDataTableProviderContext)
         self.model = mlDataTableProviderContext.model!
         self.compositionDataModel = CompositionsModel(model: self.model)
         self.mlAlgorithms = availableAlgorithms.map( { $0.name! })
+        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.delegate = self.dataContext
         valuesView = ValuesView(mlDataTableProvider: dataContext.mlDataTableProviderContext.mlDataTableProvider)
         self.unionResult = try? dataContext.mlDataTableProviderContext.mlDataTableProvider.buildMlDataTable(lookAhead: 0)
         dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider()
