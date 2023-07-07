@@ -95,23 +95,35 @@ public class PredictionsModel: Model<Predictions> {
             arrayOfPredictions.append(newPredictionPresenatation)
         }
     }
-    internal func getTimeSeries() {
-        for prediction in arrayOfPredictions {
-            self.timeSeriesSelections.append(prediction.timeSeries.map( { String($0.from)}).joined(separator: ", "))
-        }
-    }
     internal class PredictionCluster: CompositionsModel.CompositionCluster {
         var columnsDepth: Int32!
         var prediction: Predictions!
-        var connectedTimeSeries: [String] {
+        var connectedTimeSeries: [String]? {
             get {
-                var result = [String]()
-                for series in self.timeSeries.sorted(by: { $0.from < $1.from }) {
-                    let test = (series.timeseries2timeslices?.allObjects as! [Timeslices]).sorted(by: { $0.value < $1.value }).map( {String($0.value)}).joined(separator: ", ")
-                    result.append(test)
+                var result: [String]?
+                if self.timeSeries.count > 0 {
+                    result = [String]()
+                    for series in self.timeSeries.sorted(by: { $0.from < $1.from }) {
+                        let test = (series.timeseries2timeslices?.allObjects as! [Timeslices]).sorted(by: { $0.value < $1.value }).map( {String($0.value)}).joined(separator: ", ")
+                        result!.append(test)
+                    }
                 }
                 return result
             }
+        }
+        var selectedTimeSeries: [[Int]]? {
+            get {
+                var result: [[Int]]?
+                if self.connectedTimeSeries != nil {
+                    result = [[Int]]()
+                    for row in self.connectedTimeSeries! {
+                        let innerResult = row.components(separatedBy: ", ").map { Int($0)! }
+                        result!.append(innerResult)
+                    }
+                }
+                return result
+            }
+            
         }
         var minTimeSeries: Int32? {
             return timeSeries.min(by: { $0.from < $1.from })?.from
