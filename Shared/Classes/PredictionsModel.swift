@@ -13,6 +13,7 @@ public class PredictionsModel: Model<Predictions> {
     @Published var arrayOfPredictions = [PredictionCluster]()
     @Published var timeSeriesSelections = [String]()
     private var model: Models?
+    private var lookAheadModel = LookaheadsModel()
     private var compositionsDataModel: CompositionsModel?
     public init() {
         let readOnlyFields: [String] = []
@@ -55,16 +56,19 @@ public class PredictionsModel: Model<Predictions> {
     }
     internal func returnLookAhead(prediction: Predictions, lookAhead: Int) -> Lookaheads {
         var result: Lookaheads?
-        if let lookAheads = prediction.prediction2lookaheads?.allObjects as? [Lookaheads] {
+        let lookAheads = lookAheadModel.items
+        if lookAheads.count > 0 {
             result = lookAheads.first(where: { $0.lookahead == lookAhead})
         }
         if result == nil{
             let newLookAhead = LookaheadsModel().insertRecord()
-            newLookAhead.lookaheadt2prediction = prediction
+            newLookAhead.addToLookahead2predictions(prediction)
             newLookAhead.lookahead = Int32(lookAhead)
-            BaseServices.save()
             result = newLookAhead
+        } else {
+            result?.addToLookahead2predictions(prediction)
         }
+        BaseServices.save()
         guard let result = result else {
             fatalError("LookAhead could not be found!")
         }

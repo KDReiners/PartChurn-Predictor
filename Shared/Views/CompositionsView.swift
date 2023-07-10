@@ -51,6 +51,7 @@ struct CompositionsView: View {
                         Spacer()
                         if predictionsDataModel.arrayOfPredictions.count > 0 {
                             Button("Delete") {
+                                LookaheadsModel().deleteAllRecords(predicate: nil)
                                 predictionsDataModel.deleteAllRecords(predicate: nil)
                                 clusterSelection = nil
                                 predictionsDataModel.arrayOfPredictions = [PredictionsModel.PredictionCluster]()

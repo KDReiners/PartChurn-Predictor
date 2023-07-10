@@ -176,7 +176,7 @@ public struct Trainer {
         regressorKPI.dictOfMetrics["evaluationMetrics.maximumError"]? = regressorEvalutation.maximumError
         regressorKPI.dictOfMetrics["evaluationMetrics.rootMeanSquaredError"]? = regressorEvalutation.rootMeanSquaredError
 
-        regressorKPI.postMetric(prediction: self.mlDataTableProvider.prediction!, algorithmName: self.mlDataTableProvider.regressorName!)
+        regressorKPI.postMetric(prediction: self.mlDataTableProvider.prediction!, algorithmName: self.mlDataTableProvider.regressorName!, lookAhead: self.mlDataTableProviderContext.lookAhead)
         let regressorMetadata = MLModelMetadata(author: "Steps.IT",
                                                 shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden",
                                                 version: "1.0")
