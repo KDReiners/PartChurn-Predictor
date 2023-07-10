@@ -26,6 +26,8 @@ class ValuesTableProvider: ObservableObject {
     var targetValues = [String: Int]()
     var numCols: Int = 0
     var numRows: Int = 0
+    var predictionsProvider: PredictionsProvider?
+    
     init() {
         
     }
@@ -34,7 +36,11 @@ class ValuesTableProvider: ObservableObject {
         self.orderedColNames = orderedColNames
         columnDataModel = ColumnsModel(columnsFilter: selectedColumns! )
         targetColumn = columnDataModel.targetColumns.first
-       
+        if let selectedColumns = selectedColumns, let prediction = prediction, let regressorName = regressorName {
+            self.predictionsProvider = PredictionsProvider(mlDataTable: mlDataTable, orderedColNames: orderedColNames, selectedColumns: selectedColumns, prediction: prediction, regressorName: regressorName, lookAhead: 0)
+            self.orderedColNames = predictionsProvider?.orderedColNames
+            self.mlDataTable = predictionsProvider?.mlDataTable
+        }
         prepareView(orderedColNames: self.orderedColNames)
     }
     func removePredictionColumns(predictionColumName: String, filter: Bool? = false) {

@@ -316,10 +316,12 @@ struct CompositionsView: View {
             self.dataContext.mlDataTableProviderContext.mlDataTableProvider.timeSeries = nil
         }
         mlSelection = clusterSelection?.prediction == nil ? nil: mlSelection
+        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.regressorName = mlSelection
         self.dataContext.mlDataTableProviderContext.mlDataTableProvider.mlDataTable = try? self.dataContext.mlDataTableProviderContext.mlDataTableProvider.buildMlDataTable(lookAhead: selectedLookAhead ?? 0).mlDataTable
-        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider(callingFunction: callingFunction, className: className)
+        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider(callingFunction: callingFunction, className: className, lookAhead: selectedLookAhead ?? 0)
         self.dataContext.mlDataTableProviderContext.mlDataTableProvider.loaded = false
         self.valuesView = ValuesView(mlDataTableProvider: dataContext.mlDataTableProviderContext.mlDataTableProvider)
+        
     }
     func savePredictions() {
         predictionsDataModel.savePredictions(model: self.model)
@@ -328,7 +330,7 @@ struct CompositionsView: View {
         let callingFunction = #function
         let className = String(describing: type(of: self))
         self.dataContext.mlDataTableProviderContext.mlDataTableProvider.filterViewProvider = nil
-        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider(callingFunction: callingFunction, className: className)
+        self.dataContext.mlDataTableProviderContext.mlDataTableProvider.updateTableProvider(callingFunction: callingFunction, className: className, lookAhead: selectedLookAhead ?? 0)
         self.dataContext.mlDataTableProviderContext.mlDataTableProvider.loaded = false
     }
 }

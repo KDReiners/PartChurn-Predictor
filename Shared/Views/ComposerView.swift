@@ -116,7 +116,7 @@ struct ComposerView: View {
         let className = String(describing: type(of: self))
         self.mlDataTableProvider.mlDataTableRaw = nil
         self.mlDataTableProvider.mlDataTable = try? self.mlDataTableProvider.buildMlDataTable().mlDataTable
-        self.mlDataTableProvider.updateTableProvider(callingFunction: callingFunction, className: className)
+        self.mlDataTableProvider.updateTableProvider(callingFunction: callingFunction, className: className, lookAhead: 0)
         self.mlDataTableProvider.loaded = false
     }
     struct Combination {

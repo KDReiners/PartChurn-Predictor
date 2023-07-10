@@ -141,7 +141,13 @@ public struct Trainer {
             print("not found: \(algorithmName)" )
         }
         if regressor != nil {
-            writeRegressorMetrics(regressor: regressor, regressorName:  algorithmName, regressorEvaluationTable: regressorEvaluationTable)
+            let group = DispatchGroup()
+            group.enter()
+            writeRegressorMetrics(regressor: regressor, regressorName:  algorithmName, regressorEvaluationTable: regressorEvaluationTable) {
+                print("Writing completed.")
+                group.leave()
+            }
+            group.wait()
         }
         if classifier != nil {
             do {
@@ -159,7 +165,7 @@ public struct Trainer {
     private func writeClassifierMetrics(classifier: MLClassifier, classifierName: String, classifierEvaluationTable: MLDataTable) -> Void {
         print("to be done")
     }
-    private func writeRegressorMetrics (regressor: MLRegressor, regressorName: String, regressorEvaluationTable: MLDataTable) -> Void {
+    private func writeRegressorMetrics (regressor: MLRegressor, regressorName: String, regressorEvaluationTable: MLDataTable, completion: @escaping()->()) -> Void {
         let regressorKPI = Ml_RegressorMetricKPI()
         regressorKPI.dictOfMetrics["trainingMetrics.maximumError"]? = regressor.trainingMetrics.maximumError
         regressorKPI.dictOfMetrics["trainingMetrics.rootMeanSquaredError"]? = regressor.trainingMetrics.rootMeanSquaredError
@@ -178,6 +184,7 @@ public struct Trainer {
         do {
             try regressor.write(to: mlDataTableProviderContext.lookAheadPath!,
                                 metadata: regressorMetadata)
+            completion()
         } catch {
             fatalError(error.localizedDescription)
         }

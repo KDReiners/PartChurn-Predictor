@@ -35,6 +35,7 @@ class MlDataTableProvider: ObservableObject {
     var filterViewProvider: FilterViewProvider!
     var prediction: Predictions?
     var regressorName: String?
+    
     init(model: Models? = nil) {
         self.tableStatistics = TableStatistics()
         guard let model = model else {
@@ -84,7 +85,7 @@ class MlDataTableProvider: ObservableObject {
             }
         }
     }
-    internal func updateTableProvider(callingFunction: String, className: String, lookAheadChanged: Bool = false) {
+    internal func updateTableProvider(callingFunction: String, className: String, lookAhead: Int) {
         print("updateTableProvider called from \(callingFunction) in \(className)")
         tableProvider(mlDataTable: mlDataTableRaw, orderedColums: mlColumns!, selectedColumns: mergedColumns, prediction: prediction, regressorName: regressorName) { provider in
             DispatchQueue.main.async {
