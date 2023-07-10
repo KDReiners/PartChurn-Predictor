@@ -27,23 +27,28 @@ class ValuesTableProvider: ObservableObject {
     var numCols: Int = 0
     var numRows: Int = 0
     var predictionsProvider: PredictionsProvider?
+    var lookAhead: Int?
     
     init() {
         
     }
-    init( mlDataTable: MLDataTable, orderedColNames: [String], selectedColumns: [Columns]?, prediction: Predictions? , regressorName: String?, filter: Bool? = false) {
+    init( mlDataTable: MLDataTable, orderedColNames: [String], selectedColumns: [Columns]?, prediction: Predictions? , regressorName: String?, filter: Bool? = false, lookAhead: Int?) {
         self.mlDataTable = mlDataTable
         self.orderedColNames = orderedColNames
         columnDataModel = ColumnsModel(columnsFilter: selectedColumns! )
         targetColumn = columnDataModel.targetColumns.first
+        if let targetColumn = targetColumn {
+            predictedColumnName = predictionPrefix + targetColumn.name!
+            removePredictionColumns()
+        }
         if let selectedColumns = selectedColumns, let prediction = prediction, let regressorName = regressorName {
-            self.predictionsProvider = PredictionsProvider(mlDataTable: mlDataTable, orderedColNames: orderedColNames, selectedColumns: selectedColumns, prediction: prediction, regressorName: regressorName, lookAhead: 0)
+            self.predictionsProvider = PredictionsProvider(mlDataTable: mlDataTable, orderedColNames: orderedColNames, selectedColumns: selectedColumns, prediction: prediction, regressorName: regressorName, lookAhead: lookAhead)
             self.orderedColNames = predictionsProvider?.orderedColNames
             self.mlDataTable = predictionsProvider?.mlDataTable
         }
         prepareView(orderedColNames: self.orderedColNames)
     }
-    func removePredictionColumns(predictionColumName: String, filter: Bool? = false) {
+    func removePredictionColumns(filter: Bool? = false) {
         if self.mlDataTable.columnNames.contains(predictedColumnName) && filter != true {
             self.mlDataTable.removeColumn(named: predictedColumnName)
             for i in 0..<orderedColNames.count {

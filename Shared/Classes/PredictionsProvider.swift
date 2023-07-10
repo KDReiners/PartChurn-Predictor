@@ -21,7 +21,7 @@ class PredictionsProvider {
     var regressorName: String!
     var prediction: Predictions!
     var loadedModels = [loadedModel]()
-    init(mlDataTable: MLDataTable, orderedColNames: [String], selectedColumns: [Columns], prediction: Predictions , regressorName: String, lookAhead: Int) {
+    init(mlDataTable: MLDataTable, orderedColNames: [String], selectedColumns: [Columns], prediction: Predictions , regressorName: String, lookAhead: Int?) {
         self.selectedColumns = selectedColumns
         self.orderedColNames = orderedColNames
         self.mlDataTable = mlDataTable
@@ -36,12 +36,13 @@ class PredictionsProvider {
         }
         let isClassifier = (regressorName.lowercased().contains("regressor")) ? false: true
 
-
-        let urlToPredictionModel = BaseServices.homePath.appendingPathComponent((prediction.prediction2model?.name)!).appendingPathComponent(PredictionsModel().returnLookAhead(prediction: prediction, lookAhead: lookAhead).objectID.uriRepresentation().lastPathComponent).appendingPathComponent(regressorName.replacingOccurrences(of: "ML", with: "") + ".mlmodel")
-        let fileManager = FileManager.default
-        if fileManager.fileExists(atPath: urlToPredictionModel.path) {
-           predictionModel = getModel(url: urlToPredictionModel)
-            incorporatedPrediction(selectedColumns: selectedColumns, isClassifier: isClassifier)
+        if let lookAhead = lookAhead {
+            let urlToPredictionModel = BaseServices.homePath.appendingPathComponent((prediction.prediction2model?.name)!).appendingPathComponent(PredictionsModel().returnLookAhead(prediction: prediction, lookAhead: lookAhead).objectID.uriRepresentation().lastPathComponent).appendingPathComponent(regressorName.replacingOccurrences(of: "ML", with: "") + ".mlmodel")
+            let fileManager = FileManager.default
+            if fileManager.fileExists(atPath: urlToPredictionModel.path) {
+                predictionModel = getModel(url: urlToPredictionModel)
+                incorporatedPrediction(selectedColumns: selectedColumns, isClassifier: isClassifier)
+            }
         }
     }
     private func getModel(url: URL) ->MLModel {

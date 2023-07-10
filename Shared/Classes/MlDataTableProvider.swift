@@ -35,6 +35,7 @@ class MlDataTableProvider: ObservableObject {
     var filterViewProvider: FilterViewProvider!
     var prediction: Predictions?
     var regressorName: String?
+    var lookAhead: Int?
     
     init(model: Models? = nil) {
         self.tableStatistics = TableStatistics()
@@ -53,7 +54,7 @@ class MlDataTableProvider: ObservableObject {
     }
     // MARK: - Async Calls for CoreMl
     internal func updateTableProviderForFiltering() {
-        tableProvider(mlDataTable: self.mlDataTable, orderedColums: self.customColumns.map { $0.title}, selectedColumns: mergedColumns, filter: true) { provider in
+        tableProvider(mlDataTable: self.mlDataTable, orderedColums: self.customColumns.map { $0.title}, selectedColumns: mergedColumns, filter: true, lookAhead: self.lookAhead) { provider in
             DispatchQueue.main.async {
                 provider.predictionModel = self.valuesTableProvider?.predictionModel
                 self.valuesTableProvider = provider
@@ -66,7 +67,7 @@ class MlDataTableProvider: ObservableObject {
         }
     }
     internal func updateTableProviderForStatistics(completion: @escaping () ->()) {
-        tableProvider(mlDataTable: mlDataTableRaw, orderedColums: mlColumns!, selectedColumns: mergedColumns, prediction: prediction, regressorName: regressorName) { provider in
+        tableProvider(mlDataTable: mlDataTableRaw, orderedColums: mlColumns!, selectedColumns: mergedColumns, prediction: prediction, regressorName: regressorName, lookAhead: self.lookAhead) { provider in
             DispatchQueue.main.async {
                 self.valuesTableProvider = provider
                 self.tableStatistics?.absolutRowCount = provider.mlDataTable.rows.count
@@ -87,7 +88,7 @@ class MlDataTableProvider: ObservableObject {
     }
     internal func updateTableProvider(callingFunction: String, className: String, lookAhead: Int) {
         print("updateTableProvider called from \(callingFunction) in \(className)")
-        tableProvider(mlDataTable: mlDataTableRaw, orderedColums: mlColumns!, selectedColumns: mergedColumns, prediction: prediction, regressorName: regressorName) { provider in
+        tableProvider(mlDataTable: mlDataTableRaw, orderedColums: mlColumns!, selectedColumns: mergedColumns, prediction: prediction, regressorName: regressorName, lookAhead: self.lookAhead) { provider in
             DispatchQueue.main.async {
                 self.valuesTableProvider = provider
                 self.tableStatistics?.absolutRowCount = provider.mlDataTable.rows.count
@@ -107,12 +108,12 @@ class MlDataTableProvider: ObservableObject {
         }
     }
     // MARK: - related TableProvider coreMl
-    func tableProvider(mlDataTable: MLDataTable, orderedColums: [String], selectedColumns: [Columns]?, prediction: Predictions? = nil, regressorName: String? = nil, filter: Bool? = false , returnCompletion: @escaping (ValuesTableProvider) -> () ) {
+    func tableProvider(mlDataTable: MLDataTable, orderedColums: [String], selectedColumns: [Columns]?, prediction: Predictions? = nil, regressorName: String? = nil, filter: Bool? = false, lookAhead: Int? , returnCompletion: @escaping (ValuesTableProvider) -> () ) {
         var result: ValuesTableProvider!
         do {
             let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
             sampler.async {
-                result =  ValuesTableProvider(mlDataTable: mlDataTable, orderedColNames: orderedColums, selectedColumns: selectedColumns,  prediction: prediction, regressorName: regressorName, filter: filter)
+                result =  ValuesTableProvider(mlDataTable: mlDataTable, orderedColNames: orderedColums, selectedColumns: selectedColumns,  prediction: prediction, regressorName: regressorName, filter: filter, lookAhead: lookAhead)
                 DispatchQueue.main.async {
                     self.gridItems = result.gridItems
                     self.customColumns = result.customColumns
@@ -317,6 +318,7 @@ class MlDataTableProvider: ObservableObject {
     func buildMlDataTable(lookAhead: Int = 0) throws -> UnionResult {
         var result: MLDataTable?
         self.filterViewProvider = nil
+        self.lookAhead = lookAhead
         mergedColumns = selectedColumns == nil ? orderedColumns: selectedColumns
         if selectedColumns != nil {
             let additions = orderedColumns.filter { $0.ispartofprimarykey == 1 || $0.istimeseries == 1 || $0.istarget == 1}
