@@ -102,7 +102,7 @@ internal class Ml_RegressorMetricKPI: ObservableObject {
             newMetric.metricvalue2datasettype = datasetType
             newMetric.metricvalue2algorithm = algorithmType
             newMetric.metricvalue2prediction = prediction
-
+            newMetric.metricvalue2lookahead = predictionModel.returnLookAhead(prediction: prediction, lookAhead: lookAhead)
             metricType.metric2datasettypes = metricType.metric2datasettypes?.addingObjects(from: [datasetType]) as NSSet?
             metricType.metric2metricvalues = metricType.metric2metricvalues?.addingObjects(from: [newMetric]) as NSSet?
             /// Set value

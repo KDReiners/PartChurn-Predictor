@@ -51,6 +51,7 @@
     </entity>
     <entity name="Lookaheads" representedClassName="Lookaheads" syncable="YES" codeGenerationType="class">
         <attribute name="lookahead" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="lookahead2metricvalues" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Metricvalues" inverseName="metricvalue2lookahead" inverseEntity="Metricvalues"/>
         <relationship name="lookahead2predictionmetricvalue" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictionmetricvalues" inverseName="predictionmetricvalue2lookahead" inverseEntity="Predictionmetricvalues"/>
         <relationship name="lookahead2predictions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictions" inverseName="prediction2lookaheads" inverseEntity="Predictions"/>
     </entity>
@@ -64,6 +65,7 @@
         <attribute name="value" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="metricvalue2algorithm" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Algorithms" inverseName="algorithm2metricvalues" inverseEntity="Algorithms"/>
         <relationship name="metricvalue2datasettype" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Datasettypes" inverseName="datasettype2metricvalues" inverseEntity="Datasettypes"/>
+        <relationship name="metricvalue2lookahead" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Lookaheads" inverseName="lookahead2metricvalues" inverseEntity="Lookaheads"/>
         <relationship name="metricvalue2metric" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Metrics" inverseName="metric2metricvalues" inverseEntity="Metrics"/>
         <relationship name="metricvalue2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2metricvalues" inverseEntity="Models"/>
         <relationship name="metricvalue2prediction" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Predictions" inverseName="prediction2metricvalues" inverseEntity="Predictions"/>
@@ -100,9 +102,9 @@
         <relationship name="prediction2algorithms" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Algorithms" inverseName="algorithm2predictions" inverseEntity="Algorithms"/>
         <relationship name="prediction2compositions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Compositions" inverseName="composition2predictions" inverseEntity="Compositions"/>
         <relationship name="prediction2lookaheads" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Lookaheads" inverseName="lookahead2predictions" inverseEntity="Lookaheads"/>
-        <relationship name="prediction2metricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2prediction" inverseEntity="Metricvalues"/>
+        <relationship name="prediction2metricvalues" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Metricvalues" inverseName="metricvalue2prediction" inverseEntity="Metricvalues"/>
         <relationship name="prediction2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2predictions" inverseEntity="Models"/>
-        <relationship name="prediction2predictionmetricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictionmetricvalues" inverseName="predictionmetricvalue2prediction" inverseEntity="Predictionmetricvalues"/>
+        <relationship name="prediction2predictionmetricvalues" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Predictionmetricvalues" inverseName="predictionmetricvalue2prediction" inverseEntity="Predictionmetricvalues"/>
     </entity>
     <entity name="Timeseries" representedClassName="Timeseries" syncable="YES" codeGenerationType="class">
         <attribute name="from" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
