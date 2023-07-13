@@ -68,10 +68,10 @@ internal class Ml_RegressorMetricKPI: ObservableObject {
         let metricsvaluesModel = MetricvaluesModel()
         let datasetTypeModel = DatasettypesModel()
         let metricsModel = MetricsModel()
-        let lookAheadDataModel = LookaheadsModel()
         let algorithmsModel = AlgorithmsModel()
         let predictionModel = PredictionsModel()
-        let obsoleteMetrics = metricsvaluesModel.items.filter({$0.metricvalue2model == model && $0.metricvalue2algorithm?.name == algorithmName && $0.metricvalue2prediction == prediction})
+        let lookAheadItem = predictionModel.returnLookAhead(prediction: prediction, lookAhead: lookAhead)
+        let obsoleteMetrics = metricsvaluesModel.items.filter({$0.metricvalue2model == model && $0.metricvalue2algorithm?.name == algorithmName && $0.metricvalue2prediction == prediction && $0.metricvalue2lookahead == lookAheadItem})
         for item in obsoleteMetrics {
             metricsvaluesModel.deleteRecord(record: item)
         }
@@ -102,7 +102,7 @@ internal class Ml_RegressorMetricKPI: ObservableObject {
             newMetric.metricvalue2datasettype = datasetType
             newMetric.metricvalue2algorithm = algorithmType
             newMetric.metricvalue2prediction = prediction
-            newMetric.metricvalue2lookahead = predictionModel.returnLookAhead(prediction: prediction, lookAhead: lookAhead)
+            lookAheadItem.addToLookahead2metricvalues(newMetric)
             metricType.metric2datasettypes = metricType.metric2datasettypes?.addingObjects(from: [datasetType]) as NSSet?
             metricType.metric2metricvalues = metricType.metric2metricvalues?.addingObjects(from: [newMetric]) as NSSet?
             /// Set value

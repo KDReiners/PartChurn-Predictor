@@ -10,10 +10,8 @@ import SwiftUI
 
 
 struct CompositionsView: View {
-    @ObservedObject var compositionDataModel: CompositionsModel
-    @ObservedObject var predictionsDataModel = PredictionsModel()
-    @ObservedObject var valuesTableProvider = ValuesTableProvider()
     @ObservedObject var dataContext: DataContext
+    
     @State var mlSelection: String? = nil
     @State var clusterSelection: PredictionsModel.PredictionCluster?
     @State var selectedColumnCombination: [Columns]?
@@ -23,7 +21,9 @@ struct CompositionsView: View {
     @State var unionResult: UnionResult!
     @State var valuesView: ValuesView? = nil
     
-    var highestFrom: Int?
+    var compositionDataModel: CompositionsModel
+    var predictionsDataModel = PredictionsModel()
+    var valuesTableProvider = ValuesTableProvider()
     var model: Models
     var availableAlgorithms = AlgorithmsModel().items.sorted(by: { $0.algorithm2algorithmtype!.name! < $1.algorithm2algorithmtype!.name! })
     var mlAlgorithms: [String]!
@@ -284,7 +284,7 @@ struct CompositionsView: View {
                             metricValuesDataModel.deleteAllRecords(predicate: nil)
                         }
                     }
-                    AlgorithmsModel.valueList(prediction: (clusterSelection?.prediction), algorithmName: mlSelection ?? "unbekannt")
+                    AlgorithmsModel.valueList(prediction: (clusterSelection?.prediction), algorithmName: mlSelection ?? "unbekannt", lookAhead: selectedLookAhead)
                     
                 }
                 .frame(minWidth: 250)
@@ -294,8 +294,6 @@ struct CompositionsView: View {
             VStack(alignment: .leading) {
                 self.valuesView
             }.padding()
-        }.onAppear {
-            generateValuesView()
         }
     }
     private func train(regressorName: String?, mlDataTableProviderContext: SimulationController.MlDataTableProviderContext) {
@@ -307,6 +305,8 @@ struct CompositionsView: View {
             generatePredictionView()
         }
     }
+    /// This function resets the valuesView table in compositionsview
+    // It should be called when mlSelection, lookahead is called and not when algorithm is changed
     func generateValuesView() {
         let callingFunction = #function
         let className = String(describing: type(of: self))
@@ -327,7 +327,9 @@ struct CompositionsView: View {
     func savePredictions() {
         predictionsDataModel.savePredictions(model: self.model)
     }
-    fileprivate func generatePredictionView() {
+    /// This function generates a new valuesView when only the algorithm has changed
+    // mlSelection, lookahead will be left untouched
+    func generatePredictionView() {
         let callingFunction = #function
         let className = String(describing: type(of: self))
         self.dataContext.mlDataTableProviderContext.mlDataTableProvider.filterViewProvider = nil

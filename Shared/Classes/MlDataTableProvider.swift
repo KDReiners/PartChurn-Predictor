@@ -79,7 +79,6 @@ class MlDataTableProvider: ObservableObject {
                     self.filterViewProvider = FilterViewProvider(mlDataTableProvider: self)
                 }
                 if provider.targetValues.count > 0 {
-                    //                    self.ableStatistics?.targetStatistics =
                     self.updateStatisticsProvider(targetValues: provider.targetValues, predictedColumnName: provider.predictedColumnName)
                 }
                 completion()
@@ -157,11 +156,12 @@ class MlDataTableProvider: ObservableObject {
             }
         }
     }
-    func updateStatisticsProvider(targetValues: [String : Int], predictedColumnName: String) {
+    func    updateStatisticsProvider(targetValues: [String : Int], predictedColumnName: String) {
         if self.regressorName != nil {
             statisticsProvider(targetValues: targetValues, predictedColumnName: predictedColumnName) { provider in
                 DispatchQueue.main.async { [self] in
                     self.tableStatistics?.targetStatistics.append(provider)
+                    self.delegate?.asyncOperationDidFinish(withResult: provider)
                 }
             }
         }
@@ -200,8 +200,6 @@ class MlDataTableProvider: ObservableObject {
             targetStatistic.falsePositives = mlDataTable[falsePositivesMask].rows.count
             targetStatistic.trueNegatives = mlDataTable[trueNegativesMask].rows.count
             targetStatistic.falseNegatives = mlDataTable[falseNegativesMask].rows.count
-//            metricPrecisionRecallModel.updateEntry(prediction: self.prediction!, algorithmName: self.regressorName!, targetStatistics: targetStatistic)
-            
         }
         func find(trial: Int, nearestLowValue: Int = 0, nearestHighValue: Int = 0, bestRelationValue: Double = 0, bestRelationPredictionValue: Double = 0, targetStatistic: inout TargetStatistics ){
             let value =   predictionTable.rows[Int(trial)][predictedColumnName]?.doubleValue

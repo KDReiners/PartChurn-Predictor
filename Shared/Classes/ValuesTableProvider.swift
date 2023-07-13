@@ -39,6 +39,7 @@ class ValuesTableProvider: ObservableObject {
         targetColumn = columnDataModel.targetColumns.first
         if let targetColumn = targetColumn {
             predictedColumnName = predictionPrefix + targetColumn.name!
+            targetValues[targetColumn.name!] = 0
             removePredictionColumns()
         }
         if let selectedColumns = selectedColumns, let prediction = prediction, let regressorName = regressorName {

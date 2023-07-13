@@ -22,15 +22,27 @@ public class AlgorithmsModel: Model<Algorithms> {
             result = newValue.sorted(by: { $1.orderno > $0.orderno })
         }
     }
-    internal static func showKpis(predictions: Predictions?, algorithmName: String?) -> Ml_RegressorMetricKPI {
+    internal static func showKpis(prediction: Predictions?, algorithmName: String?, lookAhead: Int?) -> Ml_RegressorMetricKPI {
         let result = Ml_RegressorMetricKPI()
         let algorithmsModel = AlgorithmsModel()
         let metricValuesModel = MetricvaluesModel()
+        guard let prediction = prediction else {
+            return result
+        }
+        guard let model = prediction.prediction2model else {
+            return result
+        }
+        guard let lookAhead = lookAhead else {
+            return result
+        }
+        let predictionsModel = PredictionsModel(model: model)
+        let lookAheadItem = predictionsModel.returnLookAhead(prediction: prediction, lookAhead: lookAhead)
+        
         guard let algorithm = algorithmsModel.items.first(where: { return  $0.name == algorithmName }) else {
             return result
         }
         let metricValues = metricValuesModel.items.filter( {
-            return $0.metricvalue2algorithm == algorithm && $0.metricvalue2prediction == predictions
+            return $0.metricvalue2algorithm == algorithm && $0.metricvalue2prediction == prediction && $0.metricvalue2lookahead == lookAheadItem
         })
         for metricValue in  metricValues {
             let key = (metricValue.metricvalue2datasettype?.name!)! + "Metrics." + (metricValue.metricvalue2metric?.name!)!
@@ -45,11 +57,13 @@ public class AlgorithmsModel: Model<Algorithms> {
         var fileName: String?
         var algorithmName: String?
         var prediction: Predictions?
-        public init(prediction: Predictions?, algorithmName: String) {
+        var lookAhead: Int?
+        public init(prediction: Predictions?, algorithmName: String, lookAhead: Int?) {
             self.model = prediction?.prediction2model
             self.prediction = prediction
             self.algorithmName = algorithmName
-            metricStructure = AlgorithmsModel.showKpis(predictions: prediction, algorithmName: algorithmName)
+            self.lookAhead = lookAhead
+            metricStructure = AlgorithmsModel.showKpis(prediction: prediction, algorithmName: algorithmName, lookAhead: lookAhead)
             metricStructure.updateMetrics()
         }
         public var body: some View {
