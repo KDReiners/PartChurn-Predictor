@@ -108,7 +108,7 @@ struct ComposerView: View {
                 }.padding(.horizontal)
             }
         }.onAppear {
-            updateValuesView()
+//            updateValuesView()
         }
     }
     func updateValuesView() {

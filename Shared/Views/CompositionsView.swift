@@ -300,9 +300,14 @@ struct CompositionsView: View {
         self.dataContext.mlDataTableProviderContext = mlDataTableProviderContext
         var trainer = Trainer(mlDataProviderContext: self.dataContext.mlDataTableProviderContext)
         trainer.model = self.model
-        trainer.createModel(algorithmName: $mlSelection.wrappedValue!)
-        DispatchQueue.global().sync {
-            generatePredictionView()
+        let group = DispatchGroup()
+        group.enter()
+        trainer.createModel(algorithmName: $mlSelection.wrappedValue!) {
+            DispatchQueue.global().sync {
+                generatePredictionView()
+                group.leave()
+            }
+            group.wait()
         }
     }
     /// This function resets the valuesView table in compositionsview

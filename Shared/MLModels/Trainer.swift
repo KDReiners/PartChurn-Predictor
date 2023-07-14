@@ -51,7 +51,7 @@ public struct Trainer {
             self.regressorTable = self.regressorTable![endMask]
         }
     }
-    public mutating func createModel(algorithmName: String) -> Void {
+    public mutating func createModel(algorithmName: String, completion: @escaping () -> Void) -> Void {
         let columnDataModel = ColumnsModel(model: self.model )
         let targetColumn = columnDataModel.timedependantTargetColums.first
         let predictedColumnName = "Predicted: " + (targetColumn?.name)!
@@ -160,7 +160,7 @@ public struct Trainer {
                 fatalError(error.localizedDescription)
             }
         }
-        
+        completion()
     }
     private func writeClassifierMetrics(classifier: MLClassifier, classifierName: String, classifierEvaluationTable: MLDataTable) -> Void {
         print("to be done")
