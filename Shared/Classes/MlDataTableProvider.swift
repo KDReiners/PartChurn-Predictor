@@ -157,7 +157,7 @@ class MlDataTableProvider: ObservableObject {
         }
     }
     func    updateStatisticsProvider(targetValues: [String : Int], predictedColumnName: String) {
-        if self.regressorName != nil {
+        if self.regressorName != nil && self.mlDataTable.columnNames.contains(predictedColumnName) {
             statisticsProvider(targetValues: targetValues, predictedColumnName: predictedColumnName) { provider in
                 DispatchQueue.main.async { [self] in
                     self.tableStatistics?.targetStatistics.append(provider)
@@ -172,6 +172,7 @@ class MlDataTableProvider: ObservableObject {
         do {
             let sampler = DispatchQueue(label: "KD", qos: .userInitiated, attributes: .concurrent)
             sampler.async {
+                
                 let result = self.resolveTargetValues(targetValues: targetValues, predictedColumnName: predictedColumnName)
                 completion(result!)
             }

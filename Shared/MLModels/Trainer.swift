@@ -110,7 +110,7 @@ public struct Trainer {
                 }
             }()
         case "MLBoostedTreeClassifier":
-            let defaultParams = MLBoostedTreeClassifier.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 100, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.3, earlyStoppingRounds: nil, rowSubsample: 0.8, columnSubsample: 0.8)
+            let defaultParams = MLBoostedTreeClassifier.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 100, maxIterations: 150, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.3, earlyStoppingRounds: nil, rowSubsample: 0.8, columnSubsample: 0.8)
             classifier = {
                 do {
                     return try MLClassifier.boostedTree((MLBoostedTreeClassifier(trainingData: regressorTrainingTable, targetColumn: targetColumnName, parameters: defaultParams)))
@@ -154,7 +154,7 @@ public struct Trainer {
                 let classifierMetaData = MLModelMetadata(author: "Steps.IT",
                                                          shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden via Classifier",
                                                          version: "1.0")
-                try classifier.write(to: modelContextPath, metadata: classifierMetaData)
+                try classifier.write(to: mlDataTableProviderContext.lookAheadPath!, metadata: classifierMetaData)
                 writeClassifierMetrics(classifier: classifier, classifierName: algorithmName, classifierEvaluationTable: regressorEvaluationTable)
             } catch {
                 fatalError(error.localizedDescription)

@@ -52,9 +52,11 @@ class ValuesTableProvider: ObservableObject {
     func removePredictionColumns(filter: Bool? = false) {
         if self.mlDataTable.columnNames.contains(predictedColumnName) && filter != true {
             self.mlDataTable.removeColumn(named: predictedColumnName)
-            for i in 0..<orderedColNames.count {
+            var colCount = orderedColNames.count
+            for i in 0..<colCount {
                 if orderedColNames[i] == predictedColumnName {
                     self.orderedColNames.remove(at: i)
+                    colCount -= 1
                 }
             }
         }
