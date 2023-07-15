@@ -62,6 +62,7 @@ class MlDataTableProvider: ObservableObject {
                 if self.filterViewProvider == nil {
                     self.filterViewProvider = FilterViewProvider(mlDataTableProvider: self)
                 }
+                self.delegate?.asyncOperationDidFinish(withResult: provider)
                 self.loaded = true
             }
         }
@@ -316,6 +317,8 @@ class MlDataTableProvider: ObservableObject {
     }
     func buildMlDataTable(lookAhead: Int = 0) throws -> UnionResult {
         var result: MLDataTable?
+        var loadedTable: MLDataTable?
+        var predictionURL: URL! 
         self.filterViewProvider = nil
         self.lookAhead = lookAhead
         mergedColumns = selectedColumns == nil ? orderedColumns: selectedColumns
@@ -331,10 +334,13 @@ class MlDataTableProvider: ObservableObject {
         let timeSeriesColumn = self.orderedColumns.filter { $0.istimeseries == 1 }
         if timeSeriesColumn.count > 0 {
             let  mlTimeSeriesColumn = mlDataTable[(timeSeriesColumn.first?.name)!]
+            if let prediction = prediction {
+                let lookAhead = PredictionsModel(model: self.model!).returnLookAhead(prediction: prediction, lookAhead: lookAhead)
+                predictionURL = BaseServices.homePath.appendingPathComponent((prediction.prediction2model?.name)!).appendingPathComponent(lookAhead.objectID.uriRepresentation().lastPathComponent);
+                loadedTable = BaseServices.loadMLDataTableFromJson(filePath: predictionURL);
+            }
             if let timeSeries = timeSeries {
-                let lookAhead = PredictionsModel(model: self.model!).returnLookAhead(prediction: prediction!, lookAhead: lookAhead)
-                let predictionURL = BaseServices.homePath.appendingPathComponent((prediction?.prediction2model?.name)!).appendingPathComponent(lookAhead.objectID.uriRepresentation().lastPathComponent);
-                let loadedTable = BaseServices.loadMLDataTableFromJson(filePath: predictionURL);
+                
                 if loadedTable == nil {
                     for timeSlices in timeSeries {
                         let newCluster = MLTableCluster(columns: mergedColumns, model: self.model!)
@@ -403,8 +409,9 @@ class MlDataTableProvider: ObservableObject {
 //                        
 //                        }
 //                    }
-
-                    BaseServices.saveMLDataTableToJson(mlDataTable: self.mlDataTable, filePath: predictionURL)
+                    if let prediction = prediction {
+                        BaseServices.saveMLDataTableToJson(mlDataTable: self.mlDataTable, filePath: predictionURL)
+                    }
                     
                 } else {
                     self.mlDataTable = loadedTable;

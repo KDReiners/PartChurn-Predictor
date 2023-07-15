@@ -21,8 +21,8 @@ struct CompositionsView: View {
     @State var unionResult: UnionResult!
     @State var valuesView: ValuesView? = nil
     
-    var compositionDataModel: CompositionsModel
-    var predictionsDataModel = PredictionsModel()
+    @ObservedObject var compositionDataModel: CompositionsModel
+    @ObservedObject var predictionsDataModel = PredictionsModel()
     var valuesTableProvider = ValuesTableProvider()
     var model: Models
     var availableAlgorithms = AlgorithmsModel().items.sorted(by: { $0.algorithm2algorithmtype!.name! < $1.algorithm2algorithmtype!.name! })

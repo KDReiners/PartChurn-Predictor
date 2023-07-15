@@ -66,7 +66,7 @@ struct ComposerView: View {
                             } else {
                                 self.mlDataTableProvider.timeSeries = nil
                             }
-                            updateValuesView()
+//                            updateValuesView()
                         }
                     VStack(alignment: .leading) {
                         Text("Columns ")
@@ -89,7 +89,7 @@ struct ComposerView: View {
                         self.mlDataTableProvider.mlDataTable = composer?.mlDataTable_Base
                         self.mlDataTableProvider.selectedColumns = Array(newSelectedColumnCombination)
                         self.mlDataTableProvider.orderedColumns = composer?.orderedColumns
-                        updateValuesView()
+//                        updateValuesView()
                     }
                 }
                 HStack {
