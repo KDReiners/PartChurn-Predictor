@@ -40,7 +40,7 @@ class SimulationController: ObservableObject {
                 var result: URL? = nil
                 if let prediction = clusterSelection?.prediction {
                     let lookAhead = PredictionsModel(model: self.model!).returnLookAhead(prediction: prediction, lookAhead: lookAhead)
-                    result = BaseServices.homePath.appendingPathComponent((prediction.prediction2model?.name)!).appendingPathComponent(lookAhead.objectID.uriRepresentation().lastPathComponent);
+                    result = BaseServices.homePath.appendingPathComponent((prediction.prediction2model?.name)!).appendingPathComponent(prediction.objectID.uriRepresentation().lastPathComponent).appendingPathComponent(lookAhead.objectID.uriRepresentation().lastPathComponent);
                 }
                 return result
             }

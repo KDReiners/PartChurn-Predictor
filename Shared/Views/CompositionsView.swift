@@ -294,6 +294,8 @@ struct CompositionsView: View {
             VStack(alignment: .leading) {
                 self.valuesView
             }.padding()
+        }.onAppear {
+            generateValuesView()
         }
     }
     private func train(regressorName: String?, mlDataTableProviderContext: SimulationController.MlDataTableProviderContext) {

@@ -37,7 +37,8 @@ public struct Trainer {
         let minorityColumn = regressorTable![targetColumn!.name!]
         let minorityMask = minorityColumn == 0
         let minorityTable = self.regressorTable![minorityMask]
-        for _ in 0..<0 {
+        let debit = (self.regressorTable!.rows.count - minorityTable.rows.count) / minorityTable.rows.count
+        for _ in 0..<debit {
             regressorTable?.append(contentsOf: minorityTable)
         }
         self.regressorTable!.removeColumn(named: predictedColumnName)
@@ -90,7 +91,7 @@ public struct Trainer {
                 }
             }()
         case "MLBoostedTreeRegressor":
-            let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 100, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.1, earlyStoppingRounds: nil, rowSubsample: 0.8, columnSubsample: 0.8)
+            let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 500, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.05, earlyStoppingRounds: nil, rowSubsample: 0.8, columnSubsample: 0.8)
             regressor =  {
                 do {
                     return try MLRegressor.boostedTree(MLBoostedTreeRegressor(trainingData: regressorTrainingTable,
@@ -110,8 +111,8 @@ public struct Trainer {
                 }
             }()
         case "MLBoostedTreeClassifier":
-            let defaultParams = MLBoostedTreeClassifier.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 100, maxIterations: 150, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.3, earlyStoppingRounds: nil, rowSubsample: 0.8, columnSubsample: 0.8)
-            classifier = {
+            let defaultParams = MLBoostedTreeClassifier.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 100, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.01, earlyStoppingRounds: nil, rowSubsample: 0.8, columnSubsample: 0.8)
+            classifier = {	
                 do {
                     return try MLClassifier.boostedTree((MLBoostedTreeClassifier(trainingData: regressorTrainingTable, targetColumn: targetColumnName, parameters: defaultParams)))
                 } catch {

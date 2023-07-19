@@ -129,7 +129,7 @@ internal class FileWeaver {
                 joinParam2 = Array(joinColums)[1]
                 let timeBaseColumnName = columnsDataModel.timeStampColumn?.name
                 let newColumn = currentMLDataTable![timeBaseColumnName!].map {
-                    self.addOrSubtractMonths(baseValue: $0.intValue!, months: self.lookAhead)
+                    self.addOrSubtractMonths(baseValue: $0.intValue!, correction: self.lookAhead)
                 }
                 if timeBaseColumnName != nil {
                     currentMLDataTable.removeColumn(named: timeBaseColumnName!)
@@ -146,34 +146,34 @@ internal class FileWeaver {
     static func getColumnPivotValue(pivotColum: Columns?) ->String? {
         return FileWeaver.valuesDataModel.items.filter { $0.value2column == pivotColum}.first?.value
     }
-    func addOrSubtractMonths(baseValue: Int, months: Int) -> Int {
-        // Extract the year and month components
-        let year = baseValue / 100
-        let month = baseValue % 100
-        
-        // Convert the year and month components to a Date object
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy/MM"
-        let dateString = String(format: "%04d/%02d", year, month)
-        guard let date = dateFormatter.date(from: dateString) else {
-            return baseValue
-        }
-        
-        // Add or subtract the specified number of months
-        let calendar = Calendar.current
-        guard let newDate = calendar.date(byAdding: .month, value: -months, to: date) else {
-            return baseValue
-        }
-        
-        // Extract the year and month components from the new date
-        let newYear = calendar.component(.year, from: newDate)
-        let newMonth = calendar.component(.month, from: newDate)
-        
-        // Combine the year and month components into a new integer value
-        let newValue = newYear * 100 + newMonth
-        print("BaseValue: \(baseValue)")
-        print("NewValue: \(newValue)")
-        return newValue
+    func addOrSubtractMonths(baseValue: Int, correction: Int) -> Int {
+//        // Extract the year and month components
+//        let year = baseValue / 100
+//        let month = baseValue % 100
+//
+//        // Convert the year and month components to a Date object
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "yyyy/MM"
+//        let dateString = String(format: "%04d/%02d", year, month)
+//        guard let date = dateFormatter.date(from: dateString) else {
+//            return baseValue
+//        }
+//
+//        // Add or subtract the specified number of months
+//        let calendar = Calendar.current
+//        guard let newDate = calendar.date(byAdding: .month, value: -correction, to: date) else {
+//            return baseValue
+//        }
+//
+//        // Extract the year and month components from the new date
+//        let newYear = calendar.component(.year, from: newDate)
+//        let newMonth = calendar.component(.month, from: newDate)
+//
+//        // Combine the year and month components into a new integer value
+//        let newValue = newYear * 100 + newMonth
+//        print("BaseValue: \(baseValue)")
+//        print("NewValue: \(newValue)")
+        return baseValue-correction
     }
 
     internal struct CognitionSource: Identifiable {

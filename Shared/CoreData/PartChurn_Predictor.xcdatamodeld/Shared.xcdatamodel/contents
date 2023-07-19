@@ -25,7 +25,7 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="orderno" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="column2compositions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Compositions" inverseName="composition2columns" inverseEntity="Compositions"/>
-        <relationship name="column2file" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Files" inverseName="file2columns" inverseEntity="Files"/>
+        <relationship name="column2file" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Files" inverseName="file2columns" inverseEntity="Files"/>
         <relationship name="column2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2columns" inverseEntity="Models"/>
         <relationship name="column2values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Values" inverseName="value2column" inverseEntity="Values"/>
     </entity>
@@ -45,8 +45,8 @@
     </entity>
     <entity name="Files" representedClassName="Files" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="file2columns" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Columns" inverseName="column2file" inverseEntity="Columns"/>
-        <relationship name="file2values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Values" inverseName="value2file" inverseEntity="Values"/>
+        <relationship name="file2columns" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Columns" inverseName="column2file" inverseEntity="Columns"/>
+        <relationship name="file2values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Values" inverseName="value2file" inverseEntity="Values"/>
         <relationship name="files2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2files" inverseEntity="Models"/>
     </entity>
     <entity name="Lookaheads" representedClassName="Lookaheads" syncable="YES" codeGenerationType="class">
@@ -75,7 +75,7 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="model2columns" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Columns" inverseName="column2model" inverseEntity="Columns"/>
         <relationship name="model2compositions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Compositions" inverseName="composition2model" inverseEntity="Compositions"/>
-        <relationship name="model2files" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Files" inverseName="files2model" inverseEntity="Files"/>
+        <relationship name="model2files" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Files" inverseName="files2model" inverseEntity="Files"/>
         <relationship name="model2metricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2model" inverseEntity="Metricvalues"/>
         <relationship name="model2predictions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictions" inverseName="prediction2model" inverseEntity="Predictions"/>
         <relationship name="model2values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Values" inverseName="value2model" inverseEntity="Values"/>
@@ -124,7 +124,7 @@
         <attribute name="rowno" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="value" optional="YES" attributeType="String"/>
         <relationship name="value2column" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Columns" inverseName="column2values" inverseEntity="Columns"/>
-        <relationship name="value2file" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Files" inverseName="file2values" inverseEntity="Files"/>
+        <relationship name="value2file" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Files" inverseName="file2values" inverseEntity="Files"/>
         <relationship name="value2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2values" inverseEntity="Models"/>
     </entity>
 </model>
