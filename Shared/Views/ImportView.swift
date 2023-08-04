@@ -61,8 +61,10 @@ struct ImportView: View {
                 }
                 Button("SQL Server Import") {
                     let sqlHelper = SQLHelper()
-                    sqlHelper.runSQLCommand()
-                    
+//                    sqlHelper.runSQLCommand()
+                    if let outputData = sqlHelper.runSQLCommand() {
+                        sqlHelper.readJSONFromPipe(outputData: outputData)
+                    }
                 }
                 Button("Import") {
                     importRunning = true
@@ -77,10 +79,12 @@ struct ImportView: View {
             }.padding()
         }
     }
-}
-
-struct ImportView_Previews: PreviewProvider {
-    static var previews: some View {
-        ImportView()
+    
+    
+    
+    struct ImportView_Previews: PreviewProvider {
+        static var previews: some View {
+            ImportView()
+        }
     }
 }
