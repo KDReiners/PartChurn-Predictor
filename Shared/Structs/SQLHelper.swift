@@ -8,59 +8,69 @@
 import Foundation
 import SwiftUI
 struct SQLHelper {
-    func runSQLCommand() -> String? {
-        var outputData = Data()
+    func runSQLCommand(completion: @escaping (String?) -> Void) {
         let odbcPath = "/opt/homebrew/Cellar/mssql-tools18/18.2.1.1/bin/sqlcmd"
-        let process = Process()
-        var currentEnvironment = ProcessInfo.processInfo.environment
-        process.executableURL = URL(fileURLWithPath: odbcPath)
-        process.arguments = [
-            "-S",
-            "10.49.6.37", // The name of your SQL Server
-            "-d",
-            "WAC",
-            "-U",
-            "sa", // Your username for the SQL Server
-            "-P",
-            "!SqL!2015&T@@&", // Your password for the SQL Server
-            "-N",
-            "-C",
-            "-Q",
-            "set nocount on declare @json varchar(max) set @json = (select top 2000 s_custno FROM sao.customer_m where dt_deleted is null and i_customer_m >0  FOR JSON auto)select @json ",
-            "-k",
-            "-y",
-            "0"
-        ]
-        
-        let outputPipe = Pipe()
-        process.standardOutput = outputPipe
-        
-        do {
-            try process.run()
-            process.waitUntilExit()
-            
-            let bufferSize = 1024 // Adjust the buffer size as needed
-            var tempBuffer = Data(capacity: bufferSize)
-            
-            repeat {
-                if let bytesRead = try! outputPipe.fileHandleForReading.read(upToCount: bufferSize) {
-                    if bytesRead.count > 0 {
-                        tempBuffer = bytesRead
-                        outputData.append(tempBuffer)
+        let batchSize = 10
+        var outputData = Data()
+
+        func runBatch(offset: Int) {
+            let process = Process()
+            process.executableURL = URL(fileURLWithPath: odbcPath)
+            process.arguments = [
+                "-S",
+                "10.49.6.37", // The name of your SQL Server
+                "-d",
+                "WAC",
+                "-U",
+                "sa", // Your username for the SQL Server
+                "-P",
+                "!SqL!2015&T@@&", // Your password for the SQL Server
+                "-N",
+                "-C",
+                "-Q",
+                "set nocount on declare @json varchar(max) set @json = (select * FROM sao.customer_m where dt_deleted is null and i_customer_m >0 order by i_customer_m offset \(offset) rows fetch next \(batchSize) rows only FOR JSON auto)select @json ",
+                "-y",
+                "0"
+            ]
+
+            let outputPipe = Pipe()
+            process.standardOutput = outputPipe
+
+            process.terminationHandler = { _ in
+                let data = outputPipe.fileHandleForReading.readDataToEndOfFile()
+                outputData.append(data)
+                print("empfange daten")
+
+                if data.count < batchSize { // Reached the end of the result set
+                    if let jsonString = String(data: outputData, encoding: .utf8) {
+                        completion(jsonString)
                     } else {
-                        break
+                        completion(nil)
                     }
                 } else {
-                    break
+                    runBatch(offset: offset + batchSize)
                 }
-            } while true
-            
-            
-        } catch {
-            print(error)
+            }
+
+            do {
+                try process.run()
+            } catch {
+                print(error)
+                completion(nil)
+            }
         }
-        let outputString = String(data: outputData, encoding: .utf8)
-        return outputString
+
+        // Start fetching batches from offset 0
+        runBatch(offset: 0)
+    }
+    func test() {
+        runSQLCommand { jsonString in
+            if let jsonString = jsonString {
+                print(jsonString)
+            } else {
+                print("Failed to retrieve data from SQLCMD.")
+            }
+        }
     }
     func readJSONFromPipe(outputData: String?) {
         guard let outputData = outputData else {
