@@ -95,6 +95,10 @@ public struct BaseServices
             fatalError(error.localizedDescription)
         }
     }
+    public static func directoryExists(at url: URL) -> Bool {
+        var isDirectory: ObjCBool = false
+        return FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory) && isDirectory.boolValue
+    }
     // Funktion zum Speichern der MLDATATable in JSON
     public static func saveMLDataTableToJson(mlDataTable: MLDataTable, filePath: URL) {
         try? mlDataTable.write(to: filePath)

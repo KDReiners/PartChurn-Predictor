@@ -59,11 +59,6 @@ struct ImportView: View {
                         self.url = panel.url
                     }
                 }
-                Button("SQL Server Import") {
-                    let sqlHelper = SQLHelper()
-//                    sqlHelper.runSQLCommand()
-                    sqlHelper.test()
-                }
                 Button("Import") {
                     importRunning = true
                     Task {

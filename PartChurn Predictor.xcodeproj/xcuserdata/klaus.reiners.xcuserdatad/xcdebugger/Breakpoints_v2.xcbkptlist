@@ -118,123 +118,62 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "7A6C8728-4AC0-4C18-B26E-5D9BDBCCAF23"
+            uuid = "42973C26-7414-4517-A8E2-34E271E6F95F"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Shared/Structs/SQLHelper.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "98"
-            endingLineNumber = "98">
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "runBatch(offset:)"
+            landmarkType = "9">
             <Locations>
                <Location
-                  uuid = "7A6C8728-4AC0-4C18-B26E-5D9BDBCCAF23 - 539680e4f1fb58ca"
+                  uuid = "42973C26-7414-4517-A8E2-34E271E6F95F - 4fdff36f86a6440f"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "PartChurn_Predictor.SQLHelper.readJSONFromPipe(outputData: Swift.Optional&lt;Swift.String&gt;) -&gt; ()"
+                  symbolName = "PartChurn_Predictor.SQLHelper.runSQLCommand() -&gt; Swift.Optional&lt;Foundation.URL&gt;"
                   moduleName = "PartChurn Predictor"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Structs/SQLHelper.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "99"
-                  endingLineNumber = "99"
-                  offsetFromSymbolStart = "980">
+                  startingLineNumber = "45"
+                  endingLineNumber = "45"
+                  offsetFromSymbolStart = "1664">
                </Location>
                <Location
-                  uuid = "7A6C8728-4AC0-4C18-B26E-5D9BDBCCAF23 - 539680e4f1fb58ca"
+                  uuid = "42973C26-7414-4517-A8E2-34E271E6F95F - 4fdff36f86a6440f"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "PartChurn_Predictor.SQLHelper.readJSONFromPipe(outputData: Swift.Optional&lt;Swift.String&gt;) -&gt; ()"
+                  symbolName = "PartChurn_Predictor.SQLHelper.runSQLCommand() -&gt; Swift.Optional&lt;Foundation.URL&gt;"
                   moduleName = "PartChurn Predictor"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Structs/SQLHelper.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "99"
-                  endingLineNumber = "99"
-                  offsetFromSymbolStart = "1128">
+                  startingLineNumber = "45"
+                  endingLineNumber = "45"
+                  offsetFromSymbolStart = "1560">
                </Location>
                <Location
-                  uuid = "7A6C8728-4AC0-4C18-B26E-5D9BDBCCAF23 - 539680e4f1fb58ca"
+                  uuid = "42973C26-7414-4517-A8E2-34E271E6F95F - 916ba74051fafd26"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "PartChurn_Predictor.SQLHelper.readJSONFromPipe(outputData: Swift.Optional&lt;Swift.String&gt;) -&gt; ()"
+                  symbolName = "closure #1 (__C.NSTask) -&gt; () in runBatch(offset: Swift.Int) -&gt; ()"
                   moduleName = "PartChurn Predictor"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Structs/SQLHelper.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "99"
-                  endingLineNumber = "99"
-                  offsetFromSymbolStart = "1364">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "72DCA8D6-B92A-4E82-A101-5532B48F3E4B"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Shared/Structs/SQLHelper.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "69"
-            endingLineNumber = "69"
-            landmarkName = "test()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "72DCA8D6-B92A-4E82-A101-5532B48F3E4B - f74abb4fdb05dd43"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Swift.String&gt;) -&gt; () in PartChurn_Predictor.SQLHelper.test() -&gt; ()"
-                  moduleName = "PartChurn Predictor"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Structs/SQLHelper.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "51"
-                  endingLineNumber = "51"
-                  offsetFromSymbolStart = "320">
-               </Location>
-               <Location
-                  uuid = "72DCA8D6-B92A-4E82-A101-5532B48F3E4B - f74abb4fdb05a38c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Swift.String&gt;) -&gt; () in PartChurn_Predictor.SQLHelper.test() -&gt; ()"
-                  moduleName = "PartChurn Predictor"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Structs/SQLHelper.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "68"
-                  endingLineNumber = "68"
-                  offsetFromSymbolStart = "320">
-               </Location>
-               <Location
-                  uuid = "72DCA8D6-B92A-4E82-A101-5532B48F3E4B - f74abb4fdb05a3ed"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Optional&lt;Swift.String&gt;) -&gt; () in PartChurn_Predictor.SQLHelper.test() -&gt; ()"
-                  moduleName = "PartChurn Predictor"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Structs/SQLHelper.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "69"
-                  endingLineNumber = "69"
-                  offsetFromSymbolStart = "320">
+                  startingLineNumber = "45"
+                  endingLineNumber = "45"
+                  offsetFromSymbolStart = "756">
                </Location>
             </Locations>
          </BreakpointContent>
