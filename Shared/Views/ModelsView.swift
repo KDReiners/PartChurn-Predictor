@@ -13,6 +13,7 @@ public struct ModelsView: View {
     }
 
     public var body: some View {
+
             List{
                 VStack(spacing: 16) {
                     if let files = files {
@@ -41,8 +42,10 @@ public struct ModelsView: View {
                         Button("-") {
                             for filename in selectedFilenames {
                                 let obsoleteFile = filesDataModel.items.filter { $0.name == filename}.first
+                                selectedFilenames.remove((obsoleteFile?.name)!)
                                 filesDataModel.deleteRecord(record: obsoleteFile!)
                                 BaseServices.save()
+                                loadJSONFileNames()
                             }
                         }
                         .disabled(selectedFilenames.count == 0)
