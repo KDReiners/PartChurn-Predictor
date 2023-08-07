@@ -8,13 +8,14 @@
 import Foundation
 import SwiftUI
 struct SQLHelper {
-    func runSQLCommand(transferDirectory: URL, transferFileName: String = "MSNonsense.json") -> URL? {
+    func runSQLCommand(model: Models, transferFileName: String = "MSNonsense.json", sqlCommand: String) {
+        let transferDirectory: URL = BaseServices.homePath.appendingPathComponent(model.name!).appendingPathComponent("files", isDirectory: true )
+        if !BaseServices.directoryExists(at: transferDirectory) {
+            BaseServices.createDirectory(at: transferDirectory)
+        }
         let odbcPath = "/opt/homebrew/Cellar/mssql-tools18/18.2.1.1/bin/sqlcmd"
-
         // Construct the output file path in the current working directory
-        
         let transferPath = transferDirectory.appendingPathComponent(transferFileName).path
-
         let process = Process()
         process.executableURL = URL(fileURLWithPath: odbcPath)
         process.arguments = [
@@ -29,7 +30,7 @@ struct SQLHelper {
             "-N",
             "-C",
             "-Q",
-            "set nocount on declare @json varchar(max) set @json = (select  * FROM sao.customer_m where dt_deleted is null and i_customer_m >0 for json auto) select @json",
+            "\(sqlCommand)",
             "-k",
             "-o",
             transferPath, // Set the full path to the output file
@@ -40,14 +41,9 @@ struct SQLHelper {
         do {
             try process.run()
             process.waitUntilExit()
-
-            // Return the URL of the output file
-            return URL(fileURLWithPath: transferPath)
         } catch {
             print("Error executing SQL command: \(error)")
         }
-
-        return nil
     }
 
     func readJSONFromPipe(outputData: String?) {

@@ -4,7 +4,6 @@
 //
 //  Created by Klaus-Dieter Reiners on 19.11.21.
 //
-
 import Foundation
 import OSLog
 import CoreData
@@ -27,9 +26,7 @@ public struct BaseServices
             return FileManager.default.homeDirectoryForCurrentUser
         }
     }
-    
     /// let constructors
-    
     public static let logger = {
         return Logger()
     }()
