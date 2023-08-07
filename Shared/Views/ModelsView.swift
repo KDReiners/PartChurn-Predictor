@@ -1,64 +1,114 @@
-////
-////  ModelsView.swift
-////  PartChurn Predictor
-////
-////  Created by Klaus-Dieter Reiners on 08.05.22.
-////
-//
 import SwiftUI
-import CreateML
-public struct ModelListRow: View {
-    @State private var fileNames: [String] = []
-    @State var jsonFilesURL: URL!
+import CoreData
+
+public struct ModelsView: View {
+    @ObservedObject var filesDataModel = FilesModel()
+    @State var files: [Files]?
+    @State var selectedFilenames: Set<String> = Set<String>()
+    @State private var showAddFileView = false
     public var selectedModel: Models
-    public var editedModel: Binding<Models>?
-    init(selectedModel: Models, editedModel: Binding<Models>? = nil) {
+    
+    init(selectedModel: Models) {
         self.selectedModel = selectedModel
-        self.editedModel = editedModel
     }
+
     public var body: some View {
-        Text("\(self.selectedModel.name ?? "(no name given)")")
-        VStack() {
-            List(fileNames, id: \.self) { fileName in
-                Text(fileName)
-            }.onAppear {
+            List{
+                VStack(spacing: 16) {
+                    if let files = files {
+                        ForEach(0..<files.count, id: \.self) { index in
+                            HStack {
+                                    if index < files.count {
+                                        TableViewRow(file: files[index], isSelected: selectedFilenames.contains(files[index].name ?? "")) {
+                                            if selectedFilenames.contains(files[index].name ?? "") {
+                                                selectedFilenames.remove(files[index].name ?? "")
+                                            } else {
+                                                selectedFilenames.insert(files[index].name ?? "")
+                                            }
+                                        }
+                                    } else {
+                                        Spacer()
+                                    }
+                                }
+                            
+                        }
+                    }
+                    // Button to show the AddFileView
+                    HStack(alignment: .center, spacing: 10) {
+                        Button("+") {
+                            addNewFile(newFilename: "unknown Filename")
+                        }
+                        Button("-") {
+                            for filename in selectedFilenames {
+                                let obsoleteFile = filesDataModel.items.filter { $0.name == filename}.first
+                                filesDataModel.deleteRecord(record: obsoleteFile!)
+                                BaseServices.save()
+                            }
+                        }
+                        .disabled(selectedFilenames.count == 0)
+                    }
+                }
+                .padding()
+            }
+            .onAppear {
                 loadJSONFileNames()
             }
-            Button("SQL Server Import") {
-                let sqlHelper = SQLHelper()
-                sqlHelper.runSQLCommand()
-            }
         }
-    }
+
     func loadJSONFileNames() {
-        // Get the URL for the files directory
-        jsonFilesURL = BaseServices.homePath.appendingPathComponent(selectedModel.name!).appendingPathComponent("Files", isDirectory: true)
+        // Fetch the files associated with the selected model from Core Data
+        files = FilesModel().items.filter( { $0.files2model == selectedModel })
+    }
 
-        // Check if the directory exists
-        if BaseServices.directoryExists(at: jsonFilesURL) {
-            do {
-                // Get the contents of the directory with the .json extension
-                let fileURLs = try FileManager.default.contentsOfDirectory(at: jsonFilesURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+    func addNewFile(newFilename: String) {
+        let newFile = filesDataModel.insertRecord()
+        newFile.files2model = selectedModel
+        newFile.name = newFilename
+        files?.append(newFile)
+        BaseServices.save()
+    }
+}
 
-                // Filter and keep only the .json file names
-                fileNames = fileURLs.filter { $0.pathExtension == "json" }.map { $0.lastPathComponent }
-            } catch {
-                print("Error while loading file names: \(error)")
-            }
+struct TableViewRow: View {
+    var file: Files
+    var isSelected: Bool
+    var toggleSelection: () -> Void
+
+    var body: some View {
+        HStack {
+            Toggle(isOn: Binding(
+                            get: { isSelected },
+                            set: { isSelected in
+                                toggleSelection() // Call the toggleSelection closure when the checkbox state changes
+                            }
+                        )) {
+                            EmptyView() // Use EmptyView to hide the label for the Toggle
+                        }
+                        .toggleStyle(CheckboxToggleStyle()) // Use SwitchToggleStyle for a checkbox appearance
+            TextField("SQL Command", text: Binding(
+                get: { file.sqlCommand ?? "" },
+                set: { newValue in
+                    file.sqlCommand = newValue
+                    BaseServices.save()
+                })
+            )
+            .textFieldStyle(RoundedBorderTextFieldStyle())
+            TextField("File Name", text: Binding(
+                get: { file.name ?? "" },
+                set: { newValue in
+                    file.name = newValue
+                    BaseServices.save()
+                })
+            )
+            .textFieldStyle(RoundedBorderTextFieldStyle())
+            Text("\(file.lastupdatedate ?? Date(), formatter: BaseServices.standardDateFormatter)")
+
         }
+        .padding()
+        .background(isSelected ? Color.blue.opacity(0.3) : Color.clear) // Highlight the selected rows with a blue background
+        .cornerRadius(8)
+        .onTapGesture(perform: toggleSelection)
     }
 
 }
-public struct EditableModelListRow: View {
-    public var editedModel: Binding<Models>
-    @State var name: String
-    init(editedModel: Binding<Models>) {
-        self.editedModel = editedModel
-        self.name = editedModel.name.wrappedValue!
-    }
-    public var body: some View {
-        TextField("Model Name", text: $name).onChange(of: name) { newValue in
-            self.editedModel.name.wrappedValue = newValue
-        }
-    }
-}
+

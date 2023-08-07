@@ -30,6 +30,8 @@
 		0A4C56592869862C00961D1D /* ColumnsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4C56572869862C00961D1D /* ColumnsView.swift */; };
 		0A589C13286614A000D1239B /* ManagerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A589C12286614A000D1239B /* ManagerModels.swift */; };
 		0A589C14286614A000D1239B /* ManagerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A589C12286614A000D1239B /* ManagerModels.swift */; };
+		0A6194432A7FEE3800A2A149 /* ModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6194422A7FEE3800A2A149 /* ModelsView.swift */; };
+		0A6194442A7FEE3800A2A149 /* ModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6194422A7FEE3800A2A149 /* ModelsView.swift */; };
 		0A660F34287AD1920001EF16 /* FileWeaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A660F33287AD1920001EF16 /* FileWeaver.swift */; };
 		0A660F35287AD1920001EF16 /* FileWeaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A660F33287AD1920001EF16 /* FileWeaver.swift */; };
 		0A69F24828F7CCE70062509A /* AnalysisProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A69F24728F7CCE70062509A /* AnalysisProvider.swift */; };
@@ -52,8 +54,6 @@
 		0AC6E4242A28F02C0005F5CA /* PackedValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC6E4222A28F02C0005F5CA /* PackedValue.swift */; };
 		0AC6E4262A2A48D80005F5CA /* GridItemSequenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC6E4252A2A48D80005F5CA /* GridItemSequenceView.swift */; };
 		0AC6E4272A2A48D80005F5CA /* GridItemSequenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC6E4252A2A48D80005F5CA /* GridItemSequenceView.swift */; };
-		0AC7273D2A64392D002AF47C /* ConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC7273C2A64392D002AF47C /* ConfigurationView.swift */; };
-		0AC7273E2A64392E002AF47C /* ConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC7273C2A64392D002AF47C /* ConfigurationView.swift */; };
 		0AC727402A6439D9002AF47C /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC7273F2A6439D9002AF47C /* Configuration.swift */; };
 		0AC727412A6439D9002AF47C /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC7273F2A6439D9002AF47C /* Configuration.swift */; };
 		0AC8843B29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8843A29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift */; };
@@ -136,8 +136,8 @@
 		2DA77EFD28258384007EC3E5 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EFB28258384007EC3E5 /* Extensions.swift */; };
 		2DA77EFF28266B32007EC3E5 /* FilesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EFE28266B32007EC3E5 /* FilesModel.swift */; };
 		2DA77F0028266B32007EC3E5 /* FilesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77EFE28266B32007EC3E5 /* FilesModel.swift */; };
-		2DA77F022827E1DD007EC3E5 /* ModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77F012827E1DD007EC3E5 /* ModelsView.swift */; };
-		2DA77F032827E1DD007EC3E5 /* ModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77F012827E1DD007EC3E5 /* ModelsView.swift */; };
+		2DA77F022827E1DD007EC3E5 /* ModelListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77F012827E1DD007EC3E5 /* ModelListRow.swift */; };
+		2DA77F032827E1DD007EC3E5 /* ModelListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA77F012827E1DD007EC3E5 /* ModelListRow.swift */; };
 		2DB5E69328AD3536006DC0D2 /* CompositionsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB5E69228AD3536006DC0D2 /* CompositionsProvider.swift */; };
 		2DB5E69428AD3536006DC0D2 /* CompositionsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB5E69228AD3536006DC0D2 /* CompositionsProvider.swift */; };
 		2DB5E69628AD36DE006DC0D2 /* CompositionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB5E69528AD36DE006DC0D2 /* CompositionsView.swift */; };
@@ -166,6 +166,7 @@
 		0A4C56542869750900961D1D /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
 		0A4C56572869862C00961D1D /* ColumnsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColumnsView.swift; sourceTree = "<group>"; };
 		0A589C12286614A000D1239B /* ManagerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerModels.swift; sourceTree = "<group>"; };
+		0A6194422A7FEE3800A2A149 /* ModelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelsView.swift; sourceTree = "<group>"; };
 		0A660F33287AD1920001EF16 /* FileWeaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileWeaver.swift; sourceTree = "<group>"; };
 		0A69F24728F7CCE70062509A /* AnalysisProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisProvider.swift; sourceTree = "<group>"; };
 		0A69F9322A474EA500A95F46 /* PredictionsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionsProvider.swift; sourceTree = "<group>"; };
@@ -177,7 +178,6 @@
 		0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		0AC6E4222A28F02C0005F5CA /* PackedValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackedValue.swift; sourceTree = "<group>"; };
 		0AC6E4252A2A48D80005F5CA /* GridItemSequenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridItemSequenceView.swift; sourceTree = "<group>"; };
-		0AC7273C2A64392D002AF47C /* ConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationView.swift; sourceTree = "<group>"; };
 		0AC7273F2A6439D9002AF47C /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		0AC8843A29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ml_ClassifierMetricKPI.swift; sourceTree = "<group>"; };
 		0AD43D092920234700199F06 /* SimulationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationController.swift; sourceTree = "<group>"; };
@@ -221,7 +221,7 @@
 		2DA77EF728257B97007EC3E5 /* CSV_Importer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSV_Importer.swift; sourceTree = "<group>"; };
 		2DA77EFB28258384007EC3E5 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		2DA77EFE28266B32007EC3E5 /* FilesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesModel.swift; sourceTree = "<group>"; };
-		2DA77F012827E1DD007EC3E5 /* ModelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelsView.swift; sourceTree = "<group>"; };
+		2DA77F012827E1DD007EC3E5 /* ModelListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelListRow.swift; sourceTree = "<group>"; };
 		2DB5E69228AD3536006DC0D2 /* CompositionsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositionsProvider.swift; sourceTree = "<group>"; };
 		2DB5E69528AD36DE006DC0D2 /* CompositionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositionsView.swift; sourceTree = "<group>"; };
 		2DBDCCF5288D6B9800CC8EDC /* CompositionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositionsModel.swift; sourceTree = "<group>"; };
@@ -406,10 +406,10 @@
 		2DA77EED28257693007EC3E5 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				0AC7273C2A64392D002AF47C /* ConfigurationView.swift */,
 				2DA77EEE282576AA007EC3E5 /* ImportView.swift */,
 				2DA77EBD282569DC007EC3E5 /* DirectoryView.swift */,
-				2DA77F012827E1DD007EC3E5 /* ModelsView.swift */,
+				0A6194422A7FEE3800A2A149 /* ModelsView.swift */,
+				2DA77F012827E1DD007EC3E5 /* ModelListRow.swift */,
 				0AFCB7032850A5FA00676AF6 /* ValuesView.swift */,
 				0A4C56542869750900961D1D /* FilesView.swift */,
 				0A4C56572869862C00961D1D /* ColumnsView.swift */,
@@ -547,7 +547,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DB5E69328AD3536006DC0D2 /* CompositionsProvider.swift in Sources */,
-				0AC7273D2A64392D002AF47C /* ConfigurationView.swift in Sources */,
 				0A0FC907297D9981006F778C /* PredictionsView.swift in Sources */,
 				0AF7289628F5BEB9006DE13A /* PredictionMetricsModel.swift in Sources */,
 				2DA77EE82825716A007EC3E5 /* ModelsModel.swift in Sources */,
@@ -606,9 +605,10 @@
 				0A4C56552869750900961D1D /* FilesView.swift in Sources */,
 				0A69F9332A474EA500A95F46 /* PredictionsProvider.swift in Sources */,
 				0AC6E4232A28F02C0005F5CA /* PackedValue.swift in Sources */,
+				0A6194432A7FEE3800A2A149 /* ModelsView.swift in Sources */,
 				2D98958E282EE4100070F475 /* DatasettypesModel.swift in Sources */,
 				2DFE31BE282D8BA40058C3AA /* Ml_RegressorMetricKPI.swift in Sources */,
-				2DA77F022827E1DD007EC3E5 /* ModelsView.swift in Sources */,
+				2DA77F022827E1DD007EC3E5 /* ModelListRow.swift in Sources */,
 				2DA77EDA28256EE5007EC3E5 /* GenericViewModel.swift in Sources */,
 				2DA77ED628256E9D007EC3E5 /* Storage.swift in Sources */,
 				2D0EAF2E2A5807E5006512CE /* DataContext.swift in Sources */,
@@ -624,7 +624,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DB5E69428AD3536006DC0D2 /* CompositionsProvider.swift in Sources */,
-				0AC7273E2A64392E002AF47C /* ConfigurationView.swift in Sources */,
 				0A0FC908297D9981006F778C /* PredictionsView.swift in Sources */,
 				0AF7289728F5BEB9006DE13A /* PredictionMetricsModel.swift in Sources */,
 				2DA77EE92825716A007EC3E5 /* ModelsModel.swift in Sources */,
@@ -683,9 +682,10 @@
 				0A4C56562869750900961D1D /* FilesView.swift in Sources */,
 				0A69F9342A474EA500A95F46 /* PredictionsProvider.swift in Sources */,
 				0AC6E4242A28F02C0005F5CA /* PackedValue.swift in Sources */,
+				0A6194442A7FEE3800A2A149 /* ModelsView.swift in Sources */,
 				2D98958F282EE4100070F475 /* DatasettypesModel.swift in Sources */,
 				2DFE31BF282D8BA40058C3AA /* Ml_RegressorMetricKPI.swift in Sources */,
-				2DA77F032827E1DD007EC3E5 /* ModelsView.swift in Sources */,
+				2DA77F032827E1DD007EC3E5 /* ModelListRow.swift in Sources */,
 				2DA77EDB28256EE5007EC3E5 /* GenericViewModel.swift in Sources */,
 				2DA77ED728256E9D007EC3E5 /* Storage.swift in Sources */,
 				2D0EAF2F2A5807E5006512CE /* DataContext.swift in Sources */,

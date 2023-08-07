@@ -35,10 +35,7 @@ struct DirectoryView: View {
                 List {
                     ForEach(modelsDataModel.items, id: \.self) { model in
                         DisclosureGroup(model.name!) {
-                            NavigationLink("Configuration", destination: ConfigurationView(model: model, activeLink: activeLink), tag: DirectoryView.ActiveLink.configuration, selection: $activeLink)
-                                .onTapGesture {
-                                    activeLink = .configuration
-                                }
+                            NavigationLink("Settings", destination: ModelsView(selectedModel: model))
                             if model == modelSelect {
                                 NavigationLink("PlayGround", destination: ScenarioView(model: model, modelSelect: $modelSelect.wrappedValue), tag: model, selection: $modelSelect)
                             } else {
@@ -57,9 +54,6 @@ struct DirectoryView: View {
                                 
                             }
 //                            NavigationLink("Automator", destination: AnalysisView(model: model))
-                            DisclosureGroup("Data Manager") {
-                                NavigationLink("Steps Import", destination: ImportView())
-                            }
                         }
                     }
                 }

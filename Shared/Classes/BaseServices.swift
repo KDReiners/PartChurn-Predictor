@@ -99,6 +99,14 @@ public struct BaseServices
         var isDirectory: ObjCBool = false
         return FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory) && isDirectory.boolValue
     }
+    public static func createDirectory(at url: URL) {
+        do {
+            try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+            print("Directory created successfully: \(url)")
+        } catch {
+            print("Error while creating directory: \(error)")
+        }
+    }
     // Funktion zum Speichern der MLDATATable in JSON
     public static func saveMLDataTableToJson(mlDataTable: MLDataTable, filePath: URL) {
         try? mlDataTable.write(to: filePath)

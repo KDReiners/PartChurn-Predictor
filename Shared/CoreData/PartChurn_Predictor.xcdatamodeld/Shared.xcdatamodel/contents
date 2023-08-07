@@ -44,7 +44,10 @@
         <relationship name="datasettype2metricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2datasettype" inverseEntity="Metricvalues"/>
     </entity>
     <entity name="Files" representedClassName="Files" syncable="YES" codeGenerationType="class">
+        <attribute name="fileexists" optional="YES" transient="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="lastupdatedate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="sqlCommand" optional="YES" attributeType="String"/>
         <relationship name="file2columns" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Columns" inverseName="column2file" inverseEntity="Columns"/>
         <relationship name="file2values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Values" inverseName="value2file" inverseEntity="Values"/>
         <relationship name="files2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2files" inverseEntity="Models"/>

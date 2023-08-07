@@ -16,6 +16,7 @@ import Foundation
 import Foundation
 public class FilesModel: Model<Files> {
     @Published var result: [Files]!
+    
     internal func getCognitionType(file: Files) ->  BaseServices.cognitionTypes {
         var result: BaseServices.cognitionTypes = .cognitionError
         let fileColumns = getColumnsForFile(file: file)
