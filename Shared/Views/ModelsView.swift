@@ -70,33 +70,13 @@ public struct ModelsView: View {
             guard let result = result else {
                 return
             }
-            if result.count>0 {
-                var tableData: [String: MLDataValueConvertible] = [:]
-                    for (key, values) in result {
-                        if values.allSatisfy( {$0 as? Int != nil}) {
-                            tableData[key] = values.map {$0 as! Int }
-                            for value in values {
-                                
-                            }
-                            continue
-                        }
-                        if values.allSatisfy( {$0 as? Double != nil}) {
-                            tableData[key] = values.map {$0 as! Double }
-                            continue
-                        }
-                        if values.allSatisfy( {$0 as? String != nil}) {
-                            tableData[key] = values.map {$0 as! String }
-                            continue
-                        }
-                        
-                    }
                 do {
-                    let baseTable = try MLDataTable(dictionary: tableData)
+                    let baseTable = try MLDataTable(dictionary: result)
+                    print(baseTable)
                 } catch {
                     print(error.localizedDescription)
                 }
             }
-        }
     }
     func loadJSONFileNames() {
         // Fetch the files associated with the selected model from Core Data
@@ -132,7 +112,7 @@ struct TableViewRow: View {
                 TextEditor(text: Binding(
                     get: { file.sqlCommand ?? "" },
                     set: { newValue     in
-                        file.sqlCommand = newValue
+                        file.sqlCommand = newValue.uppercased()
                         BaseServices.save()
                     })
                 )
@@ -147,7 +127,10 @@ struct TableViewRow: View {
             TextField("File Name", text: Binding(
                 get: { file.name ?? "" },
                 set: { newValue in
-                    file.name = newValue
+                    file.name = newValue.uppercased()
+                    if let dotIndex = newValue.firstIndex(of: ".") {
+                        file.name = String(newValue[..<dotIndex]).appending(".JSON")
+                                }
                     BaseServices.save()
                 })
             )

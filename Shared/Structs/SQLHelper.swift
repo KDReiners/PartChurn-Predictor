@@ -9,8 +9,9 @@ import Foundation
 import SwiftUI
 import CreateML
 struct SQLHelper {
-    func runSQLCommand(model: Models, transferFileName: String = "MSNonsense.json", sqlCommand: String) -> [String : [Any]]? {
+    func runSQLCommand(model: Models, transferFileName: String = "MSNonsense.json", sqlCommand: String) -> [String: MLDataValueConvertible]? {
         var jsonArray: [[String: Any]]?
+        var tableData: [String: MLDataValueConvertible] = [:]
         let transferDirectory: URL = BaseServices.sandBoxDataPath
         let odbcPath = "/opt/homebrew/Cellar/mssql-tools18/18.2.1.1/bin/sqlcmd"
         // Construct the output file path in the current working directory
@@ -36,7 +37,7 @@ struct SQLHelper {
             "-y",
             "0"
         ]
-
+        
         do {
             try process.run()
             process.waitUntilExit()
@@ -46,7 +47,7 @@ struct SQLHelper {
                 fatalError("Failed to read JSON file.")
             }
             do {
-               jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any ]]
+                jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any ]]
             } catch {
                 print("Error parsing JSON: \(error)")
             }
@@ -56,41 +57,56 @@ struct SQLHelper {
         }
         guard let jsonArray = jsonArray else { return nil }
         var groupedDictionary: [String: [Any]] = [:]
-       for dictionary in jsonArray {
-           for (key, value) in dictionary {
-               if let existingValues = groupedDictionary[key] {
-                   groupedDictionary[key] = existingValues + [value]
-               } else {
-                   groupedDictionary[key] = [value]
-               }
-           }
-       }
-
-           return groupedDictionary
-    }
-
-    func readJSONFromPipe(outputData: String?) {
-        guard let outputData = outputData else {
-            print("No JSON data received.")
-            return
-        }
-        // Parse the JSON data as an array of dictionaries
-        do {
-            if let jsonArray = try JSONSerialization.jsonObject(with: (outputData.data(using: .utf8))!, options: [  ]) as? [[String: Any]] {
-                // Process the JSON array here
-                for jsonObject in jsonArray {
-                    if let s_custno = jsonObject["s_custno"] as? String {
-                        print(s_custno)
-                    }
+        for dictionary in jsonArray {
+            for (key, value) in dictionary {
+                if let existingValues = groupedDictionary[key] {
+                    groupedDictionary[key] = existingValues + [value]
+                } else {
+                    groupedDictionary[key] = [value]
                 }
-            } else {
-                print("Failed to parse JSON.")
             }
-        } catch {
-            print("Error parsing JSON: \(error)")
         }
+        for (key, values) in groupedDictionary {
+            if values.allSatisfy( {$0 as? Int != nil}) {
+                tableData[key] = values.map {$0 as! Int }
+                continue
+            }
+            if values.allSatisfy( {$0 as? Double != nil}) {
+                tableData[key] = values.map {$0 as! Double }
+                continue
+            }
+            if values.allSatisfy( {$0 as? String != nil}) {
+                tableData[key] = values.map {$0 as! String }
+                continue
+            }
+            
+        }
+        return tableData
     }
+}
+    
+    
 
+func readJSONFromPipe(outputData: String?) {
+    guard let outputData = outputData else {
+        print("No JSON data received.")
+        return
+    }
+    // Parse the JSON data as an array of dictionaries
+    do {
+        if let jsonArray = try JSONSerialization.jsonObject(with: (outputData.data(using: .utf8))!, options: [  ]) as? [[String: Any]] {
+            // Process the JSON array here
+            for jsonObject in jsonArray {
+                if let s_custno = jsonObject["s_custno"] as? String {
+                    print(s_custno)
+                }
+            }
+        } else {
+            print("Failed to parse JSON.")
+        }
+    } catch {
+        print("Error parsing JSON: \(error)")
+    }
 }
 
 
