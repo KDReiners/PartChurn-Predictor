@@ -7,12 +7,11 @@
 
 import Foundation
 import SwiftUI
+import CreateML
 struct SQLHelper {
-    func runSQLCommand(model: Models, transferFileName: String = "MSNonsense.json", sqlCommand: String) {
-        let transferDirectory: URL = BaseServices.homePath.appendingPathComponent(model.name!).appendingPathComponent("files", isDirectory: true )
-        if !BaseServices.directoryExists(at: transferDirectory) {
-            BaseServices.createDirectory(at: transferDirectory)
-        }
+    func runSQLCommand(model: Models, transferFileName: String = "MSNonsense.json", sqlCommand: String) -> [String : [Any]]? {
+        var jsonArray: [[String: Any]]?
+        let transferDirectory: URL = BaseServices.sandBoxDataPath
         let odbcPath = "/opt/homebrew/Cellar/mssql-tools18/18.2.1.1/bin/sqlcmd"
         // Construct the output file path in the current working directory
         let transferPath = transferDirectory.appendingPathComponent(transferFileName).path
@@ -41,9 +40,33 @@ struct SQLHelper {
         do {
             try process.run()
             process.waitUntilExit()
+            let fileURL = URL(fileURLWithPath: transferPath)
+            print(fileURL)
+            guard let data = try? Data(contentsOf: fileURL ) else {
+                fatalError("Failed to read JSON file.")
+            }
+            do {
+               jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any ]]
+            } catch {
+                print("Error parsing JSON: \(error)")
+            }
+            
         } catch {
             print("Error executing SQL command: \(error)")
         }
+        guard let jsonArray = jsonArray else { return nil }
+        var groupedDictionary: [String: [Any]] = [:]
+       for dictionary in jsonArray {
+           for (key, value) in dictionary {
+               if let existingValues = groupedDictionary[key] {
+                   groupedDictionary[key] = existingValues + [value]
+               } else {
+                   groupedDictionary[key] = [value]
+               }
+           }
+       }
+
+           return groupedDictionary
     }
 
     func readJSONFromPipe(outputData: String?) {

@@ -26,6 +26,22 @@ public struct BaseServices
             return FileManager.default.homeDirectoryForCurrentUser
         }
     }
+    public static var sandBoxDataPath: URL {
+        get {
+            // Find the URL for the Application Support directory within the app's container
+            let appSupportDir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+            // Append your app's Bundle ID to the Application Support URL
+            let appName = "PartChurn Predictor"  // Replace with your app's name
+            let appSubdirectory = "Data"  // Replace with your specific subdirectory
+            let appPathURL = appSupportDir
+            .appendingPathComponent(appName)
+            .appendingPathComponent(appSubdirectory)
+            if !directoryExists(at: appPathURL) {
+                createDirectory(at: appPathURL)
+            }
+            return appPathURL
+        }
+    }
     /// let constructors
     public static let logger = {
         return Logger()

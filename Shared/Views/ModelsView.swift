@@ -1,6 +1,6 @@
 import SwiftUI
 import CoreData
-
+import CreateML
 public struct ModelsView: View {
     @ObservedObject var filesDataModel = FilesModel()
     @State var files: [Files]?
@@ -49,11 +49,7 @@ public struct ModelsView: View {
                     }
                     .disabled(selectedFilenames.count == 0)
                     Button("Import Selection") {
-                        for filename in selectedFilenames {
-                            let fileToLoad = filesDataModel.items.filter { $0.files2model == selectedModel && $0.name == filename}.first
-                            let sqlHelper = SQLHelper()
-                            sqlHelper.runSQLCommand(model: selectedModel, transferFileName: (fileToLoad?.name)!, sqlCommand: (fileToLoad?.sqlCommand)!)
-                        }
+                        readAndLoad()
                     }
                 }
             }
@@ -63,7 +59,45 @@ public struct ModelsView: View {
             loadJSONFileNames()
         }
     }
-    
+    func readAndLoad() {
+        let columnsDataModel = ColumnsModel()
+        let valuesDataModel = ValuesModel() 
+        for filename in selectedFilenames {
+            let fileToLoad = filesDataModel.items.filter { $0.files2model == selectedModel && $0.name == filename}.first
+            let sqlHelper = SQLHelper()
+
+            let result = sqlHelper.runSQLCommand(model: selectedModel, transferFileName: (fileToLoad?.name)!, sqlCommand: (fileToLoad?.sqlCommand)!)
+            guard let result = result else {
+                return
+            }
+            if result.count>0 {
+                var tableData: [String: MLDataValueConvertible] = [:]
+                    for (key, values) in result {
+                        if values.allSatisfy( {$0 as? Int != nil}) {
+                            tableData[key] = values.map {$0 as! Int }
+                            for value in values {
+                                
+                            }
+                            continue
+                        }
+                        if values.allSatisfy( {$0 as? Double != nil}) {
+                            tableData[key] = values.map {$0 as! Double }
+                            continue
+                        }
+                        if values.allSatisfy( {$0 as? String != nil}) {
+                            tableData[key] = values.map {$0 as! String }
+                            continue
+                        }
+                        
+                    }
+                do {
+                    let baseTable = try MLDataTable(dictionary: tableData)
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
+    }
     func loadJSONFileNames() {
         // Fetch the files associated with the selected model from Core Data
         files = FilesModel().items.filter( { $0.files2model == selectedModel })
