@@ -32,25 +32,9 @@ class Configuration: ObservableObject {
     
     }
     private func getUniqueValues(columnName: String) -> Int{
-        let dates = Array(mlDataTable!["I_TIMEBASE"].ints!.map {$0 })
-
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMM"
 
-        let formattedDates = dates.compactMap { dateInt -> String? in
-            guard let date = dateFormatter.date(from: "\(dateInt)") else {
-                return nil
-            }
-            
-            let calendar = Calendar.current
-            let year = calendar.component(.year, from: date)
-            let quarter = (calendar.component(.month, from: date) + 2) / 3
-            
-            return "\(year)\(quarter)"
-        }
-
-        print(formattedDates)
-        let test = mlDataTable!["I_TIMEBASE"]
         var selectedAggregators = [MLDataTable.Aggregator]()
         let counter = MLDataTable.Aggregator(operations: .count, of: "Count")
         selectedAggregators.append(counter)

@@ -15,8 +15,9 @@ struct FilesView: View {
  
     init(file: Files, columnsDataModel: ColumnsModel) {
         self.file = file
-        self.columnsDataModel = columnsDataModel
-        self.columnViewModel = ColumnsViewModel(columns: columnsDataModel.items, file: file)
+        self.columnsDataModel = ColumnsModel(model: file.files2model)
+        self.columnViewModel = ColumnsViewModel(columns: ColumnsModel(model: file.files2model).items, file: file)
+        
     }
     
     var body: some View {

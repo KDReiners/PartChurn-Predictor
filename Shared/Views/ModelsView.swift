@@ -1,6 +1,5 @@
 import SwiftUI
 import CoreData
-import CreateML
 public struct ModelsView: View {
     @ObservedObject var filesDataModel = FilesModel()
     @State var files: [Files]?
@@ -60,23 +59,19 @@ public struct ModelsView: View {
         }
     }
     func readAndLoad() {
-        let columnsDataModel = ColumnsModel()
-        let valuesDataModel = ValuesModel() 
         for filename in selectedFilenames {
             let fileToLoad = filesDataModel.items.filter { $0.files2model == selectedModel && $0.name == filename}.first
             let sqlHelper = SQLHelper()
-
-            let result = sqlHelper.runSQLCommand(model: selectedModel, transferFileName: (fileToLoad?.name)!, sqlCommand: (fileToLoad?.sqlCommand)!)
-            guard let result = result else {
+            
+            let (result, keys)  = sqlHelper.runSQLCommand(model: selectedModel, transferFileName: (fileToLoad?.name)!, sqlCommand: (fileToLoad?.sqlCommand)!)
+            guard let result = result, let keys = keys else {
                 return
             }
-                do {
-                    let baseTable = try MLDataTable(dictionary: result)
-                    print(baseTable)
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
+            
+            let jsonImporter = JsonImporter(importDictionary: result, selectedModel: selectedModel, fileName: filename, sortedKeys: keys)
+            jsonImporter.saveToCoreData()
+        }
+         
     }
     func loadJSONFileNames() {
         // Fetch the files associated with the selected model from Core Data
@@ -111,11 +106,16 @@ struct TableViewRow: View {
             VStack {
                 TextEditor(text: Binding(
                     get: { file.sqlCommand ?? "" },
-                    set: { newValue     in
-                        file.sqlCommand = newValue.uppercased()
-                        BaseServices.save()
+                    set: { newValue in
+                        file.sqlCommand = newValue
                     })
                 )
+                .onChange(of: file.sqlCommand) { _ in
+                    file.sqlCommand = file.sqlCommand?.uppercased()
+                    BaseServices.save()
+                }
+
+                
                 .padding()
                 .lineSpacing(2.0)
                 .font(.system(size: standardSize))
@@ -129,7 +129,7 @@ struct TableViewRow: View {
                 set: { newValue in
                     file.name = newValue.uppercased()
                     if let dotIndex = newValue.firstIndex(of: ".") {
-                        file.name = String(newValue[..<dotIndex]).appending(".JSON")
+                        file.name = String(newValue[..<dotIndex]).appending("JSON")
                                 }
                     BaseServices.save()
                 })

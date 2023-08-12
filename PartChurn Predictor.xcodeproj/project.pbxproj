@@ -50,6 +50,8 @@
 		0AA4508729C89F3C003EF476 /* MLExplainEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA4508529C89F3C003EF476 /* MLExplainEntry.swift */; };
 		0AA8C8F429A10E1500AA399F /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */; };
 		0AA8C8F529A10E1500AA399F /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */; };
+		0AB47B7E2A83EF7100FB4F8A /* JsonImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB47B7D2A83EF7100FB4F8A /* JsonImporter.swift */; };
+		0AB47B7F2A83EF7100FB4F8A /* JsonImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB47B7D2A83EF7100FB4F8A /* JsonImporter.swift */; };
 		0AC6E4232A28F02C0005F5CA /* PackedValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC6E4222A28F02C0005F5CA /* PackedValue.swift */; };
 		0AC6E4242A28F02C0005F5CA /* PackedValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC6E4222A28F02C0005F5CA /* PackedValue.swift */; };
 		0AC6E4262A2A48D80005F5CA /* GridItemSequenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC6E4252A2A48D80005F5CA /* GridItemSequenceView.swift */; };
@@ -176,6 +178,7 @@
 		0A827F7328736F0400C928F2 /* CustomColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColumn.swift; sourceTree = "<group>"; };
 		0AA4508529C89F3C003EF476 /* MLExplainEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLExplainEntry.swift; sourceTree = "<group>"; };
 		0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
+		0AB47B7D2A83EF7100FB4F8A /* JsonImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonImporter.swift; sourceTree = "<group>"; };
 		0AC6E4222A28F02C0005F5CA /* PackedValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackedValue.swift; sourceTree = "<group>"; };
 		0AC6E4252A2A48D80005F5CA /* GridItemSequenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridItemSequenceView.swift; sourceTree = "<group>"; };
 		0AC7273F2A6439D9002AF47C /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
@@ -360,6 +363,7 @@
 				0AC6E4222A28F02C0005F5CA /* PackedValue.swift */,
 				0A13902B2A2CCCD700680122 /* TimeColumn.swift */,
 				0A1EA8832A35CFAC006ABB00 /* SQLHelper.swift */,
+				0AB47B7D2A83EF7100FB4F8A /* JsonImporter.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";
@@ -557,6 +561,7 @@
 				0A190C5029B5093600A54734 /* PythonInteractor.swift in Sources */,
 				0AD43D102921579400199F06 /* PredictionView.swift in Sources */,
 				0AFCB7042850A5FA00676AF6 /* ValuesView.swift in Sources */,
+				0AB47B7E2A83EF7100FB4F8A /* JsonImporter.swift in Sources */,
 				2D6C24FF2934E88D00DA45B6 /* AlternateRows.swift in Sources */,
 				2DA77EF828257B97007EC3E5 /* CSV_Importer.swift in Sources */,
 				2DFD1B3128A930810057C74A /* FilterViewProvider.swift in Sources */,
@@ -634,6 +639,7 @@
 				0A190C5129B5093600A54734 /* PythonInteractor.swift in Sources */,
 				0AD43D112921579400199F06 /* PredictionView.swift in Sources */,
 				0AFCB7052850A5FA00676AF6 /* ValuesView.swift in Sources */,
+				0AB47B7F2A83EF7100FB4F8A /* JsonImporter.swift in Sources */,
 				2D6C25002934E88D00DA45B6 /* AlternateRows.swift in Sources */,
 				2DA77EF928257B97007EC3E5 /* CSV_Importer.swift in Sources */,
 				2DFD1B3228A930810057C74A /* FilterViewProvider.swift in Sources */,

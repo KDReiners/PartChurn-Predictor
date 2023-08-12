@@ -10,6 +10,7 @@ class ColumnsViewModel: ObservableObject {
     var filesDataModel = FilesModel()
     @Published var observedColumns = [ObservedColumn]()
     var cognitionType: BaseServices.cognitionTypes = .cognitionError
+    
     class ObservedColumn: Hashable, ObservableObject {
         static func == (lhs: ColumnsViewModel.ObservedColumn, rhs: ColumnsViewModel.ObservedColumn) -> Bool {
             lhs.column.name == rhs.column.name
@@ -27,6 +28,7 @@ class ColumnsViewModel: ObservableObject {
         @Published var disable_ispartofprimarykey: Bool = false
         @Published var disable_istimeseries: Bool = false
         @Published var disable_isshown: Bool = false
+        @Published var disable_istarget: Bool = false
         init(column: Columns, cognitionType: BaseServices.cognitionTypes) {
             self.column = column
             self.cognitionType = cognitionType

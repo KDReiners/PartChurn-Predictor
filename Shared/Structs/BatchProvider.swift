@@ -56,8 +56,6 @@ internal class BatchProvider {
     /// Uses `NSBatchInsertRequest` (BIR) to import a JSON dictionary into the Core Data store on a private queue.
     internal func importValues(from propertiesList: [coreDataProperties]) {
         guard !propertiesList.isEmpty else { return }
-
-
         /// - Tag: performAndWait
             // Execute the batch insert.
             /// - Tag: batchInsertRequest
@@ -71,7 +69,6 @@ internal class BatchProvider {
         
         BaseServices.logger.debug("Successfully inserted data.")
     }
-    
     private func newBatchInsertRequest(with propertyList: [coreDataProperties]) -> NSBatchInsertRequest {
         var index = 0
         let total = propertyList.count

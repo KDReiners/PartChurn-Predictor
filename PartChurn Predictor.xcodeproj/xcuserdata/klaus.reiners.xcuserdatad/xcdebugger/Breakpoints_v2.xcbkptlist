@@ -7,128 +7,17 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "7F8F378A-402E-4003-AA46-56BB1D860081"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Shared/Classes/MlDataTableProvider.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "75"
-            endingLineNumber = "75"
-            landmarkName = "updateTableProviderForStatistics(completion:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "7F8F378A-402E-4003-AA46-56BB1D860081 - 134668a2da361cfe"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 (PartChurn_Predictor.ValuesTableProvider) -&gt; () in PartChurn_Predictor.MlDataTableProvider.updateTableProviderForStatistics(completion: () -&gt; ()) -&gt; ()"
-                  moduleName = "PartChurn Predictor"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Classes/MlDataTableProvider.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "75"
-                  endingLineNumber = "75"
-                  offsetFromSymbolStart = "1620">
-               </Location>
-               <Location
-                  uuid = "7F8F378A-402E-4003-AA46-56BB1D860081 - 134668a2da361cfe"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 (PartChurn_Predictor.ValuesTableProvider) -&gt; () in PartChurn_Predictor.MlDataTableProvider.updateTableProviderForStatistics(completion: () -&gt; ()) -&gt; ()"
-                  moduleName = "PartChurn Predictor"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Classes/MlDataTableProvider.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "75"
-                  endingLineNumber = "75"
-                  offsetFromSymbolStart = "1080">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "D7B0503B-44BD-474B-9D5B-E075BC188AE8"
+            uuid = "A8C92CDF-AC74-4C75-9AEC-C00A1DCA859F"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Shared/Classes/Configuration.swift"
+            filePath = "Shared/Structs/SQLHelper.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "60"
-            endingLineNumber = "60"
-            landmarkName = "getUniqueValues(columnName:)"
+            startingLineNumber = "102"
+            endingLineNumber = "102"
+            landmarkName = "runSQLCommand(model:transferFileName:sqlCommand:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "D7B0503B-44BD-474B-9D5B-E075BC188AE8 - 347d63392db2909c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "PartChurn_Predictor.Configuration.getUniqueValues(columnName: Swift.String) -&gt; Swift.Int"
-                  moduleName = "PartChurn Predictor"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Classes/Configuration.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "61"
-                  endingLineNumber = "61"
-                  offsetFromSymbolStart = "2968">
-               </Location>
-               <Location
-                  uuid = "D7B0503B-44BD-474B-9D5B-E075BC188AE8 - 347d63392db2909c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "PartChurn_Predictor.Configuration.getUniqueValues(columnName: Swift.String) -&gt; Swift.Int"
-                  moduleName = "PartChurn Predictor"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Classes/Configuration.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "61"
-                  endingLineNumber = "61"
-                  offsetFromSymbolStart = "4088">
-               </Location>
-               <Location
-                  uuid = "D7B0503B-44BD-474B-9D5B-E075BC188AE8 - 347d63392db290b3"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "PartChurn_Predictor.Configuration.getUniqueValues(columnName: Swift.String) -&gt; Swift.Int"
-                  moduleName = "PartChurn Predictor"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Classes/Configuration.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "60"
-                  endingLineNumber = "60"
-                  offsetFromSymbolStart = "4088">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "511445FF-AE1E-4B74-A0E5-9E4D8F45D91F"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Shared/Views/ModelsView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "26"
-            endingLineNumber = "26"
-            landmarkName = "body"
-            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -9,8 +9,9 @@ import Foundation
 import SwiftUI
 import CreateML
 struct SQLHelper {
-    func runSQLCommand(model: Models, transferFileName: String = "MSNonsense.json", sqlCommand: String) -> [String: MLDataValueConvertible]? {
+    func runSQLCommand(model: Models, transferFileName: String = "MSNonsense.json", sqlCommand: String) -> ([String: MLDataValueConvertible]?, [String]?) {
         var jsonArray: [[String: Any]]?
+        var keys: [String] = []
         var tableData: [String: MLDataValueConvertible] = [:]
         let transferDirectory: URL = BaseServices.sandBoxDataPath
         let odbcPath = "/opt/homebrew/Cellar/mssql-tools18/18.2.1.1/bin/sqlcmd"
@@ -42,11 +43,28 @@ struct SQLHelper {
             try process.run()
             process.waitUntilExit()
             let fileURL = URL(fileURLWithPath: transferPath)
-            print(fileURL)
+            
             guard let data = try? Data(contentsOf: fileURL ) else {
                 fatalError("Failed to read JSON file.")
             }
             do {
+                let mydata = String(data: data, encoding: .utf8)
+                let firstObjectString = mydata!.split(separator: "}")[0]
+                let cleanedString = firstObjectString
+                    .replacingOccurrences(of: "[", with: "")
+                    .replacingOccurrences(of: "]", with: "")
+                    .replacingOccurrences(of: "{", with: "")
+                    .replacingOccurrences(of: "}", with: "")
+                let keyValuePairStrings = cleanedString.components(separatedBy: ",")
+                for keyValue in keyValuePairStrings {
+                    let components = keyValue.components(separatedBy: ":")
+                    if let firstComponent = components.first {
+                        let key = firstComponent.trimmingCharacters(in: .whitespacesAndNewlines)
+                        if key.first == "\"" && key.last == "\"" {
+                            keys.append(String(key.dropFirst().dropLast()))
+                        }
+                    }
+                }
                 jsonArray = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any ]]
             } catch {
                 print("Error parsing JSON: \(error)")
@@ -55,7 +73,7 @@ struct SQLHelper {
         } catch {
             print("Error executing SQL command: \(error)")
         }
-        guard let jsonArray = jsonArray else { return nil }
+        guard let jsonArray = jsonArray else { return (nil, nil) }
         var groupedDictionary: [String: [Any]] = [:]
         for dictionary in jsonArray {
             for (key, value) in dictionary {
@@ -81,7 +99,7 @@ struct SQLHelper {
             }
             
         }
-        return tableData
+        return (tableData, keys)
     }
 }
     
