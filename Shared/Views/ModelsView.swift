@@ -129,7 +129,7 @@ struct TableViewRow: View {
                 set: { newValue in
                     file.name = newValue.uppercased()
                     if let dotIndex = newValue.firstIndex(of: ".") {
-                        file.name = String(newValue[..<dotIndex]).appending("JSON")
+                        file.name = String(newValue[..<dotIndex]).appending(".JSON")
                                 }
                     BaseServices.save()
                 })

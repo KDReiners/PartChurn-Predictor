@@ -7,17 +7,191 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "A8C92CDF-AC74-4C75-9AEC-C00A1DCA859F"
-            shouldBeEnabled = "No"
+            uuid = "23F41D4F-AF50-4051-B598-BACB0C434511"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Shared/Structs/SQLHelper.swift"
+            filePath = "Shared/Structs/Combinator.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "102"
-            endingLineNumber = "102"
-            landmarkName = "runSQLCommand(model:transferFileName:sqlCommand:)"
+            startingLineNumber = "31"
+            endingLineNumber = "31"
+            landmarkName = "init(model:orderedColumns:mlDataTable:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D3B36692-3A96-408B-A936-1B40D4DFF839"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Shared/Structs/Combinator.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
+            landmarkName = "init(model:orderedColumns:mlDataTable:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "D3B36692-3A96-408B-A936-1B40D4DFF839 - 292cd078ace25dac"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PartChurn_Predictor.Combinator.init(model: PartChurn_Predictor.Models, orderedColumns: Swift.Array&lt;PartChurn_Predictor.Columns&gt;, mlDataTable: CreateML.MLDataTable) -&gt; PartChurn_Predictor.Combinator"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Structs/Combinator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "27"
+                  endingLineNumber = "27"
+                  offsetFromSymbolStart = "1464">
+               </Location>
+               <Location
+                  uuid = "D3B36692-3A96-408B-A936-1B40D4DFF839 - 6bbe501610035b87"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (PartChurn_Predictor.Columns) -&gt; Swift.Bool in PartChurn_Predictor.Combinator.init(model: PartChurn_Predictor.Models, orderedColumns: Swift.Array&lt;PartChurn_Predictor.Columns&gt;, mlDataTable: CreateML.MLDataTable) -&gt; PartChurn_Predictor.Combinator"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Structs/Combinator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "27"
+                  endingLineNumber = "27"
+                  offsetFromSymbolStart = "36">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "67A49F8B-10C5-49EE-80E9-4AE84BA10188"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Shared/Classes/FileWeaver.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "34"
+            endingLineNumber = "34"
+            landmarkName = "init(model:lookAhead:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "67A49F8B-10C5-49EE-80E9-4AE84BA10188 - 49556e9063cd4c39"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PartChurn_Predictor.FileWeaver.init(model: PartChurn_Predictor.Models, lookAhead: Swift.Int) -&gt; PartChurn_Predictor.FileWeaver"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Classes/FileWeaver.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "32"
+                  endingLineNumber = "32"
+                  offsetFromSymbolStart = "1032">
+               </Location>
+               <Location
+                  uuid = "67A49F8B-10C5-49EE-80E9-4AE84BA10188 - 49556e9063cd4c39"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PartChurn_Predictor.FileWeaver.init(model: PartChurn_Predictor.Models, lookAhead: Swift.Int) -&gt; PartChurn_Predictor.FileWeaver"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Classes/FileWeaver.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "32"
+                  endingLineNumber = "32"
+                  offsetFromSymbolStart = "996">
+               </Location>
+               <Location
+                  uuid = "67A49F8B-10C5-49EE-80E9-4AE84BA10188 - 49556e9063cd4c5e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PartChurn_Predictor.FileWeaver.init(model: PartChurn_Predictor.Models, lookAhead: Swift.Int) -&gt; PartChurn_Predictor.FileWeaver"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Classes/FileWeaver.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "33"
+                  endingLineNumber = "33"
+                  offsetFromSymbolStart = "584">
+               </Location>
+               <Location
+                  uuid = "67A49F8B-10C5-49EE-80E9-4AE84BA10188 - 49556e9063cd4c7f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PartChurn_Predictor.FileWeaver.init(model: PartChurn_Predictor.Models, lookAhead: Swift.Int) -&gt; PartChurn_Predictor.FileWeaver"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Classes/FileWeaver.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "34"
+                  endingLineNumber = "34"
+                  offsetFromSymbolStart = "596">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1CD52E32-6C56-4F08-944F-C6229FABA2FA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Shared/Classes/FileWeaver.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "59"
+            endingLineNumber = "59"
+            landmarkName = "extractFromSQL()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "1CD52E32-6C56-4F08-944F-C6229FABA2FA - 383b2edbba9654a9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PartChurn_Predictor.FileWeaver.extractFromSQL() -&gt; ()"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Classes/FileWeaver.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "59"
+                  endingLineNumber = "59"
+                  offsetFromSymbolStart = "740">
+               </Location>
+               <Location
+                  uuid = "1CD52E32-6C56-4F08-944F-C6229FABA2FA - 383b2edbba9654a9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PartChurn_Predictor.FileWeaver.extractFromSQL() -&gt; ()"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Classes/FileWeaver.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "59"
+                  endingLineNumber = "59"
+                  offsetFromSymbolStart = "892">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

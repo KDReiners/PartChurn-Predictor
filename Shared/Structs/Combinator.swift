@@ -35,11 +35,13 @@ struct Combinator {
         }
 
         columnCombinations = [[Columns]]()
-        for i in 1...includedColumns.count {
-            let entry = includedColumnsCombinations(source: includedColumns, takenBy:  i)
-            columnCombinations += entry
+        if includedColumns.count > 0 {
+            for i in 1...includedColumns.count {
+                let entry = includedColumnsCombinations(source: includedColumns, takenBy:  i)
+                columnCombinations += entry
+            }
+            scenario = ScenarioProvider(includedColumns: columnCombinations, timeSeries: timeSeriesCombinations, baseTable: mlDataTable)
         }
-        scenario = ScenarioProvider(includedColumns: columnCombinations, timeSeries: timeSeriesCombinations, baseTable: mlDataTable)
     }
     func timeSeriesColumnCombinations(depth: Int? = 2) -> [[Int]] {
         var result: [[Int]] = []

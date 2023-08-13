@@ -16,7 +16,8 @@ struct SQLHelper {
         let transferDirectory: URL = BaseServices.sandBoxDataPath
         let odbcPath = "/opt/homebrew/Cellar/mssql-tools18/18.2.1.1/bin/sqlcmd"
         // Construct the output file path in the current working directory
-        let transferPath = transferDirectory.appendingPathComponent(transferFileName).path
+        let transferPath = BaseServices.appendJsonPath(jsonFileName: transferFileName).appendingPathComponent(transferFileName).path
+//        let transferPath = transferDirectory.appendingPathComponent(subDirectoryName.path, isDirectory: true).appendingPathComponent(transferFileName).path
         let process = Process()
         process.executableURL = URL(fileURLWithPath: odbcPath)
         process.arguments = [
@@ -97,33 +98,14 @@ struct SQLHelper {
                 tableData[key] = values.map {$0 as! String }
                 continue
             }
-            
+        }
+        do {
+            let mlDataTable = try MLDataTable(dictionary: tableData)
+            BaseServices.saveMLDataTableToJson(mlDataTable: mlDataTable, filePath: BaseServices.appendJsonPath(jsonFileName: transferFileName))
+        } catch {
+            print("mlDataTable could not be instantiated: \(error.localizedDescription)")
         }
         return (tableData, keys)
-    }
-}
-    
-    
-
-func readJSONFromPipe(outputData: String?) {
-    guard let outputData = outputData else {
-        print("No JSON data received.")
-        return
-    }
-    // Parse the JSON data as an array of dictionaries
-    do {
-        if let jsonArray = try JSONSerialization.jsonObject(with: (outputData.data(using: .utf8))!, options: [  ]) as? [[String: Any]] {
-            // Process the JSON array here
-            for jsonObject in jsonArray {
-                if let s_custno = jsonObject["s_custno"] as? String {
-                    print(s_custno)
-                }
-            }
-        } else {
-            print("Failed to parse JSON.")
-        }
-    } catch {
-        print("Error parsing JSON: \(error)")
     }
 }
 

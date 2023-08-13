@@ -119,6 +119,8 @@ struct ColumnsView: View {
                         Toggle("isTimeSeries", isOn: observedColumn.column.istimeseries.boolBinding).disabled(observedColumn.disable_istimeseries.wrappedValue)
                         Toggle("isPartOfSeries", isOn: observedColumn.column.ispartoftimeseries.boolBinding)
                         Toggle("isPartOfPrimaryKey", isOn: observedColumn.column.ispartofprimarykey.boolBinding).disabled(observedColumn.disable_ispartofprimarykey.wrappedValue)
+                        Toggle("isCoginitionSource", isOn: observedColumn.column.isincluded.boolBinding)
+                        Toggle("isCognitionObject", isOn: observedColumn.column.istarget.boolBinding)
                         Toggle("isShown", isOn: observedColumn.column.isshown.boolBinding).disabled(observedColumn.disable_isshown.wrappedValue)
                         Text(observedColumn.columnInfoText.wrappedValue).frame(width: 150)
                         Text("OrderNo").bold()

@@ -23,15 +23,17 @@ internal class FileWeaver {
     var allInDataTable = MLDataTable()
     var modelObjectID: NSManagedObjectID!
     var modelStoreURL: URL!
+    var desiredFileNames: [String]!
     static var valuesDataModel = ValuesModel()
     var cognitionSources = [CognitionSource]()
     var cognitionObjects = [CognitionObject]()
     var lookAhead: Int = 0
+    
     init(model: Models, lookAhead: Int = 0)
     {
         self.lookAhead = lookAhead
         self.modelObjectID = model.objectID
-        modelStoreURL =  BaseServices.homePath.appendingPathComponent(model.name!).appendingPathComponent("\(lookAhead)")
+        modelStoreURL =  BaseServices.sandBoxDataPath.appendingPathComponent("\(lookAhead)")
         self.columnsDataModel = ColumnsModel(model: model)
         self.allColumns = Array(model.model2columns?.allObjects as! [Columns]).sorted(by: { $0.orderno < $1.orderno})
         self.model = model
@@ -42,6 +44,34 @@ internal class FileWeaver {
         self.primaryKeyColumns = Array(model.model2columns?.allObjects as! [Columns]).filter({ $0.ispartofprimarykey == 1 }).map( {
             $0.name!
         })
+        if files.count > 0 {
+            desiredFileNames = (files.allObjects as! [Files]).map { $0.name!}
+            if !BaseServices.allFilesExcist(desiredFileNames: desiredFileNames, directoryPath: BaseServices.sandBoxDataPath) {
+                extractFromCoreData()
+            } else {
+                extractFromSQL()
+            }
+        }
+    }
+    func extractFromSQL() {
+        for fileName in self.desiredFileNames {
+            let currentUrl = BaseServices.sandBoxDataPath.appendingPathComponent(fileName)
+            if let data = try? Data(contentsOf: currentUrl) {
+                do {
+                    let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
+                    if let jsonDictionary = jsonObject as? [String: MLDataValueConvertible] {
+                        try! self.mlDataTable_Base = MLDataTable(dictionary: jsonDictionary)
+                    } else {
+                        print("Invalid JSON format: \(fileName)")
+                    }
+                } catch {
+                    print("Error parsing JSON: \(error)")
+                }
+            }
+        }
+    }
+
+    func extractFromCoreData() {
         self.mlDataTable_Base = BaseServices.loadMLDataTableFromJson(filePath: modelStoreURL)
         if self.mlDataTable_Base != nil {
             self.allInDataTable = self.mlDataTable_Base

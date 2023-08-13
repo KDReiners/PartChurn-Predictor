@@ -67,6 +67,34 @@ public struct BaseServices
         return formatter
     }()
     /// functions
+    public static func appendJsonPath(jsonFileName: String) -> URL {
+        let subDirectoryName = (jsonFileName as NSString).deletingPathExtension
+        let directoryPath = self.sandBoxDataPath.appendingPathComponent(subDirectoryName)
+        if !directoryExists(at: directoryPath) {
+          createDirectory(at: directoryPath)
+        }
+        return directoryPath
+        
+    }
+    public static func allFilesExcist(desiredFileNames: [String], directoryPath: URL) -> Bool {
+        var result: Bool!
+        do {
+            let fileManager = FileManager.default
+            let files = try fileManager.contentsOfDirectory(atPath: directoryPath.path)
+            
+            let missingFiles = desiredFileNames.filter { !files.contains($0) }
+            
+            if missingFiles.isEmpty {
+                result = true
+            } else {
+                result = false
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        return result
+        
+    }
     public static func getAttributesForEntity(entity: NSEntityDescription) -> Array<EntityAttributeInfo> {
         var result = Array<EntityAttributeInfo>()
         let attributes = entity.attributesByName
