@@ -35,11 +35,11 @@ struct DirectoryView: View {
                 List {
                     ForEach(modelsDataModel.items, id: \.self) { model in
                         DisclosureGroup(model.name!) {
-                            NavigationLink("Settings", destination: ModelsView(selectedModel: model))
+                            NavigationLink("Infrastructure", destination: ModelsView(selectedModel: model))
                             if model == modelSelect {
-                                NavigationLink("PlayGround", destination: ScenarioView(model: model, modelSelect: $modelSelect.wrappedValue), tag: model, selection: $modelSelect)
+                                NavigationLink("Laboratory", destination: ScenarioView(model: model, modelSelect: $modelSelect.wrappedValue), tag: model, selection: $modelSelect)
                             } else {
-                                NavigationLink("PlayGround", destination: Text(model.name!), tag: model, selection: $modelSelect)
+                                NavigationLink("Laboratory", destination: Text(model.name!), tag: model, selection: $modelSelect)
                             }
                             NavigationLink("Predictions", destination: PredictionsView(model: model))
                             DisclosureGroup("Files") {

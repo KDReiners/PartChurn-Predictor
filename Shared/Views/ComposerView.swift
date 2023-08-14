@@ -70,7 +70,7 @@ struct ComposerView: View {
                         }
                     VStack(alignment: .leading) {
                         Text("Columns ")
-                        List(combinator.includedColumns.filter( { $0.isshown == true} ), id: \.self, selection: $selectedColumnCombination) { column in
+                        List(combinator.includedColumns.filter( { $0.isshown == true && $0.ispartofprimarykey == false} ), id: \.self, selection: $selectedColumnCombination) { column in
                             Text(column.name!)
                                 .onTapGesture {
                                     if selectedColumnCombination.contains(column) {

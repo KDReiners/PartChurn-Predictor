@@ -33,7 +33,7 @@ internal class FileWeaver {
     {
         self.lookAhead = lookAhead
         self.modelObjectID = model.objectID
-        modelStoreURL =  BaseServices.sandBoxDataPath.appendingPathComponent("\(lookAhead)")
+        modelStoreURL =  BaseServices.sandBoxDataPath.appendingPathComponent(model.name!).appendingPathComponent("\(lookAhead)")
         self.columnsDataModel = ColumnsModel(model: model)
         self.allColumns = Array(model.model2columns?.allObjects as! [Columns]).sorted(by: { $0.orderno < $1.orderno})
         self.model = model
@@ -47,30 +47,31 @@ internal class FileWeaver {
         if files.count > 0 {
             desiredFileNames = (files.allObjects as! [Files]).map { $0.name!}
             if !BaseServices.allFilesExcist(desiredFileNames: desiredFileNames, directoryPath: BaseServices.sandBoxDataPath) {
-                extractFromCoreData()
+                extractFromJson()
             } else {
-                extractFromSQL()
+                extractFromCoreData()
             }
         }
     }
-    func extractFromSQL() {
+    func extractFromJson() {
+        let jsonFilesPath = BaseServices.sandBoxDataPath.appendingPathComponent(model.name!, isDirectory: true).appendingPathComponent("Import", isDirectory: true)
+        BaseServices.createDirectory(at: jsonFilesPath)
+        
         for fileName in self.desiredFileNames {
-            let currentUrl = BaseServices.sandBoxDataPath.appendingPathComponent(fileName)
-            if let data = try? Data(contentsOf: currentUrl) {
-                do {
-                    let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
-                    if let jsonDictionary = jsonObject as? [String: MLDataValueConvertible] {
-                        try! self.mlDataTable_Base = MLDataTable(dictionary: jsonDictionary)
-                    } else {
-                        print("Invalid JSON format: \(fileName)")
-                    }
-                } catch {
-                    print("Error parsing JSON: \(error)")
-                }
+            let subDirectoryName = (fileName as NSString).deletingPathExtension
+            let currentUrl = jsonFilesPath.appendingPathComponent(subDirectoryName)
+            self.mlDataTable_Base = BaseServices.loadMLDataTableFromJson(filePath: currentUrl)
+            if mlDataTable_Base == nil {
+                self.mlDataTable_Base = BaseServices.loadMLDataTableFromJson(filePath: currentUrl)
+                BaseServices.saveMLDataTableToJson(mlDataTable: self.mlDataTable_Base, filePath: currentUrl)
             }
+            self.orderedColumns = allColumns.filter( { $0.isshown == 1})
+            
         }
+        
+        
     }
-
+    
     func extractFromCoreData() {
         self.mlDataTable_Base = BaseServices.loadMLDataTableFromJson(filePath: modelStoreURL)
         if self.mlDataTable_Base != nil {
@@ -125,7 +126,7 @@ internal class FileWeaver {
                 allInDataTable = currentMLDataTable
             } else {
                 let joinColumns = Set(allInDataTable.columnNames).intersection(currentMLDataTable.columnNames)
-//                joinColumns.remove(at: joinColumns.firstIndex(of: "COGNITIONSOURCE")!)
+                //                joinColumns.remove(at: joinColumns.firstIndex(of: "COGNITIONSOURCE")!)
                 switch joinColumns.count {
                 case 1:
                     joinParam1 = Array(joinColumns)[0]
@@ -177,35 +178,35 @@ internal class FileWeaver {
         return FileWeaver.valuesDataModel.items.filter { $0.value2column == pivotColum}.first?.value
     }
     func addOrSubtractMonths(baseValue: Int, correction: Int) -> Int {
-//        // Extract the year and month components
-//        let year = baseValue / 100
-//        let month = baseValue % 100
-//
-//        // Convert the year and month components to a Date object
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy/MM"
-//        let dateString = String(format: "%04d/%02d", year, month)
-//        guard let date = dateFormatter.date(from: dateString) else {
-//            return baseValue
-//        }
-//
-//        // Add or subtract the specified number of months
-//        let calendar = Calendar.current
-//        guard let newDate = calendar.date(byAdding: .month, value: -correction, to: date) else {
-//            return baseValue
-//        }
-//
-//        // Extract the year and month components from the new date
-//        let newYear = calendar.component(.year, from: newDate)
-//        let newMonth = calendar.component(.month, from: newDate)
-//
-//        // Combine the year and month components into a new integer value
-//        let newValue = newYear * 100 + newMonth
-//        print("BaseValue: \(baseValue)")
-//        print("NewValue: \(newValue)")
+        //        // Extract the year and month components
+        //        let year = baseValue / 100
+        //        let month = baseValue % 100
+        //
+        //        // Convert the year and month components to a Date object
+        //        let dateFormatter = DateFormatter()
+        //        dateFormatter.dateFormat = "yyyy/MM"
+        //        let dateString = String(format: "%04d/%02d", year, month)
+        //        guard let date = dateFormatter.date(from: dateString) else {
+        //            return baseValue
+        //        }
+        //
+        //        // Add or subtract the specified number of months
+        //        let calendar = Calendar.current
+        //        guard let newDate = calendar.date(byAdding: .month, value: -correction, to: date) else {
+        //            return baseValue
+        //        }
+        //
+        //        // Extract the year and month components from the new date
+        //        let newYear = calendar.component(.year, from: newDate)
+        //        let newMonth = calendar.component(.month, from: newDate)
+        //
+        //        // Combine the year and month components into a new integer value
+        //        let newValue = newYear * 100 + newMonth
+        //        print("BaseValue: \(baseValue)")
+        //        print("NewValue: \(newValue)")
         return baseValue-correction
     }
-
+    
     internal struct CognitionSource: Identifiable {
         var id = UUID()
         var name: String!

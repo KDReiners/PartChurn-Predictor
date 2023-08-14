@@ -13,10 +13,12 @@ struct SQLHelper {
         var jsonArray: [[String: Any]]?
         var keys: [String] = []
         var tableData: [String: MLDataValueConvertible] = [:]
-        let transferDirectory: URL = BaseServices.sandBoxDataPath
+        let subDirectoryName = (transferFileName as NSString).deletingPathExtension
+        let transferFileDirectory: URL = BaseServices.sandBoxDataPath.appendingPathComponent(model.name!).appendingPathComponent("Import", isDirectory: true).appendingPathComponent(subDirectoryName)
+        BaseServices.createDirectory(at: transferFileDirectory)
         let odbcPath = "/opt/homebrew/Cellar/mssql-tools18/18.2.1.1/bin/sqlcmd"
         // Construct the output file path in the current working directory
-        let transferPath = BaseServices.appendJsonPath(jsonFileName: transferFileName).appendingPathComponent(transferFileName).path
+        let transferPath = transferFileDirectory.appendingPathComponent(transferFileName).path
 //        let transferPath = transferDirectory.appendingPathComponent(subDirectoryName.path, isDirectory: true).appendingPathComponent(transferFileName).path
         let process = Process()
         process.executableURL = URL(fileURLWithPath: odbcPath)
@@ -101,7 +103,7 @@ struct SQLHelper {
         }
         do {
             let mlDataTable = try MLDataTable(dictionary: tableData)
-            BaseServices.saveMLDataTableToJson(mlDataTable: mlDataTable, filePath: BaseServices.appendJsonPath(jsonFileName: transferFileName))
+            BaseServices.saveMLDataTableToJson(mlDataTable: mlDataTable, filePath: transferFileDirectory)
         } catch {
             print("mlDataTable could not be instantiated: \(error.localizedDescription)")
         }
