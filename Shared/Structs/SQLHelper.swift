@@ -76,8 +76,53 @@ struct SQLHelper {
         } catch {
             print("Error executing SQL command: \(error)")
         }
+        
         guard let jsonArray = jsonArray else { return (nil, nil) }
+
         var groupedDictionary: [String: [Any]] = [:]
+        var startTime = Date()
+
+        transformData(jsonArray) { result in
+            let endTime = Date()
+            let executionTime = endTime.timeIntervalSince(startTime)
+            print("Execution time: \(executionTime) seconds")
+            
+            // Use the 'result' dictionary of arrays as needed
+            print(result)
+        }
+        func transformData(_ dataArray: [[String: Any]], completion: @escaping ([[String: [Any]]]) -> Void) {
+            var transformedDataArray: [[String: [Any]]] = []
+            
+            let queue = DispatchQueue(label: "com.example.transformQueue") // Serial queue
+
+            DispatchQueue.concurrentPerform(iterations: dataArray.count) { index in
+                let dict = dataArray[index]
+                var transformedDict: [String: [Any]] = [:]
+                
+                for (key, value) in dict {
+                    transformedDict[key] = [value]
+                }
+                
+                queue.sync {
+                    transformedDataArray.append(transformedDict)
+                }
+            }
+            
+            completion(transformedDataArray)
+        }
+        let combinedDict = jsonArray.reduce(into: [String: [Any]]()) { result, dict in
+            for (key, value) in dict {
+                if var values = result[key] {
+                    values.append(value)
+                    result[key] = values
+                } else {
+                    result[key] = [value]
+                }
+            }
+        }
+        var endTime = Date()
+        var executionTime = endTime.timeIntervalSince(startTime)
+        startTime = Date()
         for dictionary in jsonArray {
             for (key, value) in dictionary {
                 if let existingValues = groupedDictionary[key] {
@@ -87,6 +132,8 @@ struct SQLHelper {
                 }
             }
         }
+        endTime = Date()
+        executionTime = endTime.timeIntervalSince(startTime)
         for (key, values) in groupedDictionary {
             if values.allSatisfy( {$0 as? Int != nil}) {
                 tableData[key] = values.map {$0 as! Int }
