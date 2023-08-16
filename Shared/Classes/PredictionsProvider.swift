@@ -37,7 +37,7 @@ class PredictionsProvider {
         let isClassifier = (regressorName.lowercased().contains("regressor")) ? false: true
 
         if let lookAhead = lookAhead {
-            let urlToPredictionModel = BaseServices.homePath.appendingPathComponent((prediction.prediction2model?.name)!).appendingPathComponent(prediction.objectID.uriRepresentation().lastPathComponent).appendingPathComponent(PredictionsModel().returnLookAhead(prediction: prediction, lookAhead: lookAhead).objectID.uriRepresentation().lastPathComponent).appendingPathComponent(regressorName.replacingOccurrences(of: "ML", with: "") + ".mlmodel")
+            let urlToPredictionModel = BaseServices.sandBoxDataPath.appendingPathComponent((prediction.prediction2model?.name)!).appendingPathComponent(prediction.objectID.uriRepresentation().lastPathComponent).appendingPathComponent(PredictionsModel().returnLookAhead(prediction: prediction, lookAhead: lookAhead).objectID.uriRepresentation().lastPathComponent).appendingPathComponent(regressorName.replacingOccurrences(of: "ML", with: "") + ".mlmodel")
             let fileManager = FileManager.default
             if fileManager.fileExists(atPath: urlToPredictionModel.path) {
                 predictionModel = getModel(url: urlToPredictionModel)

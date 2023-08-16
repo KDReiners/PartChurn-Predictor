@@ -19,7 +19,7 @@ struct SQLHelper {
         let odbcPath = "/opt/homebrew/Cellar/mssql-tools18/18.2.1.1/bin/sqlcmd"
         // Construct the output file path in the current working directory
         let transferPath = transferFileDirectory.appendingPathComponent(transferFileName).path
-//        let transferPath = transferDirectory.appendingPathComponent(subDirectoryName.path, isDirectory: true).appendingPathComponent(transferFileName).path
+        //        let transferPath = transferDirectory.appendingPathComponent(subDirectoryName.path, isDirectory: true).appendingPathComponent(transferFileName).path
         let process = Process()
         process.executableURL = URL(fileURLWithPath: odbcPath)
         process.arguments = [
@@ -78,62 +78,17 @@ struct SQLHelper {
         }
         
         guard let jsonArray = jsonArray else { return (nil, nil) }
-
         var groupedDictionary: [String: [Any]] = [:]
-        var startTime = Date()
+        let startTime = Date()
+        for key in keys {
+            let valuesForKey = jsonArray.compactMap { dict in
+                return dict[key]
+            }
+            groupedDictionary[key] = valuesForKey
+        }
+        let endTime = Date()
+        print("Transformation took: \(endTime.distance(to: startTime))")
 
-        transformData(jsonArray) { result in
-            let endTime = Date()
-            let executionTime = endTime.timeIntervalSince(startTime)
-            print("Execution time: \(executionTime) seconds")
-            
-            // Use the 'result' dictionary of arrays as needed
-            print(result)
-        }
-        func transformData(_ dataArray: [[String: Any]], completion: @escaping ([[String: [Any]]]) -> Void) {
-            var transformedDataArray: [[String: [Any]]] = []
-            
-            let queue = DispatchQueue(label: "com.example.transformQueue") // Serial queue
-
-            DispatchQueue.concurrentPerform(iterations: dataArray.count) { index in
-                let dict = dataArray[index]
-                var transformedDict: [String: [Any]] = [:]
-                
-                for (key, value) in dict {
-                    transformedDict[key] = [value]
-                }
-                
-                queue.sync {
-                    transformedDataArray.append(transformedDict)
-                }
-            }
-            
-            completion(transformedDataArray)
-        }
-        let combinedDict = jsonArray.reduce(into: [String: [Any]]()) { result, dict in
-            for (key, value) in dict {
-                if var values = result[key] {
-                    values.append(value)
-                    result[key] = values
-                } else {
-                    result[key] = [value]
-                }
-            }
-        }
-        var endTime = Date()
-        var executionTime = endTime.timeIntervalSince(startTime)
-        startTime = Date()
-        for dictionary in jsonArray {
-            for (key, value) in dictionary {
-                if let existingValues = groupedDictionary[key] {
-                    groupedDictionary[key] = existingValues + [value]
-                } else {
-                    groupedDictionary[key] = [value]
-                }
-            }
-        }
-        endTime = Date()
-        executionTime = endTime.timeIntervalSince(startTime)
         for (key, values) in groupedDictionary {
             if values.allSatisfy( {$0 as? Int != nil}) {
                 tableData[key] = values.map {$0 as! Int }

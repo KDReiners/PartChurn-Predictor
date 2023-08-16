@@ -48,6 +48,8 @@ internal class FileWeaver {
             desiredFileNames = (files.allObjects as! [Files]).map { $0.name!}
             if !BaseServices.allFilesExcist(desiredFileNames: desiredFileNames, directoryPath: BaseServices.sandBoxDataPath) {
                 extractFromJson()
+                self.mlDataTable_Base = jsonCompose()
+                BaseServices.saveMLDataTableToJson(mlDataTable: self.mlDataTable_Base, filePath: modelStoreURL)
             } else {
                 extractFromCoreData()
             }
@@ -61,15 +63,8 @@ internal class FileWeaver {
             let subDirectoryName = (fileName as NSString).deletingPathExtension
             let currentUrl = jsonFilesPath.appendingPathComponent(subDirectoryName)
             self.mlDataTable_Base = BaseServices.loadMLDataTableFromJson(filePath: currentUrl)
-            if mlDataTable_Base == nil {
-                self.mlDataTable_Base = BaseServices.loadMLDataTableFromJson(filePath: currentUrl)
-                BaseServices.saveMLDataTableToJson(mlDataTable: self.mlDataTable_Base, filePath: currentUrl)
-            }
             self.orderedColumns = allColumns.filter( { $0.isshown == 1})
-            
         }
-        
-        
     }
     
     func extractFromCoreData() {
@@ -79,7 +74,7 @@ internal class FileWeaver {
             self.orderedColumns = orderColumns(allColumns: self.allColumns)
         } else {
             examine()
-            self.mlDataTable_Base = compose()
+            self.mlDataTable_Base = coreDataCompose()
             BaseServices.saveMLDataTableToJson(mlDataTable: self.mlDataTable_Base, filePath: modelStoreURL)
         }
     }
@@ -114,7 +109,43 @@ internal class FileWeaver {
             }
         }
     }
-    private func compose() -> MLDataTable {
+    private func jsonCompose() -> MLDataTable {
+        var result = MLDataTable()
+        var joinParam1: String = ""
+        var joinParam2: String = ""
+        let joinColumns = columnsDataModel.joinColumns
+        let targetColumns = columnsDataModel.targetColumns
+        let splitColumns = joinColumns + targetColumns
+        if self.mlDataTable_Base != nil {
+            var splitTable = self.mlDataTable_Base!
+            for name in splitTable.columnNames {
+                if !splitColumns.map({ $0.name }).contains(name) {
+                    splitTable.removeColumn(named: name)
+                }
+            }
+            mlDataTable_Base.removeColumn(named: (targetColumns.first?.name)!)
+            joinParam1 = joinColumns[0].name!
+            joinParam2 = joinColumns[1].name!
+            
+            let timeValues = splitTable[(columnsDataModel.timeStampColumn?.name)!]
+            let newValues = timeValues.ints.map( { $0  - lookAhead})
+            splitTable[(columnsDataModel.timeStampColumn?.name)!] = newValues!
+            result = self.mlDataTable_Base.join(with: splitTable, on: joinParam1, joinParam2, type: .inner)
+        }
+        return result
+    }
+    func showFilter(mlDataTable: MLDataTable, filterColumnName: String, filterValue: String) {
+        let columnName = filterColumnName // Replace with the name of the column you want to filter by
+        let filterValue =  filterValue // Replace with the value you want to filter
+        
+        let mask = mlDataTable[columnName].map {  $0.stringValue == filterValue }
+
+        // Apply the mask to the dataTable
+        let filteredTable = mlDataTable[mask]
+        print(filteredTable)
+    }
+
+    private func coreDataCompose() -> MLDataTable {
         var joinParam1: String = ""
         var joinParam2: String = ""
         
