@@ -35,23 +35,26 @@ struct DirectoryView: View {
                 List {
                     ForEach(modelsDataModel.items, id: \.self) { model in
                         DisclosureGroup(model.name!) {
-                            NavigationLink("Infrastructure", destination: ModelsView(selectedModel: model))
+                            NavigationLink("Setting", destination: ModelsView(model: model))
                             if model == modelSelect {
                                 NavigationLink("Laboratory", destination: ScenarioView(model: model, modelSelect: $modelSelect.wrappedValue), tag: model, selection: $modelSelect)
                             } else {
                                 NavigationLink("Laboratory", destination: Text(model.name!), tag: model, selection: $modelSelect)
                             }
                             NavigationLink("Predictions", destination: PredictionsView(model: model))
-                            DisclosureGroup("Files") {
-                                let files =  model.model2files?.allObjects as! [Files]
-                                if filesDataModel.items.count > 0 {
-                                    ForEach(files, id: \.self) { file in
-                                        NavigationLink( file.name!, destination: FilesView(file: file, columnsDataModel: managerModels.columnsDataModel), tag: file, selection: $modelSelect)
+                            DisclosureGroup("Environment") {
+                                NavigationLink("Databases", destination: SourcesView(selectedModel: model))
+                                DisclosureGroup("Files") {
+                                    let files =  model.model2files?.allObjects as! [Files]
+                                    if filesDataModel.items.count > 0 {
+                                        ForEach(files, id: \.self) { file in
+                                            NavigationLink( file.name!, destination: FilesView(file: file, columnsDataModel: managerModels.columnsDataModel), tag: file, selection: $modelSelect)
+                                        }
+                                    } else {
+                                        Text("No files")
                                     }
-                                } else {
-                                    Text("No files")
+                                    
                                 }
-                                
                             }
 //                            NavigationLink("Automator", destination: AnalysisView(model: model))
                         }

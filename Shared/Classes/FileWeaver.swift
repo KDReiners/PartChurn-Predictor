@@ -113,6 +113,7 @@ internal class FileWeaver {
         var result = MLDataTable()
         var joinParam1: String = ""
         var joinParam2: String = ""
+        var sortedTimeInts: MLDataValueConvertible
         let joinColumns = columnsDataModel.joinColumns
         let targetColumns = columnsDataModel.targetColumns
         let splitColumns = joinColumns + targetColumns
@@ -126,14 +127,36 @@ internal class FileWeaver {
             mlDataTable_Base.removeColumn(named: (targetColumns.first?.name)!)
             joinParam1 = joinColumns[0].name!
             joinParam2 = joinColumns[1].name!
+            let timeColumn = splitTable[(columnsDataModel.timeStampColumn?.name)!]
+            var baseDictionary: [String: MLDataValueConvertible] = [:]
+            var convertedValues: MLDataValueConvertible!
+            for columnName in splitTable.columnNames {
+                print("columnName: \(columnName)")
+                if Array(splitTable[columnName]).allSatisfy( {$0.intValue != nil}) {
+                    convertedValues = Array(splitTable[columnName].ints!)
+                    baseDictionary[columnName] = convertedValues
+                    continue
+                }
+                if Array(splitTable[columnName]).allSatisfy( {$0.doubleValue != nil}) {
+                    convertedValues = Array(splitTable[columnName].doubles!)
+                    baseDictionary[columnName] = convertedValues
+                    continue
+                }
+                if Array(splitTable[columnName]).allSatisfy( {$0.stringValue != nil}) {
+                    convertedValues = Array(splitTable[columnName].strings!)
+                    baseDictionary[columnName] = convertedValues
+                    continue
+                }
+            }
             
-            let timeValues = splitTable[(columnsDataModel.timeStampColumn?.name)!]
-            let newValues = timeValues.ints.map( { $0  - lookAhead})
-            splitTable[(columnsDataModel.timeStampColumn?.name)!] = newValues!
+            let interactor = TimeBaseInteractor(mlTableDictionary: baseDictionary, model: self.model, lookAhead: lookAhead)
+            baseDictionary = interactor.updateValues()
+//            splitTable = try! MLDataTable(dictionary: baseDictionary)
             result = self.mlDataTable_Base.join(with: splitTable, on: joinParam1, joinParam2, type: .inner)
         }
         return result
     }
+    
     func showFilter(mlDataTable: MLDataTable, filterColumnName: String, filterValue: String) {
         let columnName = filterColumnName // Replace with the name of the column you want to filter by
         let filterValue =  filterValue // Replace with the value you want to filter

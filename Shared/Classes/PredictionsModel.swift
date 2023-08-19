@@ -144,7 +144,7 @@ public class PredictionsModel: Model<Predictions> {
             
             var body: some View {
                 List(selection: $selectedLookAhead) {
-                    ForEach(0..<maxLookAhead, id: \.self) { number in
+                    ForEach(0..<maxLookAhead/6, id: \.self) { number in
                         Row(number: number, selectedNumber: $selectedLookAhead)
                     }
                 }

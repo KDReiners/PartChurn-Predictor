@@ -8,6 +8,7 @@ import Foundation
 import OSLog
 import CoreData
 import CreateML
+
 public struct BaseServices
 {
     internal enum cognitionTypes: Int {

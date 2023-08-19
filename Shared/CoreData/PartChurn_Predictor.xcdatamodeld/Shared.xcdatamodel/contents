@@ -75,7 +75,9 @@
     </entity>
     <entity name="Models" representedClassName="Models" syncable="YES" codeGenerationType="class">
         <attribute name="filepattern" optional="YES" attributeType="String"/>
+        <attribute name="learninglasttimebase" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="periodtype" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="model2columns" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Columns" inverseName="column2model" inverseEntity="Columns"/>
         <relationship name="model2compositions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Compositions" inverseName="composition2model" inverseEntity="Compositions"/>
         <relationship name="model2files" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Files" inverseName="files2model" inverseEntity="Files"/>

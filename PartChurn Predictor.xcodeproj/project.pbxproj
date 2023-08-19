@@ -30,8 +30,8 @@
 		0A4C56592869862C00961D1D /* ColumnsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4C56572869862C00961D1D /* ColumnsView.swift */; };
 		0A589C13286614A000D1239B /* ManagerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A589C12286614A000D1239B /* ManagerModels.swift */; };
 		0A589C14286614A000D1239B /* ManagerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A589C12286614A000D1239B /* ManagerModels.swift */; };
-		0A6194432A7FEE3800A2A149 /* ModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6194422A7FEE3800A2A149 /* ModelsView.swift */; };
-		0A6194442A7FEE3800A2A149 /* ModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6194422A7FEE3800A2A149 /* ModelsView.swift */; };
+		0A6194432A7FEE3800A2A149 /* SourcesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6194422A7FEE3800A2A149 /* SourcesView.swift */; };
+		0A6194442A7FEE3800A2A149 /* SourcesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6194422A7FEE3800A2A149 /* SourcesView.swift */; };
 		0A660F34287AD1920001EF16 /* FileWeaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A660F33287AD1920001EF16 /* FileWeaver.swift */; };
 		0A660F35287AD1920001EF16 /* FileWeaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A660F33287AD1920001EF16 /* FileWeaver.swift */; };
 		0A69F24828F7CCE70062509A /* AnalysisProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A69F24728F7CCE70062509A /* AnalysisProvider.swift */; };
@@ -48,6 +48,10 @@
 		0A827F7528736F0400C928F2 /* CustomColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A827F7328736F0400C928F2 /* CustomColumn.swift */; };
 		0AA4508629C89F3C003EF476 /* MLExplainEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA4508529C89F3C003EF476 /* MLExplainEntry.swift */; };
 		0AA4508729C89F3C003EF476 /* MLExplainEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA4508529C89F3C003EF476 /* MLExplainEntry.swift */; };
+		0AA5B29B2A8E70FA006858BF /* ModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA5B29A2A8E70FA006858BF /* ModelsView.swift */; };
+		0AA5B29C2A8E70FA006858BF /* ModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA5B29A2A8E70FA006858BF /* ModelsView.swift */; };
+		0AA5B29E2A8E9721006858BF /* TimeBaseInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA5B29D2A8E9721006858BF /* TimeBaseInteractor.swift */; };
+		0AA5B29F2A8E9721006858BF /* TimeBaseInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA5B29D2A8E9721006858BF /* TimeBaseInteractor.swift */; };
 		0AA8C8F429A10E1500AA399F /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */; };
 		0AA8C8F529A10E1500AA399F /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */; };
 		0AB47B7E2A83EF7100FB4F8A /* JsonImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB47B7D2A83EF7100FB4F8A /* JsonImporter.swift */; };
@@ -168,7 +172,7 @@
 		0A4C56542869750900961D1D /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
 		0A4C56572869862C00961D1D /* ColumnsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColumnsView.swift; sourceTree = "<group>"; };
 		0A589C12286614A000D1239B /* ManagerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerModels.swift; sourceTree = "<group>"; };
-		0A6194422A7FEE3800A2A149 /* ModelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelsView.swift; sourceTree = "<group>"; };
+		0A6194422A7FEE3800A2A149 /* SourcesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcesView.swift; sourceTree = "<group>"; };
 		0A660F33287AD1920001EF16 /* FileWeaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileWeaver.swift; sourceTree = "<group>"; };
 		0A69F24728F7CCE70062509A /* AnalysisProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisProvider.swift; sourceTree = "<group>"; };
 		0A69F9322A474EA500A95F46 /* PredictionsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionsProvider.swift; sourceTree = "<group>"; };
@@ -177,6 +181,8 @@
 		0A827F702873686A00C928F2 /* ValuesTableProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValuesTableProvider.swift; sourceTree = "<group>"; };
 		0A827F7328736F0400C928F2 /* CustomColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColumn.swift; sourceTree = "<group>"; };
 		0AA4508529C89F3C003EF476 /* MLExplainEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLExplainEntry.swift; sourceTree = "<group>"; };
+		0AA5B29A2A8E70FA006858BF /* ModelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelsView.swift; sourceTree = "<group>"; };
+		0AA5B29D2A8E9721006858BF /* TimeBaseInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBaseInteractor.swift; sourceTree = "<group>"; };
 		0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		0AB47B7D2A83EF7100FB4F8A /* JsonImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonImporter.swift; sourceTree = "<group>"; };
 		0AC6E4222A28F02C0005F5CA /* PackedValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackedValue.swift; sourceTree = "<group>"; };
@@ -354,6 +360,7 @@
 		2DA77EDC28256EFA007EC3E5 /* Structs */ = {
 			isa = PBXGroup;
 			children = (
+				0A69F9352A4758C100A95F46 /* LoadedModel.swift */,
 				0AA4508529C89F3C003EF476 /* MLExplainEntry.swift */,
 				0AD6C8942858D5FD00EB92FB /* BatchProvider.swift */,
 				2DBDCCF8288D6C1C00CC8EDC /* Combinator.swift */,
@@ -374,6 +381,7 @@
 				0A69F24728F7CCE70062509A /* AnalysisProvider.swift */,
 				2D481BA428356EA4003EBCF2 /* AlgorithmsModel.swift */,
 				0A01CB682985AAAC00272B76 /* AlgorithmTypesModel.swift */,
+				2DA77EE028256F16007EC3E5 /* BaseServices.swift */,
 				0AC7273F2A6439D9002AF47C /* Configuration.swift */,
 				0A02736629AFEFAB00821074 /* LookaheadsModel.swift */,
 				2DA77EE428256F52007EC3E5 /* ColumnsModel.swift */,
@@ -399,10 +407,10 @@
 				0A827F702873686A00C928F2 /* ValuesTableProvider.swift */,
 				2DB5E69228AD3536006DC0D2 /* CompositionsProvider.swift */,
 				0AD43D092920234700199F06 /* SimulationController.swift */,
-				2DA77EE028256F16007EC3E5 /* BaseServices.swift */,
 				0AD43D0C2921062F00199F06 /* MLTableCluster.swift */,
 				0A69F9322A474EA500A95F46 /* PredictionsProvider.swift */,
 				2D0EAF2D2A5807E5006512CE /* DataContext.swift */,
+				0AA5B29D2A8E9721006858BF /* TimeBaseInteractor.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -410,24 +418,24 @@
 		2DA77EED28257693007EC3E5 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				2DA77EEE282576AA007EC3E5 /* ImportView.swift */,
-				2DA77EBD282569DC007EC3E5 /* DirectoryView.swift */,
-				0A6194422A7FEE3800A2A149 /* ModelsView.swift */,
-				2DA77F012827E1DD007EC3E5 /* ModelListRow.swift */,
-				0AFCB7032850A5FA00676AF6 /* ValuesView.swift */,
-				0A4C56542869750900961D1D /* FilesView.swift */,
+				2D6C24FE2934E88C00DA45B6 /* AlternateRows.swift */,
+				0AF2F06928FC333E0094D0F8 /* AnalysisView.swift */,
 				0A4C56572869862C00961D1D /* ColumnsView.swift */,
 				2D01395D287868C000AC8EBF /* ComposerView.swift */,
-				2D0139602878692500AC8EBF /* ScenarioView.swift */,
 				2DB5E69528AD36DE006DC0D2 /* CompositionsView.swift */,
-				0AF2F06928FC333E0094D0F8 /* AnalysisView.swift */,
-				0A7F4E4D2917FE7B00015DB3 /* SimulatorView.swift */,
-				0AD43D0F2921579400199F06 /* PredictionView.swift */,
-				2D6C24FE2934E88C00DA45B6 /* AlternateRows.swift */,
-				0A0FC906297D9981006F778C /* PredictionsView.swift */,
-				0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */,
+				2DA77EBD282569DC007EC3E5 /* DirectoryView.swift */,
+				0A4C56542869750900961D1D /* FilesView.swift */,
 				0AC6E4252A2A48D80005F5CA /* GridItemSequenceView.swift */,
-				0A69F9352A4758C100A95F46 /* LoadedModel.swift */,
+				2DA77EEE282576AA007EC3E5 /* ImportView.swift */,
+				2DA77F012827E1DD007EC3E5 /* ModelListRow.swift */,
+				0AA5B29A2A8E70FA006858BF /* ModelsView.swift */,
+				0AD43D0F2921579400199F06 /* PredictionView.swift */,
+				0A0FC906297D9981006F778C /* PredictionsView.swift */,
+				2D0139602878692500AC8EBF /* ScenarioView.swift */,
+				0A7F4E4D2917FE7B00015DB3 /* SimulatorView.swift */,
+				0A6194422A7FEE3800A2A149 /* SourcesView.swift */,
+				0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */,
+				0AFCB7032850A5FA00676AF6 /* ValuesView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -576,12 +584,14 @@
 				0A02736729AFEFAB00821074 /* LookaheadsModel.swift in Sources */,
 				2D0B8569282565BF00856BCB /* PartChurn_PredictorApp.swift in Sources */,
 				0A13902C2A2CCCD700680122 /* TimeColumn.swift in Sources */,
+				0AA5B29B2A8E70FA006858BF /* ModelsView.swift in Sources */,
 				2D9895942830321D0070F475 /* MetricvaluesModel.swift in Sources */,
 				2DBDCCF6288D6B9800CC8EDC /* CompositionsModel.swift in Sources */,
 				2DBDCCF9288D6C1C00CC8EDC /* Combinator.swift in Sources */,
 				0A827F712873686A00C928F2 /* ValuesTableProvider.swift in Sources */,
 				0A01CB692985AAAC00272B76 /* AlgorithmTypesModel.swift in Sources */,
 				2DA77EE528256F52007EC3E5 /* ColumnsModel.swift in Sources */,
+				0AA5B29E2A8E9721006858BF /* TimeBaseInteractor.swift in Sources */,
 				0AC6E4262A2A48D80005F5CA /* GridItemSequenceView.swift in Sources */,
 				2D0B856D282565BF00856BCB /* Persistence.swift in Sources */,
 				0A827F7428736F0400C928F2 /* CustomColumn.swift in Sources */,
@@ -610,7 +620,7 @@
 				0A4C56552869750900961D1D /* FilesView.swift in Sources */,
 				0A69F9332A474EA500A95F46 /* PredictionsProvider.swift in Sources */,
 				0AC6E4232A28F02C0005F5CA /* PackedValue.swift in Sources */,
-				0A6194432A7FEE3800A2A149 /* ModelsView.swift in Sources */,
+				0A6194432A7FEE3800A2A149 /* SourcesView.swift in Sources */,
 				2D98958E282EE4100070F475 /* DatasettypesModel.swift in Sources */,
 				2DFE31BE282D8BA40058C3AA /* Ml_RegressorMetricKPI.swift in Sources */,
 				2DA77F022827E1DD007EC3E5 /* ModelListRow.swift in Sources */,
@@ -654,12 +664,14 @@
 				0A02736829AFEFAB00821074 /* LookaheadsModel.swift in Sources */,
 				2D0B856A282565BF00856BCB /* PartChurn_PredictorApp.swift in Sources */,
 				0A13902D2A2CCCD700680122 /* TimeColumn.swift in Sources */,
+				0AA5B29C2A8E70FA006858BF /* ModelsView.swift in Sources */,
 				2D9895952830321D0070F475 /* MetricvaluesModel.swift in Sources */,
 				2DBDCCF7288D6B9800CC8EDC /* CompositionsModel.swift in Sources */,
 				2DBDCCFA288D6C1C00CC8EDC /* Combinator.swift in Sources */,
 				0A827F722873686A00C928F2 /* ValuesTableProvider.swift in Sources */,
 				0A01CB6A2985AAAC00272B76 /* AlgorithmTypesModel.swift in Sources */,
 				2DA77EE628256F52007EC3E5 /* ColumnsModel.swift in Sources */,
+				0AA5B29F2A8E9721006858BF /* TimeBaseInteractor.swift in Sources */,
 				0AC6E4272A2A48D80005F5CA /* GridItemSequenceView.swift in Sources */,
 				2D0B856E282565BF00856BCB /* Persistence.swift in Sources */,
 				0A827F7528736F0400C928F2 /* CustomColumn.swift in Sources */,
@@ -688,7 +700,7 @@
 				0A4C56562869750900961D1D /* FilesView.swift in Sources */,
 				0A69F9342A474EA500A95F46 /* PredictionsProvider.swift in Sources */,
 				0AC6E4242A28F02C0005F5CA /* PackedValue.swift in Sources */,
-				0A6194442A7FEE3800A2A149 /* ModelsView.swift in Sources */,
+				0A6194442A7FEE3800A2A149 /* SourcesView.swift in Sources */,
 				2D98958F282EE4100070F475 /* DatasettypesModel.swift in Sources */,
 				2DFE31BF282D8BA40058C3AA /* Ml_RegressorMetricKPI.swift in Sources */,
 				2DA77F032827E1DD007EC3E5 /* ModelListRow.swift in Sources */,
