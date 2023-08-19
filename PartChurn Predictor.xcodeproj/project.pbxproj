@@ -50,8 +50,8 @@
 		0AA4508729C89F3C003EF476 /* MLExplainEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA4508529C89F3C003EF476 /* MLExplainEntry.swift */; };
 		0AA5B29B2A8E70FA006858BF /* ModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA5B29A2A8E70FA006858BF /* ModelsView.swift */; };
 		0AA5B29C2A8E70FA006858BF /* ModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA5B29A2A8E70FA006858BF /* ModelsView.swift */; };
-		0AA5B29E2A8E9721006858BF /* TimeBaseInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA5B29D2A8E9721006858BF /* TimeBaseInteractor.swift */; };
-		0AA5B29F2A8E9721006858BF /* TimeBaseInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA5B29D2A8E9721006858BF /* TimeBaseInteractor.swift */; };
+		0AA5B29E2A8E9721006858BF /* TimeLord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA5B29D2A8E9721006858BF /* TimeLord.swift */; };
+		0AA5B29F2A8E9721006858BF /* TimeLord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA5B29D2A8E9721006858BF /* TimeLord.swift */; };
 		0AA8C8F429A10E1500AA399F /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */; };
 		0AA8C8F529A10E1500AA399F /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */; };
 		0AB47B7E2A83EF7100FB4F8A /* JsonImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB47B7D2A83EF7100FB4F8A /* JsonImporter.swift */; };
@@ -182,7 +182,7 @@
 		0A827F7328736F0400C928F2 /* CustomColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColumn.swift; sourceTree = "<group>"; };
 		0AA4508529C89F3C003EF476 /* MLExplainEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLExplainEntry.swift; sourceTree = "<group>"; };
 		0AA5B29A2A8E70FA006858BF /* ModelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelsView.swift; sourceTree = "<group>"; };
-		0AA5B29D2A8E9721006858BF /* TimeBaseInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBaseInteractor.swift; sourceTree = "<group>"; };
+		0AA5B29D2A8E9721006858BF /* TimeLord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeLord.swift; sourceTree = "<group>"; };
 		0AA8C8F329A10E1500AA399F /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		0AB47B7D2A83EF7100FB4F8A /* JsonImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonImporter.swift; sourceTree = "<group>"; };
 		0AC6E4222A28F02C0005F5CA /* PackedValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackedValue.swift; sourceTree = "<group>"; };
@@ -410,7 +410,7 @@
 				0AD43D0C2921062F00199F06 /* MLTableCluster.swift */,
 				0A69F9322A474EA500A95F46 /* PredictionsProvider.swift */,
 				2D0EAF2D2A5807E5006512CE /* DataContext.swift */,
-				0AA5B29D2A8E9721006858BF /* TimeBaseInteractor.swift */,
+				0AA5B29D2A8E9721006858BF /* TimeLord.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -591,7 +591,7 @@
 				0A827F712873686A00C928F2 /* ValuesTableProvider.swift in Sources */,
 				0A01CB692985AAAC00272B76 /* AlgorithmTypesModel.swift in Sources */,
 				2DA77EE528256F52007EC3E5 /* ColumnsModel.swift in Sources */,
-				0AA5B29E2A8E9721006858BF /* TimeBaseInteractor.swift in Sources */,
+				0AA5B29E2A8E9721006858BF /* TimeLord.swift in Sources */,
 				0AC6E4262A2A48D80005F5CA /* GridItemSequenceView.swift in Sources */,
 				2D0B856D282565BF00856BCB /* Persistence.swift in Sources */,
 				0A827F7428736F0400C928F2 /* CustomColumn.swift in Sources */,
@@ -671,7 +671,7 @@
 				0A827F722873686A00C928F2 /* ValuesTableProvider.swift in Sources */,
 				0A01CB6A2985AAAC00272B76 /* AlgorithmTypesModel.swift in Sources */,
 				2DA77EE628256F52007EC3E5 /* ColumnsModel.swift in Sources */,
-				0AA5B29F2A8E9721006858BF /* TimeBaseInteractor.swift in Sources */,
+				0AA5B29F2A8E9721006858BF /* TimeLord.swift in Sources */,
 				0AC6E4272A2A48D80005F5CA /* GridItemSequenceView.swift in Sources */,
 				2D0B856E282565BF00856BCB /* Persistence.swift in Sources */,
 				0A827F7528736F0400C928F2 /* CustomColumn.swift in Sources */,

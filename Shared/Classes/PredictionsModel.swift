@@ -135,8 +135,8 @@ public class PredictionsModel: Model<Predictions> {
         var maxTimeSeries: Int32? {
             return timeSeries.max(by: { $0.from < $1.from })?.from
         }
-        var maxLookAhead: Int {
-            return Int(maxTimeSeries ?? 0) - Int(minTimeSeries ?? 0)
+        var maxLookAhead: Int? {
+            return connectedTimeSeries?.count
         }
         internal struct LookAheadView: View {
             @Binding internal var selectedLookAhead: Int?
@@ -144,7 +144,7 @@ public class PredictionsModel: Model<Predictions> {
             
             var body: some View {
                 List(selection: $selectedLookAhead) {
-                    ForEach(0..<maxLookAhead/6, id: \.self) { number in
+                    ForEach(0..<maxLookAhead, id: \.self) { number in
                         Row(number: number, selectedNumber: $selectedLookAhead)
                     }
                 }

@@ -113,7 +113,6 @@ internal class FileWeaver {
         var result = MLDataTable()
         var joinParam1: String = ""
         var joinParam2: String = ""
-        var sortedTimeInts: MLDataValueConvertible
         let joinColumns = columnsDataModel.joinColumns
         let targetColumns = columnsDataModel.targetColumns
         let splitColumns = joinColumns + targetColumns
@@ -149,7 +148,7 @@ internal class FileWeaver {
                 }
             }
             
-            let interactor = TimeBaseInteractor(mlTableDictionary: baseDictionary, model: self.model, lookAhead: lookAhead)
+            let interactor = TimeLord(mlTableDictionary: baseDictionary, model: self.model, lookAhead: lookAhead)
             baseDictionary = interactor.updateValues()
 //            splitTable = try! MLDataTable(dictionary: baseDictionary)
             result = self.mlDataTable_Base.join(with: splitTable, on: joinParam1, joinParam2, type: .inner)

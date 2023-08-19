@@ -7,7 +7,7 @@
 
 import Foundation
 import CreateML
-class TimeBaseInteractor: Identifiable {
+class TimeLord: Identifiable {
     /// Enums
     internal enum PeriodTypes: Int16, CaseIterable {
         case year = 0
