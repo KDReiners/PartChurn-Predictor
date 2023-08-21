@@ -75,14 +75,15 @@
     </entity>
     <entity name="Models" representedClassName="Models" syncable="YES" codeGenerationType="class">
         <attribute name="filepattern" optional="YES" attributeType="String"/>
-        <attribute name="learninglasttimebase" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="periodtype" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="model2columns" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Columns" inverseName="column2model" inverseEntity="Columns"/>
         <relationship name="model2compositions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Compositions" inverseName="composition2model" inverseEntity="Compositions"/>
         <relationship name="model2files" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Files" inverseName="files2model" inverseEntity="Files"/>
+        <relationship name="model2lastLearningTimeSlice" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Timeslices"/>
         <relationship name="model2metricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2model" inverseEntity="Metricvalues"/>
         <relationship name="model2predictions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictions" inverseName="prediction2model" inverseEntity="Predictions"/>
+        <relationship name="model2timeslices" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Timeslices" inverseName="timeslice2models" inverseEntity="Timeslices"/>
         <relationship name="model2values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Values" inverseName="value2model" inverseEntity="Values"/>
     </entity>
     <entity name="Modeltypes" representedClassName="Modeltypes" syncable="YES" codeGenerationType="class">
@@ -119,6 +120,7 @@
     </entity>
     <entity name="Timeslices" representedClassName="Timeslices" syncable="YES" codeGenerationType="class">
         <attribute name="value" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="timeslice2models" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2timeslices" inverseEntity="Models"/>
         <relationship name="timeslice2timeseries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Timeseries" inverseName="timeseries2timeslices" inverseEntity="Timeseries"/>
     </entity>
     <entity name="Values" representedClassName="Values" syncable="YES" codeGenerationType="class">

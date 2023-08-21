@@ -148,9 +148,9 @@ internal class FileWeaver {
                 }
             }
             
-            let interactor = TimeLord(mlTableDictionary: baseDictionary, model: self.model, lookAhead: lookAhead)
-            baseDictionary = interactor.updateValues()
-//            splitTable = try! MLDataTable(dictionary: baseDictionary)
+            let timeLord = TimeLord(mlTableDictionary: baseDictionary, model: self.model, lookAhead: lookAhead)
+            baseDictionary = timeLord.updateValues()
+            splitTable = try! MLDataTable(dictionary: baseDictionary)
             result = self.mlDataTable_Base.join(with: splitTable, on: joinParam1, joinParam2, type: .inner)
         }
         return result

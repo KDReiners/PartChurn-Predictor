@@ -9,7 +9,7 @@ import Foundation
 import CreateML
 class TimeLord: Identifiable {
     /// Enums
-    internal enum PeriodTypes: Int16, CaseIterable {
+    public enum PeriodTypes: Int16, CaseIterable {
         case year = 0
         case halfYear = 1
         case quarter = 2
@@ -34,7 +34,6 @@ class TimeLord: Identifiable {
                 [.year, .month, .quarter ],
               from: calendarDate
             )
-            
             switch self {
             case .year:
                 return components.year!
@@ -58,7 +57,39 @@ class TimeLord: Identifiable {
         self.lookAhead = lookAhead
         self.timeStampColumnName = (columnsDataModel.timeStampColumn?.name)!
     }
-    
+    func incrementHalfYear(_ value: Int, by increment: Int, periodType: PeriodTypes) -> Int {
+        var year: Int
+        var month: Int
+        let calendar = Calendar.current
+        var dateComponents = DateComponents()
+        dateComponents.timeZone = TimeZone.current
+        switch periodType {
+        case .year:
+            return value
+        case .halfYear:
+            year = value / 10
+            let halfYear = value % 10
+            month = halfYear == 1 ? 6 : 12
+            
+            // Construct the date
+            dateComponents.year = year
+            dateComponents.month = month        // Add 1 to the month to move to the next month
+            dateComponents.day = 1              // Setting day to 0 gives the last day of the previous month
+            guard let initialDate = calendar.date(from: dateComponents) else {
+                fatalError("Could not convert halfyear \(value) to date")
+            }
+            guard let newDate = calendar.date(byAdding: .month, value: 6 * increment, to: initialDate) else {
+                fatalError("Could not create new targetDate for halfyear \(value) and increment \(increment)")
+            }
+            let result = periodType.convertToInt(calendarDate: newDate)
+            print("Converted \(value) for \(6*increment) month to \(result)")
+            return result
+        case .quarter:
+            return value
+        case .month:
+            return value
+        }
+    }
     func updateValues() -> [String: MLDataValueConvertible] {
         var newValues: [Int] = []
         let periodType: PeriodTypes = .halfYear
@@ -73,13 +104,7 @@ class TimeLord: Identifiable {
             if key == timeStampColumnName,
                let valueSequence = values as? [Int] { // Ensure the value is an array of Int
                 for value in valueSequence {
-                    guard let currentDate = dateFormatter.date(from: String(value)) else {
-                        fatalError("Failed to parse the date")
-                    }
-                    guard let newDate = calendar.date(byAdding: dateComponents, to: currentDate) else {
-                        fatalError("Failed to calculate new date")
-                    }
-                    let newEntry = periodType.convertToInt(calendarDate: newDate)
+                    let newEntry = incrementHalfYear(value, by: lookAhead, periodType: periodType)
                     newValues.append(newEntry)
                 }
             }
@@ -88,22 +113,4 @@ class TimeLord: Identifiable {
         return updatableDictionary
     }
 
-
-//    func convertTimeSlices(lookAhead: Int)    -> Int {
-//        var result = Array<Int>()
-//        let dateFormatter = DateFormatter()
-//        var dateComponents = DateComponents()
-//        let dateFormat = PeriodTypes.fromRawValue(self.periodType)?.dateFormat()
-//        dateFormatter.dateFormat = dateFormat
-//        let calendar = Calendar.current
-//        for index in 0..<values.count {
-//            var value = values[index].dataValue.intValue
-//            let currentDate = dateFormatter.date(from: String(value!))
-//            dateComponents.month = -lookAhead * 6
-//            let newDate = calendar.date(byAdding: dateComponents, to: currentDate!)!
-//            let newValue = Int(dateFormatter.string(from: newDate))
-//            result.append(newValue!)
-//        }
-//        return result
-//    }
 }

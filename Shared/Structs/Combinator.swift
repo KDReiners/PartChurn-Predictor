@@ -125,6 +125,7 @@ struct Combinator {
                     let found = timeSliceDataModel.getExistingRecord(predicate: predicate)
                     let timeSliceEntry = found == nil ? timeSliceDataModel.insertRecord(): found
                     timeSliceEntry!.value = Int32(timeSlice)
+                    timeSliceEntry!.timeslice2models = self.model
                     seriesEntry!.addToTimeseries2timeslices(timeSliceEntry!)
                 }
             }

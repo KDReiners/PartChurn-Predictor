@@ -35,7 +35,7 @@ struct DirectoryView: View {
                 List {
                     ForEach(modelsDataModel.items, id: \.self) { model in
                         DisclosureGroup(model.name!) {
-                            NavigationLink("Setting", destination: ModelsView(model: model))
+                            NavigationLink("Settings", destination: ModelsView(model: model))
                             if model == modelSelect {
                                 NavigationLink("Laboratory", destination: ScenarioView(model: model, modelSelect: $modelSelect.wrappedValue), tag: model, selection: $modelSelect)
                             } else {

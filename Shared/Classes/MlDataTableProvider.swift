@@ -345,11 +345,9 @@ class MlDataTableProvider: ObservableObject {
                     for timeSlices in timeSeries {
                         let newCluster = MLTableCluster(columns: mergedColumns, model: self.model!)
                         for timeSlice in timeSlices.sorted(by: { $0 < $1 }) {
-                            
                             let timeSeriesMask = mlTimeSeriesColumn == timeSlice
                             let newMlDataTable = self.mlDataTable[timeSeriesMask]
                             newCluster.tables.append(newMlDataTable)
-                            
                             if unionOfMlDataTables == nil {
                                 unionOfMlDataTables = [newMlDataTable] } else {
                                     unionOfMlDataTables?.append(newMlDataTable)
