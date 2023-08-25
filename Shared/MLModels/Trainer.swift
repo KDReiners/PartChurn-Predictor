@@ -38,7 +38,7 @@ public struct Trainer {
         let minorityMask = minorityColumn == 0
         let minorityTable = self.regressorTable![minorityMask]
         let debit = (self.regressorTable!.rows.count - minorityTable.rows.count) / minorityTable.rows.count
-        for _ in 0..<debit {
+        for _ in 0..<0 {
             regressorTable?.append(contentsOf: minorityTable)
         }
         self.regressorTable!.removeColumn(named: predictedColumnName)
@@ -47,10 +47,11 @@ public struct Trainer {
         self.timeSeriesColumnName = self.mlDataTableProvider.orderedColumns.first(where: { $0.istimeseries == 1})?.name
         if self.timeSeriesColumnName != nil {
             let timeSeriesColumn = self.regressorTable![timeSeriesColumnName!]
-            let seriesEnd = (timeSeriesColumn.ints?.max())!
-            let endMask = timeSeriesColumn < seriesEnd
+            let seriesEnd = Int((model.model2lastLearningTimeSlice?.value)!)
+            let endMask = timeSeriesColumn <= seriesEnd
             self.regressorTable = self.regressorTable![endMask]
         }
+        
     }
     public mutating func createModel(algorithmName: String, completion: @escaping () -> Void) -> Void {
         let columnDataModel = ColumnsModel(model: self.model )
@@ -63,7 +64,7 @@ public struct Trainer {
         let (regressorEvaluationTable, regressorTrainingTable) = regressorTable!.randomSplit(by: 0.2, seed: 5)
         switch algorithmName {
         case "MLLinearRegressor":
-            let defaultParams = MLLinearRegressor.ModelParameters(validation: .split(strategy: .automatic), maxIterations: 500, l1Penalty: 0, l2Penalty: 0.001, stepSize: 0.001, convergenceThreshold: 0.001, featureRescaling: true)
+            let defaultParams = MLLinearRegressor.ModelParameters(validation: .split(strategy: .automatic), maxIterations: 300, l1Penalty: 0, l2Penalty: 0.001, stepSize: 0.001, convergenceThreshold: 0.001, featureRescaling: true)
             regressor = {
                 do {
                     return try MLRegressor.linear(MLLinearRegressor(trainingData: regressorTrainingTable,
@@ -82,7 +83,7 @@ public struct Trainer {
                 }
             }()
         case "MLRandomForestRegressor":
-            let defaultParams = MLRandomForestRegressor.ModelParameters(validation: .split(strategy: .automatic), maxDepth: 100, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, rowSubsample: 0.8, columnSubsample: 0.8)
+            let defaultParams = MLRandomForestRegressor.ModelParameters(validation: .split(strategy: .automatic), maxDepth: 100, maxIterations: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, rowSubsample: 0.8, columnSubsample: 0.8)
             regressor = {
                 do {
                     return try MLRegressor.randomForest(MLRandomForestRegressor(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
@@ -91,7 +92,7 @@ public struct Trainer {
                 }
             }()
         case "MLBoostedTreeRegressor":
-            let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 500, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.05, earlyStoppingRounds: nil, rowSubsample: 0.8, columnSubsample: 0.8)
+            let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 300, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.05, earlyStoppingRounds: nil, rowSubsample: 0.8, columnSubsample: 0.8)
             regressor =  {
                 do {
                     return try MLRegressor.boostedTree(MLBoostedTreeRegressor(trainingData: regressorTrainingTable,
@@ -111,7 +112,7 @@ public struct Trainer {
                 }
             }()
         case "MLBoostedTreeClassifier":
-            let defaultParams = MLBoostedTreeClassifier.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 100, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.01, earlyStoppingRounds: nil, rowSubsample: 0.8, columnSubsample: 0.8)
+            let defaultParams = MLBoostedTreeClassifier.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 100, maxIterations: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.01, earlyStoppingRounds: nil, rowSubsample: 0.8, columnSubsample: 0.8)
             classifier = {	
                 do {
                     return try MLClassifier.boostedTree((MLBoostedTreeClassifier(trainingData: regressorTrainingTable, targetColumn: targetColumnName, parameters: defaultParams)))
@@ -120,7 +121,7 @@ public struct Trainer {
                 }
             }()
         case "MLRandomForestClassifier":
-            let defaultParams = MLRandomForestClassifier.ModelParameters(validation: .split(strategy: .automatic), maxDepth: 100, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, rowSubsample: 0.8, columnSubsample: 0.8)
+            let defaultParams = MLRandomForestClassifier.ModelParameters(validation: .split(strategy: .automatic), maxDepth: 100, maxIterations: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, rowSubsample: 0.8, columnSubsample: 0.8)
             classifier = {
                 do {
                     return try MLClassifier.randomForest(MLRandomForestClassifier(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))

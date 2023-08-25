@@ -32,7 +32,7 @@ class TimeLord: Identifiable {
         func convertToInt(calendarDate: Date) -> Int {
             let components = Calendar.current.dateComponents(
                 [.year, .month, .quarter ],
-              from: calendarDate
+                from: calendarDate
             )
             switch self {
             case .year:
@@ -78,7 +78,7 @@ class TimeLord: Identifiable {
             guard let initialDate = calendar.date(from: dateComponents) else {
                 fatalError("Could not convert halfyear \(value) to date")
             }
-            guard let newDate = calendar.date(byAdding: .month, value: 6 * increment, to: initialDate) else {
+            guard let newDate = calendar.date(byAdding: .month, value: -6 * increment, to: initialDate) else {
                 fatalError("Could not create new targetDate for halfyear \(value) and increment \(increment)")
             }
             let result = periodType.convertToInt(calendarDate: newDate)
@@ -96,7 +96,6 @@ class TimeLord: Identifiable {
         let dateFormat = periodType.dateFormat()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = dateFormat
-        let calendar = Calendar.current
         var dateComponents = DateComponents()
         dateComponents.month = 0
         
@@ -110,7 +109,36 @@ class TimeLord: Identifiable {
             }
         }
         updatableDictionary[timeStampColumnName]! = newValues
+        getTestValue(desiredCustno: "1004179")
         return updatableDictionary
     }
-
+    func getTestValue(desiredCustno: String) {
+        var custnoIndices: [Int] = []
+        var client: Client = Client(custNo: desiredCustno)
+        
+        for (index, value) in (updatableDictionary["S_CUSTNO"].map({ $0}) as? [String])!.enumerated() {
+            if value == desiredCustno {
+                custnoIndices.append(index)
+            }
+        }
+        for index in custnoIndices {
+            var timeSliceContent = TimeSliceContent()
+            timeSliceContent.timeSlice =  (updatableDictionary["I_TIMEBASE"].map({ $0}) as? [Int])![index]
+            timeSliceContent.Alive = (updatableDictionary["I_ALIVE"].map({ $0}) as? [Int])![index]
+            client.results.append(timeSliceContent)
+        }
+        print("Stop")
+    }
+    struct Client {
+        var custNo: String
+        var results: [TimeSliceContent] = []
+    }
+    struct TimeSliceContent {
+        var timeSlice: Int?
+        var Alive: Int?
+        init() {
+            
+        }
+    }
+    
 }

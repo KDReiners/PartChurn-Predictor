@@ -14,40 +14,37 @@ struct ModelsView: View {
     var timeslicesDataModel = TimeSliceModel()
     var model: Models
     @State private var selectedPeriod: TimeLord.PeriodTypes?
-    @State private var selectedPeriodIndex: Int = 0
+    @State private var selectedPeriodIndex: Int
     let periodLabels = ["Year", "Half Year", "Quarter", "Month"]
     
-    @State private var selectedTimeSlice: Timeslices
-    @State private var selectedTimeSliceIndex: Int = 1
+    @State private var selectedTimeSlice: Timeslices?
+    @State private var selectedTimeSliceIndex: Int
     
     
     var timeSlices: [Timeslices] = []
     init(model: Models) {
         self.model = model
-        
         timeSlices = timeslicesDataModel.items.filter( { $0.timeslice2models == model} )
         timeSlices.sort(by: { $0.value < $1.value })
+        self.selectedPeriodIndex = Int(model.periodtype)
         
-        if model.model2lastLearningTimeSlice != nil {
-            selectedTimeSlice = model.model2lastLearningTimeSlice!
-            if let sliceIndex = timeSlices.firstIndex(of: selectedTimeSlice) {
-                selectedTimeSliceIndex = sliceIndex
-            } else {
-                selectedTimeSliceIndex = 0
+        if !timeSlices.isEmpty {
+            if model.model2lastLearningTimeSlice == nil {
+                model.model2lastLearningTimeSlice = timeSlices.first
             }
+            guard let selectedTimeSlice = model.model2lastLearningTimeSlice else {
+                fatalError("Error in grepping timeslice")
+            }
+            self.selectedTimeSlice = selectedTimeSlice
+            let index = timeSlices.firstIndex(of: selectedTimeSlice)
+            self.selectedTimeSliceIndex = index!
         } else {
-            selectedTimeSlice = timeSlices.first!
             selectedTimeSliceIndex = 0
         }
-        guard let selectedPeriod = TimeLord.PeriodTypes(rawValue: model.periodtype) else {
-            fatalError("no model selected")
-        }
-        if let index = TimeLord.PeriodTypes.allCases.firstIndex(of: selectedPeriod) {
-            selectedPeriodIndex = index
-        } else {
-            selectedPeriodIndex = 0
-        }
-        //        selectedPeriodIndex = 0
+        
+        
+           
+        
     }
     var body: some View {
         

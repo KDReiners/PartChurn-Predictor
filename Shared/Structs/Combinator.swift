@@ -29,7 +29,7 @@ struct Combinator {
         
         if timeSeriesColumns.count > 0 {
             seriesStart = self.mlDataTable[(timeSeriesColumns.first?.name)!].ints?.min()
-            series = findNextSlice(start: seriesStart, columnName: (timeSeriesColumns.first?.name)!)
+	            series = findNextSlice(start: seriesStart, columnName: (timeSeriesColumns.first?.name)!)
             seriesEnd = self.mlDataTable[(timeSeriesColumns.first?.name)!].ints?.max()
             timeSeriesCombinations = timeSeriesColumnCombinations()
         }

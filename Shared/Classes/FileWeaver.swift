@@ -118,6 +118,10 @@ internal class FileWeaver {
         let splitColumns = joinColumns + targetColumns
         if self.mlDataTable_Base != nil {
             var splitTable = self.mlDataTable_Base!
+            let customerSplitColumn = splitTable["S_CUSTNO"]
+            let customerSplitMask  = customerSplitColumn == "1004179"
+            let customerColumn = self.mlDataTable_Base["S_CUSTNO"]
+            let customerMask  = customerColumn == "1004179"
             for name in splitTable.columnNames {
                 if !splitColumns.map({ $0.name }).contains(name) {
                     splitTable.removeColumn(named: name)
@@ -151,6 +155,7 @@ internal class FileWeaver {
             let timeLord = TimeLord(mlTableDictionary: baseDictionary, model: self.model, lookAhead: lookAhead)
             baseDictionary = timeLord.updateValues()
             splitTable = try! MLDataTable(dictionary: baseDictionary)
+
             result = self.mlDataTable_Base.join(with: splitTable, on: joinParam1, joinParam2, type: .inner)
         }
         return result
