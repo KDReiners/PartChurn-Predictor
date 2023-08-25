@@ -21,14 +21,15 @@ struct PredictionsView: View {
                 Group {
                     performanceDataProvider.involvedColumns
                     performanceDataProvider.columnsCount
+                    performanceDataProvider.lookAhead
                     performanceDataProvider.timeSlices
                     performanceDataProvider.algorithm
                     performanceDataProvider.precision
                     performanceDataProvider.recall
                     performanceDataProvider.f1Score
-                    performanceDataProvider.specifity
                 }
                 Group {
+                    performanceDataProvider.specifity
                     performanceDataProvider.falseNegatives
                     performanceDataProvider.falsePositives
                     performanceDataProvider.trueNegatives

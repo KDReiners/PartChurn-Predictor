@@ -79,6 +79,7 @@ internal struct PredictionKPI: Identifiable  {
     var trueNegatives: Double = 0.0000001
     var falsePositives: Double = 0.0000001
     var truePositives: Double = 0.0000001
+    var lookAhead: Int = 0
     var precision: Double! {
         get {
             return (truePositives / (truePositives + falsePositives))
@@ -121,6 +122,11 @@ internal class PerformanceDataProvider: ObservableObject {
     var columnsCount: TableColumn<PredictionKPI, Never, TextViewCell, Text> {
         TableColumn("Column(s) count") { row in
             TextViewCell(textValue: "\(row.inputColumnsNames.count)")
+        }
+    }
+    var lookAhead: TableColumn<PredictionKPI, Never, TextViewCell, Text> {
+        TableColumn("LookAhead") { row in
+            TextViewCell(textValue: "\(row.lookAhead)")
         }
     }
     var timeSlices: TableColumn<PredictionKPI, Never, TextViewCell, Text> {
@@ -224,6 +230,8 @@ internal class PerformanceDataProvider: ObservableObject {
                         predictionKPI.falsePositives = Double(predictionMetricValue.value)
                     case "truePositives":
                         predictionKPI.truePositives = Double(predictionMetricValue.value)
+                    case "lookAhead":
+                        predictionKPI.lookAhead = Int(predictionMetricValue.value)
                     default:
                         print("KPI not found: " + predictionMetricType)
                     }

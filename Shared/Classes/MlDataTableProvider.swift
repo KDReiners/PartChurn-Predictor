@@ -35,7 +35,7 @@ class MlDataTableProvider: ObservableObject {
     var filterViewProvider: FilterViewProvider!
     var prediction: Predictions?
     var regressorName: String?
-    var lookAhead: Int?
+    var lookAhead: Int!
     
     init(model: Models? = nil) {
         self.tableStatistics = TableStatistics()
@@ -202,6 +202,7 @@ class MlDataTableProvider: ObservableObject {
             targetStatistic.falsePositives = mlDataTable[falsePositivesMask].rows.count
             targetStatistic.trueNegatives = mlDataTable[trueNegativesMask].rows.count
             targetStatistic.falseNegatives = mlDataTable[falseNegativesMask].rows.count
+            targetStatistic.lookAhead =  self.lookAhead
         }
         func find(trial: Int, nearestLowValue: Int = 0, nearestHighValue: Int = 0, bestRelationValue: Double = 0, bestRelationPredictionValue: Double = 0, targetStatistic: inout TargetStatistics ){
             let value =   predictionTable.rows[Int(trial)][predictedColumnName]?.doubleValue
@@ -520,6 +521,7 @@ class MlDataTableProvider: ObservableObject {
         var falsePositives = 0
         var trueNegatives = 0
         var falseNegatives = 0
+        var lookAhead = 0
     }
 }
 struct UnionResult {
