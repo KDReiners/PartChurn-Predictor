@@ -250,6 +250,7 @@ class MlDataTableProvider: ObservableObject {
         let mainContext = PersistenceController.shared.container.viewContext
         privateContext.parent = mainContext
         privateContext.perform {
+            let lookAheadItem = PredictionsModel(model: self.model!).returnLookAhead(prediction: self.prediction!, lookAhead: self.lookAhead)
             let m = Mirror(reflecting: targetStatistic)
             let properties = Array(m.children)
             var dictOfPredictionMetrics = Dictionary<String, Double> ()
@@ -269,12 +270,13 @@ class MlDataTableProvider: ObservableObject {
                     metric = predictionMetricsDataModel.insertRecord()
                     metric?.name = entry.key
                 }
-                var valueEntry = predictionMetricValueDataModel.items.filter { $0.predictionmetricvalue2predictionmetric?.name == entry.key && $0.predictionmetricvalue2algorithm?.name == self.regressorName && $0.predictionmetricvalue2prediction == self.prediction }.first
+                var valueEntry = predictionMetricValueDataModel.items.filter { $0.predictionmetricvalue2predictionmetric?.name == entry.key && $0.predictionmetricvalue2algorithm?.name == self.regressorName && $0.predictionmetricvalue2prediction == self.prediction && $0.predictionmetricvalue2lookahead == lookAheadItem}.first
                 if valueEntry == nil {
                     valueEntry = predictionMetricValueDataModel.insertRecord()
                     valueEntry?.predictionmetricvalue2algorithm = algorithm
                     valueEntry?.predictionmetricvalue2predictionmetric = metric
                     valueEntry?.predictionmetricvalue2prediction = self.prediction
+                    valueEntry?.predictionmetricvalue2lookahead = lookAheadItem
                 }
                 let prop = properties.first(where: { $0.label == entry.key })
                 if prop?.value is Int {

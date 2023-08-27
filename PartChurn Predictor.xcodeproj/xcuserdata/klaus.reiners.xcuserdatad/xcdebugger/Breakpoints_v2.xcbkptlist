@@ -8,48 +8,192 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "668C5B21-372A-4BD5-92BD-E76D6CE1CE92"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Shared/Classes/Ml_RegressorMetricKPI.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "99"
-            endingLineNumber = "99"
+            startingLineNumber = "101"
+            endingLineNumber = "101"
             landmarkName = "postMetric(prediction:algorithmName:lookAhead:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "668C5B21-372A-4BD5-92BD-E76D6CE1CE92 - 955cda01cfd39107"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PartChurn_Predictor.Ml_RegressorMetricKPI.postMetric(prediction: PartChurn_Predictor.Predictions, algorithmName: Swift.String, lookAhead: Swift.Int) -&gt; ()"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Classes/Ml_RegressorMetricKPI.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "99"
+                  endingLineNumber = "99"
+                  offsetFromSymbolStart = "2140">
+               </Location>
+               <Location
+                  uuid = "668C5B21-372A-4BD5-92BD-E76D6CE1CE92 - 955cda01cfd39145"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PartChurn_Predictor.Ml_RegressorMetricKPI.postMetric(prediction: PartChurn_Predictor.Predictions, algorithmName: Swift.String, lookAhead: Swift.Int) -&gt; ()"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Classes/Ml_RegressorMetricKPI.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "101"
+                  endingLineNumber = "101"
+                  offsetFromSymbolStart = "2172">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "04703034-2467-4D1E-BED7-CE1A6F0143D0"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Shared/Classes/Ml_RegressorMetricKPI.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
+            startingLineNumber = "78"
+            endingLineNumber = "78"
             landmarkName = "postMetric(prediction:algorithmName:lookAhead:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "04703034-2467-4D1E-BED7-CE1A6F0143D0 - 955cda01cfd3960c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PartChurn_Predictor.Ml_RegressorMetricKPI.postMetric(prediction: PartChurn_Predictor.Predictions, algorithmName: Swift.String, lookAhead: Swift.Int) -&gt; ()"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Classes/Ml_RegressorMetricKPI.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "76"
+                  endingLineNumber = "76"
+                  offsetFromSymbolStart = "812">
+               </Location>
+               <Location
+                  uuid = "04703034-2467-4D1E-BED7-CE1A6F0143D0 - 955cda01cfd3964a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PartChurn_Predictor.Ml_RegressorMetricKPI.postMetric(prediction: PartChurn_Predictor.Predictions, algorithmName: Swift.String, lookAhead: Swift.Int) -&gt; ()"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Classes/Ml_RegressorMetricKPI.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "78"
+                  endingLineNumber = "78"
+                  offsetFromSymbolStart = "860">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "7AD2BBB4-6895-40F3-B7BC-9B7942012E03"
+            uuid = "07A6282E-A330-4995-8352-C7C036D5F81D"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Shared/Classes/Ml_RegressorMetricKPI.swift"
+            filePath = "Shared/Classes/MlDataTableProvider.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "72"
-            endingLineNumber = "72"
-            landmarkName = "postMetric(prediction:algorithmName:lookAhead:)"
+            startingLineNumber = "292"
+            endingLineNumber = "292"
+            landmarkName = "store2PredictionMetrics(targetStatistic:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "07A6282E-A330-4995-8352-C7C036D5F81D - 6d8ebae58a0947dc"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in PartChurn_Predictor.MlDataTableProvider.store2PredictionMetrics(targetStatistic: PartChurn_Predictor.MlDataTableProvider.TargetStatistics) -&gt; ()"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Classes/MlDataTableProvider.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "292"
+                  endingLineNumber = "292"
+                  offsetFromSymbolStart = "4568">
+               </Location>
+               <Location
+                  uuid = "07A6282E-A330-4995-8352-C7C036D5F81D - b53a96a4004992fe"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #6 () -&gt; Swift.Optional&lt;()&gt; in closure #1 () -&gt; () in PartChurn_Predictor.MlDataTableProvider.store2PredictionMetrics(targetStatistic: PartChurn_Predictor.MlDataTableProvider.TargetStatistics) -&gt; ()"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/Classes/MlDataTableProvider.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "293"
+                  endingLineNumber = "293"
+                  offsetFromSymbolStart = "36">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B7FB7BDB-4FE8-4A42-83E2-626BAE1EEB5F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Shared/MLModels/Trainer.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "46"
+            endingLineNumber = "46"
+            landmarkName = "init(mlDataProviderContext:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "B7FB7BDB-4FE8-4A42-83E2-626BAE1EEB5F - 4b144e61fcb3e8b9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PartChurn_Predictor.Trainer.init(mlDataProviderContext: PartChurn_Predictor.SimulationController.MlDataTableProviderContext) -&gt; PartChurn_Predictor.Trainer"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/MLModels/Trainer.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "45"
+                  endingLineNumber = "45"
+                  offsetFromSymbolStart = "5076">
+               </Location>
+               <Location
+                  uuid = "B7FB7BDB-4FE8-4A42-83E2-626BAE1EEB5F - 4b144e61fcb3e898"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PartChurn_Predictor.Trainer.init(mlDataProviderContext: PartChurn_Predictor.SimulationController.MlDataTableProviderContext) -&gt; PartChurn_Predictor.Trainer"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/MLModels/Trainer.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "46"
+                  endingLineNumber = "46"
+                  offsetFromSymbolStart = "3292">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

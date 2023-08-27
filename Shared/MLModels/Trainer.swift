@@ -37,10 +37,12 @@ public struct Trainer {
         let minorityColumn = regressorTable![targetColumn!.name!]
         let minorityMask = minorityColumn == 0
         let minorityTable = self.regressorTable![minorityMask]
-        let debit = (self.regressorTable!.rows.count - minorityTable.rows.count) / minorityTable.rows.count
-        for _ in 0..<0 {
-            regressorTable?.append(contentsOf: minorityTable)
-        }
+//        let debit = (self.regressorTable!.rows.count - minorityTable.rows.count) / minorityTable.rows.count
+//        REPLACE WITH SMOTE
+//        for _ in 0..<debit {
+//            self.regressorTable!.append(contentsOf: minorityTable)
+//            print(regressorTable!.rows.count)
+//        }
         self.regressorTable!.removeColumn(named: predictedColumnName)
         self.regressorTable!.removeColumn(named: columnDataModel.primaryKeyColumn!.name!)
         self.targetColumnName = self.mlDataTableProvider.orderedColumns.first(where: { $0.istarget == 1})?.name!
@@ -92,7 +94,7 @@ public struct Trainer {
                 }
             }()
         case "MLBoostedTreeRegressor":
-            let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 300, maxIterations: 500, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.05, earlyStoppingRounds: nil, rowSubsample: 0.8, columnSubsample: 0.8)
+            let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 300, maxIterations: 500, minLossReduction: 0.1, minChildWeight: 0.1, randomSeed: 42, stepSize: 0.05, earlyStoppingRounds: 10, rowSubsample: 0.8, columnSubsample: 0.8)
             regressor =  {
                 do {
                     return try MLRegressor.boostedTree(MLBoostedTreeRegressor(trainingData: regressorTrainingTable,
@@ -112,7 +114,7 @@ public struct Trainer {
                 }
             }()
         case "MLBoostedTreeClassifier":
-            let defaultParams = MLBoostedTreeClassifier.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 100, maxIterations: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.01, earlyStoppingRounds: nil, rowSubsample: 0.8, columnSubsample: 0.8)
+            let defaultParams = MLBoostedTreeClassifier.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 100, maxIterations: 700, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.01, earlyStoppingRounds: 10, rowSubsample: 0.8, columnSubsample: 0.8)
             classifier = {	
                 do {
                     return try MLClassifier.boostedTree((MLBoostedTreeClassifier(trainingData: regressorTrainingTable, targetColumn: targetColumnName, parameters: defaultParams)))

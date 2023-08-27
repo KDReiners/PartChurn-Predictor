@@ -196,47 +196,51 @@ internal class PerformanceDataProvider: ObservableObject {
             let mlExplainColumnCluster = MLExplainColumnCluster(prediction: prediction)
             let inputColumns = mlExplainColumnCluster.inputColumns.map( { $0.name! })
             for algorithm in prediction.prediction2algorithms?.allObjects as![Algorithms] {
-                var predictionKPI = PredictionKPI()
-                predictionKPI.prediction = prediction
-                predictionKPI.inputColumnsNames = inputColumns
-                predictionKPI.algorithm = algorithm.name!
-                predictionKPI.timeSpan = String(prediction.seriesdepth)
-                for predictionMetricValue in (prediction.prediction2predictionmetricvalues?.allObjects as! [Predictionmetricvalues]).filter({ $0.predictionmetricvalue2algorithm == algorithm }) {
-                    let predictionMetricType = predictionMetricValue.predictionmetricvalue2predictionmetric!.name!
-                    switch predictionMetricType {
-                    case "targetsAtOptimum":
-                        predictionKPI.targetsAtOptimum = BaseServices.intFormatter.string(from:predictionMetricValue.value.toInt()! as NSNumber)
-                    case "dirtiesAtThreshold":
-                        predictionKPI.dirtiesAtThreshold = BaseServices.intFormatter.string(from:predictionMetricValue.value.toInt()! as NSNumber)
-                    case "dirtiesAtOptimum":
-                        predictionKPI.dirtiesAtOptimum = BaseServices.intFormatter.string(from:predictionMetricValue.value.toInt()! as NSNumber)
-                    case "targetValue":
-                        predictionKPI.targetValue = BaseServices.intFormatter.string(from:predictionMetricValue.value.toInt()! as NSNumber)
-                    case "threshold":
-                        predictionKPI.threshold = BaseServices.intFormatter.string(from:predictionMetricValue.value.toInt()! as NSNumber)
-                    case "predictionValueAtThreshold":
-                        predictionKPI.predictionValueAtThreshold = BaseServices.doubleFormatter.string(from: predictionMetricValue.value as NSNumber)!
-                    case "targetsAtThreshold":
-                        predictionKPI.targetsAtThreshold = BaseServices.intFormatter.string(from:predictionMetricValue.value.toInt()! as NSNumber)
-                    case "targetPopulation":
-                        predictionKPI.targetPopulation = BaseServices.intFormatter.string(from:predictionMetricValue.value.toInt()! as NSNumber)
-                    case "predictionValueAtOptimum":
-                        predictionKPI.predictionValueAtOptimum =  BaseServices.doubleFormatter.string(from: predictionMetricValue.value as NSNumber)!
-                    case "falseNegatives":
-                        predictionKPI.falseNegatives = Double(predictionMetricValue.value)
-                    case "trueNegatives":
-                        predictionKPI.trueNegatives = Double(predictionMetricValue.value)
-                    case "falsePositives":
-                        predictionKPI.falsePositives = Double(predictionMetricValue.value)
-                    case "truePositives":
-                        predictionKPI.truePositives = Double(predictionMetricValue.value)
-                    case "lookAhead":
-                        predictionKPI.lookAhead = Int(predictionMetricValue.value)
-                    default:
-                        print("KPI not found: " + predictionMetricType)
+                for lookAheadItem in prediction.prediction2lookaheads?.allObjects as! [Lookaheads] {
+                    var predictionKPI = PredictionKPI()
+                    predictionKPI.prediction = prediction
+                    predictionKPI.inputColumnsNames = inputColumns
+                    predictionKPI.algorithm = algorithm.name!
+                    predictionKPI.timeSpan = String(prediction.seriesdepth)
+                    for predictionMetricValue in (prediction.prediction2predictionmetricvalues?.allObjects as! [Predictionmetricvalues]).filter({ $0.predictionmetricvalue2algorithm == algorithm && $0.predictionmetricvalue2lookahead == lookAheadItem }) {
+                        let predictionMetricType = predictionMetricValue.predictionmetricvalue2predictionmetric!.name!
+                        switch predictionMetricType {
+                        case "targetsAtOptimum":
+                            predictionKPI.targetsAtOptimum = BaseServices.intFormatter.string(from:predictionMetricValue.value.toInt()! as NSNumber)
+                        case "dirtiesAtThreshold":
+                            predictionKPI.dirtiesAtThreshold = BaseServices.intFormatter.string(from:predictionMetricValue.value.toInt()! as NSNumber)
+                        case "dirtiesAtOptimum":
+                            predictionKPI.dirtiesAtOptimum = BaseServices.intFormatter.string(from:predictionMetricValue.value.toInt()! as NSNumber)
+                        case "targetValue":
+                            predictionKPI.targetValue = BaseServices.intFormatter.string(from:predictionMetricValue.value.toInt()! as NSNumber)
+                        case "threshold":
+                            predictionKPI.threshold = BaseServices.intFormatter.string(from:predictionMetricValue.value.toInt()! as NSNumber)
+                        case "predictionValueAtThreshold":
+                            predictionKPI.predictionValueAtThreshold = BaseServices.doubleFormatter.string(from: predictionMetricValue.value as NSNumber)!
+                        case "targetsAtThreshold":
+                            predictionKPI.targetsAtThreshold = BaseServices.intFormatter.string(from:predictionMetricValue.value.toInt()! as NSNumber)
+                        case "targetPopulation":
+                            predictionKPI.targetPopulation = BaseServices.intFormatter.string(from:predictionMetricValue.value.toInt()! as NSNumber)
+                        case "predictionValueAtOptimum":
+                            predictionKPI.predictionValueAtOptimum =  BaseServices.doubleFormatter.string(from: predictionMetricValue.value as NSNumber)!
+                        case "falseNegatives":
+                            print("falseNegatives set to: \(predictionMetricValue.value)")
+                            predictionKPI.falseNegatives = Double(predictionMetricValue.value)
+                        case "trueNegatives":
+                            predictionKPI.trueNegatives = Double(predictionMetricValue.value)
+                        case "falsePositives":
+                            predictionKPI.falsePositives = Double(predictionMetricValue.value)
+                        case "truePositives":
+                            predictionKPI.truePositives = Double(predictionMetricValue.value)
+                        case "lookAhead":
+                            predictionKPI.lookAhead = Int(predictionMetricValue.value)
+                            print("assigned lookAhead \(predictionMetricValue.value)")
+                        default:
+                            print("KPI not found: " + predictionMetricType)
+                        }
                     }
+                    result.append(predictionKPI)
                 }
-                result.append(predictionKPI)
             }
         }
         return result
