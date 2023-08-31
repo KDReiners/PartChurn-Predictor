@@ -23,4 +23,18 @@ public class LookaheadsModel: Model<Lookaheads> {
             result = newValue
         }
     }
+    struct LookAheadItemRelations {
+        var lookAheadItem: Lookaheads
+        var connectedAlgorihms: [Algorithms] {
+            get {
+                var returnValue: [Algorithms] = []
+                let predictionMetricValues = (lookAheadItem.lookahead2predictionmetricvalue?.allObjects) as! [Predictionmetricvalues]
+                for predictionMetricValue in predictionMetricValues.filter( { $0.predictionmetricvalue2lookahead == lookAheadItem} ) {
+                    returnValue.append(predictionMetricValue.predictionmetricvalue2algorithm!)
+                }
+                return returnValue
+            }
+        }
+        
+    }
 }

@@ -13,6 +13,7 @@ struct ModelsView: View {
     var modelDataModel = ModelsModel()
     var timeslicesDataModel = TimeSliceModel()
     var model: Models
+    @State var churnPublisher: ChurnPublisher!
     @State private var selectedPeriod: TimeLord.PeriodTypes?
     @State private var selectedPeriodIndex: Int
     let periodLabels = ["Year", "Half Year", "Quarter", "Month"]
@@ -50,36 +51,41 @@ struct ModelsView: View {
         
         GeometryReader { geometry in
             VStack(alignment: .leading, spacing: 20) {
-                HStack {
-                    GroupBox(label: Text("Model").font(.title)) {
-                        Picker("Type of Period:", selection: $selectedPeriodIndex) {
-                            ForEach(0..<periodLabels.count, id: \.self) { index in
-                                Text(periodLabels[index])
+                VStack {
+                    HStack {
+                        GroupBox(label: Text("Model").font(.title)) {
+                            Picker("Type of Period:", selection: $selectedPeriodIndex) {
+                                ForEach(0..<periodLabels.count, id: \.self) { index in
+                                    Text(periodLabels[index])
+                                }
+                            }
+                            .onChange(of: selectedPeriodIndex) { newValue in
+                                self.model.periodtype = Int16(newValue)
+                                BaseServices.save()
+                            }
+                            Picker("Learn until:", selection: $selectedTimeSliceIndex) {
+                                ForEach(timeSlices.indices, id: \.self) { index in
+                                    Text("\(timeSlices[index].value)")
+                                }
+                            }
+                            .onChange(of: selectedTimeSliceIndex) { newValue in
+                                self.selectedTimeSlice = timeSlices[newValue]
+                                self.model.model2lastLearningTimeSlice = selectedTimeSlice
+                                BaseServices.save()
                             }
                         }
-                        .onChange(of: selectedPeriodIndex) { newValue in
-                            self.model.periodtype = Int16(newValue)
-                            BaseServices.save()
+                        .background(Color.white)
+                        .frame(maxWidth: geometry.size.width * 0.5, alignment: .topLeading)
+                        
+                        GroupBox(label: Text("Learning").font(.title)) {
+                            Text("Item 3")
+                            Text("Item 4")
                         }
-                        Picker("Learn until:", selection: $selectedTimeSliceIndex) {
-                            ForEach(timeSlices.indices, id: \.self) { index in
-                                Text("\(timeSlices[index].value)")
-                            }
-                        }
-                        .onChange(of: selectedTimeSliceIndex) { newValue in
-                            self.selectedTimeSlice = timeSlices[newValue]
-                            self.model.model2lastLearningTimeSlice = selectedTimeSlice
-                            BaseServices.save()
-                        }
+                    }.background(Color.white)
+                    Button("Get Best of") {
+                        self.churnPublisher = ChurnPublisher(model: self.model)
                     }
-                    .background(Color.white)
-                    .frame(maxWidth: geometry.size.width * 0.5, alignment: .topLeading)
-                    
-                    GroupBox(label: Text("Learning").font(.title)) {
-                        Text("Item 3")
-                        Text("Item 4")
-                    }
-                }.background(Color.white)
+                }
             }
             .frame(maxWidth: geometry.size.width * 0.5, alignment: .topLeading)
             .background(Color.white)

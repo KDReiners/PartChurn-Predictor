@@ -66,29 +66,6 @@ class ValuesTableProvider: ObservableObject {
         numCols = customColumns.count
         numRows = numCols > 0 ?customColumns[0].rows.count : 0
     }
-    private func incorporatedPrediction(selectedColumns: [Columns], isClassifier: Bool) {
-        let tableDictionary = convertDataTableToDictionary(mlDataTable)
-        let provider = try! MLArrayBatchProvider(dictionary: tableDictionary)
-        let predictions = try! predictionModel?.predictions(from: provider, options: MLPredictionOptions())
-        var predictedValues = [Double]()
-        for i in 0..<(predictions?.count ?? 0) {
-            predictedValues.append((predictions?.features(at: i).featureValue(for: targetColumn.name!)!.doubleValue)!)
-        }
-        let newColumn = MLDataColumn(predictedValues)
-        mlDataTable.addColumn(newColumn, named: predictedColumnName)
-        self.orderedColNames.append(predictedColumnName)
-        targetValues[targetColumn.name!] = 0
-    }
-    struct PredictionEntry: Hashable {
-        var primaryKey: Int
-        var timeSeriesValue: Int
-        var predictedValue: Double
-        var combinedKey: String {
-            get {
-                return String(primaryKey) + "_" + String(timeSeriesValue)
-            }
-        }
-    }
     func insertIntoGridItems(_ columnName: String?) {
         var rows = [String]()
         var sequences: MLDataColumn<CreateML.MLDataValue.SequenceType>?

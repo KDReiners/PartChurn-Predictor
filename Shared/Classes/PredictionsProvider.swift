@@ -79,7 +79,7 @@ class PredictionsProvider {
             predictedValues.append((predictions?.features(at: i).featureValue(for: targetColumn.name!)!.doubleValue)!)
         }
         let newColumn = MLDataColumn(predictedValues)
-        mlDataTable.addColumn(newColumn, named: predictedColumnName)
+        self.mlDataTable.addColumn(newColumn, named: predictedColumnName)
         self.orderedColNames.append(predictedColumnName)
     }
     func removePredictionColumns(predictionColumName: String, filter: Bool? = false) {
