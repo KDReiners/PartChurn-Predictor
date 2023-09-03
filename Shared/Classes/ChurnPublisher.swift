@@ -34,6 +34,16 @@ class ChurnPublisher: Identifiable {
     ///     - wie gut haben sie den Zeiten < timeSlicetoStartfrom vorhergesagt
     ///     - wie gut für die Zeiten >= timeSliceToStartFrom
     func calculate() {
+        var i = 0
+        let columnsDataModel = ColumnsModel(model: self.model)
+        guard let primaryKeyColumn = columnsDataModel.primaryKeyColumn else {
+            print("calculate needs a primary key columns")
+            return
+        }
+        guard let timeStampColumn = columnsDataModel.timeStampColumn else {
+            print("calculate needs a timeStamp columns")
+            return
+        }
         let predictionsDataModel = PredictionsModel(model: self.model)
         predictions.forEach { prediction in
             predictionsDataModel.createPredictionForModel(model: self.model)
@@ -53,6 +63,7 @@ class ChurnPublisher: Identifiable {
                         dataContext!.mlDataTableProvider.selectedColumns = cluster?.columns
                         dataContext!.mlDataTableProvider.prediction = prediction
                         dataContext?.mlDataTableProvider.mlDataTable = try! dataContext!.mlDataTableProvider.buildMlDataTable(lookAhead: Int(lookAheadItem.lookahead)).mlDataTable
+                        dataContext?.mlDataTableProvider.regressorName = algorithm.name!
                         guard let predictionTable = dataContext?.mlDataTableProvider.mlDataTable else {
                             return
                         }
@@ -65,15 +76,37 @@ class ChurnPublisher: Identifiable {
                         guard let algorithmName = algorithm.name else {
                             return
                         }
-                        print("working on prediction \(prediction.groupingpattern) for algorithm: \(algorithm.name) with lookAhead: \(lookAheadItem.lookahead)")
+                        guard let timeStampColumn = columnsDataModel.timeStampColumn else {
+                            return
+                        }
+                        print("working on prediction \(prediction.groupingpattern ?? "no grouping pattern found") for algorithm: \(algorithm.name ?? "no Algorithm selected") with lookAhead: \(lookAheadItem.lookahead)")
                         let lookAhead = Int(lookAheadItem.lookahead)
                         let predictionProvider = PredictionsProvider(mlDataTable: predictionTable, orderedColNames: orderedColumns.map( { $0.name! }), selectedColumns: selectedColumns, prediction: prediction, regressorName: algorithmName, lookAhead: lookAhead)
                         let result = predictionProvider.mlDataTable
-                        print(result)
+                        let distinctTimeStamps = Array(result[timeStampColumn.name!].ints!).reduce(into: Set<Int>()) { $0.insert($1) }.sorted(by: { $0 < $1})
+//                        for i in 0..<1 //distinctTimeStamps.count
+                        if i == 0
+                        {
+                            let mask = result[timeStampColumn.name!] == distinctTimeStamps[i]
+                            dataContext?.mlDataTableProvider.mlDataTableRaw = result[mask]
+//                            dataContext?.mlDataTableProvider.mlDataTable = result[mask]
+                            dataContext?.mlDataTableProvider.updateTableProvider(callingFunction: #function, className: "ChurnPublisher", lookAhead: lookAhead)
+                        }
+                        i += 1
+                        
                     }
                     
                 }
+                break
             }
+            
         }
+    }
+    struct Candidate {
+        var primaryKeyColumn: Columns
+        var timeStampColumn: Columns
+        var predictedValue: Double
+        var currentValue: Double
+        var voters: [Predictions]
     }
 }

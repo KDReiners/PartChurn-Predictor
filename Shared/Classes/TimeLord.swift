@@ -82,7 +82,6 @@ class TimeLord: Identifiable {
                 fatalError("Could not create new targetDate for halfyear \(value) and increment \(increment)")
             }
             let result = periodType.convertToInt(calendarDate: newDate)
-            print("Converted \(value) for \(6*increment) month to \(result)")
             return result
         case .quarter:
             return value
@@ -127,7 +126,6 @@ class TimeLord: Identifiable {
             timeSliceContent.Alive = (updatableDictionary["I_ALIVE"].map({ $0}) as? [Int])![index]
             client.results.append(timeSliceContent)
         }
-        print("Stop")
     }
     struct Client {
         var custNo: String
