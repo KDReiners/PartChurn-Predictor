@@ -242,6 +242,7 @@ class MlDataTableProvider: ObservableObject {
             targetStatistic.dirtiesAtOptimum = dirtiesAtOptimum
         }
         store2PredictionMetrics(targetStatistic: targetStatistic)
+        self.tableStatistics?.targetStatistics.append(targetStatistic)
         return targetStatistic
     }
     func store2PredictionMetrics(targetStatistic: TargetStatistics) -> Void {
