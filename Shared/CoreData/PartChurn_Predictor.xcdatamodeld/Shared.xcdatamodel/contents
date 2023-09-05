@@ -5,7 +5,6 @@
         <attribute name="orderno" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="algorithm2algorithmtype" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Algorithmtypes" inverseName="algorithmtype2algorithms" inverseEntity="Algorithmtypes"/>
         <relationship name="algorithm2metricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2algorithm" inverseEntity="Metricvalues"/>
-        <relationship name="algorithm2observations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Observations" inverseName="observation2algorithm" inverseEntity="Observations"/>
         <relationship name="algorithm2predictionmetricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictionmetricvalues" inverseName="predictionmetricvalue2algorithm" inverseEntity="Predictionmetricvalues"/>
         <relationship name="algorithm2predictions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictions" inverseName="prediction2algorithms" inverseEntity="Predictions"/>
     </entity>
@@ -57,7 +56,6 @@
     <entity name="Lookaheads" representedClassName="Lookaheads" syncable="YES" codeGenerationType="class">
         <attribute name="lookahead" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="lookahead2metricvalues" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Metricvalues" inverseName="metricvalue2lookahead" inverseEntity="Metricvalues"/>
-        <relationship name="lookahead2observations" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Observations" inverseName="observation2lookahead" inverseEntity="Observations"/>
         <relationship name="lookahead2predictionmetricvalue" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictionmetricvalues" inverseName="predictionmetricvalue2lookahead" inverseEntity="Predictionmetricvalues"/>
         <relationship name="lookahead2predictions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictions" inverseName="prediction2lookaheads" inverseEntity="Predictions"/>
     </entity>
@@ -95,10 +93,8 @@
     <entity name="Observations" representedClassName="Observations" syncable="YES" codeGenerationType="class">
         <attribute name="predictedvalue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="realvalue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <relationship name="observation2algorithm" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Algorithms" inverseName="algorithm2observations" inverseEntity="Algorithms"/>
         <relationship name="observation2column" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Columns" inverseName="column2observations" inverseEntity="Columns"/>
-        <relationship name="observation2lookahead" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Lookaheads" inverseName="lookahead2observations" inverseEntity="Lookaheads"/>
-        <relationship name="observation2prediction" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Predictions" inverseName="prediction2observations" inverseEntity="Predictions"/>
+        <relationship name="observation2predictionmetricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictionmetricvalues" inverseName="predictionmetricvalue2observation" inverseEntity="Predictionmetricvalues"/>
         <relationship name="observation2timeslice" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Timeslices" inverseName="timeslice2observations" inverseEntity="Timeslices"/>
     </entity>
     <entity name="Predictionmetrics" representedClassName="Predictionmetrics" syncable="YES" codeGenerationType="class">
@@ -109,6 +105,7 @@
         <attribute name="value" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="predictionmetricvalue2algorithm" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Algorithms" inverseName="algorithm2predictionmetricvalues" inverseEntity="Algorithms"/>
         <relationship name="predictionmetricvalue2lookahead" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Lookaheads" inverseName="lookahead2predictionmetricvalue" inverseEntity="Lookaheads"/>
+        <relationship name="predictionmetricvalue2observation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Observations" inverseName="observation2predictionmetricvalues" inverseEntity="Observations"/>
         <relationship name="predictionmetricvalue2prediction" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Predictions" inverseName="prediction2predictionmetricvalues" inverseEntity="Predictions"/>
         <relationship name="predictionmetricvalue2predictionmetric" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Predictionmetrics" inverseName="predictionmetric2predictionmetricvalues" inverseEntity="Predictionmetrics"/>
     </entity>
@@ -122,7 +119,6 @@
         <relationship name="prediction2lookaheads" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Lookaheads" inverseName="lookahead2predictions" inverseEntity="Lookaheads"/>
         <relationship name="prediction2metricvalues" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Metricvalues" inverseName="metricvalue2prediction" inverseEntity="Metricvalues"/>
         <relationship name="prediction2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2predictions" inverseEntity="Models"/>
-        <relationship name="prediction2observations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Observations" inverseName="observation2prediction" inverseEntity="Observations"/>
         <relationship name="prediction2predictionmetricvalues" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Predictionmetricvalues" inverseName="predictionmetricvalue2prediction" inverseEntity="Predictionmetricvalues"/>
     </entity>
     <entity name="Timeseries" representedClassName="Timeseries" syncable="YES" codeGenerationType="class">

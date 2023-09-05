@@ -52,6 +52,30 @@ class MlDataTableProvider: ObservableObject {
         }
         return result
     }
+    internal var distinctTimeStamps: [Int]? {
+        get {
+            guard let timeStampColumn = columnsDataModel.timeStampColumn else {
+                return nil
+            }
+            return Array(self.mlDataTable[(timeStampColumn.name)!].ints!).reduce(into: Set<Int>()) { $0.insert($1) }.sorted(by: { $0 < $1})
+        }
+    }
+    internal var minTimeSlice: Int? {
+        get {
+            guard let result = distinctTimeStamps else {
+                return nil
+            }
+            return result.min()
+        }
+    }
+    internal var maxTimeSlice: Int? {
+        get {
+            guard let result = distinctTimeStamps else {
+                return nil
+            }
+            return result.max()
+        }
+    }
     // MARK: - Async Calls for CoreMl
     internal func updateTableProviderForFiltering() {
         tableProvider(mlDataTable: self.mlDataTable, orderedColums: self.customColumns.map { $0.title}, selectedColumns: mergedColumns, filter: true, lookAhead: self.lookAhead) { provider in
@@ -249,9 +273,6 @@ class MlDataTableProvider: ObservableObject {
         privateContext.automaticallyMergesChangesFromParent = true
         let mainContext = PersistenceController.shared.container.viewContext
         let timeStampColumn = columnsDataModel.timeStampColumn
-        let distinctTimeStamps = Array(self.mlDataTable[(timeStampColumn?.name)!].ints!).reduce(into: Set<Int>()) { $0.insert($1) }.sorted(by: { $0 < $1})
-        let minTimeSlice = distinctTimeStamps.min()
-        let maxTimeSlice = distinctTimeStamps.max()
         privateContext.parent = mainContext
         privateContext.perform {
             let lookAheadItem = PredictionsModel(model: self.model!).returnLookAhead(prediction: self.prediction!, lookAhead: self.lookAhead)

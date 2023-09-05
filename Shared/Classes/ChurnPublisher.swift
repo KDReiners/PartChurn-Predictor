@@ -102,11 +102,4 @@ class ChurnPublisher: Identifiable {
             
         }
     }
-    struct Candidate {
-        var primaryKeyColumn: Columns
-        var timeStampColumn: Columns
-        var predictedValue: Double
-        var currentValue: Double
-        var voters: [Predictions]
-    }
 }

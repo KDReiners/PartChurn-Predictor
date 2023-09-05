@@ -21,5 +21,4 @@ public class TimeSeriesModel: Model<Timeseries> {
             result = newValue.sorted(by: { $1.from > $0.to })
         }
     }
-    
 }
