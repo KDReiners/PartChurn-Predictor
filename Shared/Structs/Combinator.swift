@@ -111,7 +111,7 @@ struct Combinator {
     }
     func getTimeSeriesEntries() -> Set<TimeSeriesEntry> {
         let timeSeriesDataModel = TimeSeriesModel()
-        let timeSliceDataModel = TimeSliceModel()
+        let timeSliceDataModel = TimeSlicesModel()
         var result = Set<TimeSeriesEntry>()
         for series in self.timeSeriesCombinations {
             let predicate = NSPredicate(format: "from == %i and  to ==%i", Int32(series.min()!), Int32(series.max()!))

@@ -157,7 +157,7 @@ class MlDataTableProvider: ObservableObject {
             }
         }
     }
-    func    updateStatisticsProvider(targetValues: [String : Int], predictedColumnName: String) {
+    func updateStatisticsProvider(targetValues: [String : Int], predictedColumnName: String) {
         if self.regressorName != nil && self.mlDataTable.columnNames.contains(predictedColumnName) {
             statisticsProvider(targetValues: targetValues, predictedColumnName: predictedColumnName) { provider in
                 DispatchQueue.main.async { [self] in
@@ -193,7 +193,6 @@ class MlDataTableProvider: ObservableObject {
         targetStatistic.targetPopulation = targetCount
         enhanceTargetStatistics()
         func enhanceTargetStatistics() {
-//            let metricPrecisionRecallModel = MetricprecisionrecallModell()
             let truePositivesMask = mlPredictionColumn <= targetStatistic.predictionValueAtThreshold && mlTargetColumn == targetStatistic.targetValue
             let falsePositivesMask = mlPredictionColumn <= targetStatistic.predictionValueAtThreshold && mlTargetColumn != targetStatistic.targetValue
             let trueNegativesMask = mlPredictionColumn > targetStatistic.predictionValueAtThreshold && mlTargetColumn != targetStatistic.targetValue
@@ -249,6 +248,10 @@ class MlDataTableProvider: ObservableObject {
         let privateContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         privateContext.automaticallyMergesChangesFromParent = true
         let mainContext = PersistenceController.shared.container.viewContext
+        let timeStampColumn = columnsDataModel.timeStampColumn
+        let distinctTimeStamps = Array(self.mlDataTable[(timeStampColumn?.name)!].ints!).reduce(into: Set<Int>()) { $0.insert($1) }.sorted(by: { $0 < $1})
+        let minTimeSlice = distinctTimeStamps.min()
+        let maxTimeSlice = distinctTimeStamps.max()
         privateContext.parent = mainContext
         privateContext.perform {
             let lookAheadItem = PredictionsModel(model: self.model!).returnLookAhead(prediction: self.prediction!, lookAhead: self.lookAhead)
@@ -271,16 +274,19 @@ class MlDataTableProvider: ObservableObject {
                     metric = predictionMetricsDataModel.insertRecord()
                     metric?.name = entry.key
                 }
-                var valueEntry = predictionMetricValueDataModel.items.filter { $0.predictionmetricvalue2predictionmetric?.name == entry.key && $0.predictionmetricvalue2algorithm?.name == self.regressorName && $0.predictionmetricvalue2prediction == self.prediction && $0.predictionmetricvalue2lookahead == lookAheadItem}.first
+                var valueEntry = predictionMetricValueDataModel.items.filter { $0.predictionmetricvalue2predictionmetric?.name == entry.key && $0.predictionmetricvalue2algorithm?.name == self.regressorName && $0.predictionmetricvalue2prediction == self.prediction &&
+                    $0.predictionmetricvalue2lookahead == lookAheadItem}.first
                 if valueEntry == nil {
                     valueEntry = predictionMetricValueDataModel.insertRecord()
                     valueEntry?.predictionmetricvalue2algorithm = algorithm
                     valueEntry?.predictionmetricvalue2predictionmetric = metric
                     valueEntry?.predictionmetricvalue2prediction = self.prediction
                     valueEntry?.predictionmetricvalue2lookahead = lookAheadItem
+
                 }
                 let prop = properties.first(where: { $0.label == entry.key })
                 if prop?.value is Int {
+                    print("Set \(entry.key) to: \(prop!.value)")
                     valueEntry?.value = Double(prop?.value as! Int)
                 }
                 if prop?.value is Double {

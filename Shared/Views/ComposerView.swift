@@ -163,7 +163,7 @@ struct ComposerView: View {
         compositionDataModel.deleteAllRecords(predicate: nil)
         let timeseriesDataModel = TimeSeriesModel()
         timeseriesDataModel.deleteAllRecords(predicate: nil)
-        let timeSliceModel = TimeSliceModel()
+        let timeSliceModel = TimeSlicesModel()
         timeSliceModel.deleteAllRecords(predicate: nil)
         compositionDataModel.arrayOfClusters = [CompositionsModel.CompositionCluster]()
         BaseServices.save()

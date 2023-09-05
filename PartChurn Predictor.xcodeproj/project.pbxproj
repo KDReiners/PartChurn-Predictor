@@ -26,6 +26,8 @@
 		0A1EA8852A35CFAC006ABB00 /* SQLHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EA8832A35CFAC006ABB00 /* SQLHelper.swift */; };
 		0A49CE6D2A9BC582006C1BD5 /* ChurnPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A49CE6C2A9BC582006C1BD5 /* ChurnPublisher.swift */; };
 		0A49CE6E2A9BC582006C1BD5 /* ChurnPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A49CE6C2A9BC582006C1BD5 /* ChurnPublisher.swift */; };
+		0A49CE702AA72A16006C1BD5 /* ObservationsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A49CE6F2AA72A16006C1BD5 /* ObservationsModel.swift */; };
+		0A49CE712AA72A16006C1BD5 /* ObservationsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A49CE6F2AA72A16006C1BD5 /* ObservationsModel.swift */; };
 		0A4C56552869750900961D1D /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4C56542869750900961D1D /* FilesView.swift */; };
 		0A4C56562869750900961D1D /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4C56542869750900961D1D /* FilesView.swift */; };
 		0A4C56582869862C00961D1D /* ColumnsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4C56572869862C00961D1D /* ColumnsView.swift */; };
@@ -108,8 +110,8 @@
 		2D6C25002934E88D00DA45B6 /* AlternateRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6C24FE2934E88C00DA45B6 /* AlternateRows.swift */; };
 		2D867B5A28AACC4B005E8B87 /* TimeSeriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D867B5928AACC4B005E8B87 /* TimeSeriesModel.swift */; };
 		2D867B5B28AACC4B005E8B87 /* TimeSeriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D867B5928AACC4B005E8B87 /* TimeSeriesModel.swift */; };
-		2D867B5D28AACCB5005E8B87 /* TimeSliceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D867B5C28AACCB5005E8B87 /* TimeSliceModel.swift */; };
-		2D867B5E28AACCB5005E8B87 /* TimeSliceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D867B5C28AACCB5005E8B87 /* TimeSliceModel.swift */; };
+		2D867B5D28AACCB5005E8B87 /* TimeSlicesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D867B5C28AACCB5005E8B87 /* TimeSlicesModel.swift */; };
+		2D867B5E28AACCB5005E8B87 /* TimeSlicesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D867B5C28AACCB5005E8B87 /* TimeSlicesModel.swift */; };
 		2D98958E282EE4100070F475 /* DatasettypesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D98958D282EE4100070F475 /* DatasettypesModel.swift */; };
 		2D98958F282EE4100070F475 /* DatasettypesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D98958D282EE4100070F475 /* DatasettypesModel.swift */; };
 		2D989591282EE47F0070F475 /* MetricsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D989590282EE47F0070F475 /* MetricsModel.swift */; };
@@ -172,6 +174,7 @@
 		0A1A2AC529805DB80078AA11 /* PerformanceDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceDataProvider.swift; sourceTree = "<group>"; };
 		0A1EA8832A35CFAC006ABB00 /* SQLHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLHelper.swift; sourceTree = "<group>"; };
 		0A49CE6C2A9BC582006C1BD5 /* ChurnPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChurnPublisher.swift; sourceTree = "<group>"; };
+		0A49CE6F2AA72A16006C1BD5 /* ObservationsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationsModel.swift; sourceTree = "<group>"; };
 		0A4C56542869750900961D1D /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
 		0A4C56572869862C00961D1D /* ColumnsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColumnsView.swift; sourceTree = "<group>"; };
 		0A589C12286614A000D1239B /* ManagerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerModels.swift; sourceTree = "<group>"; };
@@ -216,7 +219,7 @@
 		2D6B0E58289EC8680016E57F /* MlDataTableProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MlDataTableProvider.swift; sourceTree = "<group>"; usesTabs = 0; };
 		2D6C24FE2934E88C00DA45B6 /* AlternateRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlternateRows.swift; sourceTree = "<group>"; };
 		2D867B5928AACC4B005E8B87 /* TimeSeriesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSeriesModel.swift; sourceTree = "<group>"; };
-		2D867B5C28AACCB5005E8B87 /* TimeSliceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSliceModel.swift; sourceTree = "<group>"; };
+		2D867B5C28AACCB5005E8B87 /* TimeSlicesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSlicesModel.swift; sourceTree = "<group>"; };
 		2D98958D282EE4100070F475 /* DatasettypesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatasettypesModel.swift; sourceTree = "<group>"; };
 		2D989590282EE47F0070F475 /* MetricsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsModel.swift; sourceTree = "<group>"; };
 		2D9895932830321D0070F475 /* MetricvaluesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricvaluesModel.swift; sourceTree = "<group>"; };
@@ -386,35 +389,36 @@
 				0A01CB682985AAAC00272B76 /* AlgorithmTypesModel.swift */,
 				2DA77EE028256F16007EC3E5 /* BaseServices.swift */,
 				0A49CE6C2A9BC582006C1BD5 /* ChurnPublisher.swift */,
-				0AC7273F2A6439D9002AF47C /* Configuration.swift */,
-				0A02736629AFEFAB00821074 /* LookaheadsModel.swift */,
 				2DA77EE428256F52007EC3E5 /* ColumnsModel.swift */,
 				2DBDCCF5288D6B9800CC8EDC /* CompositionsModel.swift */,
+				2DB5E69228AD3536006DC0D2 /* CompositionsProvider.swift */,
+				0AC7273F2A6439D9002AF47C /* Configuration.swift */,
+				2D0EAF2D2A5807E5006512CE /* DataContext.swift */,
 				2D98958D282EE4100070F475 /* DatasettypesModel.swift */,
 				2DA77EFE28266B32007EC3E5 /* FilesModel.swift */,
+				0A660F33287AD1920001EF16 /* FileWeaver.swift */,
+				2DFD1B3028A930810057C74A /* FilterViewProvider.swift */,
+				0A02736629AFEFAB00821074 /* LookaheadsModel.swift */,
+				0A589C12286614A000D1239B /* ManagerModels.swift */,
 				2D989590282EE47F0070F475 /* MetricsModel.swift */,
 				2D9895932830321D0070F475 /* MetricvaluesModel.swift */,
-				2DFE31BD282D8BA40058C3AA /* Ml_RegressorMetricKPI.swift */,
 				0AC8843A29A52B5D00A233B9 /* Ml_ClassifierMetricKPI.swift */,
-				2D1DB46628B3CC08005BFC2D /* PredictionsModel.swift */,
+				0AD43D0C2921062F00199F06 /* MLTableCluster.swift */,
+				2D6B0E58289EC8680016E57F /* MlDataTableProvider.swift */,
+				2DFE31BD282D8BA40058C3AA /* Ml_RegressorMetricKPI.swift */,
 				2DA77EE72825716A007EC3E5 /* ModelsModel.swift */,
+				0A49CE6F2AA72A16006C1BD5 /* ObservationsModel.swift */,
+				2D1DB46628B3CC08005BFC2D /* PredictionsModel.swift */,
 				0AF7289528F5BEB9006DE13A /* PredictionMetricsModel.swift */,
 				0AF7289828F5BF4B006DE13A /* PredictionMetricValueModel.swift */,
-				2D867B5928AACC4B005E8B87 /* TimeSeriesModel.swift */,
-				2D867B5C28AACCB5005E8B87 /* TimeSliceModel.swift */,
-				2DA77EEA2825721B007EC3E5 /* ValuesModel.swift */,
-				0A589C12286614A000D1239B /* ManagerModels.swift */,
-				2D6B0E58289EC8680016E57F /* MlDataTableProvider.swift */,
-				0A660F33287AD1920001EF16 /* FileWeaver.swift */,
-				2DBDCCFB288EF0A500CC8EDC /* ScenarioProvider.swift */,
-				2DFD1B3028A930810057C74A /* FilterViewProvider.swift */,
-				0A827F702873686A00C928F2 /* ValuesTableProvider.swift */,
-				2DB5E69228AD3536006DC0D2 /* CompositionsProvider.swift */,
-				0AD43D092920234700199F06 /* SimulationController.swift */,
-				0AD43D0C2921062F00199F06 /* MLTableCluster.swift */,
 				0A69F9322A474EA500A95F46 /* PredictionsProvider.swift */,
-				2D0EAF2D2A5807E5006512CE /* DataContext.swift */,
+				2DBDCCFB288EF0A500CC8EDC /* ScenarioProvider.swift */,
+				0AD43D092920234700199F06 /* SimulationController.swift */,
 				0AA5B29D2A8E9721006858BF /* TimeLord.swift */,
+				2D867B5928AACC4B005E8B87 /* TimeSeriesModel.swift */,
+				2D867B5C28AACCB5005E8B87 /* TimeSlicesModel.swift */,
+				2DA77EEA2825721B007EC3E5 /* ValuesModel.swift */,
+				0A827F702873686A00C928F2 /* ValuesTableProvider.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -564,6 +568,7 @@
 			files = (
 				2DB5E69328AD3536006DC0D2 /* CompositionsProvider.swift in Sources */,
 				0A0FC907297D9981006F778C /* PredictionsView.swift in Sources */,
+				0A49CE702AA72A16006C1BD5 /* ObservationsModel.swift in Sources */,
 				0AF7289628F5BEB9006DE13A /* PredictionMetricsModel.swift in Sources */,
 				2DA77EE82825716A007EC3E5 /* ModelsModel.swift in Sources */,
 				2D867B5A28AACC4B005E8B87 /* TimeSeriesModel.swift in Sources */,
@@ -632,7 +637,7 @@
 				2DA77EDA28256EE5007EC3E5 /* GenericViewModel.swift in Sources */,
 				2DA77ED628256E9D007EC3E5 /* Storage.swift in Sources */,
 				2D0EAF2E2A5807E5006512CE /* DataContext.swift in Sources */,
-				2D867B5D28AACCB5005E8B87 /* TimeSliceModel.swift in Sources */,
+				2D867B5D28AACCB5005E8B87 /* TimeSlicesModel.swift in Sources */,
 				2D989591282EE47F0070F475 /* MetricsModel.swift in Sources */,
 				2DA77EFF28266B32007EC3E5 /* FilesModel.swift in Sources */,
 				0AA4508629C89F3C003EF476 /* MLExplainEntry.swift in Sources */,
@@ -645,6 +650,7 @@
 			files = (
 				2DB5E69428AD3536006DC0D2 /* CompositionsProvider.swift in Sources */,
 				0A0FC908297D9981006F778C /* PredictionsView.swift in Sources */,
+				0A49CE712AA72A16006C1BD5 /* ObservationsModel.swift in Sources */,
 				0AF7289728F5BEB9006DE13A /* PredictionMetricsModel.swift in Sources */,
 				2DA77EE92825716A007EC3E5 /* ModelsModel.swift in Sources */,
 				2D867B5B28AACC4B005E8B87 /* TimeSeriesModel.swift in Sources */,
@@ -713,7 +719,7 @@
 				2DA77EDB28256EE5007EC3E5 /* GenericViewModel.swift in Sources */,
 				2DA77ED728256E9D007EC3E5 /* Storage.swift in Sources */,
 				2D0EAF2F2A5807E5006512CE /* DataContext.swift in Sources */,
-				2D867B5E28AACCB5005E8B87 /* TimeSliceModel.swift in Sources */,
+				2D867B5E28AACCB5005E8B87 /* TimeSlicesModel.swift in Sources */,
 				2D989592282EE47F0070F475 /* MetricsModel.swift in Sources */,
 				2DA77F0028266B32007EC3E5 /* FilesModel.swift in Sources */,
 				0AA4508729C89F3C003EF476 /* MLExplainEntry.swift in Sources */,

@@ -25,7 +25,7 @@ class ChurnPublisher: Identifiable {
         }
         self.timeSliceToStartFrom  = timeSliceToStartFrom
         self.predictions = predictions
-        calculate()
+//        calculate()
     }
     /// Ich habe für jede prediction eine BasisTabelle mit t = 0
     /// Ich ermittle den Minority Target Wert

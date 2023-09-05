@@ -6,7 +6,7 @@
 //
 
 import Foundation
-public class TimeSliceModel: Model<Timeslices> {
+public class TimeSlicesModel: Model<Timeslices> {
     @Published var result: [Timeslices]!
     public init() {
         let readOnlyFields: [String] = []

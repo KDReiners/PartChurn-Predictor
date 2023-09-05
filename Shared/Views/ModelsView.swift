@@ -11,7 +11,7 @@ import CoreData
 
 struct ModelsView: View {
     var modelDataModel = ModelsModel()
-    var timeslicesDataModel = TimeSliceModel()
+    var timeslicesDataModel = TimeSlicesModel()
     var model: Models
     @State var churnPublisher: ChurnPublisher!
     @State private var selectedPeriod: TimeLord.PeriodTypes?
@@ -36,16 +36,13 @@ struct ModelsView: View {
             guard let selectedTimeSlice = model.model2lastLearningTimeSlice else {
                 fatalError("Error in grepping timeslice")
             }
+            self.churnPublisher = ChurnPublisher(model: self.model)
             self.selectedTimeSlice = selectedTimeSlice
             let index = timeSlices.firstIndex(of: selectedTimeSlice)
             self.selectedTimeSliceIndex = index!
         } else {
             selectedTimeSliceIndex = 0
         }
-        
-        
-           
-        
     }
     var body: some View {
         
@@ -83,7 +80,7 @@ struct ModelsView: View {
                         }
                     }.background(Color.white)
                     Button("Get Best of") {
-                        self.churnPublisher = ChurnPublisher(model: self.model)
+                        ChurnPublisher(model: self.model).calculate()
                     }
                 }
             }
