@@ -99,7 +99,7 @@
     </entity>
     <entity name="Predictionmetrics" representedClassName="Predictionmetrics" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="predictionmetric2predictionmetricvalues" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Predictionmetricvalues" inverseName="predictionmetricvalue2predictionmetric" inverseEntity="Predictionmetricvalues"/>
+        <relationship name="predictionmetric2predictionmetricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictionmetricvalues" inverseName="predictionmetricvalue2predictionmetric" inverseEntity="Predictionmetricvalues"/>
     </entity>
     <entity name="Predictionmetricvalues" representedClassName="Predictionmetricvalues" syncable="YES" codeGenerationType="class">
         <attribute name="value" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>

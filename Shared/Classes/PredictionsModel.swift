@@ -68,7 +68,7 @@ public class PredictionsModel: Model<Predictions> {
         } else {
             result?.addToLookahead2predictions(prediction)
         }
-        BaseServices.save()
+//        BaseServices.save()
         guard let result = result else {
             fatalError("LookAhead could not be found!")
         }

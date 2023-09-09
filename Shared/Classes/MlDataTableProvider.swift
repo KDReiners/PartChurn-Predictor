@@ -27,7 +27,7 @@ class MlDataTableProvider: ObservableObject {
     var mlDataTableRaw: MLDataTable!
     var unionOfMlDataTables: [MLDataTable]?
     var orderedColumns: [Columns]!
-    var selectedColumns: [Columns]? 
+    var selectedColumns: [Columns]?
     var mergedColumns: [Columns]!
     var timeSeries: [[Int]]?
     var mlColumns: [String]?
@@ -270,60 +270,66 @@ class MlDataTableProvider: ObservableObject {
     }
     func store2PredictionMetrics(targetStatistic: TargetStatistics) -> Void {
         let privateContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        let lookAheadItem = PredictionsModel(model: self.model!).returnLookAhead(prediction: self.prediction!, lookAhead: self.lookAhead)
         privateContext.automaticallyMergesChangesFromParent = true
         let mainContext = PersistenceController.shared.container.viewContext
-        let timeStampColumn = columnsDataModel.timeStampColumn
         privateContext.parent = mainContext
-        privateContext.perform {
-            let lookAheadItem = PredictionsModel(model: self.model!).returnLookAhead(prediction: self.prediction!, lookAhead: self.lookAhead)
-            let m = Mirror(reflecting: targetStatistic)
-            let properties = Array(m.children)
-            var dictOfPredictionMetrics = Dictionary<String, Double> ()
-            properties.forEach { prop in
-                dictOfPredictionMetrics[(prop.label)!] = Double(0)
+        let m = Mirror(reflecting: targetStatistic)
+        let properties = Array(m.children)
+        var dictOfPredictionMetrics = Dictionary<String, Double> ()
+        properties.forEach { prop in
+            dictOfPredictionMetrics[(prop.label)!] = Double(0)
+        }
+        let predictionMetricsDataModel = PredictionMetricsModel()
+//                predictionMetricsDataModel.deleteAllRecords(predicate: nil)
+        let predictionMetricValueDataModel = PredictionMetricValueModel()
+//                predictionMetricValueDataModel.deleteAllRecords(predicate: nil)
+        let algorithmDataModel = AlgorithmsModel()
+        let algorithm = algorithmDataModel.items.first(where: { $0.name == self.regressorName})
+        algorithm?.addToAlgorithm2predictions(self.prediction!)
+        for entry in dictOfPredictionMetrics {
+            var metric = predictionMetricsDataModel.items.filter { $0.name == entry.key }.first
+            if metric == nil {
+                metric = predictionMetricsDataModel.insertRecord()
+                metric?.name = entry.key
             }
-            let predictionMetricsDataModel = PredictionMetricsModel()
-            //        predictionMetricsDataModel.deleteAllRecords(predicate: nil)
-            let predictionMetricValueDataModel = PredictionMetricValueModel()
-            //        predictionMetricValueDataModel.deleteAllRecords(predicate: nil)
-            let algorithmDataModel = AlgorithmsModel()
-            let algorithm = algorithmDataModel.items.first(where: { $0.name == self.regressorName})
-            algorithm?.addToAlgorithm2predictions(self.prediction!)
-            for entry in dictOfPredictionMetrics {
-                var metric = predictionMetricsDataModel.items.filter { $0.name == entry.key }.first
-                if metric == nil {
-                    metric = predictionMetricsDataModel.insertRecord()
-                    metric?.name = entry.key
-                }
-                var valueEntry = predictionMetricValueDataModel.items.filter { $0.predictionmetricvalue2predictionmetric?.name == entry.key && $0.predictionmetricvalue2algorithm?.name == self.regressorName && $0.predictionmetricvalue2prediction == self.prediction &&
-                    $0.predictionmetricvalue2lookahead == lookAheadItem}.first
-                if valueEntry == nil {
-                    valueEntry = predictionMetricValueDataModel.insertRecord()
-                    valueEntry?.predictionmetricvalue2algorithm = algorithm
-                    valueEntry?.predictionmetricvalue2predictionmetric = metric
-                    valueEntry?.predictionmetricvalue2prediction = self.prediction
-                    valueEntry?.predictionmetricvalue2lookahead = lookAheadItem
-
-                }
-                let prop = properties.first(where: { $0.label == entry.key })
-                if prop?.value is Int {
-                    print("Set \(entry.key) to: \(prop!.value)")
-                    valueEntry?.value = Double(prop?.value as! Int)
-                }
-                if prop?.value is Double {
-                    valueEntry?.value = Double(prop?.value as! Double)
-                }
+            var valueEntry = predictionMetricValueDataModel.items.filter { $0.predictionmetricvalue2predictionmetric?.name == entry.key && $0.predictionmetricvalue2algorithm?.name == self.regressorName && $0.predictionmetricvalue2prediction == self.prediction &&
+                $0.predictionmetricvalue2lookahead == lookAheadItem}.first
+            if valueEntry == nil {
+                valueEntry = predictionMetricValueDataModel.insertRecord()
+                valueEntry?.predictionmetricvalue2algorithm = algorithm
+                valueEntry?.predictionmetricvalue2predictionmetric = metric
+                valueEntry?.predictionmetricvalue2prediction = self.prediction
+                valueEntry?.predictionmetricvalue2lookahead = lookAheadItem
+                
+            }
+            guard let prop = properties.first(where: { $0.label == entry.key }) else {
+                fatalError("cannot assign property to key")
+            }
+            if prop.value is Int {
+                print("Set \(entry.key) to: \(prop.value)")
+                valueEntry?.value = Double(prop.value as! Int)
+            }
+            if prop.value is Double {
+                print("Set \(entry.key) to: \(prop.value)")
+                valueEntry?.value = Double(prop.value as! Double)
             }
             do {
                 if privateContext.hasChanges {
                     try privateContext.save()
-                    mainContext.performAndWait {
-                                try? mainContext.save()
-                            }
                 }
             } catch {
                 fatalError(error.localizedDescription)
             }
+        }
+        do {
+            try mainContext.performAndWait {
+                if mainContext.hasChanges {
+                    try mainContext.save()
+                }
+            }
+        } catch {
+            fatalError(error.localizedDescription)
         }
     }
     func getIndexOfMergedColumn( colName: String) -> Int {
@@ -349,7 +355,7 @@ class MlDataTableProvider: ObservableObject {
     func buildMlDataTable(lookAhead: Int = 0) throws -> UnionResult {
         var result: MLDataTable?
         var loadedTable: MLDataTable?
-        var predictionURL: URL! 
+        var predictionURL: URL!
         self.filterViewProvider = nil
         self.lookAhead = lookAhead
         mergedColumns = selectedColumns == nil ? orderedColumns: selectedColumns
@@ -396,48 +402,48 @@ class MlDataTableProvider: ObservableObject {
                         }
                     }
                     self.mlDataTable = result?.dropMissing()
-//                    var columnsArray: [[PackedValue]] = []
+                    //                    var columnsArray: [[PackedValue]] = []
                     
-//                    for originalName in self.orderedColumns.map({ $0.name }) {
-//                        let filteredColumnsUnsorted = self.mlDataTable.columnNames.filter { $0.hasPrefix(originalName!) }
-//                        let filteredColumns = filteredColumnsUnsorted.sorted { (str1, str2) -> Bool in
-//                            let suffix1 = str1.components(separatedBy: "-").last ?? ""
-//                            let suffix2 = str2.components(separatedBy: "-").last ?? ""
-//                            if suffix1 == suffix2 {
-//                                    return str1 > str2 // If the suffix is the same, sort lexicographically
-//                                }
-//
-//                                if suffix1 == "" {
-//                                    return true // Empty suffix comes first
-//                                } else if suffix2 == "" {
-//                                    return false // Empty suffix comes first
-//                                }
-//
-//                                return suffix1 > suffix2
-//                        }
-//                        if filteredColumns.count > 1 {
-//                            var packedColumnName: String = ""
-//                            for i in 0..<filteredColumns.count {
-//                                if filteredColumns.count > 1 {
-//                                    packedColumnName = filteredColumns[i]
-//                                    let packColumn = mlDataTable[packedColumnName]
-//                                    let packValues = (0..<packColumn.count).compactMap { index -> PackedValue? in
-//                                        return PackedValue(from: packColumn[index])
-//                                    }
-//                                    columnsArray.append(packValues)
-//                                }
-//                            }
-//                            if filteredColumns.count > 1 {
-////                                mlDataTable.removeColumn(named: packedColumnName)
-//                                let result = zipArrays(columnsArray)
-//                                let newColumn = MLDataColumn(result)
-//                                self.mlDataTable.addColumn(newColumn, named: "\(originalName!).Packed")
-//                                columnsArray.removeAll()
-//                            }
-//                            
-//                        
-//                        }
-//                    }
+                    //                    for originalName in self.orderedColumns.map({ $0.name }) {
+                    //                        let filteredColumnsUnsorted = self.mlDataTable.columnNames.filter { $0.hasPrefix(originalName!) }
+                    //                        let filteredColumns = filteredColumnsUnsorted.sorted { (str1, str2) -> Bool in
+                    //                            let suffix1 = str1.components(separatedBy: "-").last ?? ""
+                    //                            let suffix2 = str2.components(separatedBy: "-").last ?? ""
+                    //                            if suffix1 == suffix2 {
+                    //                                    return str1 > str2 // If the suffix is the same, sort lexicographically
+                    //                                }
+                    //
+                    //                                if suffix1 == "" {
+                    //                                    return true // Empty suffix comes first
+                    //                                } else if suffix2 == "" {
+                    //                                    return false // Empty suffix comes first
+                    //                                }
+                    //
+                    //                                return suffix1 > suffix2
+                    //                        }
+                    //                        if filteredColumns.count > 1 {
+                    //                            var packedColumnName: String = ""
+                    //                            for i in 0..<filteredColumns.count {
+                    //                                if filteredColumns.count > 1 {
+                    //                                    packedColumnName = filteredColumns[i]
+                    //                                    let packColumn = mlDataTable[packedColumnName]
+                    //                                    let packValues = (0..<packColumn.count).compactMap { index -> PackedValue? in
+                    //                                        return PackedValue(from: packColumn[index])
+                    //                                    }
+                    //                                    columnsArray.append(packValues)
+                    //                                }
+                    //                            }
+                    //                            if filteredColumns.count > 1 {
+                    ////                                mlDataTable.removeColumn(named: packedColumnName)
+                    //                                let result = zipArrays(columnsArray)
+                    //                                let newColumn = MLDataColumn(result)
+                    //                                self.mlDataTable.addColumn(newColumn, named: "\(originalName!).Packed")
+                    //                                columnsArray.removeAll()
+                    //                            }
+                    //
+                    //
+                    //                        }
+                    //                    }
                     if prediction != nil {
                         BaseServices.saveMLDataTableToJson(mlDataTable: self.mlDataTable, filePath: predictionURL)
                     }
