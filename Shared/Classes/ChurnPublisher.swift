@@ -89,8 +89,9 @@ class ChurnPublisher: Identifiable {
                         {
                             let mask = result[timeStampColumn.name!] == distinctTimeStamps[i]
                             dataContext?.mlDataTableProvider.mlDataTableRaw = result[mask]
-//                            dataContext?.mlDataTableProvider.mlDataTable = result[mask]
+                            dataContext?.mlDataTableProvider.mlDataTable = result[mask]
                             dataContext?.mlDataTableProvider.updateTableProvider(callingFunction: #function, className: "ChurnPublisher", lookAhead: lookAhead)
+                            print("READY")
                         }
                         i += 1
                         
