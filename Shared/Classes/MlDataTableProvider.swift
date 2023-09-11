@@ -226,6 +226,9 @@ class MlDataTableProvider: ObservableObject {
             targetStatistic.trueNegatives = mlDataTable[trueNegativesMask].rows.count
             targetStatistic.falseNegatives = mlDataTable[falseNegativesMask].rows.count
             targetStatistic.lookAhead =  self.lookAhead
+            targetStatistic.timeSliceFrom = distinctTimeStamps?.first ?? 0
+            targetStatistic.timeSliceTo = distinctTimeStamps?.last ?? 0
+            
         }
         func find(trial: Int, nearestLowValue: Int = 0, nearestHighValue: Int = 0, bestRelationValue: Double = 0, bestRelationPredictionValue: Double = 0, targetStatistic: inout TargetStatistics ){
             let value =   predictionTable.rows[Int(trial)][predictedColumnName]?.doubleValue
@@ -277,6 +280,7 @@ class MlDataTableProvider: ObservableObject {
         properties.forEach { prop in
             dictOfPredictionMetrics[(prop.label)!] = Double(0)
         }
+        let observationsDataModel = ObservationModel()
         let predictionMetricsDataModel = PredictionMetricsModel()
 //                predictionMetricsDataModel.deleteAllRecords(predicate: nil)
         let predictionMetricValueDataModel = PredictionMetricValueModel()
@@ -290,6 +294,7 @@ class MlDataTableProvider: ObservableObject {
                 metric = predictionMetricsDataModel.insertRecord()
                 metric?.name = entry.key
             }
+            var observationEntry = observationsDataModel.items.filter { $0.observation2prediction == prediction }
             var valueEntry = predictionMetricValueDataModel.items.filter { $0.predictionmetricvalue2predictionmetric?.name == entry.key && $0.predictionmetricvalue2algorithm?.name == self.regressorName && $0.predictionmetricvalue2prediction == self.prediction &&
                 $0.predictionmetricvalue2lookahead == lookAheadItem}.first
             if valueEntry == nil {
@@ -540,6 +545,8 @@ class MlDataTableProvider: ObservableObject {
         var trueNegatives = 0
         var falseNegatives = 0
         var lookAhead = 0
+        var timeSliceFrom: Int = 0
+        var timeSliceTo: Int = 0
     }
 }
 struct UnionResult {

@@ -19,6 +19,8 @@ struct PredictionsView: View {
         ScrollView(.horizontal) {
             Table(performanceDataProvider.PredictionKPIS) {
                 Group {
+                    performanceDataProvider.timeSliceFrom
+                    performanceDataProvider.timeSliceTo
                     performanceDataProvider.involvedColumns
                     performanceDataProvider.columnsCount
                     performanceDataProvider.lookAhead

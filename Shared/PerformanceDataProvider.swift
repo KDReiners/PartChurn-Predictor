@@ -80,6 +80,8 @@ internal struct PredictionKPI: Identifiable  {
     var falsePositives: Double = 0.0000001
     var truePositives: Double = 0.0000001
     var lookAhead: Int = 0
+    var timeSliceFrom: Int = 0
+    var timeSliceTo: Int = 0
     var precision: Double! {
         get {
             return (truePositives / (truePositives + falsePositives))
@@ -122,6 +124,16 @@ internal class PerformanceDataProvider: ObservableObject {
     var columnsCount: TableColumn<PredictionKPI, Never, TextViewCell, Text> {
         TableColumn("Column(s) count") { row in
             TextViewCell(textValue: "\(row.inputColumnsNames.count)")
+        }
+    }
+    var timeSliceFrom: TableColumn<PredictionKPI, Never, TextViewCell, Text> {
+        TableColumn("TimeSlice from") { row in
+            TextViewCell(textValue: "\(row.timeSliceFrom)")
+        }
+    }
+    var timeSliceTo: TableColumn<PredictionKPI, Never, TextViewCell, Text> {
+        TableColumn("TimeSlice to") { row in
+            TextViewCell(textValue: "\(row.timeSliceTo)")
         }
     }
     var lookAhead: TableColumn<PredictionKPI, Never, TextViewCell, Text> {
@@ -236,6 +248,12 @@ internal class PerformanceDataProvider: ObservableObject {
                             case "lookAhead":
                                 predictionKPI.lookAhead = Int(predictionMetricValue.value)
                                 print("assigned lookAhead \(predictionMetricValue.value)")
+                            case "timeSliceTo":
+                                predictionKPI.timeSliceTo = Int(predictionMetricValue.value)
+                                print("assigned timeSliceTo \(predictionMetricValue.value)")
+                            case "timeSliceFrom":
+                                predictionKPI.timeSliceFrom = Int(predictionMetricValue.value)
+                                print("assigned timeSliceFrom \(predictionMetricValue.value)")
                             default:
                                 print("KPI not found: " + predictionMetricType)
                             }
