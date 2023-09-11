@@ -271,9 +271,6 @@ class MlDataTableProvider: ObservableObject {
     func store2PredictionMetrics(targetStatistic: TargetStatistics) -> Void {
         let privateContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         let lookAheadItem = PredictionsModel(model: self.model!).returnLookAhead(prediction: self.prediction!, lookAhead: self.lookAhead)
-        privateContext.automaticallyMergesChangesFromParent = true
-        let mainContext = PersistenceController.shared.container.viewContext
-        privateContext.parent = mainContext
         let m = Mirror(reflecting: targetStatistic)
         let properties = Array(m.children)
         var dictOfPredictionMetrics = Dictionary<String, Double> ()
@@ -314,22 +311,7 @@ class MlDataTableProvider: ObservableObject {
                 print("Set \(entry.key) to: \(prop.value)")
                 valueEntry?.value = Double(prop.value as! Double)
             }
-            do {
-                if privateContext.hasChanges {
-                    try privateContext.save()
-                }
-            } catch {
-                fatalError(error.localizedDescription)
-            }
-        }
-        do {
-            try mainContext.performAndWait {
-                if mainContext.hasChanges {
-                    try mainContext.save()
-                }
-            }
-        } catch {
-            fatalError(error.localizedDescription)
+            BaseServices.save()
         }
     }
     func getIndexOfMergedColumn( colName: String) -> Int {
