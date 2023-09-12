@@ -272,7 +272,6 @@ class MlDataTableProvider: ObservableObject {
         return targetStatistic
     }
     func store2PredictionMetrics(targetStatistic: TargetStatistics) -> Void {
-        let privateContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         let lookAheadItem = PredictionsModel(model: self.model!).returnLookAhead(prediction: self.prediction!, lookAhead: self.lookAhead)
         let m = Mirror(reflecting: targetStatistic)
         let properties = Array(m.children)
@@ -280,11 +279,12 @@ class MlDataTableProvider: ObservableObject {
         properties.forEach { prop in
             dictOfPredictionMetrics[(prop.label)!] = Double(0)
         }
-        let observationsDataModel = ObservationModel()
+        let observationsDataModel = ObservationsModel()
         let predictionMetricsDataModel = PredictionMetricsModel()
 //                predictionMetricsDataModel.deleteAllRecords(predicate: nil)
         let predictionMetricValueDataModel = PredictionMetricValueModel()
 //                predictionMetricValueDataModel.deleteAllRecords(predicate: nil)
+        let timeSlicesDataModel = TimeSlicesModel()
         let algorithmDataModel = AlgorithmsModel()
         let algorithm = algorithmDataModel.items.first(where: { $0.name == self.regressorName})
         algorithm?.addToAlgorithm2predictions(self.prediction!)
@@ -294,29 +294,41 @@ class MlDataTableProvider: ObservableObject {
                 metric = predictionMetricsDataModel.insertRecord()
                 metric?.name = entry.key
             }
-            var observationEntry = observationsDataModel.items.filter { $0.observation2prediction == prediction }
-            var valueEntry = predictionMetricValueDataModel.items.filter { $0.predictionmetricvalue2predictionmetric?.name == entry.key && $0.predictionmetricvalue2algorithm?.name == self.regressorName && $0.predictionmetricvalue2prediction == self.prediction &&
-                $0.predictionmetricvalue2lookahead == lookAheadItem}.first
-            if valueEntry == nil {
-                valueEntry = predictionMetricValueDataModel.insertRecord()
-                valueEntry?.predictionmetricvalue2algorithm = algorithm
-                valueEntry?.predictionmetricvalue2predictionmetric = metric
-                valueEntry?.predictionmetricvalue2prediction = self.prediction
-                valueEntry?.predictionmetricvalue2lookahead = lookAheadItem
-                
+            if let timeSliceFrom = timeSlicesDataModel.getTimeSlice(timeSliceInt: (distinctTimeStamps?.first)!), let timeSliceTo = timeSlicesDataModel.getTimeSlice(timeSliceInt: (distinctTimeStamps?.last)!) {
+                let defaultObservationEntry = observationsDataModel.items.filter { $0.observation2prediction == nil && $0.observation2timesliceto == nil && $0.observation2timeslicefrom == nil  && $0.observation2model == self.model}.first
+                var observationEntry = observationsDataModel.items.filter { $0.observation2prediction == prediction && $0.observation2timesliceto == timeSliceTo && $0.observation2timeslicefrom == timeSliceFrom && $0.observation2model == self.model }.first
+                observationEntry = defaultObservationEntry != nil ? defaultObservationEntry: observationEntry
+                if observationEntry == nil {
+                    observationEntry = observationsDataModel.insertRecord()
+                }
+                observationEntry?.observation2model = model
+                observationEntry?.observation2timesliceto = timeSliceTo
+                observationEntry?.observation2timeslicefrom = timeSliceFrom
+                observationEntry?.observation2prediction = self.prediction
+                var valueEntry = predictionMetricValueDataModel.items.filter { $0.predictionmetricvalue2predictionmetric?.name == entry.key && $0.predictionmetricvalue2algorithm?.name == self.regressorName && $0.predictionmetricvalue2prediction == self.prediction &&
+                    $0.predictionmetricvalue2lookahead == lookAheadItem && $0.predictionmetricvalue2observation == observationEntry}.first
+                if valueEntry == nil {
+                    valueEntry = predictionMetricValueDataModel.insertRecord()
+                    valueEntry?.predictionmetricvalue2algorithm = algorithm
+                    valueEntry?.predictionmetricvalue2predictionmetric = metric
+                    valueEntry?.predictionmetricvalue2prediction = self.prediction
+                    valueEntry?.predictionmetricvalue2lookahead = lookAheadItem
+                    valueEntry?.predictionmetricvalue2observation = observationEntry
+                    
+                }
+                guard let prop = properties.first(where: { $0.label == entry.key }) else {
+                    fatalError("cannot assign property to key")
+                }
+                if prop.value is Int {
+                    print("Set \(entry.key) to: \(prop.value)")
+                    valueEntry?.value = Double(prop.value as! Int)
+                }
+                if prop.value is Double {
+                    print("Set \(entry.key) to: \(prop.value)")
+                    valueEntry?.value = Double(prop.value as! Double)
+                }
+                BaseServices.save()
             }
-            guard let prop = properties.first(where: { $0.label == entry.key }) else {
-                fatalError("cannot assign property to key")
-            }
-            if prop.value is Int {
-                print("Set \(entry.key) to: \(prop.value)")
-                valueEntry?.value = Double(prop.value as! Int)
-            }
-            if prop.value is Double {
-                print("Set \(entry.key) to: \(prop.value)")
-                valueEntry?.value = Double(prop.value as! Double)
-            }
-            BaseServices.save()
         }
     }
     func getIndexOfMergedColumn( colName: String) -> Int {

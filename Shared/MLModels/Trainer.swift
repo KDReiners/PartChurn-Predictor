@@ -35,8 +35,8 @@ public struct Trainer {
         self.mlDataTableProvider = mlDataProviderContext.mlDataTableProvider
         self.regressorTable = self.mlDataTableProvider.mlDataTable
         let minorityColumn = regressorTable![targetColumn!.name!]
-        let minorityMask = minorityColumn == 0
-        let minorityTable = self.regressorTable![minorityMask]
+//        let minorityMask = minorityColumn == 0
+//        let minorityTable = self.regressorTable![minorityMask]
 //        let debit = (self.regressorTable!.rows.count - minorityTable.rows.count) / minorityTable.rows.count
 //        REPLACE WITH SMOTE
 //        for _ in 0..<debit {
@@ -49,7 +49,7 @@ public struct Trainer {
         self.timeSeriesColumnName = self.mlDataTableProvider.orderedColumns.first(where: { $0.istimeseries == 1})?.name
         if self.timeSeriesColumnName != nil {
             let timeSeriesColumn = self.regressorTable![timeSeriesColumnName!]
-            let seriesEnd = Int((model.model2lastLearningTimeSlice?.value)!)
+            let seriesEnd = 20222 //Int((model.model2lastLearningTimeSlice?.value)!)
             let endMask = timeSeriesColumn <= seriesEnd
             self.regressorTable = self.regressorTable![endMask]
         }

@@ -7,17 +7,49 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "2461C973-50D7-443D-A008-B3E5D71FC8C0"
+            uuid = "338B1402-6A0C-43F7-B160-C837331F83E6"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Shared/Classes/ChurnPublisher.swift"
+            filePath = "Shared/GenericClasses/Model.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
-            landmarkName = "calculate()"
+            startingLineNumber = "33"
+            endingLineNumber = "33"
+            landmarkName = "deleteAllRecords(predicate:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "338B1402-6A0C-43F7-B160-C837331F83E6 - 29ac7729744b3003"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PartChurn_Predictor.Model.deleteAllRecords(predicate: Swift.Optional&lt;__C.NSPredicate&gt;) -&gt; ()"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/GenericClasses/Model.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "33"
+                  endingLineNumber = "33"
+                  offsetFromSymbolStart = "160">
+               </Location>
+               <Location
+                  uuid = "338B1402-6A0C-43F7-B160-C837331F83E6 - 29ac7729744b3003"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PartChurn_Predictor.Model.deleteAllRecords(predicate: Swift.Optional&lt;__C.NSPredicate&gt;) -&gt; ()"
+                  moduleName = "PartChurn Predictor"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/klaus.reiners/Documents/WK/Swift/PartChurn%20Analysis/PartChurn%20Predictor/Shared/GenericClasses/Model.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "33"
+                  endingLineNumber = "33"
+                  offsetFromSymbolStart = "296">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

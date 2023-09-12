@@ -12,6 +12,7 @@ struct PartChurn_PredictorApp: App {
     let persistenceController = PersistenceController.shared
     @StateObject var managerModels = ManagerModels()
     init() {
+//        ObservationsModel().deleteAllRecords(predicate: nil)
         setenv("PYTHONPATH", "/opt/homebrew/lib/python3.11/site-packages", 1)
         setenv("PYTHON_EXECUTABLE", "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3", 1)
 

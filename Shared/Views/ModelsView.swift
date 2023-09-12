@@ -13,6 +13,7 @@ struct ModelsView: View {
     var modelDataModel = ModelsModel()
     var timeslicesDataModel = TimeSlicesModel()
     var model: Models
+    var observation: Observations!
     @State var churnPublisher: ChurnPublisher!
     @State private var selectedPeriod: TimeLord.PeriodTypes?
     @State private var selectedPeriodIndex: Int
@@ -30,10 +31,15 @@ struct ModelsView: View {
         self.selectedPeriodIndex = Int(model.periodtype)
         
         if !timeSlices.isEmpty {
-            if model.model2lastLearningTimeSlice == nil {
-                model.model2lastLearningTimeSlice = timeSlices.first
+            observation = (model.model2observations?.allObjects as? [Observations])?.first
+            if observation == nil {
+                observation = ObservationsModel().insertRecord()
+                observation?.observation2model = model
             }
-            guard let selectedTimeSlice = model.model2lastLearningTimeSlice else {
+            if observation?.observation2lastlearningTimeSlice == nil {
+                observation?.observation2lastlearningTimeSlice = timeSlices.first
+            }
+            guard let selectedTimeSlice = observation?.observation2lastlearningTimeSlice else {
                 fatalError("Error in grepping timeslice")
             }
             self.churnPublisher = ChurnPublisher(model: self.model)
@@ -67,7 +73,7 @@ struct ModelsView: View {
                             }
                             .onChange(of: selectedTimeSliceIndex) { newValue in
                                 self.selectedTimeSlice = timeSlices[newValue]
-                                self.model.model2lastLearningTimeSlice = selectedTimeSlice
+                                observation.observation2lastlearningTimeSlice = selectedTimeSlice
                                 BaseServices.save()
                             }
                         }

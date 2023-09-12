@@ -49,7 +49,6 @@ class ModelObjects {
         }
         
     }
-    
     struct CompositionObject: Hashable {
         static func == (lhs: ModelObjects.CompositionObject, rhs: ModelObjects.CompositionObject) -> Bool {
             lhs.id == rhs.id

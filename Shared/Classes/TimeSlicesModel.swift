@@ -21,5 +21,9 @@ public class TimeSlicesModel: Model<Timeslices> {
             result = newValue.sorted(by: { $1.value > $0.value })
         }
     }
+    internal func getTimeSlice(timeSliceInt: Int) -> Timeslices? {
+        let coreDataInt = Int16(timeSliceInt)
+        return self.items.first(where: { $0.value == coreDataInt})
+    }
     
 }

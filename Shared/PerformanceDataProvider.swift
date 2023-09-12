@@ -108,7 +108,7 @@ internal class PerformanceDataProvider: ObservableObject {
     var predictionsDataModel: PredictionsModel
     internal var PredictionKPIS: [PredictionKPI] {
         get {
-            if self.model.model2predictions?.count ?? 0 > 0 {
+            if self.model.model2observations?.count ?? 0 > 0 {
                 return fillPredictionKPIS()
             } else {
                 return [PredictionKPI]()
@@ -204,18 +204,18 @@ internal class PerformanceDataProvider: ObservableObject {
     }
     private func fillPredictionKPIS() -> [PredictionKPI] {
         var result = [PredictionKPI]()
-        for prediction in predictionsDataModel.items.filter( { $0.prediction2model == self.model}) {
-            let mlExplainColumnCluster = MLExplainColumnCluster(prediction: prediction)
+        for observation in ObservationsModel().items.filter( { $0.observation2model == self.model}) {
+            let mlExplainColumnCluster = MLExplainColumnCluster(prediction: observation.observation2prediction!)
             let inputColumns = mlExplainColumnCluster.inputColumns.map( { $0.name! })
-            for algorithm in prediction.prediction2algorithms?.allObjects as![Algorithms] {
-                for lookAheadItem in prediction.prediction2lookaheads?.allObjects as! [Lookaheads] {
+            for algorithm in observation.observation2prediction!.prediction2algorithms?.allObjects as![Algorithms] {
+                for lookAheadItem in observation.observation2prediction!.prediction2lookaheads?.allObjects as! [Lookaheads] {
                     if LookaheadsModel.LookAheadItemRelations(lookAheadItem: lookAheadItem).connectedAlgorihms .contains(algorithm) {
                         var predictionKPI = PredictionKPI()
-                        predictionKPI.prediction = prediction
+                        predictionKPI.prediction = observation.observation2prediction
                         predictionKPI.inputColumnsNames = inputColumns
                         predictionKPI.algorithm = algorithm.name!
-                        predictionKPI.timeSpan = String(prediction.seriesdepth)
-                        for predictionMetricValue in (prediction.prediction2predictionmetricvalues?.allObjects as! [Predictionmetricvalues]).filter({ $0.predictionmetricvalue2algorithm == algorithm && $0.predictionmetricvalue2lookahead == lookAheadItem }) {
+                        predictionKPI.timeSpan = String(observation.observation2prediction!.seriesdepth)
+                        for predictionMetricValue in (observation.observation2predictionmetricvalues?.allObjects as! [Predictionmetricvalues]).filter({ $0.predictionmetricvalue2algorithm == algorithm && $0.predictionmetricvalue2lookahead == lookAheadItem }) {
                             let predictionMetricType = predictionMetricValue.predictionmetricvalue2predictionmetric!.name!
                             switch predictionMetricType {
                             case "targetsAtOptimum":

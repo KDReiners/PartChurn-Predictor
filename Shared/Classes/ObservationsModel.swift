@@ -6,7 +6,7 @@
 //
 
 import Foundation
-public class ObservationModel: Model<Observations> {
+public class ObservationsModel: Model<Observations> {
     @Published var result: [Observations]!
     public init() {
         let readOnlyFields: [String] = []
@@ -18,7 +18,7 @@ public class ObservationModel: Model<Observations> {
         }
         set
         {
-            result = newValue.sorted(by: { $1.observation2timeslice!.value > $0.observation2timeslice!.value })
+            result = newValue
         }
     }
     

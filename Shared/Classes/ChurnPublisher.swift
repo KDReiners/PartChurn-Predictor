@@ -17,13 +17,16 @@ class ChurnPublisher: Identifiable {
     init(model: Models)
     {
         self.model = model
-        guard let timeSliceToStartFrom = self.model.model2lastLearningTimeSlice else {
+        guard let observation = (model.model2observations?.allObjects as? [Observations])?.first else {
+            return
+        }
+        guard let timeSliceToStopLearning = observation.observation2lastlearningTimeSlice else {
             return
         }
         guard let predictions = model.model2predictions?.allObjects as? [Predictions] else {
             return
         }
-        self.timeSliceToStartFrom  = timeSliceToStartFrom
+        self.timeSliceToStartFrom  = timeSliceToStopLearning
         self.predictions = predictions
 //        calculate()
     }
