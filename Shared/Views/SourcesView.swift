@@ -6,6 +6,7 @@ public struct SourcesView: View {
     @State var selectedFilenames: Set<String> = Set<String>()
     @State private var showAddFileView = false
     public var selectedModel: Models
+    private var defaultEmptyFilename = "unknown Filename"
     
     init(selectedModel: Models) {
         self.selectedModel = selectedModel
@@ -25,6 +26,9 @@ public struct SourcesView: View {
                                     } else {
                                         selectedFilenames.insert(files[index].name ?? "")
                                     }
+                                    if files[index].name! == defaultEmptyFilename {
+                                        selectedFilenames.remove(files[index].name ?? "")
+                                    }
                                 }
                             } else {
                                 Spacer()
@@ -35,7 +39,7 @@ public struct SourcesView: View {
                 // Button to show the AddFileView
                 HStack(alignment: .center, spacing: 10) {
                     Button("+") {
-                        addNewFile(newFilename: "unknown Filename")
+                        addNewFile(newFilename: defaultEmptyFilename)
                     }
                     Button("-") {
                         for filename in selectedFilenames {
@@ -50,6 +54,7 @@ public struct SourcesView: View {
                     Button("Import Selection") {
                         readAndLoad()
                     }
+                    .disabled(selectedFilenames.count == 0)
                 }
             }
             .padding()
