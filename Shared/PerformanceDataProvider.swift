@@ -209,7 +209,7 @@ internal class PerformanceDataProvider: ObservableObject {
             let inputColumns = mlExplainColumnCluster.inputColumns.map( { $0.name! })
             for algorithm in observation.observation2prediction!.prediction2algorithms?.allObjects as![Algorithms] {
                 for lookAheadItem in observation.observation2prediction!.prediction2lookaheads?.allObjects as! [Lookaheads] {
-                    if LookaheadsModel.LookAheadItemRelations(lookAheadItem: lookAheadItem).connectedAlgorihms .contains(algorithm) {
+                    if LookaheadsModel.LookAheadItemRelations(lookAheadItem: lookAheadItem).connectedAlgorihms .contains(algorithm) && observation.observation2lookahead == lookAheadItem {
                         var predictionKPI = PredictionKPI()
                         predictionKPI.prediction = observation.observation2prediction
                         predictionKPI.inputColumnsNames = inputColumns

@@ -110,6 +110,38 @@ class MlDataTableProvider: ObservableObject {
             }
         }
     }
+    internal func syncUpdateTableProvider(callingFunction: String, className: String, lookAhead: Int) {
+        print("updateTableProvider called from \(callingFunction) in \(className)")
+        syncTableProvider(mlDataTable: mlDataTableRaw, orderedColums: mlColumns!, selectedColumns: mergedColumns, prediction: prediction, regressorName: regressorName, lookAhead: self.lookAhead) { provider in
+
+                self.valuesTableProvider = provider
+                self.tableStatistics?.absolutRowCount = provider.mlDataTable.rows.count
+                self.tableStatistics?.filteredRowCount = provider.mlDataTable.rows.count
+                self.mlDataTableRaw = provider.mlDataTable
+                self.mlDataTable = self.mlDataTableRaw
+                if provider.targetValues.count > 0 {
+                    self.syncUpdateStatisticsProvider(targetValues: provider.targetValues, predictedColumnName: provider.predictedColumnName)
+                }
+                self.mlColumns = provider.orderedColNames
+                if self.filterViewProvider == nil {
+                    self.filterViewProvider = FilterViewProvider(mlDataTableProvider: self)
+                }
+                self.loaded = true
+                self.delegate?.asyncOperationDidFinish(withResult: self)
+            
+        }
+    }
+    func syncUpdateStatisticsProvider(targetValues: [String : Int], predictedColumnName: String) {
+        if self.regressorName != nil && self.mlDataTable.columnNames.contains(predictedColumnName) {
+            guard let provider = syncStatisticsProvider(targetValues: targetValues, predictedColumnName: predictedColumnName) else {
+                fatalError("StatisticProvider did not return results")
+            }
+            self.tableStatistics?.targetStatistics.append(provider)
+            self.delegate?.asyncOperationDidFinish(withResult: provider)
+        }
+    }
+    
+
     internal func updateTableProvider(callingFunction: String, className: String, lookAhead: Int) {
         print("updateTableProvider called from \(callingFunction) in \(className)")
         tableProvider(mlDataTable: mlDataTableRaw, orderedColums: mlColumns!, selectedColumns: mergedColumns, prediction: prediction, regressorName: regressorName, lookAhead: self.lookAhead) { provider in
@@ -146,6 +178,16 @@ class MlDataTableProvider: ObservableObject {
                 }
             }
         }
+    }
+    func syncTableProvider(mlDataTable: MLDataTable, orderedColums: [String], selectedColumns: [Columns]?, prediction: Predictions? = nil, regressorName: String? = nil, filter: Bool? = false, lookAhead: Int? , returnCompletion: @escaping (ValuesTableProvider) -> () ) {
+        var result: ValuesTableProvider!
+        result =  ValuesTableProvider(mlDataTable: mlDataTable, orderedColNames: orderedColums, selectedColumns: selectedColumns,  prediction: prediction, regressorName: regressorName, filter: filter, lookAhead: lookAhead)
+        self.gridItems = result.gridItems
+        self.customColumns = result.customColumns
+        self.numRows = self.customColumns.count > 0 ? self.customColumns[0].rows.count:0
+        returnCompletion(result as ValuesTableProvider)
+            
+            
     }
     // MARK: - Async call for file inspection
     func updateTableProvider(file: Files) {
@@ -202,6 +244,10 @@ class MlDataTableProvider: ObservableObject {
                 completion(result!)
             }
         }
+    }
+    func syncStatisticsProvider(targetValues: [String : Int], predictedColumnName: String) -> TargetStatistics?  {
+        self.tableStatistics?.targetStatistics = [TargetStatistics]()
+        return self.resolveTargetValues(targetValues: targetValues, predictedColumnName: predictedColumnName)
     }
     // MARK: - related statistics provider
     func resolveTargetValues(targetValues: [String: Int], predictedColumnName: String) -> TargetStatistics? {
@@ -296,7 +342,7 @@ class MlDataTableProvider: ObservableObject {
             }
             if let timeSliceFrom = timeSlicesDataModel.getTimeSlice(timeSliceInt: (distinctTimeStamps?.first)!), let timeSliceTo = timeSlicesDataModel.getTimeSlice(timeSliceInt: (distinctTimeStamps?.last)!) {
                 let defaultObservationEntry = observationsDataModel.items.filter { $0.observation2prediction == nil && $0.observation2timesliceto == nil && $0.observation2timeslicefrom == nil  && $0.observation2model == self.model}.first
-                var observationEntry = observationsDataModel.items.filter { $0.observation2prediction == prediction && $0.observation2timesliceto == timeSliceTo && $0.observation2timeslicefrom == timeSliceFrom && $0.observation2model == self.model }.first
+                var observationEntry = observationsDataModel.items.filter { $0.observation2prediction == prediction && $0.observation2timesliceto == timeSliceTo && $0.observation2timeslicefrom == timeSliceFrom && $0.observation2model == self.model && $0.observation2lookahead == lookAheadItem}.first
                 observationEntry = defaultObservationEntry != nil ? defaultObservationEntry: observationEntry
                 if observationEntry == nil {
                     observationEntry = observationsDataModel.insertRecord()
@@ -305,6 +351,7 @@ class MlDataTableProvider: ObservableObject {
                 observationEntry?.observation2timesliceto = timeSliceTo
                 observationEntry?.observation2timeslicefrom = timeSliceFrom
                 observationEntry?.observation2prediction = self.prediction
+                observationEntry?.observation2lookahead = lookAheadItem
                 var valueEntry = predictionMetricValueDataModel.items.filter { $0.predictionmetricvalue2predictionmetric?.name == entry.key && $0.predictionmetricvalue2algorithm?.name == self.regressorName && $0.predictionmetricvalue2prediction == self.prediction &&
                     $0.predictionmetricvalue2lookahead == lookAheadItem && $0.predictionmetricvalue2observation == observationEntry}.first
                 if valueEntry == nil {

@@ -178,6 +178,7 @@ struct CompositionsView: View {
                             PredictionsModel().deleteAllRecords(predicate: nil)
                             PredictionMetricsModel().deleteAllRecords(predicate: nil)
                             PredictionMetricValueModel().deleteAllRecords(predicate: nil)
+                            ObservationsModel().deleteAllRecords(predicate: nil)
                         }
                     }
                     
@@ -278,9 +279,8 @@ struct CompositionsView: View {
                         Text("Algorithmus KPI")
                             .font(.title)
                         Spacer()
-                        Button("Delete all...") {
+                        Button("Delete Algo-Metrics") {
                             let metricValuesDataModel = MetricvaluesModel()
-                            
                             metricValuesDataModel.deleteAllRecords(predicate: nil)
                         }
                     }

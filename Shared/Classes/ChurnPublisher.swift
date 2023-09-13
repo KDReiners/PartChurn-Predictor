@@ -87,11 +87,12 @@ class ChurnPublisher: Identifiable {
                         let predictionProvider = PredictionsProvider(mlDataTable: predictionTable, orderedColNames: orderedColumns.map( { $0.name! }), selectedColumns: selectedColumns, prediction: prediction, regressorName: algorithmName, lookAhead: lookAhead)
                         let result = predictionProvider.mlDataTable
                         let distinctTimeStamps = Array(result[timeStampColumn.name!].ints!).reduce(into: Set<Int>()) { $0.insert($1) }.sorted(by: { $0 < $1})
+                        print("Zeitstempel: \(distinctTimeStamps.count)")
                         for i in 0..<distinctTimeStamps.count {
                             let mask = result[timeStampColumn.name!] == distinctTimeStamps[i]
                             dataContext?.mlDataTableProvider.mlDataTableRaw = result[mask]
                             dataContext?.mlDataTableProvider.mlDataTable = result[mask]
-                            dataContext?.mlDataTableProvider.updateTableProvider(callingFunction: #function, className: "ChurnPublisher", lookAhead: lookAhead)
+                            dataContext?.mlDataTableProvider.syncUpdateTableProvider(callingFunction: #function, className: "ChurnPublisher", lookAhead: lookAhead)
                             print("READY")
                         }
                     }
