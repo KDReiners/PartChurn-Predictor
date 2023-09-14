@@ -40,7 +40,7 @@ class ValuesTableProvider: ObservableObject {
         if let targetColumn = targetColumn {
             predictedColumnName = predictionPrefix + targetColumn.name!
             targetValues[targetColumn.name!] = 0
-            removePredictionColumns()
+//            removePredictionColumns()
         }
         if let selectedColumns = selectedColumns, let prediction = prediction, let regressorName = regressorName {
             self.predictionsProvider = PredictionsProvider(mlDataTable: mlDataTable, orderedColNames: orderedColNames, selectedColumns: selectedColumns, prediction: prediction, regressorName: regressorName, lookAhead: lookAhead)
@@ -52,7 +52,8 @@ class ValuesTableProvider: ObservableObject {
     func removePredictionColumns(filter: Bool? = false) {
         if self.mlDataTable.columnNames.contains(predictedColumnName) && filter != true {
             self.mlDataTable.removeColumn(named: predictedColumnName)
-            for i in 0..<orderedColNames.count {
+            let baseColumnNames = orderedColNames!
+            for i in 0..<baseColumnNames.count {
                 if orderedColNames[i] == predictedColumnName {
                     self.orderedColNames.remove(at: i)
                 }

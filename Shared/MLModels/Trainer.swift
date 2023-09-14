@@ -49,7 +49,7 @@ public struct Trainer {
         self.timeSeriesColumnName = self.mlDataTableProvider.orderedColumns.first(where: { $0.istimeseries == 1})?.name
         if self.timeSeriesColumnName != nil {
             let timeSeriesColumn = self.regressorTable![timeSeriesColumnName!]
-            let seriesEnd = 20222 //Int((model.model2lastLearningTimeSlice?.value)!)
+            let seriesEnd = 20221 //Int((model.model2lastLearningTimeSlice?.value)!)
             let endMask = timeSeriesColumn <= seriesEnd
             self.regressorTable = self.regressorTable![endMask]
         }
