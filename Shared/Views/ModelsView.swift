@@ -36,10 +36,10 @@ struct ModelsView: View {
                 observation = ObservationsModel().insertRecord()
                 observation?.observation2model = model
             }
-            if observation?.observation2lastlearningTimeSlice == nil {
-                observation?.observation2lastlearningTimeSlice = timeSlices.first
+            if model.model2lastlearningtimeslice == nil {
+                model.model2lastlearningtimeslice = timeSlices.first
             }
-            guard let selectedTimeSlice = observation?.observation2lastlearningTimeSlice else {
+            guard let selectedTimeSlice = model.model2lastlearningtimeslice else {
                 fatalError("Error in grepping timeslice")
             }
             self.churnPublisher = ChurnPublisher(model: self.model)
@@ -73,7 +73,7 @@ struct ModelsView: View {
                             }
                             .onChange(of: selectedTimeSliceIndex) { newValue in
                                 self.selectedTimeSlice = timeSlices[newValue]
-                                observation.observation2lastlearningTimeSlice = selectedTimeSlice
+                                self.model.model2lastlearningtimeslice = selectedTimeSlice
                                 BaseServices.save()
                             }
                         }

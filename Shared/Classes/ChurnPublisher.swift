@@ -20,7 +20,7 @@ class ChurnPublisher: Identifiable {
         guard let observation = (model.model2observations?.allObjects as? [Observations])?.first else {
             return
         }
-        guard let timeSliceToStopLearning = observation.observation2lastlearningTimeSlice else {
+        guard let timeSliceToStopLearning = model.model2lastlearningtimeslice else {
             return
         }
         guard let predictions = model.model2predictions?.allObjects as? [Predictions] else {
@@ -48,6 +48,10 @@ class ChurnPublisher: Identifiable {
             return
         }
         let predictionsDataModel = PredictionsModel(model: self.model)
+        guard let extractionTimeSliceFrom = model.model2lastlearningtimeslice  else {
+            print ("no timeslice found to begin extraction with")
+            return
+        }
         predictions.forEach { prediction in
             predictionsDataModel.createPredictionForModel(model: self.model)
             let cluster = predictionsDataModel.arrayOfPredictions.filter { $0.prediction == prediction}.first
@@ -87,16 +91,14 @@ class ChurnPublisher: Identifiable {
                         let predictionProvider = PredictionsProvider(mlDataTable: predictionTable, orderedColNames: orderedColumns.map( { $0.name! }), selectedColumns: selectedColumns, prediction: prediction, regressorName: algorithmName, lookAhead: lookAhead)
                         let result = predictionProvider.mlDataTable
                         let distinctTimeStamps = Array(result[timeStampColumn.name!].ints!).reduce(into: Set<Int>()) { $0.insert($1) }.sorted(by: { $0 < $1})
-                        print("Zeitstempel: \(distinctTimeStamps.count)")
-                        for i in 0..<distinctTimeStamps.count {
+                        for i in 0..<distinctTimeStamps.filter( {$0 > extractionTimeSliceFrom.value }).count {
                             let mask = result[timeStampColumn.name!] == distinctTimeStamps[i]
                             dataContext?.mlDataTableProvider.mlDataTableRaw = result[mask]
                             dataContext?.mlDataTableProvider.mlDataTable = result[mask]
                             dataContext?.mlDataTableProvider.syncUpdateTableProvider(callingFunction: #function, className: "ChurnPublisher", lookAhead: lookAhead)
-                            print("READY")
+                            print("ready")
                         }
                     }
-                    
                 }
                 break
             }
