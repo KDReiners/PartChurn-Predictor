@@ -175,6 +175,7 @@ struct CompositionsView: View {
                             .padding(.top, 15)
                         Spacer()
                         Button("Delete All") {
+                            ComparisonsModel(model: self.model).deleteAllRecords(predicate: nil)
                             PredictionsModel().deleteAllRecords(predicate: nil)
                             PredictionMetricsModel().deleteAllRecords(predicate: nil)
                             PredictionMetricValueModel().deleteAllRecords(predicate: nil)
@@ -279,7 +280,7 @@ struct CompositionsView: View {
                         Text("Algorithmus KPI")
                             .font(.title)
                         Spacer()
-                        Button("Delete Algo-Metrics") {
+                        Button("Delete") {
                             let metricValuesDataModel = MetricvaluesModel()
                             metricValuesDataModel.deleteAllRecords(predicate: nil)
                         }

@@ -10,6 +10,7 @@ class ColumnsViewModel: ObservableObject {
     var filesDataModel = FilesModel()
     @Published var observedColumns = [ObservedColumn]()
     var cognitionType: BaseServices.cognitionTypes = .cognitionError
+ 
     
     class ObservedColumn: Hashable, ObservableObject {
         static func == (lhs: ColumnsViewModel.ObservedColumn, rhs: ColumnsViewModel.ObservedColumn) -> Bool {

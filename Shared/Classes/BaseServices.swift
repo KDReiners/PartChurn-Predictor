@@ -47,10 +47,15 @@ public struct BaseServices
     public static let logger = {
         return Logger()
     }()
-    public static let standardDateFormatter: DateFormatter = {
+    public static let standardDateFormatterWithTime: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
         formatter.timeStyle = .medium
+        return formatter
+    }()
+    public static let standardDateFormatterWithoutTime: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
         return formatter
     }()
     public static var intFormatter: NumberFormatter = {

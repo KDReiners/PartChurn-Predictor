@@ -142,7 +142,7 @@ struct TableViewRow: View {
             .frame(width: 200)
             .font(.system(size: standardSize))
             .textFieldStyle(RoundedBorderTextFieldStyle())
-            Text("\(file.lastupdatedate ?? Date(), formatter: BaseServices.standardDateFormatter)")
+            Text("\(file.lastupdatedate ?? Date(), formatter: BaseServices.standardDateFormatterWithTime)")
                 .font(.system(size: standardSize))
         }
         .padding()

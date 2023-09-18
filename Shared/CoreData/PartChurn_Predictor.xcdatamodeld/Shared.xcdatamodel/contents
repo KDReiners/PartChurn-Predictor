@@ -27,8 +27,16 @@
         <relationship name="column2compositions" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Compositions" inverseName="composition2columns" inverseEntity="Compositions"/>
         <relationship name="column2file" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Files" inverseName="file2columns" inverseEntity="Files"/>
         <relationship name="column2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2columns" inverseEntity="Models"/>
-        <relationship name="column2observations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Observations" inverseName="observation2column" inverseEntity="Observations"/>
         <relationship name="column2values" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Values" inverseName="value2column" inverseEntity="Values"/>
+    </entity>
+    <entity name="Comparisons" representedClassName="Comparisons" syncable="YES" codeGenerationType="class">
+        <attribute name="comparisondate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="primarykey" optional="YES" attributeType="String"/>
+        <attribute name="targetpredicted" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="targetreported" optional="YES" attributeType="Integer 32" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="timebase" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="comparion2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2comparisons" inverseEntity="Models"/>
+        <relationship name="comparison2observaton" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Observations" inverseName="observation2comparisons" inverseEntity="Observations"/>
     </entity>
     <entity name="Compositions" representedClassName="Compositions" syncable="YES" codeGenerationType="class">
         <attribute name="columnsdepth" optional="YES" transient="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -80,6 +88,7 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="periodtype" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="model2columns" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Columns" inverseName="column2model" inverseEntity="Columns"/>
+        <relationship name="model2comparisons" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comparisons" inverseName="comparion2model" inverseEntity="Comparisons"/>
         <relationship name="model2compositions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Compositions" inverseName="composition2model" inverseEntity="Compositions"/>
         <relationship name="model2files" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Files" inverseName="files2model" inverseEntity="Files"/>
         <relationship name="model2lastlearningtimeslice" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Timeslices" inverseName="lastlearningTimeSlice2models" inverseEntity="Timeslices"/>
@@ -95,7 +104,7 @@
     <entity name="Observations" representedClassName="Observations" syncable="YES" codeGenerationType="class">
         <attribute name="predictedvalue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="realvalue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <relationship name="observation2column" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Columns" inverseName="column2observations" inverseEntity="Columns"/>
+        <relationship name="observation2comparisons" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comparisons" inverseName="comparison2observaton" inverseEntity="Comparisons"/>
         <relationship name="observation2lookahead" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Lookaheads" inverseName="loodahead2observations" inverseEntity="Lookaheads"/>
         <relationship name="observation2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2observations" inverseEntity="Models"/>
         <relationship name="observation2prediction" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Predictions" inverseName="prediction2observations" inverseEntity="Predictions"/>
