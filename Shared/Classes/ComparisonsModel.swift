@@ -60,7 +60,6 @@ public class ComparisonsModel: Model<Comparisons> {
                 reportingSummaries.append(reportingSummaryEntry)
             }
         }
-        print("ready")
     }
     struct ComparisonEntry: Identifiable {
         var model: Models

@@ -90,7 +90,7 @@ struct ModelsView: View {
                         }
                     }
                     Button("Get Best of") {
-                        ChurnPublisher(model: self.model).calculate()
+                        ChurnPublisher(model: self.model).calculate(comparisonsDataModel: self.comparisonDataModel)
                     }
         }.padding()
         Spacer()

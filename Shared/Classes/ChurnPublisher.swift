@@ -16,6 +16,7 @@ class ChurnPublisher: Identifiable {
     var columnsDataModel: ColumnsModel
     var timeSliceToStopLearning: Timeslices!
     var timeSlicesDataModel: TimeSlicesModel
+    var comparisonsDataModel: ComparisonsModel!
     init(model: Models)
     {
         self.model = model
@@ -31,9 +32,12 @@ class ChurnPublisher: Identifiable {
         self.predictions = predictions
         //        calculate()
     }
-    func calculate() {
+    func calculate(comparisonsDataModel: ComparisonsModel) {
+        self.comparisonsDataModel = comparisonsDataModel
         let columnsDataModel = ColumnsModel(model: self.model)
         let predictionsDataModel = PredictionsModel(model: self.model)
+        comparisonsDataModel.deleteAllRecords(predicate: nil)
+        comparisonsDataModel.reportingSummaries.removeAll()
         predictions.forEach { prediction in
             predictionsDataModel.createPredictionForModel(model: self.model)
             let cluster = predictionsDataModel.arrayOfPredictions.filter { $0.prediction == prediction}.first
@@ -91,10 +95,15 @@ class ChurnPublisher: Identifiable {
     }
     func store2Comparisons(dataContext: SimulationController.MlDataTableProviderContext?, observation: Observations?) {
         let entryDate = getCurrentDate()
-        let comparisonDataModel = ComparisonsModel(model: model)
+        guard let observationID = observation?.objectID else {
+            print("\(#function) no Observation is passed.")
+            return
+        }
+        
+        let modelID = self.model.objectID
         let metricValues = observation?.observation2predictionmetricvalues?.allObjects as! [Predictionmetricvalues]
         let threshold = metricValues.filter( { $0.predictionmetricvalue2predictionmetric?.name == "predictionValueAtThreshold"})
-//        comparisonDataModel.deleteAllRecords(predicate: nil)
+        //        comparisonDataModel.deleteAllRecords(predicate: nil)
         guard let primaryKeyColumn = self.columnsDataModel.primaryKeyColumn else {
             print("\(#function) needs a primary key columns")
             return
@@ -116,12 +125,16 @@ class ChurnPublisher: Identifiable {
             return
         }
         let predictedColumnName = "Predicted: " + targetColumn.name!
+        let privateContext = PersistenceController.shared.container.newBackgroundContext()
         
-        dataContext.mlDataTableProvider.mlDataTable.rows.forEach { row in
-//            if row["S_CUSTNO"]?.stringValue == "1010180" {
-                let comparison = comparisonDataModel.insertRecord()
+        privateContext.perform {
+            let observationInPrivateContext = privateContext.object(with: observationID) as? Observations
+            let modelInPrivateContext = privateContext.object(with: modelID) as? Models
+            dataContext.mlDataTableProvider.mlDataTable.rows.forEach { row in
+                let comparison = NSEntityDescription.insertNewObject(forEntityName: Comparisons.entity().name!, into: privateContext) as! Comparisons
                 comparison.comparisondate = entryDate
-                comparison.comparison2observaton = observation
+                comparison.comparison2observaton = observationInPrivateContext
+                comparison.comparion2model = modelInPrivateContext
                 let sourcePrimaryKeyColumn = dataContext.mlDataTableProvider.mlDataTable[primaryKeyColumn.name!]
                 switch  sourcePrimaryKeyColumn.type {
                 case .int :
@@ -136,11 +149,22 @@ class ChurnPublisher: Identifiable {
                 comparison.timebase = Int16(row[timeStampColumn.name!]?.intValue ?? 0)
                 comparison.targetreported = Int32((row[targetColumn.name!]?.intValue)!)
                 comparison.targetpredicted = (row[predictedColumnName]?.doubleValue)!
-                comparison.comparison2observaton = observation
-                comparison.comparion2model = model
+                
             }
-            BaseServices.save()
-//        }
+            do {
+                try privateContext.save()
+                // Merge the changes with the main context if needed
+                PersistenceController.shared.container.viewContext.performAndWait {
+                    do {
+                        try PersistenceController.shared.container.viewContext.save()
+                    } catch {
+                        print("Error merging changes with main context: \(error)")
+                    }
+                }
+            } catch {
+                print("Error saving private context: \(error)")
+            }
+        }
     }
     func getCurrentDate() -> Date {
         // Get the current date and time

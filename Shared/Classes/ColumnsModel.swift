@@ -72,7 +72,7 @@ public class ColumnsModel: Model<Columns> {
     
     var primaryKeyColumn: Columns? {
         get {
-            return self.items.first(where: { $0.ispartofprimarykey == 1 })!
+            return self.items.first(where: { $0.ispartofprimarykey == 1 })
         }
     }
     var timeStampColumn: Columns? {
