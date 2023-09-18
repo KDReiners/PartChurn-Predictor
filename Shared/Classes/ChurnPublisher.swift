@@ -84,8 +84,6 @@ class ChurnPublisher: Identifiable {
                         dataContext?.mlDataTableProvider.syncUpdateTableProvider(callingFunction: #function, className: "ChurnPublisher", lookAhead: lookAhead)
                         let observation = ObservationsModel().items.filter( { $0.observation2prediction == prediction && $0.observation2lookahead == lookAheadItem && $0.observation2timeslicefrom == timeSliceFrom && $0.observation2timesliceto == timeSliceTo} ).first
                         store2Comparisons(dataContext: dataContext, observation: observation)
-                        
-                        
                     }
                 }
                 break
@@ -126,6 +124,7 @@ class ChurnPublisher: Identifiable {
         }
         let predictedColumnName = "Predicted: " + targetColumn.name!
         let privateContext = PersistenceController.shared.container.newBackgroundContext()
+        privateContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         
         privateContext.perform {
             let observationInPrivateContext = privateContext.object(with: observationID) as? Observations
