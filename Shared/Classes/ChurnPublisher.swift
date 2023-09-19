@@ -156,6 +156,7 @@ class ChurnPublisher: Identifiable {
                 PersistenceController.shared.container.viewContext.performAndWait {
                     do {
                         try PersistenceController.shared.container.viewContext.save()
+                        self.comparisonsDataModel.resume()
                     } catch {
                         print("Error merging changes with main context: \(error)")
                     }

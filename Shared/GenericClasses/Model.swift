@@ -23,7 +23,7 @@ public class Model<T>: GenericViewModel where T: NSManagedObject {
     internal func detachValues() -> Void {
         deviceCancellable = nil
     }
-    private func attachValues (devicePublisher: AnyPublisher<[T], Never> = Storage<T>().items.eraseToAnyPublisher()) {
+    internal func attachValues (devicePublisher: AnyPublisher<[T], Never> = Storage<T>().items.eraseToAnyPublisher()) {
         deviceCancellable = devicePublisher.sink {[weak self] items in
             self?.items = items
         }

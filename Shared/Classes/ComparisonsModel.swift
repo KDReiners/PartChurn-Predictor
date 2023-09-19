@@ -29,6 +29,10 @@ public class ComparisonsModel: Model<Comparisons> {
             result = newValue.sorted(by: { $1.comparisondate ?? Date.now > $0.comparisondate ?? Date.now})
         }
     }
+    internal func resume() -> Void {
+        attachValues()
+        gather()
+    }
     internal func gather() -> Void {
         primaryKeys =  Array(items.compactMap { $0.primarykey })
         allItems = items.filter( {$0.targetpredicted <= 0.7} )
