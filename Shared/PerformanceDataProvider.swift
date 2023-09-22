@@ -82,6 +82,15 @@ internal struct PredictionKPI: Identifiable  {
     var lookAhead: Int = 0
     var timeSliceFrom: Int = 0
     var timeSliceTo: Int = 0
+    init(targetStatistic: MlDataTableProvider.TargetStatistics) {
+        self.falseNegatives = Double(targetStatistic.falseNegatives)
+        self.falsePositives = Double(targetStatistic.falsePositives)
+        self.trueNegatives = Double(targetStatistic.trueNegatives)
+        self.truePositives = Double(targetStatistic.truePositives)
+    }
+    init() {
+        
+    }
     var precision: Double! {
         get {
             return (truePositives / (truePositives + falsePositives))

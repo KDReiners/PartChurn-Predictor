@@ -38,12 +38,14 @@ class ChurnPublisher: Identifiable {
         let predictionsDataModel = PredictionsModel(model: self.model)
         comparisonsDataModel.deleteAllRecords(predicate: nil)
         comparisonsDataModel.reportingSummaries.removeAll()
+        comparisonsDataModel.reportingDetails.removeAll()
         predictions.forEach { prediction in
             predictionsDataModel.createPredictionForModel(model: self.model)
             let cluster = predictionsDataModel.arrayOfPredictions.filter { $0.prediction == prediction}.first
             let lookAheadItems = prediction.prediction2lookaheads?.allObjects as! [Lookaheads]
             for algorithm in prediction.prediction2algorithms?.allObjects as![Algorithms] {
                 for lookAheadItem in lookAheadItems {
+                    let baseTargetStatistics = predictionsDataModel.getTargetStatistics(prediction: prediction, lookhead: lookAheadItem)
                     if LookaheadsModel.LookAheadItemRelations(lookAheadItem: lookAheadItem).connectedAlgorihms .contains(algorithm) {
                         let dataContext = SimulationController.returnFittingProviderContext(model: self.model, lookAhead: Int(lookAheadItem.lookahead))
                         if cluster?.connectedTimeSeries != nil {
@@ -72,7 +74,6 @@ class ChurnPublisher: Identifiable {
                         guard let timeStampColumn = columnsDataModel.timeStampColumn else {
                             return
                         }
-                        print("working on prediction \(prediction.groupingpattern ?? "no grouping pattern found") for algorithm: \(algorithm.name ?? "no Algorithm selected") with lookAhead: \(lookAheadItem.lookahead)")
                         let lookAhead = Int(lookAheadItem.lookahead)
                         let predictionProvider = PredictionsProvider(mlDataTable: predictionTable, orderedColNames: orderedColumns.map( { $0.name! }), selectedColumns: selectedColumns, prediction: prediction, regressorName: algorithmName, lookAhead: lookAhead)
                         let result = predictionProvider.mlDataTable
@@ -83,7 +84,10 @@ class ChurnPublisher: Identifiable {
                         let timeSliceTo = timeSlicesDataModel.getTimeSlice(timeSliceInt: (dataContext?.mlDataTableProvider.distinctTimeStamps?.last)!)
                         dataContext?.mlDataTableProvider.syncUpdateTableProvider(callingFunction: #function, className: "ChurnPublisher", lookAhead: lookAhead)
                         let observation = ObservationsModel().items.filter( { $0.observation2prediction == prediction && $0.observation2lookahead == lookAheadItem && $0.observation2timeslicefrom == timeSliceFrom && $0.observation2timesliceto == timeSliceTo} ).first
-                        store2Comparisons(dataContext: dataContext, observation: observation)
+                        guard let targetStatistics = dataContext?.mlDataTableProvider.tableStatistics?.targetStatistics.first  else {
+                            continue
+                        }
+                        store2Comparisons(dataContext: dataContext, observation: observation, targetStatistics: targetStatistics, baseTargetStatistics: baseTargetStatistics)
                     }
                 }
                 break
@@ -91,10 +95,14 @@ class ChurnPublisher: Identifiable {
             
         }
     }
-    func store2Comparisons(dataContext: SimulationController.MlDataTableProviderContext?, observation: Observations?) {
+    func store2Comparisons(dataContext: SimulationController.MlDataTableProviderContext?, observation: Observations?, targetStatistics: MlDataTableProvider.TargetStatistics, baseTargetStatistics: MlDataTableProvider.TargetStatistics) {
         let entryDate = getCurrentDate()
         guard let observationID = observation?.objectID else {
             print("\(#function) no Observation is passed.")
+            return
+        }
+        let localPredictionKPI = PredictionKPI(targetStatistic: baseTargetStatistics)
+        if localPredictionKPI.precision < 0.4 {
             return
         }
         
@@ -132,7 +140,7 @@ class ChurnPublisher: Identifiable {
             dataContext.mlDataTableProvider.mlDataTable.rows.forEach { row in
                 let comparison = NSEntityDescription.insertNewObject(forEntityName: Comparisons.entity().name!, into: privateContext) as! Comparisons
                 comparison.comparisondate = entryDate
-                comparison.comparison2observaton = observationInPrivateContext
+                comparison.comparison2observation = observationInPrivateContext
                 comparison.comparion2model = modelInPrivateContext
                 let sourcePrimaryKeyColumn = dataContext.mlDataTableProvider.mlDataTable[primaryKeyColumn.name!]
                 switch  sourcePrimaryKeyColumn.type {

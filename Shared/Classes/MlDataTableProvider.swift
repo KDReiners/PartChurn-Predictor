@@ -591,23 +591,23 @@ class MlDataTableProvider: ObservableObject {
         var targetStatistics = [TargetStatistics]()
         
     }
-    class TargetStatistics {
-        var targetValue = 0
-        var targetPopulation = 0
-        var threshold: Double = 0.00000
-        var predictionValueAtOptimum: Double = 0
-        var targetsAtOptimum: Int = 0
-        var dirtiesAtOptimum: Int = 0
-        var predictionValueAtThreshold: Double = 0
-        var targetsAtThreshold = 0
-        var dirtiesAtThreshold = 0
-        var truePositives = 0
-        var falsePositives = 0
-        var trueNegatives = 0
-        var falseNegatives = 0
-        var lookAhead = 0
-        var timeSliceFrom: Int = 0
-        var timeSliceTo: Int = 0
+    class TargetStatistics: NSObject{
+        @objc var targetValue = 0
+        @objc var targetPopulation = 0
+        @objc var threshold: Double = 0.00000
+        @objc var predictionValueAtOptimum: Double = 0
+        @objc var targetsAtOptimum: Int = 0
+        @objc var dirtiesAtOptimum: Int = 0
+        @objc var predictionValueAtThreshold: Double = 0
+        @objc var targetsAtThreshold = 0
+        @objc var dirtiesAtThreshold = 0
+        @objc var truePositives = 0
+        @objc var falsePositives = 0
+        @objc var trueNegatives = 0
+        @objc var falseNegatives = 0
+        @objc var lookAhead = 0
+        @objc var timeSliceFrom: Int = 0
+        @objc var timeSliceTo: Int = 0
     }
 }
 struct UnionResult {

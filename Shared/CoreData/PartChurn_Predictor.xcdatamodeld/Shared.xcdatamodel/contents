@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22G90" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22222" systemVersion="22G91" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Algorithms" representedClassName="Algorithms" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="orderno" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -36,7 +36,7 @@
         <attribute name="targetreported" optional="YES" attributeType="Integer 32" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="timebase" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="comparion2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2comparisons" inverseEntity="Models"/>
-        <relationship name="comparison2observaton" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Observations" inverseName="observation2comparisons" inverseEntity="Observations"/>
+        <relationship name="comparison2observation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Observations" inverseName="observation2comparisons" inverseEntity="Observations"/>
     </entity>
     <entity name="Compositions" representedClassName="Compositions" syncable="YES" codeGenerationType="class">
         <attribute name="columnsdepth" optional="YES" transient="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -104,7 +104,7 @@
     <entity name="Observations" representedClassName="Observations" syncable="YES" codeGenerationType="class">
         <attribute name="predictedvalue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="realvalue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <relationship name="observation2comparisons" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comparisons" inverseName="comparison2observaton" inverseEntity="Comparisons"/>
+        <relationship name="observation2comparisons" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comparisons" inverseName="comparison2observation" inverseEntity="Comparisons"/>
         <relationship name="observation2lookahead" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Lookaheads" inverseName="loodahead2observations" inverseEntity="Lookaheads"/>
         <relationship name="observation2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2observations" inverseEntity="Models"/>
         <relationship name="observation2prediction" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Predictions" inverseName="prediction2observations" inverseEntity="Predictions"/>

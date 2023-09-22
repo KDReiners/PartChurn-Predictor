@@ -79,6 +79,18 @@ public class PredictionsModel: Model<Predictions> {
         compositionsDataModel =  CompositionsModel(model: model)
         compositionsDataModel?.retrievePredictionClusters()
     }
+    internal func getTargetStatistics(prediction: Predictions, lookhead: Lookaheads) -> MlDataTableProvider.TargetStatistics {
+        var result = MlDataTableProvider.TargetStatistics()
+        
+        guard let predictionmetricvalues = prediction.prediction2predictionmetricvalues?.allObjects as? [Predictionmetricvalues] else {
+            return result
+        }
+        for label in result.propertyNames() {
+            result.setValue(predictionmetricvalues.first(where: { $0.predictionmetricvalue2predictionmetric?.name == label })!.value, forKey: label)
+        }
+        return result
+        
+    }
     internal func createPredictionForModel(model: Models) {
         //      self.deleteAllRecords(predicate: nil)
         self.model = model

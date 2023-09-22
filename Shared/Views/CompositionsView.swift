@@ -176,8 +176,8 @@ struct CompositionsView: View {
                         Spacer()
                         Button("Delete All") {
                             ComparisonsModel(model: self.model).deleteAllRecords(predicate: nil)
-                            PredictionsModel().deleteAllRecords(predicate: nil)
                             PredictionMetricsModel().deleteAllRecords(predicate: nil)
+                            LookaheadsModel().deleteAllRecords(predicate: nil)
                             PredictionMetricValueModel().deleteAllRecords(predicate: nil)
                             ObservationsModel().deleteAllRecords(predicate: nil)
                         }

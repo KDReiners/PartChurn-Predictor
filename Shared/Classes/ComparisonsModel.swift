@@ -34,8 +34,9 @@ public class ComparisonsModel: Model<Comparisons> {
         gather()
     }
     internal func gather() -> Void {
-        primaryKeys =  Array(items.compactMap { $0.primarykey })
-        allItems = items.filter( {$0.targetpredicted <= 0.7} )
+        primaryKeys = Array(Set(Array(items.compactMap { $0.primarykey })))
+        allItems = items
+//        allItems = items.filter( {$0.targetpredicted <= 0.5} )
         for i in 0..<primaryKeys.count {
             let entries = allItems.filter( { $0.primarykey == primaryKeys[i]})
             let appearances = Double(entries.count)
@@ -45,13 +46,13 @@ public class ComparisonsModel: Model<Comparisons> {
                 for entry in entries {
                     sumOfTargetReported += Double(entry.targetreported)
                     sumOfTargetPredicted += entry.targetpredicted
-                    
                     var comparisonEntry: ComparisonEntry = ComparisonEntry(model: self.model, items: entries)
                     comparisonEntry.reportingDate = entry.comparisondate
                     comparisonEntry.timeBaseCount = Int(entry.timebase)
                     comparisonEntry.targetPredicted = entry.targetpredicted
                     comparisonEntry.targetReported = Double(entry.targetreported)
                     comparisonEntry.primaryKeyValue = entry.primarykey!
+                    comparisonEntry.observation = entry.comparison2observation
                     comparisonEntry.comparisons.append(contentsOf: entries)
                     reportingDetails.append(comparisonEntry)
                 }
@@ -65,10 +66,16 @@ public class ComparisonsModel: Model<Comparisons> {
             }
         }
     }
-    struct ComparisonEntry: Identifiable {
+    internal struct ComparisonEntry: Identifiable, Hashable {
+        static func == (lhs: ComparisonsModel.ComparisonEntry, rhs: ComparisonsModel.ComparisonEntry) -> Bool {
+            lhs.id == rhs.id
+        }
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
         var model: Models
         var columnDataModel: ColumnsModel
-        var id = UUID()
+        internal var id = UUID()
         internal var reportingDate: Date?
         internal var primaryKeyColumnName: String?
         internal var timeBaseColumName: String?
@@ -77,6 +84,8 @@ public class ComparisonsModel: Model<Comparisons> {
         internal var targetReported : Double! = 0.0
         internal var targetPredicted: Double! = 0.0
         internal var primaryKeyValue: String = ""
+        internal var observation: Observations?
+        
         var primayKeyColumn: TableColumn<ComparisonEntry, Never, TextViewCell, Text> {
             TableColumn("TimeSlice to") { row in
                 TextViewCell(textValue: "\(row.primaryKeyColumnName!)")
@@ -94,6 +103,12 @@ public class ComparisonsModel: Model<Comparisons> {
         var targetReportedStringValue: String {
             return BaseServices.doubleFormatter.string(from: NSNumber(value: targetReported))!
         }
+        var lookAheadStringValue: String {
+            return String((observation?.observation2lookahead!.lookahead)!)
+        }
+        var timeSlicesStringValue: String {
+            return String((observation?.observation2prediction?.seriesdepth)!)
+        }
         var threshold: Double!
         init(model: Models, items: [Comparisons], threshold: Double = 1) {
             self.model = model
@@ -107,7 +122,5 @@ public class ComparisonsModel: Model<Comparisons> {
             }
             self.timeBaseColumName  = timeBaseColumName
         }
-
-        
     }
 }
