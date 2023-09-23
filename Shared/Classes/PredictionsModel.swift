@@ -79,14 +79,22 @@ public class PredictionsModel: Model<Predictions> {
         compositionsDataModel =  CompositionsModel(model: model)
         compositionsDataModel?.retrievePredictionClusters()
     }
-    internal func getTargetStatistics(prediction: Predictions, lookhead: Lookaheads) -> MlDataTableProvider.TargetStatistics {
-        var result = MlDataTableProvider.TargetStatistics()
-        
-        guard let predictionmetricvalues = prediction.prediction2predictionmetricvalues?.allObjects as? [Predictionmetricvalues] else {
+    internal func getTargetStatistics(observation: Observations, algorithm: Algorithms ) -> MlDataTableProvider.TargetStatistics? {
+        let result = MlDataTableProvider.TargetStatistics()
+        guard let prediction = observation.observation2prediction  else {
+            print("\(#function) cannot create prediction out of observation.")
             return result
         }
-        for label in result.propertyNames() {
-            result.setValue(predictionmetricvalues.first(where: { $0.predictionmetricvalue2predictionmetric?.name == label })!.value, forKey: label)
+        guard let observationmetricvalues = prediction.prediction2predictionmetricvalues?.allObjects as? [Predictionmetricvalues] else {
+            return result
+        }
+        let concretePredictionMetricValues = observationmetricvalues.filter( { $0.predictionmetricvalue2algorithm == algorithm && $0.predictionmetricvalue2lookahead == observation.observation2lookahead  })
+        if concretePredictionMetricValues.count > 0 {
+            for label in result.propertyNames() {
+                result.setValue(concretePredictionMetricValues.first(where: { $0.predictionmetricvalue2predictionmetric?.name == label })!.value, forKey: label)
+            }
+        } else {
+            return nil
         }
         return result
         
@@ -96,24 +104,29 @@ public class PredictionsModel: Model<Predictions> {
         self.model = model
         let foundItems = self.items.filter( { $0.prediction2model == model })
         for item in foundItems {
-            let newPredictionPresenatation = PredictionCluster()
-            newPredictionPresenatation.prediction = item
-            newPredictionPresenatation.id = item.id!
-            newPredictionPresenatation.groupingPattern = item.groupingpattern
-            newPredictionPresenatation.seriesDepth = Int32(item.seriesdepth)
-            newPredictionPresenatation.columnsDepth = Int32(item.columnsdepth)
-            let composition = (item.prediction2compositions!.allObjects.first as! Compositions)
-            newPredictionPresenatation.columns.append(contentsOf: composition.composition2columns?.allObjects as! [Columns])
-            for composition in item.prediction2compositions!.allObjects as! [Compositions] {
-                //                newPredictionPresenatation.columns.append(contentsOf: composition.composition2columns?.allObjects as! [Columns])
-                newPredictionPresenatation.timeSeries.append(composition.composition2timeseries!)
-            }
+            let newPredictionPresenatation = createPredictionCluster(item: item)
             arrayOfPredictions.append(newPredictionPresenatation)
         }
+    }
+    internal func createPredictionCluster(item: Predictions) -> PredictionCluster {
+        let newPredictionPresenatation = PredictionCluster()
+        newPredictionPresenatation.prediction = item
+        newPredictionPresenatation.id = item.id!
+        newPredictionPresenatation.groupingPattern = item.groupingpattern
+        newPredictionPresenatation.seriesDepth = Int32(item.seriesdepth)
+        newPredictionPresenatation.columnsDepth = Int32(item.columnsdepth)
+        let composition = (item.prediction2compositions!.allObjects.first as! Compositions)
+        newPredictionPresenatation.columns.append(contentsOf: composition.composition2columns?.allObjects as! [Columns])
+        for composition in item.prediction2compositions!.allObjects as! [Compositions] {
+            //                newPredictionPresenatation.columns.append(contentsOf: composition.composition2columns?.allObjects as! [Columns])
+            newPredictionPresenatation.timeSeries.append(composition.composition2timeseries!)
+        }
+        return newPredictionPresenatation
     }
     internal class PredictionCluster: CompositionsModel.CompositionCluster {
         var columnsDepth: Int32!
         var prediction: Predictions!
+
         var connectedTimeSeries: [String]? {
             get {
                 var result: [String]?

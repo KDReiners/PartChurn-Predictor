@@ -87,6 +87,8 @@ internal struct PredictionKPI: Identifiable  {
         self.falsePositives = Double(targetStatistic.falsePositives)
         self.trueNegatives = Double(targetStatistic.trueNegatives)
         self.truePositives = Double(targetStatistic.truePositives)
+        self.predictionValueAtOptimum = String(targetStatistic.predictionValueAtThreshold)
+        self.predictionValueAtThreshold = String(targetStatistic.predictionValueAtThreshold)
     }
     init() {
         

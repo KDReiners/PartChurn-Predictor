@@ -124,10 +124,10 @@ struct ReportingView: View {
             }.background(Color.green)
             Table(summaryItems, selection: $id, sortOrder: $sorting) {
                 TableColumn("Reporting Date", value: \.reportingDateStringValue)
-                TableColumn(modelColumnsMap["primaryKeyValue"]!, value: \.primaryKeyValue)
-                TableColumn(modelColumnsMap["timeBaseCount"]!, value: \.timeBaseCountStringValue)
-                TableColumn(modelColumnsMap[ "targetReported"]!, value: \.targetReportedStringValue)
-                TableColumn(modelColumnsMap[ "targetPredicted"]!, value: \.targetPredictedStringValue)
+//                TableColumn(modelColumnsMap["primaryKeyValue"]!, value: \.primaryKeyValue)
+//                TableColumn(modelColumnsMap["timeBaseCount"]!, value: \.timeBaseCountStringValue)
+//                TableColumn(modelColumnsMap[ "targetReported"]!, value: \.targetReportedStringValue)
+//                TableColumn(modelColumnsMap[ "targetPredicted"]!, value: \.targetPredictedStringValue)
                 
             }
             Table(detailedItems.filter( { $0.primaryKeyValue == summaryItems.filter( { $0.id == id}).first?.primaryKeyValue})) {

@@ -85,7 +85,6 @@ public class ComparisonsModel: Model<Comparisons> {
         internal var targetPredicted: Double! = 0.0
         internal var primaryKeyValue: String = ""
         internal var observation: Observations?
-        
         var primayKeyColumn: TableColumn<ComparisonEntry, Never, TextViewCell, Text> {
             TableColumn("TimeSlice to") { row in
                 TextViewCell(textValue: "\(row.primaryKeyColumnName!)")

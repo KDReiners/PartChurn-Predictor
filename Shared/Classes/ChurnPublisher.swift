@@ -33,66 +33,71 @@ class ChurnPublisher: Identifiable {
         //        calculate()
     }
     func calculate(comparisonsDataModel: ComparisonsModel) {
+        let observations = ObservationsModel().items.filter( { $0.observation2model == model})
         self.comparisonsDataModel = comparisonsDataModel
         let columnsDataModel = ColumnsModel(model: self.model)
         let predictionsDataModel = PredictionsModel(model: self.model)
         comparisonsDataModel.deleteAllRecords(predicate: nil)
         comparisonsDataModel.reportingSummaries.removeAll()
         comparisonsDataModel.reportingDetails.removeAll()
-        predictions.forEach { prediction in
-            predictionsDataModel.createPredictionForModel(model: self.model)
-            let cluster = predictionsDataModel.arrayOfPredictions.filter { $0.prediction == prediction}.first
-            let lookAheadItems = prediction.prediction2lookaheads?.allObjects as! [Lookaheads]
+        observations.forEach { observation in
+            guard let prediction = observation.observation2prediction else {
+                print("\(#function) cannot create prediction.")
+                return
+            }
+            let cluster = predictionsDataModel.createPredictionCluster(item: prediction)
+            guard let lookAheadItem = observation.observation2lookahead else {
+                print("\(#function) cannot create lookAhead Item.")
+                return
+            }
             for algorithm in prediction.prediction2algorithms?.allObjects as![Algorithms] {
-                for lookAheadItem in lookAheadItems {
-                    let baseTargetStatistics = predictionsDataModel.getTargetStatistics(prediction: prediction, lookhead: lookAheadItem)
-                    if LookaheadsModel.LookAheadItemRelations(lookAheadItem: lookAheadItem).connectedAlgorihms .contains(algorithm) {
-                        let dataContext = SimulationController.returnFittingProviderContext(model: self.model, lookAhead: Int(lookAheadItem.lookahead))
-                        if cluster?.connectedTimeSeries != nil {
-                            dataContext?.mlDataTableProvider.timeSeries = cluster?.selectedTimeSeries
-                        } else {
-                            dataContext?.mlDataTableProvider.timeSeries = nil
-                        }
-                        dataContext?.mlDataTableProvider.mlDataTable = dataContext!.composer?.mlDataTable_Base
-                        dataContext?.mlDataTableProvider.orderedColumns = dataContext!.composer?.orderedColumns!
-                        dataContext!.mlDataTableProvider.selectedColumns = cluster?.columns
-                        dataContext!.mlDataTableProvider.prediction = prediction
-                        dataContext?.mlDataTableProvider.mlDataTable = try! dataContext!.mlDataTableProvider.buildMlDataTable(lookAhead: Int(lookAheadItem.lookahead)).mlDataTable
-                        dataContext?.mlDataTableProvider.regressorName = algorithm.name!
-                        guard let predictionTable = dataContext?.mlDataTableProvider.mlDataTable else {
-                            return
-                        }
-                        guard let orderedColumns = dataContext?.mlDataTableProvider.orderedColumns else {
-                            return
-                        }
-                        guard let selectedColumns = dataContext?.mlDataTableProvider.selectedColumns else {
-                            return
-                        }
-                        guard let algorithmName = algorithm.name else {
-                            return
-                        }
-                        guard let timeStampColumn = columnsDataModel.timeStampColumn else {
-                            return
-                        }
-                        let lookAhead = Int(lookAheadItem.lookahead)
-                        let predictionProvider = PredictionsProvider(mlDataTable: predictionTable, orderedColNames: orderedColumns.map( { $0.name! }), selectedColumns: selectedColumns, prediction: prediction, regressorName: algorithmName, lookAhead: lookAhead)
-                        let result = predictionProvider.mlDataTable
-                        let mask = result[timeStampColumn.name!] > Int((model.model2lastlearningtimeslice?.value)!)
-                        dataContext?.mlDataTableProvider.mlDataTableRaw = result[mask]
-                        dataContext?.mlDataTableProvider.mlDataTable = result[mask]
-                        let timeSliceFrom = timeSlicesDataModel.getTimeSlice(timeSliceInt: (dataContext?.mlDataTableProvider.distinctTimeStamps?.first)!)
-                        let timeSliceTo = timeSlicesDataModel.getTimeSlice(timeSliceInt: (dataContext?.mlDataTableProvider.distinctTimeStamps?.last)!)
-                        dataContext?.mlDataTableProvider.syncUpdateTableProvider(callingFunction: #function, className: "ChurnPublisher", lookAhead: lookAhead)
-                        let observation = ObservationsModel().items.filter( { $0.observation2prediction == prediction && $0.observation2lookahead == lookAheadItem && $0.observation2timeslicefrom == timeSliceFrom && $0.observation2timesliceto == timeSliceTo} ).first
-                        guard let targetStatistics = dataContext?.mlDataTableProvider.tableStatistics?.targetStatistics.first  else {
-                            continue
-                        }
-                        store2Comparisons(dataContext: dataContext, observation: observation, targetStatistics: targetStatistics, baseTargetStatistics: baseTargetStatistics)
+                guard let baseTargetStatistics = predictionsDataModel.getTargetStatistics(observation: observation, algorithm: algorithm) else {
+                    continue
+                }
+                if LookaheadsModel.LookAheadItemRelations(lookAheadItem: lookAheadItem).connectedAlgorihms .contains(algorithm) {
+                    let dataContext = SimulationController.returnFittingProviderContext(model: self.model, lookAhead: Int(lookAheadItem.lookahead))
+                    if cluster.connectedTimeSeries != nil {
+                        dataContext?.mlDataTableProvider.timeSeries = cluster.selectedTimeSeries
+                    } else {
+                        dataContext?.mlDataTableProvider.timeSeries = nil
                     }
+                    dataContext?.mlDataTableProvider.mlDataTable = dataContext!.composer?.mlDataTable_Base
+                    dataContext?.mlDataTableProvider.orderedColumns = dataContext!.composer?.orderedColumns!
+                    dataContext!.mlDataTableProvider.selectedColumns = cluster.columns
+                    dataContext!.mlDataTableProvider.prediction = prediction
+                    dataContext?.mlDataTableProvider.mlDataTable = try! dataContext!.mlDataTableProvider.buildMlDataTable(lookAhead: Int(lookAheadItem.lookahead)).mlDataTable
+                    dataContext?.mlDataTableProvider.regressorName = algorithm.name!
+                    guard let predictionTable = dataContext?.mlDataTableProvider.mlDataTable else {
+                        return
+                    }
+                    guard let orderedColumns = dataContext?.mlDataTableProvider.orderedColumns else {
+                        return
+                    }
+                    guard let selectedColumns = dataContext?.mlDataTableProvider.selectedColumns else {
+                        return
+                    }
+                    guard let algorithmName = algorithm.name else {
+                        return
+                    }
+                    guard let timeStampColumn = columnsDataModel.timeStampColumn else {
+                        return
+                    }
+                    let lookAhead = Int(lookAheadItem.lookahead)
+                    let predictionProvider = PredictionsProvider(mlDataTable: predictionTable, orderedColNames: orderedColumns.map( { $0.name! }), selectedColumns: selectedColumns, prediction: prediction, regressorName: algorithmName, lookAhead: lookAhead)
+                    let result = predictionProvider.mlDataTable
+                    let mask = result[timeStampColumn.name!] > Int((model.model2lastlearningtimeslice?.value)!)
+                    dataContext?.mlDataTableProvider.mlDataTableRaw = result[mask]
+                    dataContext?.mlDataTableProvider.mlDataTable = result[mask]
+                    let timeSliceFrom = timeSlicesDataModel.getTimeSlice(timeSliceInt: (dataContext?.mlDataTableProvider.distinctTimeStamps?.first)!)
+                    let timeSliceTo = timeSlicesDataModel.getTimeSlice(timeSliceInt: (dataContext?.mlDataTableProvider.distinctTimeStamps?.last)!)
+                    dataContext?.mlDataTableProvider.syncUpdateTableProvider(callingFunction: #function, className: "ChurnPublisher", lookAhead: lookAhead)
+                    guard let targetStatistics = dataContext?.mlDataTableProvider.tableStatistics?.targetStatistics.first  else {
+                        continue
+                    }
+                    store2Comparisons(dataContext: dataContext, observation: observation, targetStatistics: targetStatistics, baseTargetStatistics: baseTargetStatistics)
                 }
                 break
             }
-            
         }
     }
     func store2Comparisons(dataContext: SimulationController.MlDataTableProviderContext?, observation: Observations?, targetStatistics: MlDataTableProvider.TargetStatistics, baseTargetStatistics: MlDataTableProvider.TargetStatistics) {
@@ -102,9 +107,9 @@ class ChurnPublisher: Identifiable {
             return
         }
         let localPredictionKPI = PredictionKPI(targetStatistic: baseTargetStatistics)
-        if localPredictionKPI.precision < 0.4 {
-            return
-        }
+        //        if localPredictionKPI.precision > Double(localPredictionKPI.predictionValueAtThreshold)! {
+        //            return
+        //        }
         
         let modelID = self.model.objectID
         let metricValues = observation?.observation2predictionmetricvalues?.allObjects as! [Predictionmetricvalues]
@@ -133,7 +138,7 @@ class ChurnPublisher: Identifiable {
         let predictedColumnName = "Predicted: " + targetColumn.name!
         let privateContext = PersistenceController.shared.container.newBackgroundContext()
         privateContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        
+        let mask = dataContext.mlDataTableProvider.mlDataTable[predictedColumnName] <= Double(localPredictionKPI.predictionValueAtThreshold)!
         privateContext.perform {
             let observationInPrivateContext = privateContext.object(with: observationID) as? Observations
             let modelInPrivateContext = privateContext.object(with: modelID) as? Models
