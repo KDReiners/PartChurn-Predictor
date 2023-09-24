@@ -5,6 +5,7 @@
         <attribute name="orderno" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="algorithm2algorithmtype" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Algorithmtypes" inverseName="algorithmtype2algorithms" inverseEntity="Algorithmtypes"/>
         <relationship name="algorithm2metricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2algorithm" inverseEntity="Metricvalues"/>
+        <relationship name="algorithm2observations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Observations" inverseName="observation2algorithm" inverseEntity="Observations"/>
         <relationship name="algorithm2predictionmetricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictionmetricvalues" inverseName="predictionmetricvalue2algorithm" inverseEntity="Predictionmetricvalues"/>
         <relationship name="algorithm2predictions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictions" inverseName="prediction2algorithms" inverseEntity="Predictions"/>
     </entity>
@@ -104,6 +105,7 @@
     <entity name="Observations" representedClassName="Observations" syncable="YES" codeGenerationType="class">
         <attribute name="predictedvalue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="realvalue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="observation2algorithm" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Algorithms" inverseName="algorithm2observations" inverseEntity="Algorithms"/>
         <relationship name="observation2comparisons" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comparisons" inverseName="comparison2observation" inverseEntity="Comparisons"/>
         <relationship name="observation2lookahead" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Lookaheads" inverseName="loodahead2observations" inverseEntity="Lookaheads"/>
         <relationship name="observation2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2observations" inverseEntity="Models"/>

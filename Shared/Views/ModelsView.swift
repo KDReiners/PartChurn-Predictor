@@ -83,9 +83,14 @@ struct ModelsView: View {
                             Text("Item 4")
                         }
                     }
-                    Button("Get Best of") {
-                        ChurnPublisher(model: self.model).calculate(comparisonsDataModel: self.comparisonsDataModel)
-                    }
+            HStack {
+                Button("Get Best of") {
+                    ChurnPublisher(model: self.model).calculate(comparisonsDataModel: self.comparisonsDataModel)
+                }
+                Button("delete Comparisons") {
+                    ComparisonsModel(model: self.model).deleteAllRecords(predicate: nil)
+                }
+            }
         }.padding()
         Spacer()
         ReportingView(model: self.model, comparisonsDataModel: self.comparisonsDataModel)
@@ -97,21 +102,21 @@ struct ModelsView: View {
 struct ReportingView: View {
     @ObservedObject var comparisonsDataModel: ComparisonsModel
     @State private var id: UUID?
+    @State private var selectedSummaryItem: ComparisonsModel.ComparisonSummaryEntry?
     var model: Models
     var modelColumnsMap: Dictionary<String, String> = [:]
     var columnsDataModel: ColumnsModel
-    @State private var sorting = [KeyPathComparator(\ComparisonsModel.ComparisonEntry.targetReportedStringValue)]
+//    @State private var sorting = [KeyPathComparator(\ComparisonsModel.ComparisonSummaryEntry.targetReportedStringValue)]
     init(model: Models, comparisonsDataModel: ComparisonsModel ) {
         self.model = model
-        self.comparisonsDataModel = comparisonsDataModel
+        self.comparisonsDataModel = ComparisonsModel(model: self.model)
         columnsDataModel = ColumnsModel(model: self.model)
         modelColumnsMap["primaryKeyValue"] = columnsDataModel.primaryKeyColumn!.name!
-        modelColumnsMap["timeBaseCount"] = columnsDataModel.timeStampColumn!.name!
+        modelColumnsMap["timeBase"] = columnsDataModel.timeStampColumn!.name!
         modelColumnsMap["targetReported"] = columnsDataModel.targetColumns.first!.name!
-        modelColumnsMap["targetPredicted"] = "Predicted: " + columnsDataModel.targetColumns.first!.name!
+        modelColumnsMap["targetPredicted"] = "PREDICTED " + columnsDataModel.targetColumns.first!.name!
     }
     var body: some View {
-        let detailedItems = comparisonsDataModel.reportingDetails
         let summaryItems = comparisonsDataModel.reportingSummaries.sorted(by: { $0.primaryKeyValue < $1.primaryKeyValue})
         VStack {
             HStack {
@@ -122,29 +127,30 @@ struct ReportingView: View {
                 Spacer()
                 
             }.background(Color.green)
-            Table(summaryItems, selection: $id, sortOrder: $sorting) {
-                TableColumn("Reporting Date", value: \.reportingDateStringValue)
-//                TableColumn(modelColumnsMap["primaryKeyValue"]!, value: \.primaryKeyValue)
-//                TableColumn(modelColumnsMap["timeBaseCount"]!, value: \.timeBaseCountStringValue)
-//                TableColumn(modelColumnsMap[ "targetReported"]!, value: \.targetReportedStringValue)
-//                TableColumn(modelColumnsMap[ "targetPredicted"]!, value: \.targetPredictedStringValue)
-                
-            }
-            Table(detailedItems.filter( { $0.primaryKeyValue == summaryItems.filter( { $0.id == id}).first?.primaryKeyValue})) {
+            Table(summaryItems, selection: $id) {
                 TableColumn("Reporting Date", value: \.reportingDateStringValue)
                 TableColumn(modelColumnsMap["primaryKeyValue"]!, value: \.primaryKeyValue)
-                TableColumn("TimeSlices", value: \.timeSlicesStringValue)
-                TableColumn("LookAhead", value: \.lookAheadStringValue)
-                TableColumn(modelColumnsMap["timeBaseCount"]!, value: \.timeBaseCountStringValue)
+                TableColumn(modelColumnsMap["timeBase"]!, value: \.timeBaseCountStringValue)
                 TableColumn(modelColumnsMap[ "targetReported"]!, value: \.targetReportedStringValue)
                 TableColumn(modelColumnsMap[ "targetPredicted"]!, value: \.targetPredictedStringValue)
+            }
+            .onChange(of: id) { newValue in
+                selectedSummaryItem = summaryItems.first(where: { $0.id == newValue})
+            }
+            .id(UUID())
+            if selectedSummaryItem != nil {
+                Table(selectedSummaryItem!.comparisonsDetails) {
+                    TableColumn(modelColumnsMap["timeBase"]!, value: \.timebase)
+                    TableColumn("Algorithm", value: \.algorithm)
+                    TableColumn(modelColumnsMap[ "targetReported"]!, value: \.targetreported)
+                    TableColumn(modelColumnsMap[ "targetPredicted"]!, value: \.targetpredicted)
+                }
             }
         }
         .onAppear {
             comparisonsDataModel.gather()
         }
     }
-    
 }
 struct ModelsView_Previews: PreviewProvider {
     static var previews: some View {

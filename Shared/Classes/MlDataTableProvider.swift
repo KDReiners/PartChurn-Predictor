@@ -353,6 +353,7 @@ class MlDataTableProvider: ObservableObject {
                 observationEntry?.observation2timeslicefrom = timeSliceFrom
                 observationEntry?.observation2prediction = self.prediction
                 observationEntry?.observation2lookahead = lookAheadItem
+                observationEntry?.observation2algorithm = algorithm
                 self.observations.append(observationEntry!)
                 var valueEntry = predictionMetricValueDataModel.items.filter { $0.predictionmetricvalue2predictionmetric?.name == entry.key && $0.predictionmetricvalue2algorithm?.name == self.regressorName && $0.predictionmetricvalue2prediction == self.prediction &&
                     $0.predictionmetricvalue2lookahead == lookAheadItem && $0.predictionmetricvalue2observation == observationEntry}.first

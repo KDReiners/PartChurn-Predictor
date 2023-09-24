@@ -9,8 +9,8 @@ import Foundation
 import SwiftUI
 public class ComparisonsModel: Model<Comparisons> {
     @Published var result: [Comparisons]!
-    @Published var reportingDetails: [ComparisonEntry] = []
-    @Published var reportingSummaries: [ComparisonEntry] = []
+    @Published var reportingDetails: [ComparisonSummaryEntry] = []
+    @Published var reportingSummaries: [ComparisonSummaryEntry] = []
     var primaryKeys: Array<String>!
     var allItems: [Comparisons]!
     var model: Models
@@ -34,73 +34,83 @@ public class ComparisonsModel: Model<Comparisons> {
         gather()
     }
     internal func gather() -> Void {
-        primaryKeys = Array(Set(Array(items.compactMap { $0.primarykey })))
-        allItems = items
-//        allItems = items.filter( {$0.targetpredicted <= 0.5} )
-        for i in 0..<primaryKeys.count {
-            let entries = allItems.filter( { $0.primarykey == primaryKeys[i]})
-            let appearances = Double(entries.count)
-            var sumOfTargetPredicted: Double = 0
-            var sumOfTargetReported: Double = 0
-            if entries.count > 0 {
-                for entry in entries {
-                    sumOfTargetReported += Double(entry.targetreported)
-                    sumOfTargetPredicted += entry.targetpredicted
-                    var comparisonEntry: ComparisonEntry = ComparisonEntry(model: self.model, items: entries)
-                    comparisonEntry.reportingDate = entry.comparisondate
-                    comparisonEntry.timeBaseCount = Int(entry.timebase)
-                    comparisonEntry.targetPredicted = entry.targetpredicted
-                    comparisonEntry.targetReported = Double(entry.targetreported)
-                    comparisonEntry.primaryKeyValue = entry.primarykey!
-                    comparisonEntry.observation = entry.comparison2observation
-                    comparisonEntry.comparisons.append(contentsOf: entries)
-                    reportingDetails.append(comparisonEntry)
+        var dictOfPrimaryKeys: [String: [Comparisons]] = [:]
+        for entity in self.items.filter({ $0.comparion2model == model }) {
+            if let primaryKeyValue = entity.primarykey {
+                if dictOfPrimaryKeys[primaryKeyValue] == nil {
+                    dictOfPrimaryKeys[primaryKeyValue] = [entity]
+                } else {
+                    dictOfPrimaryKeys[primaryKeyValue]?.append(entity)
                 }
-                var reportingSummaryEntry = ComparisonEntry(model: self.model, items: entries)
-                reportingSummaryEntry.targetPredicted = sumOfTargetPredicted / appearances
-                reportingSummaryEntry.targetReported = sumOfTargetReported / appearances
-                reportingSummaryEntry.timeBaseCount = Int(appearances)
-                reportingSummaryEntry.primaryKeyValue = entries.first!.primarykey!
-                reportingSummaryEntry.reportingDate = entries.first!.comparisondate!
-                reportingSummaries.append(reportingSummaryEntry)
             }
         }
+        reportingSummaries = dictOfPrimaryKeys.map( { ComparisonsModel.ComparisonSummaryEntry(model: self.model, primaryKeyValue: $0.key, items: $0.value)})
     }
-    internal struct ComparisonEntry: Identifiable, Hashable {
-        static func == (lhs: ComparisonsModel.ComparisonEntry, rhs: ComparisonsModel.ComparisonEntry) -> Bool {
+    internal struct ComparisonDetailEntry: Identifiable, Hashable {
+        // Protocol stubs
+        internal var id = UUID()
+        static func == (lhs: ComparisonsModel.ComparisonDetailEntry, rhs: ComparisonsModel.ComparisonDetailEntry) -> Bool {
+            lhs.id == rhs.id
+        }
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
+        internal var comparison: Comparisons
+        internal var observation: Observations
+        internal var primarykey: String
+        internal var timebase: String
+        internal var targetpredicted: String
+        internal var targetreported: String
+        internal var algorithm: String
+        
+        init(id: UUID = UUID(), comparison: Comparisons) {
+            self.id = id
+            self.primarykey = comparison.primarykey!
+            self.comparison = comparison
+            self.timebase = String(comparison.timebase)
+            self.targetpredicted = BaseServices.doubleFormatter.string(from: NSNumber(value: comparison.targetpredicted))!
+            self.targetreported = BaseServices.doubleFormatter.string(from: NSNumber(value: comparison.targetreported))!
+            let cluster = PredictionsModel(model: comparison.comparion2model!).createPredictionCluster(item: (comparison.comparison2observation?.observation2prediction)!)
+            self.algorithm = (comparison.comparison2observation?.observation2algorithm?.name)!
+            guard let observation = comparison.comparison2observation else {
+                fatalError()
+            }
+            self.observation = observation
+        }
+    }
+    internal struct ComparisonSummaryEntry: Identifiable, Hashable {
+        static func == (lhs: ComparisonsModel.ComparisonSummaryEntry, rhs: ComparisonsModel.ComparisonSummaryEntry) -> Bool {
             lhs.id == rhs.id
         }
         func hash(into hasher: inout Hasher) {
             hasher.combine(id)
         }
         var model: Models
+        var subEntriesCount: Int
         var columnDataModel: ColumnsModel
         internal var id = UUID()
-        internal var reportingDate: Date?
         internal var primaryKeyColumnName: String?
         internal var timeBaseColumName: String?
-        internal var comparisons: [Comparisons] = []
+        internal var comparisonsDetails: [ComparisonDetailEntry] = []
         internal var timeBaseCount: Int = 0
-        internal var targetReported : Double! = 0.0
-        internal var targetPredicted: Double! = 0.0
+        internal var targetsReported : Double! = 0.0
+        internal var targetsPredicted: Double! = 0.0
         internal var primaryKeyValue: String = ""
         internal var observation: Observations?
-        var primayKeyColumn: TableColumn<ComparisonEntry, Never, TextViewCell, Text> {
+        internal var reportingDateStringValue = ""
+        var primayKeyColumn: TableColumn<ComparisonSummaryEntry, Never, TextViewCell, Text> {
             TableColumn("TimeSlice to") { row in
                 TextViewCell(textValue: "\(row.primaryKeyColumnName!)")
             }
-        }
-        var reportingDateStringValue: String {
-            return BaseServices.standardDateFormatterWithoutTime.string(from: reportingDate!)
         }
         var timeBaseCountStringValue: String {
             return String(timeBaseCount)
         }
         var targetPredictedStringValue: String {
-            return BaseServices.doubleFormatter.string(from: NSNumber(value: targetPredicted))!
+            return BaseServices.doubleFormatter.string(from: NSNumber(value: targetsPredicted))!
         }
         var targetReportedStringValue: String {
-            return BaseServices.doubleFormatter.string(from: NSNumber(value: targetReported))!
+            return BaseServices.doubleFormatter.string(from: NSNumber(value: targetsReported))!
         }
         var lookAheadStringValue: String {
             return String((observation?.observation2lookahead!.lookahead)!)
@@ -109,8 +119,20 @@ public class ComparisonsModel: Model<Comparisons> {
             return String((observation?.observation2prediction?.seriesdepth)!)
         }
         var threshold: Double!
-        init(model: Models, items: [Comparisons], threshold: Double = 1) {
+        init(model: Models, primaryKeyValue: String? = nil,  items: [Comparisons], threshold: Double = 1) {
+            // Direct Values
             self.model = model
+            comparisonsDetails = items.map({ComparisonDetailEntry(comparison: $0) })
+            guard let primaryKeyValue = primaryKeyValue else {
+                fatalError()
+            }
+            self.primaryKeyValue = primaryKeyValue
+            self.subEntriesCount = items.count
+            self.timeBaseCount = Set(items.map { $0.timebase }).count / items.count
+            self.targetsPredicted = items.reduce(0) { $0 + $1.targetpredicted } / Double(timeBaseCount)
+            self.targetsReported = Double(items.reduce(0) { $0 + $1.targetreported }) / Double(timeBaseCount)
+            reportingDateStringValue = BaseServices.standardDateFormatterWithoutTime.string(from: Date.now)
+            // Helper
             columnDataModel = ColumnsModel(model: model)
             guard let primaryKeyColumnName = columnDataModel.primaryKeyColumn?.name! else {
                 return
