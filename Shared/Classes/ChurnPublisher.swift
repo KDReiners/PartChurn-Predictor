@@ -33,13 +33,13 @@ class ChurnPublisher: Identifiable {
         //        calculate()
     }
     func calculate(comparisonsDataModel: ComparisonsModel) {
-        let observations = ObservationsModel().items.filter( { $0.observation2model == model})
         self.comparisonsDataModel = comparisonsDataModel
         let columnsDataModel = ColumnsModel(model: self.model)
         let predictionsDataModel = PredictionsModel(model: self.model)
         comparisonsDataModel.deleteAllRecords(predicate: nil)
         comparisonsDataModel.reportingSummaries.removeAll()
         comparisonsDataModel.reportingDetails.removeAll()
+        let observations = ObservationsModel().items.filter( { $0.observation2model == self.model && $0.observation2timeslicefrom!.value < self.model.model2lastlearningtimeslice!.value})
         observations.forEach { observation in
             guard let prediction = observation.observation2prediction else {
                 print("\(#function) cannot create prediction.")
@@ -88,8 +88,6 @@ class ChurnPublisher: Identifiable {
                     let mask = result[timeStampColumn.name!] > Int((model.model2lastlearningtimeslice?.value)!)
                     dataContext?.mlDataTableProvider.mlDataTableRaw = result[mask]
                     dataContext?.mlDataTableProvider.mlDataTable = result[mask]
-                    let timeSliceFrom = timeSlicesDataModel.getTimeSlice(timeSliceInt: (dataContext?.mlDataTableProvider.distinctTimeStamps?.first)!)
-                    let timeSliceTo = timeSlicesDataModel.getTimeSlice(timeSliceInt: (dataContext?.mlDataTableProvider.distinctTimeStamps?.last)!)
                     dataContext?.mlDataTableProvider.syncUpdateTableProvider(callingFunction: #function, className: "ChurnPublisher", lookAhead: lookAhead)
                     guard let targetStatistics = dataContext?.mlDataTableProvider.tableStatistics?.targetStatistics.first  else {
                         continue
@@ -138,11 +136,11 @@ class ChurnPublisher: Identifiable {
         let predictedColumnName = "Predicted: " + targetColumn.name!
         let privateContext = PersistenceController.shared.container.newBackgroundContext()
         privateContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        let mask = dataContext.mlDataTableProvider.mlDataTable[predictedColumnName] <= Double(localPredictionKPI.predictionValueAtThreshold)!
         privateContext.perform {
+            let mask = dataContext.mlDataTableProvider.mlDataTable[predictedColumnName] <= Double(localPredictionKPI.predictionValueAtThreshold)!
             let observationInPrivateContext = privateContext.object(with: observationID) as? Observations
             let modelInPrivateContext = privateContext.object(with: modelID) as? Models
-            dataContext.mlDataTableProvider.mlDataTable.rows.forEach { row in
+            dataContext.mlDataTableProvider.mlDataTable[mask].rows.forEach { row in
                 let comparison = NSEntityDescription.insertNewObject(forEntityName: Comparisons.entity().name!, into: privateContext) as! Comparisons
                 comparison.comparisondate = entryDate
                 comparison.comparison2observation = observationInPrivateContext

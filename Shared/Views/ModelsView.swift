@@ -106,23 +106,30 @@ struct ReportingView: View {
     var model: Models
     var modelColumnsMap: Dictionary<String, String> = [:]
     var columnsDataModel: ColumnsModel
-//    @State private var sorting = [KeyPathComparator(\ComparisonsModel.ComparisonSummaryEntry.targetReportedStringValue)]
+    @State private var sorting = [KeyPathComparator(\ComparisonsModel.ComparisonSummaryEntry.targetReportedStringValue)]
     init(model: Models, comparisonsDataModel: ComparisonsModel ) {
         self.model = model
-        self.comparisonsDataModel = ComparisonsModel(model: self.model)
+        self.comparisonsDataModel = comparisonsDataModel
         columnsDataModel = ColumnsModel(model: self.model)
         modelColumnsMap["primaryKeyValue"] = columnsDataModel.primaryKeyColumn!.name!
         modelColumnsMap["timeBase"] = columnsDataModel.timeStampColumn!.name!
         modelColumnsMap["targetReported"] = columnsDataModel.targetColumns.first!.name!
-        modelColumnsMap["targetPredicted"] = "PREDICTED " + columnsDataModel.targetColumns.first!.name!
+        modelColumnsMap["targetPredicted"] = "PREDICTED: " + columnsDataModel.targetColumns.first!.name!
     }
     var body: some View {
         let summaryItems = comparisonsDataModel.reportingSummaries.sorted(by: { $0.primaryKeyValue < $1.primaryKeyValue})
+        let votings = comparisonsDataModel.votings
+        let votersCount = summaryItems.reduce(0) { (result, summaryItem) in
+            return result + summaryItem.timeBaseCount
+            
+        }
         VStack {
             HStack {
                 HStack {
                     Text("Rows count")
                     Text("\(summaryItems.count)")
+                    Text("Voters count")
+                    Text("\(votersCount)")
                 }
                 Spacer()
                 
@@ -137,10 +144,24 @@ struct ReportingView: View {
             .onChange(of: id) { newValue in
                 selectedSummaryItem = summaryItems.first(where: { $0.id == newValue})
             }
-            .id(UUID())
-            if selectedSummaryItem != nil {
+            if votings.count > 0 {
+                Table(votings) {
+                    TableColumn("Primary Key", value: \.primaryKey)
+                    TableColumn("Algorithm", value: \.algorithm)
+                    TableColumn("Entries", value: \.entriesCount)
+                    TableColumn("OwnVotings", value: \.uniqueContributions)
+                    TableColumn("CommonVotings", value: \.mixedContributions)
+                    TableColumn("LookAhead", value: \.lookAhead)
+                    TableColumn("TimeSlices", value: \.timeSlices)
+                    
+                }
+            }
+            if selectedSummaryItem?.comparisonsDetails != nil {
                 Table(selectedSummaryItem!.comparisonsDetails) {
+                    TableColumn("ID", value: \.observationId)
                     TableColumn(modelColumnsMap["timeBase"]!, value: \.timebase)
+                    TableColumn("TimeSlices", value:\.timeslices)
+                    TableColumn("LookAhead", value: \.lookahead)
                     TableColumn("Algorithm", value: \.algorithm)
                     TableColumn(modelColumnsMap[ "targetReported"]!, value: \.targetreported)
                     TableColumn(modelColumnsMap[ "targetPredicted"]!, value: \.targetpredicted)

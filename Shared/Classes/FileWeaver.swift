@@ -115,6 +115,7 @@ internal class FileWeaver {
         var joinParam2: String = ""
         let joinColumns = columnsDataModel.joinColumns
         let targetColumns = columnsDataModel.targetColumns
+        let timeStampColumn = columnsDataModel.timeStampColumn
         let splitColumns = joinColumns + targetColumns
         if self.mlDataTable_Base != nil {
             var splitTable = self.mlDataTable_Base!
@@ -150,8 +151,10 @@ internal class FileWeaver {
             let timeLord = TimeLord(mlTableDictionary: baseDictionary, model: self.model, lookAhead: lookAhead)
             baseDictionary = timeLord.updateValues()
             splitTable = try! MLDataTable(dictionary: baseDictionary)
-
             result = self.mlDataTable_Base.join(with: splitTable, on: joinParam1, joinParam2, type: .inner)
+            // Switch columns the join with the switched timestamp columnname, but the after this the old timebase entry should be shown
+            result.removeColumn(named: (timeStampColumn?.name)!)
+            result.renameColumn(named: "original: " + (timeStampColumn?.name)!, to: (timeStampColumn?.name)!)
         }
         return result
     }

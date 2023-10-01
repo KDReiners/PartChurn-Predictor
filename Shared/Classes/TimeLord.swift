@@ -91,6 +91,7 @@ class TimeLord: Identifiable {
     }
     func updateValues() -> [String: MLDataValueConvertible] {
         var newValues: [Int] = []
+        var originalValues: [Int] = []
         let periodType: PeriodTypes = .halfYear
         let dateFormat = periodType.dateFormat()
         let dateFormatter = DateFormatter()
@@ -104,10 +105,12 @@ class TimeLord: Identifiable {
                 for value in valueSequence {
                     let newEntry = incrementHalfYear(value, by: lookAhead, periodType: periodType)
                     newValues.append(newEntry)
+                    originalValues.append(value)
                 }
             }
         }
         updatableDictionary[timeStampColumnName]! = newValues
+        updatableDictionary["original: " + timeStampColumnName] = originalValues
         getTestValue(desiredCustno: "1004179")
         return updatableDictionary
     }
