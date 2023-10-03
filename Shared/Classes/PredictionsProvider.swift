@@ -40,35 +40,44 @@ class PredictionsProvider {
             let urlToPredictionModel = BaseServices.sandBoxDataPath.appendingPathComponent((prediction.prediction2model?.name)!).appendingPathComponent(prediction.objectID.uriRepresentation().lastPathComponent).appendingPathComponent(PredictionsModel().returnLookAhead(prediction: prediction, lookAhead: lookAhead).objectID.uriRepresentation().lastPathComponent).appendingPathComponent(regressorName.replacingOccurrences(of: "ML", with: "") + ".mlmodel")
             let fileManager = FileManager.default
             if fileManager.fileExists(atPath: urlToPredictionModel.path) {
-                predictionModel = getModel(url: urlToPredictionModel)
+                Task {
+                    getModel(url: urlToPredictionModel) { [self] completion in
+                        predictionModel = completion
+                    }
+                }
                 incorporatedPrediction(selectedColumns: selectedColumns, isClassifier: isClassifier)
             }
         }
     }
-    private func getModel(url: URL) ->MLModel {
+    private func getModel(url: URL, completion: @escaping (MLModel?) -> Void) {
         var result: MLModel?
-        if let result = loadedModels.filter({ $0.url == url}).first?.model {
-            return result
-        } else {
-            let compiledUrl:URL = {
-                do {
-                    return try MLModel.compileModel(at: url)
-                } catch {
-                    fatalError(error.localizedDescription)
+        DispatchQueue.main.async { [self] in
+            if let loadedModel = loadedModels.first(where: { $0.url == url })?.model {
+                // If the model is already loaded, return it immediately
+                result = loadedModel
+                } else {
+                    let compiledUrl:URL = {
+                        do {
+                            return try MLModel.compileModel(at: url)
+                        } catch {
+                            fatalError(error.localizedDescription)
+                        }
+                    }()
+                    result = {
+                        do {
+                            return try MLModel(contentsOf: compiledUrl)
+                        } catch {
+                            fatalError(error.localizedDescription)
+                        }
+                    }()
+                    
                 }
-            }()
-            result = {
-                do {
-                    return try MLModel(contentsOf: compiledUrl)
-                } catch {
-                    fatalError(error.localizedDescription)
+                let newModel = loadedModel(model: result!, url: url)
+                loadedModels.append(newModel)
+            }
+        DispatchQueue.main.async {
+                    completion(result)
                 }
-            }()
-            
-        }
-        let newModel = loadedModel(model: result!, url: url)
-        loadedModels.append(newModel)
-        return result!
     }
     private func incorporatedPrediction(selectedColumns: [Columns], isClassifier: Bool) {
         let tableDictionary = convertDataTableToDictionary()

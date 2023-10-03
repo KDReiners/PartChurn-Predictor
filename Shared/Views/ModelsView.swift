@@ -35,10 +35,11 @@ struct ModelsView: View {
 //                comparisonDataModel.deleteAllRecords(predicate: nil)
         if !timeSlices.isEmpty {
             observation = (model.model2observations?.allObjects as? [Observations])?.first
-            if observation == nil {
-                observation = ObservationsModel().insertRecord()
-                observation?.observation2model = model
-            }
+//            if observation == nil {
+//                observation = ObservationsModel().insertRecord()
+//                observation?.observation2model = model
+//                
+//            }
             if model.model2lastlearningtimeslice == nil {
                 model.model2lastlearningtimeslice = timeSlices.first
             }
@@ -85,7 +86,11 @@ struct ModelsView: View {
                     }
             HStack {
                 Button("Get Best of") {
-                    ChurnPublisher(model: self.model).calculate(comparisonsDataModel: self.comparisonsDataModel)
+                    let publisher =  ChurnPublisher(model: self.model)
+                    publisher.cleanUp(comparisonsDataModel: comparisonsDataModel)
+                    Task {
+                        await publisher.calculate(comparisonsDataModel: comparisonsDataModel ) 
+                    }
                 }
                 Button("delete Comparisons") {
                     ComparisonsModel(model: self.model).deleteAllRecords(predicate: nil)
@@ -119,6 +124,7 @@ struct ReportingView: View {
     var body: some View {
         let summaryItems = comparisonsDataModel.reportingSummaries.sorted(by: { $0.primaryKeyValue < $1.primaryKeyValue})
         let votings = comparisonsDataModel.votings
+        let voters = comparisonsDataModel.voters
         let votersCount = summaryItems.reduce(0) { (result, summaryItem) in
             return result + summaryItem.timeBaseCount
             
@@ -129,7 +135,7 @@ struct ReportingView: View {
                     Text("Rows count")
                     Text("\(summaryItems.count)")
                     Text("Voters count")
-                    Text("\(votersCount)")
+                    Text(voters ?? "")
                 }
                 Spacer()
                 

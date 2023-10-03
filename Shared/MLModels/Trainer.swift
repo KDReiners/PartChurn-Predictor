@@ -11,7 +11,7 @@ import CoreML
 import Combine
 import PythonKit
 
-public struct Trainer {
+public class Trainer {
     var mlDataTableProvider: MlDataTableProvider!
     var regressorTable: MLDataTable?
     var coreDataML: CoreDataML!
@@ -52,13 +52,14 @@ public struct Trainer {
             let seriesEnd = Int((model.model2lastlearningtimeslice?.value)!)
             let endMask = timeSeriesColumn <= seriesEnd
             self.regressorTable = self.regressorTable![endMask]
+            print("Learn from table with \(self.regressorTable!.rows.count) and timeslice restriction is < than \(seriesEnd)")
         }
         if columnDataModel.timeStampColumn?.isincluded == 0 {
             self.regressorTable!.removeColumn(named: columnDataModel.timeStampColumn!.name!)
         }
         
     }
-    public mutating func createModel(algorithmName: String, completion: @escaping () -> Void) -> Void {
+    public func createModel(algorithmName: String, completion: @escaping () -> Void) -> Void {
         let columnDataModel = ColumnsModel(model: self.model )
         let targetColumn = columnDataModel.timedependantTargetColums.first
         let predictedColumnName = "Predicted: " + (targetColumn?.name)!
@@ -67,107 +68,109 @@ public struct Trainer {
         }
         //        this sets aside 20% of each model’s data rows for evaluation, leaving the remaining 80% for training.
         let (regressorEvaluationTable, regressorTrainingTable) = regressorTable!.randomSplit(by: 0.2, seed: 5)
-        switch algorithmName {
-        case "MLLinearRegressor":
-            let defaultParams = MLLinearRegressor.ModelParameters(validation: .split(strategy: .automatic), maxIterations: 300, l1Penalty: 0, l2Penalty: 0.001, stepSize: 0.001, convergenceThreshold: 0.001, featureRescaling: true)
-            regressor = {
-                do {
-                    return try MLRegressor.linear(MLLinearRegressor(trainingData: regressorTrainingTable,
-                                                                    targetColumn: self.targetColumnName, parameters: defaultParams))
-                } catch {
-                    fatalError(error.localizedDescription)
-                }
-            }()
-        case "MLDecisionTreeRegressor":
-            let defaultParams = MLDecisionTreeRegressor.ModelParameters(validation:.split(strategy: .automatic) , maxDepth: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42)
-            regressor = {
-                do {
-                    return try MLRegressor.decisionTree(MLDecisionTreeRegressor(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
-                } catch {
-                    fatalError(error.localizedDescription)
-                }
-            }()
-        case "MLRandomForestRegressor":
-            let defaultParams = MLRandomForestRegressor.ModelParameters(validation: .split(strategy: .automatic), maxDepth: 100, maxIterations: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, rowSubsample: 0.8, columnSubsample: 0.8)
-            regressor = {
-                do {
-                    return try MLRegressor.randomForest(MLRandomForestRegressor(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
-                } catch {
-                    fatalError(error.localizedDescription)
-                }
-            }()
-        case "MLBoostedTreeRegressor":
-            let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 300, maxIterations: 500, minLossReduction: 0.1, minChildWeight: 0.1, randomSeed: 42, stepSize: 0.05, earlyStoppingRounds: 10, rowSubsample: 0.8, columnSubsample: 0.8)
-            regressor =  {
-                do {
-                    return try MLRegressor.boostedTree(MLBoostedTreeRegressor(trainingData: regressorTrainingTable,
-                                                                              targetColumn: targetColumnName, parameters: defaultParams ))
-                } catch {
-                    fatalError(error.localizedDescription)
-                }
-            }()
-            
-        case "MLSupportVectorClassifier":
-            let defaultParams = MLSupportVectorClassifier.ModelParameters(maxIterations: 5000, penalty: 1.0, convergenceThreshold: 0.001, featureRescaling: true)
-            classifier = {
-                do {
-                    return try MLClassifier.supportVector(MLSupportVectorClassifier(trainingData: regressorTrainingTable, targetColumn: targetColumnName, parameters: defaultParams))
-                } catch {
-                    fatalError(error.localizedDescription)
-                }
-            }()
-        case "MLBoostedTreeClassifier":
-            let defaultParams = MLBoostedTreeClassifier.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 100, maxIterations: 700, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.01, earlyStoppingRounds: 10, rowSubsample: 0.8, columnSubsample: 0.8)
-            classifier = {	
-                do {
-                    return try MLClassifier.boostedTree((MLBoostedTreeClassifier(trainingData: regressorTrainingTable, targetColumn: targetColumnName, parameters: defaultParams)))
-                } catch {
-                    fatalError(error.localizedDescription)
-                }
-            }()
-        case "MLRandomForestClassifier":
-            let defaultParams = MLRandomForestClassifier.ModelParameters(validation: .split(strategy: .automatic), maxDepth: 100, maxIterations: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, rowSubsample: 0.8, columnSubsample: 0.8)
-            classifier = {
-                do {
-                    return try MLClassifier.randomForest(MLRandomForestClassifier(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
-                } catch {
-                    fatalError(error.localizedDescription)
-                }
-            }()
-        case "MLDecisionTreeClassifier":
-            
-            let defaultParams = MLDecisionTreeClassifier.ModelParameters(validation:.split(strategy: .automatic) , maxDepth: 100, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42)
-            classifier = {
-                do {
-                    return try MLClassifier.decisionTree(MLDecisionTreeClassifier(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
-                } catch {
-                    fatalError(error.localizedDescription)
-                }
-            }()
-        default:
-            print("not found: \(algorithmName)" )
-        }
-        if regressor != nil {
-            let group = DispatchGroup()
-            group.enter()
-            writeRegressorMetrics(regressor: regressor, regressorName:  algorithmName, regressorEvaluationTable: regressorEvaluationTable) {
-                print("Writing completed.")
-                group.leave()
+        DispatchQueue.global().async { [self] in
+            switch algorithmName {
+            case "MLLinearRegressor":
+                let defaultParams = MLLinearRegressor.ModelParameters(validation: .split(strategy: .automatic), maxIterations: 300, l1Penalty: 0, l2Penalty: 0.001, stepSize: 0.001, convergenceThreshold: 0.001, featureRescaling: true)
+                regressor = {
+                    do {
+                        return try MLRegressor.linear(MLLinearRegressor(trainingData: regressorTrainingTable,
+                                                                        targetColumn: self.targetColumnName, parameters: defaultParams))
+                    } catch {
+                        fatalError(error.localizedDescription)
+                    }
+                }()
+            case "MLDecisionTreeRegressor":
+                let defaultParams = MLDecisionTreeRegressor.ModelParameters(validation:.split(strategy: .automatic) , maxDepth: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42)
+                regressor = {
+                    do {
+                        return try MLRegressor.decisionTree(MLDecisionTreeRegressor(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
+                    } catch {
+                        fatalError(error.localizedDescription)
+                    }
+                }()
+            case "MLRandomForestRegressor":
+                let defaultParams = MLRandomForestRegressor.ModelParameters(validation: .split(strategy: .automatic), maxDepth: 100, maxIterations: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, rowSubsample: 0.8, columnSubsample: 0.8)
+                regressor = {
+                    do {
+                        return try MLRegressor.randomForest(MLRandomForestRegressor(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
+                    } catch {
+                        fatalError(error.localizedDescription)
+                    }
+                }()
+            case "MLBoostedTreeRegressor":
+                let defaultParams = MLBoostedTreeRegressor.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 300, maxIterations: 500, minLossReduction: 0.1, minChildWeight: 0.1, randomSeed: 42, stepSize: 0.05, earlyStoppingRounds: 10, rowSubsample: 0.8, columnSubsample: 0.8)
+                regressor =  {
+                    do {
+                        return try MLRegressor.boostedTree(MLBoostedTreeRegressor(trainingData: regressorTrainingTable,
+                                                                                  targetColumn: targetColumnName, parameters: defaultParams ))
+                    } catch {
+                        fatalError(error.localizedDescription)
+                    }
+                }()
+                
+            case "MLSupportVectorClassifier":
+                let defaultParams = MLSupportVectorClassifier.ModelParameters(maxIterations: 5000, penalty: 1.0, convergenceThreshold: 0.001, featureRescaling: true)
+                classifier = {
+                    do {
+                        return try MLClassifier.supportVector(MLSupportVectorClassifier(trainingData: regressorTrainingTable, targetColumn: targetColumnName, parameters: defaultParams))
+                    } catch {
+                        fatalError(error.localizedDescription)
+                    }
+                }()
+            case "MLBoostedTreeClassifier":
+                let defaultParams = MLBoostedTreeClassifier.ModelParameters(validation: .split(strategy: .automatic) , maxDepth: 100, maxIterations: 700, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, stepSize: 0.01, earlyStoppingRounds: 10, rowSubsample: 0.8, columnSubsample: 0.8)
+                classifier = {
+                    do {
+                        return try MLClassifier.boostedTree((MLBoostedTreeClassifier(trainingData: regressorTrainingTable, targetColumn: targetColumnName, parameters: defaultParams)))
+                    } catch {
+                        fatalError(error.localizedDescription)
+                    }
+                }()
+            case "MLRandomForestClassifier":
+                let defaultParams = MLRandomForestClassifier.ModelParameters(validation: .split(strategy: .automatic), maxDepth: 100, maxIterations: 300, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42, rowSubsample: 0.8, columnSubsample: 0.8)
+                classifier = {
+                    do {
+                        return try MLClassifier.randomForest(MLRandomForestClassifier(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
+                    } catch {
+                        fatalError(error.localizedDescription)
+                    }
+                }()
+            case "MLDecisionTreeClassifier":
+                
+                let defaultParams = MLDecisionTreeClassifier.ModelParameters(validation:.split(strategy: .automatic) , maxDepth: 100, minLossReduction: 0, minChildWeight: 0.01, randomSeed: 42)
+                classifier = {
+                    do {
+                        return try MLClassifier.decisionTree(MLDecisionTreeClassifier(trainingData: regressorTrainingTable, targetColumn: self.targetColumnName, parameters: defaultParams))
+                    } catch {
+                        fatalError(error.localizedDescription)
+                    }
+                }()
+            default:
+                print("not found: \(algorithmName)" )
             }
-            group.wait()
-        }
-        if classifier != nil {
-            do {
-                let classifierMetaData = MLModelMetadata(author: "Steps.IT",
-                                                         shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden via Classifier",
-                                                         version: "1.0")
-                try classifier.write(to: mlDataTableProviderContext.lookAheadPath!, metadata: classifierMetaData)
-                writeClassifierMetrics(classifier: classifier, classifierName: algorithmName, classifierEvaluationTable: regressorEvaluationTable)
-            } catch {
-                fatalError(error.localizedDescription)
+            if regressor != nil {
+                let group = DispatchGroup()
+                group.enter()
+                writeRegressorMetrics(regressor: regressor, regressorName:  algorithmName, regressorEvaluationTable: regressorEvaluationTable) {
+                    print("Writing completed.")
+                    group.leave()
+                }
+                group.wait()
             }
+            if classifier != nil {
+                do {
+                    let classifierMetaData = MLModelMetadata(author: "Steps.IT",
+                                                             shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden via Classifier",
+                                                             version: "1.0")
+                    try classifier.write(to: mlDataTableProviderContext.lookAheadPath!, metadata: classifierMetaData)
+                    writeClassifierMetrics(classifier: classifier, classifierName: algorithmName, classifierEvaluationTable: regressorEvaluationTable)
+                } catch {
+                    fatalError(error.localizedDescription)
+                }
+            }
+            completion()
         }
-        completion()
     }
     private func writeClassifierMetrics(classifier: MLClassifier, classifierName: String, classifierEvaluationTable: MLDataTable) -> Void {
         print("to be done")

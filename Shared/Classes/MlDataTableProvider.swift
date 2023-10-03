@@ -11,7 +11,7 @@ import CreateML
 import CoreData
 class MlDataTableProvider: ObservableObject {
     // MARK: Init
-    @Published var loaded = false
+    var loaded = false
     @Published var gridItems: [GridItem]!
     @Published var valuesTableProvider: ValuesTableProvider?
     @Published var tableStatistics: TableStatistics?

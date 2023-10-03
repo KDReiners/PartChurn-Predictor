@@ -172,5 +172,8 @@ public struct BaseServices
     public static func isEvenRow(_ index: Int) -> Bool {
         index % 2 == 0
     }
+    public static func convertToString<T>(_ value: T) -> String {
+        return String(describing: value)
+    }
 }
 public let predictionPrefix = "Predicted: "

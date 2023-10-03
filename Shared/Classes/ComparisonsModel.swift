@@ -7,10 +7,12 @@
 
 import Foundation
 import SwiftUI
+import CreateML
 public class ComparisonsModel: Model<Comparisons> {
     @Published var reportingSummaries: [ComparisonSummaryEntry] = []
     var reportingDetails:  [[ComparisonDetailEntry]]!
     var votings: [Voting] = []
+    var voters: String!
     var result: [Comparisons]!
     var primaryKeys: Array<String>!
     var allItems: [Comparisons]!
@@ -37,16 +39,20 @@ public class ComparisonsModel: Model<Comparisons> {
     internal func gather() -> Void {
         var dictOfPrimaryKeys: [String: [Comparisons]] = [:]
         for entity in self.items.filter({ $0.comparion2model == model }) {
-                if let primaryKeyValue = entity.primarykey {
-                    if dictOfPrimaryKeys[primaryKeyValue] == nil {
-                        dictOfPrimaryKeys[primaryKeyValue] = [entity]
-                    } else {
-                        dictOfPrimaryKeys[primaryKeyValue]?.append(entity)
-                    }
-                }}
+            if let primaryKeyValue = entity.primarykey {
+                if dictOfPrimaryKeys[primaryKeyValue] == nil {
+                    dictOfPrimaryKeys[primaryKeyValue] = [entity]
+                } else {
+                    dictOfPrimaryKeys[primaryKeyValue]?.append(entity)
+                }
+            }}
         reportingSummaries = dictOfPrimaryKeys.map( { ComparisonsModel.ComparisonSummaryEntry(model: self.model, primaryKeyValue: $0.key, items: $0.value)})
         reportingDetails = reportingSummaries.map( { $0.comparisonsDetails })
+        guard let observations = (self.model.model2observations?.allObjects as? [Observations])?.filter({ $0.observation2timeslicefrom!.value > model.model2lastlearningtimeslice!.value}) else {
+            return
+        }
         votings = Winners(reportingDetails: reportingDetails).votings
+        voters = String((observations.count))
     }
     struct Voting: Identifiable, Hashable  {
         // Protocol stubs
@@ -70,36 +76,53 @@ public class ComparisonsModel: Model<Comparisons> {
             
         }
     }
+    struct ChurnDataResults {
+        let churnHistory: [Int: [Int]]
+        let churnCountByYear: [Int: (churned: Int, notChurned: Int)]
+    }
+
     struct Winners {
+        typealias bs = BaseServices
         var votings: [Voting] = []
         var result: [[ComparisonDetailEntry]]
+        var historicalData: HistoricalData!
         init(reportingDetails: [[ComparisonDetailEntry]]) {
             self.result = reportingDetails
             var distinctDictOfObservations = Set<String>()
-            
+            guard let model = self.result.first?.first?.observation.observation2model else {
+                return
+            }
+            let historicalData = HistoricalData(model: model)
+            Task {
+                await historicalData.fillHistory(model: model) { ChurnDataResults in
+                    print(ChurnDataResults.churnCountByYear)
+                }
+            }
+        
+
             for outer in result {
                 for inner in outer {
-                    let candidate = inner.observation
-                    let innerPrimaryKey = inner.primarykey
-                        let key = inner.observation.objectID.uriRepresentation().lastPathComponent
-                        distinctDictOfObservations.insert(key)
-                        let observationStatistic = ObservationStatistics(observation: inner.observation, comparisonDetailEntries: result)
-                        var voting = Voting()
-                        voting.contribution = String(observationStatistic.contributions.ownDistinctPrimaryKeys.count)
-                        let ownContributions = observationStatistic.contributions.ownDistinctPrimaryKeys
-                        let foreignContributions = observationStatistic.contributions.foreignDistinctPrimaryKeys
-                        voting.uniqueContributions = String(Array(ownContributions.subtracting(foreignContributions)).count)
-                        voting.mixedContributions = String(Array(ownContributions.intersection(foreignContributions)).count)
-                        voting.primaryKey = key
-                        voting.observation = inner.observation
-                        voting.lookAhead = String(Int(exactly: inner.observation.observation2lookahead!.lookahead)!)
-                        voting.algorithm = (inner.observation.observation2algorithm?.name)!
-                        voting.timeSlices = String(Int((inner.observation.observation2prediction?.seriesdepth)!))
-                        let comparisons = inner.observation.observation2comparisons!.allObjects as! [Comparisons]
-                        voting.entriesCount = String(countPrimaryKeys(comparions: comparisons))
-                        if votings.first(where: { $0.primaryKey == voting.primaryKey }) == nil {
-                            votings.append(voting)
-                        }
+                    /// Observation
+                    /// Get the distinct observation key
+                    let key = inner.observation.objectID.uriRepresentation().lastPathComponent
+                    distinctDictOfObservations.insert(key)
+                    /// Init the statisc struct for the current observation
+                    let observationStatistic = ObservationStatistics(observation: inner.observation, comparisonDetailEntries: result)
+                    /// set the vote of the observation
+                    var voting = Voting()
+                    voting.contribution = observationStatistic.contributions.lblOwnPrimaryKeysCount
+                    voting.uniqueContributions = observationStatistic.contributions.lblUniquePrimaryKeysCount
+                    voting.mixedContributions = observationStatistic.contributions.lblMixedPrimaryKeysCount
+                    voting.primaryKey = observationStatistic.references.primaryKey
+                    voting.observation = observationStatistic.references.observation
+                    voting.lookAhead = String(Int(exactly: inner.observation.observation2lookahead!.lookahead)!)
+                    voting.algorithm = (inner.observation.observation2algorithm?.name)!
+                    voting.timeSlices = String(Int((inner.observation.observation2prediction?.seriesdepth)!))
+                    let comparisons = inner.observation.observation2comparisons!.allObjects as! [Comparisons]
+                    voting.entriesCount = String(countPrimaryKeys(comparions: comparisons))
+                    if votings.first(where: { $0.primaryKey == voting.primaryKey }) == nil {
+                        votings.append(voting)
+                    }
                 }
             }
         }
@@ -113,6 +136,25 @@ public class ComparisonsModel: Model<Comparisons> {
         struct ObservationStatistics {
             var observation: Observations
             var comparisonDetailEntries: [[ComparisonDetailEntry]]
+            struct References {
+                var primaryKey: String!
+                var observation: Observations!
+                var lookAhead: Lookaheads { get {
+                    guard let result = observation.observation2lookahead else {
+                        fatalError()
+                    }
+                    return result
+                }
+                    
+                }
+            }
+            var references: References { get {
+                var result = References()
+                result.observation = observation
+                result.primaryKey = observation.objectID.uriRepresentation().lastPathComponent
+                return result
+            }
+            }
             var contributions: Contributions {
                 get {
                     return Contributions(comparisonDetailEntries: comparisonDetailEntries, observation: observation)
@@ -122,9 +164,24 @@ public class ComparisonsModel: Model<Comparisons> {
                 self.observation = observation
                 self.comparisonDetailEntries = comparisonDetailEntries
             }
+
             struct Contributions {
+                var lblOwnPrimaryKeysCount: String {
+                    bs.convertToString(ownDistinctPrimaryKeys.count)
+                }
+                var lblForeignPrimaryKeysCount: String {
+                    bs.convertToString(foreignDistinctPrimaryKeys)
+                }
+                var lblUniquePrimaryKeysCount:String {
+                    bs.convertToString(uniqueDistinctPrimaryKeys.count)
+                }
+                var lblMixedPrimaryKeysCount: String {
+                    bs.convertToString(mixedDistinctPrimaryKeys.count)
+                }
                 var ownDistinctPrimaryKeys = Set<String>()
                 var foreignDistinctPrimaryKeys = Set<String>()
+                var uniqueDistinctPrimaryKeys = Set<String>()
+                var mixedDistinctPrimaryKeys = Set<String>()
                 init(comparisonDetailEntries: [[ComparisonDetailEntry]], observation: Observations) {
                     for outer in comparisonDetailEntries {
                         for entry in outer {
@@ -134,6 +191,8 @@ public class ComparisonsModel: Model<Comparisons> {
                                 foreignDistinctPrimaryKeys.insert(entry.primarykey)
                             }
                         }
+                        uniqueDistinctPrimaryKeys = Set(Array(ownDistinctPrimaryKeys.subtracting(foreignDistinctPrimaryKeys)))
+                        mixedDistinctPrimaryKeys = Set(Array(ownDistinctPrimaryKeys.intersection(foreignDistinctPrimaryKeys)))
                     }
                 }
             }
@@ -268,5 +327,54 @@ public class ComparisonsModel: Model<Comparisons> {
             
         }
         
+    }
+    class HistoricalData {
+        var model: Models
+        var dataColumnsModel: ColumnsModel!
+        var churnHistory: [Int: [Int]] = [:]
+        var timeStampColumnName: String!
+        var targetColumnName: String!
+        var mlDataTable: MLDataTable!
+        var churnCountByYear: [Int: (churned: Int, notChurned: Int)] = [:]
+        init(model: Models) {
+            self.model = model
+            self.dataColumnsModel = ColumnsModel(model: model)
+            self.targetColumnName = dataColumnsModel.targetColumns.first!.name
+            self.timeStampColumnName = dataColumnsModel.timeStampColumn!.name
+        }
+        func fillHistory(model: Models, completion: @escaping (ChurnDataResults) -> Void) async {
+            guard let mlDataTableProviderContext = SimulationController.returnFittingProviderContext(model: model, lookAhead: 0) else {
+                print("\(#function) no dataContext could be generated")
+                return
+            }
+            self.mlDataTable = mlDataTableProviderContext.mlDataTableProvider.mlDataTable
+            
+            // Initialize other properties (timeStampColumnName, targetColumnName, etc.) here
+            
+            for i in 0..<mlDataTable[self.timeStampColumnName].count {
+                guard let key = mlDataTable[timeStampColumnName][i].intValue else {
+                    fatalError()
+                }
+                guard let value = mlDataTable[targetColumnName][i].intValue else {
+                    fatalError()
+                }
+                if churnHistory[key] == nil {
+                    churnHistory[key] = [value]
+                } else {
+                    churnHistory[key]?.append(value)
+                }
+            }
+            
+            let churnCountByYear: [Int: (churned: Int, notChurned: Int)] = churnHistory.mapValues { churnStatus in
+                let churnedCount = churnStatus.reduce(0) { $0 + ($1 == 0 ? 1 : 0) }
+                let notChurnedCount = churnStatus.reduce(0) { $0 + ($1 == 1 ? 1 : 0) }
+                return (churned: churnedCount, notChurned: notChurnedCount)
+            }
+            
+            let results = ChurnDataResults(churnHistory: churnHistory, churnCountByYear: churnCountByYear)
+            
+            // Call the completion handler with the results
+            completion(results)
+        }
     }
 }

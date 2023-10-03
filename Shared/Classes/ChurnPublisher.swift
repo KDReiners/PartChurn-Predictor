@@ -17,7 +17,22 @@ class ChurnPublisher: Identifiable {
     var timeSliceToStopLearning: Timeslices!
     var timeSlicesDataModel: TimeSlicesModel
     var comparisonsDataModel: ComparisonsModel!
-    init(model: Models)
+    init(model: Models, completion: @escaping () -> Void)  {
+        self.model = model
+        self.timeSlicesDataModel = TimeSlicesModel()
+        self.columnsDataModel = ColumnsModel(model: self.model)
+        guard let timeSliceToStopLearning = model.model2lastlearningtimeslice else {
+            return
+        }
+        self.timeSliceToStopLearning = timeSliceToStopLearning
+        guard let predictions = model.model2predictions?.allObjects as? [Predictions] else {
+            return
+        }
+        self.predictions = predictions
+        //        calculate()
+        
+    }
+    init(model: Models )
     {
         self.model = model
         self.timeSlicesDataModel = TimeSlicesModel()
@@ -32,13 +47,15 @@ class ChurnPublisher: Identifiable {
         self.predictions = predictions
         //        calculate()
     }
-    func calculate(comparisonsDataModel: ComparisonsModel) {
+    func cleanUp(comparisonsDataModel: ComparisonsModel) {
         self.comparisonsDataModel = comparisonsDataModel
-        let columnsDataModel = ColumnsModel(model: self.model)
-        let predictionsDataModel = PredictionsModel(model: self.model)
         comparisonsDataModel.deleteAllRecords(predicate: nil)
         comparisonsDataModel.reportingSummaries.removeAll()
         comparisonsDataModel.reportingDetails.removeAll()
+        comparisonsDataModel.votings.removeAll()
+    }
+    func calculate(comparisonsDataModel: ComparisonsModel) async {
+        let predictionsDataModel = PredictionsModel(model: self.model)
         let observations = ObservationsModel().items.filter( { $0.observation2model == self.model && $0.observation2timeslicefrom!.value < self.model.model2lastlearningtimeslice!.value})
         observations.forEach { observation in
             guard let prediction = observation.observation2prediction else {
@@ -105,14 +122,11 @@ class ChurnPublisher: Identifiable {
             return
         }
         let localPredictionKPI = PredictionKPI(targetStatistic: baseTargetStatistics)
-        //        if localPredictionKPI.precision > Double(localPredictionKPI.predictionValueAtThreshold)! {
-        //            return
-        //        }
-        
+        if Double(localPredictionKPI.predictionValueAtOptimum) == 0.00 {
+            return
+        }
         let modelID = self.model.objectID
         let metricValues = observation?.observation2predictionmetricvalues?.allObjects as! [Predictionmetricvalues]
-        let threshold = metricValues.filter( { $0.predictionmetricvalue2predictionmetric?.name == "predictionValueAtThreshold"})
-        //        comparisonDataModel.deleteAllRecords(predicate: nil)
         guard let primaryKeyColumn = self.columnsDataModel.primaryKeyColumn else {
             print("\(#function) needs a primary key columns")
             return
@@ -127,10 +141,6 @@ class ChurnPublisher: Identifiable {
         }
         guard let dataContext = dataContext else {
             print("\(#function) need a datacontext")
-            return
-        }
-        guard let observation = observation else {
-            print("\(#function) need an observation")
             return
         }
         let predictedColumnName = "Predicted: " + targetColumn.name!
