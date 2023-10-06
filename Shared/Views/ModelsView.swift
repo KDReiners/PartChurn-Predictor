@@ -15,13 +15,17 @@ struct ModelsView: View {
     var model: Models
     var observation: Observations!
     var timeSlices: [Timeslices] = []
-    
+    var labelWidth = 100
     @ObservedObject var comparisonsDataModel: ComparisonsModel
     @State var churnPublisher: ChurnPublisher!
     @State private var selectedPeriod: TimeLord.PeriodTypes?
     @State private var selectedPeriodIndex: Int
     @State private var selectedTimeSlice: Timeslices?
+    @State private var observationTimeSliceFrom: Timeslices?
+    @State private var observationTimeSliceTo: Timeslices?
     @State private var selectedTimeSliceIndex: Int
+    @State private var observationIndexFrom: Int
+    @State private var observationIndexTo: Int
     
     let periodLabels = ["Year", "Half Year", "Quarter", "Month"]
    
@@ -43,21 +47,42 @@ struct ModelsView: View {
             if model.model2lastlearningtimeslice == nil {
                 model.model2lastlearningtimeslice = timeSlices.first
             }
+            if model.model2observationtimeslicefrom == nil {
+                model.model2observationtimeslicefrom = timeSlices.first
+            }
+            if model.model2observationtimesliceto == nil {
+                model.model2observationtimesliceto = timeSlices.first
+            }
             guard let selectedTimeSlice = model.model2lastlearningtimeslice else {
+                fatalError("Error in grepping timeslice")
+            }
+            guard let observationTimeSliceFrom = model.model2observationtimeslicefrom else {
+                fatalError("Error in grepping timeslice")
+            }
+            guard let observationTimeSliceTo = model.model2observationtimesliceto else {
                 fatalError("Error in grepping timeslice")
             }
             self.churnPublisher = ChurnPublisher(model: self.model)
             self.selectedTimeSlice = selectedTimeSlice
             let index = timeSlices.firstIndex(of: selectedTimeSlice)
             self.selectedTimeSliceIndex = index!
+            let observationFromIndex = timeSlices.firstIndex(of: observationTimeSliceFrom)
+            self.observationIndexFrom = observationFromIndex!
+            let observationToIndex = timeSlices.firstIndex(of: observationTimeSliceTo)
+            self.observationIndexTo = observationToIndex!
+            self.churnPublisher.timeSliceFrom = observationTimeSliceFrom
+            self.churnPublisher.timeSliceTo = observationTimeSliceTo
         } else {
             selectedTimeSliceIndex = 0
+            self.observationIndexFrom = 0
+            self.observationIndexTo = 0
+            
         }
     }
     var body: some View {
         VStack(alignment: .leading){
                     HStack {
-                            GroupBox(label: Text("Model").font(.title)) {
+                        GroupBox(label: Text("Model").font(.title)) {
                                 Picker("Type of Period:", selection: $selectedPeriodIndex) {
                                     ForEach(0..<periodLabels.count, id: \.self) { index in
                                         Text(periodLabels[index])
@@ -80,8 +105,28 @@ struct ModelsView: View {
                             }
                         
                         GroupBox(label: Text("Learning").font(.title)) {
-                            Text("Item 3")
-                            Text("Item 4")
+                            Picker("Observation from:", selection: $observationIndexFrom) {
+                                ForEach(timeSlices.indices, id: \.self) { index in
+                                    Text("\(timeSlices[index].value)")
+                                }
+                            }
+                            .onChange(of: observationIndexFrom) { newValue in
+                                self.observationTimeSliceFrom = timeSlices[newValue]
+                                self.model.model2observationtimeslicefrom = self.observationTimeSliceFrom
+                                self.churnPublisher.timeSliceFrom = self.observationTimeSliceFrom
+                                BaseServices.save()
+                            }
+                            Picker("Observation to:", selection: $observationIndexTo) {
+                                ForEach(timeSlices.indices, id: \.self) { index in
+                                    Text("\(timeSlices[index].value)")
+                                }
+                            }
+                            .onChange(of: observationIndexTo) { newValue in
+                                self.observationTimeSliceTo = timeSlices[newValue]
+                                self.model.model2observationtimesliceto = self.observationTimeSliceTo
+                                self.churnPublisher.timeSliceTo = self.observationTimeSliceTo
+                                BaseServices.save()
+                            }
                         }
                     }
             HStack {
@@ -111,7 +156,7 @@ struct ReportingView: View {
     var model: Models
     var modelColumnsMap: Dictionary<String, String> = [:]
     var columnsDataModel: ColumnsModel
-    @State private var sorting = [KeyPathComparator(\ComparisonsModel.ComparisonSummaryEntry.targetReportedStringValue)]
+    @State private var sorting = [KeyPathComparator(\ComparisonsModel.ComparisonSummaryEntry.lblTargetReported)]
     init(model: Models, comparisonsDataModel: ComparisonsModel ) {
         self.model = model
         self.comparisonsDataModel = comparisonsDataModel
@@ -125,6 +170,7 @@ struct ReportingView: View {
         let summaryItems = comparisonsDataModel.reportingSummaries.sorted(by: { $0.primaryKeyValue < $1.primaryKeyValue})
         let votings = comparisonsDataModel.votings
         let voters = comparisonsDataModel.voters
+        let history = comparisonsDataModel.churnStatistics
         let votersCount = summaryItems.reduce(0) { (result, summaryItem) in
             return result + summaryItem.timeBaseCount
             
@@ -140,25 +186,33 @@ struct ReportingView: View {
                 Spacer()
                 
             }.background(Color.green)
+            Table(history) {
+                TableColumn("TIMEBASE", value: \.lblTimebase)
+                TableColumn("TARGETSCOUNT", value: \.lblTargetCount)
+                TableColumn("NONTARGETSCOUNT", value: \.lblNonTargetCount)
+            }
             Table(summaryItems, selection: $id) {
-                TableColumn("Reporting Date", value: \.reportingDateStringValue)
+                TableColumn("DATE", value: \.reportingDateStringValue)
                 TableColumn(modelColumnsMap["primaryKeyValue"]!, value: \.primaryKeyValue)
-                TableColumn(modelColumnsMap["timeBase"]!, value: \.timeBaseCountStringValue)
-                TableColumn(modelColumnsMap[ "targetReported"]!, value: \.targetReportedStringValue)
-                TableColumn(modelColumnsMap[ "targetPredicted"]!, value: \.targetPredictedStringValue)
+                TableColumn(modelColumnsMap["timeBase"]!, value: \.lblTimeBaseCount)
+                TableColumn(modelColumnsMap[ "targetReported"]!, value: \.lblTargetReported)
+                TableColumn(modelColumnsMap[ "targetPredicted"]!, value: \.lblTargetPredicted)
             }
             .onChange(of: id) { newValue in
                 selectedSummaryItem = summaryItems.first(where: { $0.id == newValue})
             }
             if votings.count > 0 {
                 Table(votings) {
-                    TableColumn("Primary Key", value: \.primaryKey)
-                    TableColumn("Algorithm", value: \.algorithm)
-                    TableColumn("Entries", value: \.entriesCount)
-                    TableColumn("OwnVotings", value: \.uniqueContributions)
-                    TableColumn("CommonVotings", value: \.mixedContributions)
-                    TableColumn("LookAhead", value: \.lookAhead)
-                    TableColumn("TimeSlices", value: \.timeSlices)
+                    TableColumn("PRIMARY KEY", value: \.primaryKey)
+                    TableColumn("ALGORITHM", value: \.algorithm)
+                    TableColumn("ENTRIES", value: \.entriesCount)
+                    TableColumn("OWNVOTINGS", value: \.uniqueContributions)
+                    TableColumn("COMMONVOTINGS", value: \.mixedContributions)
+                    TableColumn("LOOKAHEAD", value: \.lookAhead)
+                    TableColumn("TIMESLICES", value: \.timeSlices)
+                    TableColumn("PRECISION", value: \.precision)
+                    TableColumn("RECALL", value: \.recall)
+                    TableColumn("F1-SCORE", value: \.f1Score)
                     
                 }
             }
@@ -175,6 +229,7 @@ struct ReportingView: View {
             }
         }
         .onAppear {
+            comparisonsDataModel.retrieveHistory()
             comparisonsDataModel.gather()
         }
     }

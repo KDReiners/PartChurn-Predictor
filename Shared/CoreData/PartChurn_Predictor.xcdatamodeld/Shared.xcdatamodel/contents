@@ -95,6 +95,8 @@
         <relationship name="model2lastlearningtimeslice" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Timeslices" inverseName="lastlearningTimeSlice2models" inverseEntity="Timeslices"/>
         <relationship name="model2metricvalues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Metricvalues" inverseName="metricvalue2model" inverseEntity="Metricvalues"/>
         <relationship name="model2observations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Observations" inverseName="observation2model" inverseEntity="Observations"/>
+        <relationship name="model2observationtimeslicefrom" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Timeslices" inverseName="observationtimeslicefrom2model" inverseEntity="Timeslices"/>
+        <relationship name="model2observationtimesliceto" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Timeslices" inverseName="observatontimesliceto2model" inverseEntity="Timeslices"/>
         <relationship name="model2predictions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Predictions" inverseName="prediction2model" inverseEntity="Predictions"/>
         <relationship name="model2timeslices" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Timeslices" inverseName="timeslice2models" inverseEntity="Timeslices"/>
         <relationship name="model2values" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Values" inverseName="value2model" inverseEntity="Values"/>
@@ -103,8 +105,10 @@
         <attribute name="name" optional="YES" attributeType="String"/>
     </entity>
     <entity name="Observations" representedClassName="Observations" syncable="YES" codeGenerationType="class">
-        <attribute name="predictedvalue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="realvalue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="f1score" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="precision" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="recall" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="simulation" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <relationship name="observation2algorithm" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Algorithms" inverseName="algorithm2observations" inverseEntity="Algorithms"/>
         <relationship name="observation2comparisons" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comparisons" inverseName="comparison2observation" inverseEntity="Comparisons"/>
         <relationship name="observation2lookahead" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Lookaheads" inverseName="loodahead2observations" inverseEntity="Lookaheads"/>
@@ -148,6 +152,8 @@
     <entity name="Timeslices" representedClassName="Timeslices" syncable="YES" codeGenerationType="class">
         <attribute name="value" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="lastlearningTimeSlice2models" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2lastlearningtimeslice" inverseEntity="Models"/>
+        <relationship name="observationtimeslicefrom2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2observationtimeslicefrom" inverseEntity="Models"/>
+        <relationship name="observatontimesliceto2model" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2observationtimesliceto" inverseEntity="Models"/>
         <relationship name="timeslice2models" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Models" inverseName="model2timeslices" inverseEntity="Models"/>
         <relationship name="timeslice2timeseries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Timeseries" inverseName="timeseries2timeslices" inverseEntity="Timeseries"/>
         <relationship name="timeslicefrom2observations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Observations" inverseName="observation2timeslicefrom" inverseEntity="Observations"/>

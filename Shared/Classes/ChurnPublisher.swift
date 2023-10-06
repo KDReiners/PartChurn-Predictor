@@ -17,6 +17,8 @@ class ChurnPublisher: Identifiable {
     var timeSliceToStopLearning: Timeslices!
     var timeSlicesDataModel: TimeSlicesModel
     var comparisonsDataModel: ComparisonsModel!
+    var timeSliceFrom: Timeslices!
+    var timeSliceTo: Timeslices!
     init(model: Models, completion: @escaping () -> Void)  {
         self.model = model
         self.timeSlicesDataModel = TimeSlicesModel()
@@ -45,7 +47,6 @@ class ChurnPublisher: Identifiable {
             return
         }
         self.predictions = predictions
-        //        calculate()
     }
     func cleanUp(comparisonsDataModel: ComparisonsModel) {
         self.comparisonsDataModel = comparisonsDataModel
@@ -56,7 +57,9 @@ class ChurnPublisher: Identifiable {
     }
     func calculate(comparisonsDataModel: ComparisonsModel) async {
         let predictionsDataModel = PredictionsModel(model: self.model)
-        let observations = ObservationsModel().items.filter( { $0.observation2model == self.model && $0.observation2timeslicefrom!.value < self.model.model2lastlearningtimeslice!.value})
+        self.timeSliceFrom = model.model2observationtimeslicefrom
+        self.timeSliceTo = model.model2observationtimesliceto
+        let observations = ObservationsModel().items.filter( { $0.observation2model == self.model && $0.observation2timeslicefrom!.value <= self.model.model2lastlearningtimeslice!.value && $0.simulation == false })
         observations.forEach { observation in
             guard let prediction = observation.observation2prediction else {
                 print("\(#function) cannot create prediction.")
@@ -102,14 +105,16 @@ class ChurnPublisher: Identifiable {
                     let lookAhead = Int(lookAheadItem.lookahead)
                     let predictionProvider = PredictionsProvider(mlDataTable: predictionTable, orderedColNames: orderedColumns.map( { $0.name! }), selectedColumns: selectedColumns, prediction: prediction, regressorName: algorithmName, lookAhead: lookAhead)
                     let result = predictionProvider.mlDataTable
-                    let mask = result[timeStampColumn.name!] > Int((model.model2lastlearningtimeslice?.value)!)
+                    let mask = (result[timeStampColumn.name!] >= Int(self.timeSliceFrom.value) && result[timeStampColumn.name!] <= Int(self.timeSliceTo.value))
                     dataContext?.mlDataTableProvider.mlDataTableRaw = result[mask]
                     dataContext?.mlDataTableProvider.mlDataTable = result[mask]
                     dataContext?.mlDataTableProvider.syncUpdateTableProvider(callingFunction: #function, className: "ChurnPublisher", lookAhead: lookAhead)
                     guard let targetStatistics = dataContext?.mlDataTableProvider.tableStatistics?.targetStatistics.first  else {
                         continue
                     }
-                    store2Comparisons(dataContext: dataContext, observation: observation, targetStatistics: targetStatistics, baseTargetStatistics: baseTargetStatistics)
+                    let newObservation = dataContext?.mlDataTableProvider.observations.first(where: { $0.observation2timeslicefrom == self.timeSliceFrom && $0.observation2timesliceto == self.timeSliceTo && $0.observation2lookahead == lookAheadItem && $0.observation2prediction == prediction})
+                    newObservation?.simulation = true
+                    store2Comparisons(dataContext: dataContext, observation: newObservation, targetStatistics: targetStatistics, baseTargetStatistics: baseTargetStatistics)
                 }
                 break
             }
@@ -121,10 +126,12 @@ class ChurnPublisher: Identifiable {
             print("\(#function) no Observation is passed.")
             return
         }
-        let localPredictionKPI = PredictionKPI(targetStatistic: baseTargetStatistics)
-        if Double(localPredictionKPI.predictionValueAtOptimum) == 0.00 {
-            return
-        }
+        let oberallPredictionKPI = PredictionKPI(targetStatistic: baseTargetStatistics)
+        let observationsPredictionKPI = PredictionKPI(targetStatistic: targetStatistics)
+        
+//        if Double(oberallPredictionKPI.predictionValueAtOptimum) == 0.00 {
+//            return
+//        }
         let modelID = self.model.objectID
         let metricValues = observation?.observation2predictionmetricvalues?.allObjects as! [Predictionmetricvalues]
         guard let primaryKeyColumn = self.columnsDataModel.primaryKeyColumn else {
@@ -147,8 +154,11 @@ class ChurnPublisher: Identifiable {
         let privateContext = PersistenceController.shared.container.newBackgroundContext()
         privateContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         privateContext.perform {
-            let mask = dataContext.mlDataTableProvider.mlDataTable[predictedColumnName] <= Double(localPredictionKPI.predictionValueAtThreshold)!
+            let mask = dataContext.mlDataTableProvider.mlDataTable[predictedColumnName] <= Double(oberallPredictionKPI.predictionValueAtThreshold)!
             let observationInPrivateContext = privateContext.object(with: observationID) as? Observations
+            observationInPrivateContext?.f1score = observationsPredictionKPI.f1Score
+            observationInPrivateContext?.precision = observationsPredictionKPI.precision
+            observationInPrivateContext?.recall = observationsPredictionKPI.recall
             let modelInPrivateContext = privateContext.object(with: modelID) as? Models
             dataContext.mlDataTableProvider.mlDataTable[mask].rows.forEach { row in
                 let comparison = NSEntityDescription.insertNewObject(forEntityName: Comparisons.entity().name!, into: privateContext) as! Comparisons

@@ -7,48 +7,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "83CEB20E-482E-4A4F-95F5-F60B18F7EB0E"
+            uuid = "1DE9557B-85EB-45B9-8967-45A60BEE48AF"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Shared/Classes/ComparisonsModel.swift"
+            filePath = "Shared/Classes/ChurnPublisher.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "98"
-            endingLineNumber = "98"
-            landmarkName = "init(reportingDetails:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "7DC01BA2-95BC-4687-ACF1-84C13DE6DC3F"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Shared/Classes/ComparisonsModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "99"
-            endingLineNumber = "99"
-            landmarkName = "init(reportingDetails:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "804891A4-3258-4C9F-91C5-D313D0B82151"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Shared/Classes/ComparisonsModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "100"
-            endingLineNumber = "100"
-            landmarkName = "init(reportingDetails:)"
+            startingLineNumber = "117"
+            endingLineNumber = "117"
+            landmarkName = "calculate(comparisonsDataModel:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

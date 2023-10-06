@@ -10,7 +10,9 @@ import SwiftUI
 import CreateML
 public class ComparisonsModel: Model<Comparisons> {
     @Published var reportingSummaries: [ComparisonSummaryEntry] = []
+    @Published var historyCalulated = false
     var reportingDetails:  [[ComparisonDetailEntry]]!
+    var churnStatistics: [ChurnStatistics] = []
     var votings: [Voting] = []
     var voters: String!
     var result: [Comparisons]!
@@ -18,9 +20,11 @@ public class ComparisonsModel: Model<Comparisons> {
     var allItems: [Comparisons]!
     var model: Models
     var theshold: Double = 1
+    var historicalData: HistoricalData
     public init(model: Models) {
         self.model = model
         let readOnlyFields: [String] = []
+        historicalData = HistoricalData(model: model)
         super.init(readOnlyFields: readOnlyFields)
     }
     override public var items: [Comparisons] {
@@ -36,6 +40,17 @@ public class ComparisonsModel: Model<Comparisons> {
         attachValues()
         gather()
     }
+    internal func retrieveHistory() {
+        Task {
+            await historicalData.fillHistory(model: model) { result in
+                self.churnStatistics = result.churnCountByYear.map({ (year, churnCounts) in
+                    ChurnStatistics(i_TimeBase: year, targetCount: churnCounts.churned, nonTargetCount: churnCounts.notChurned)
+                }).sorted { $0.timeBase < $1.timeBase}
+                
+                self.historyCalulated = true
+            }
+        }
+    }
     internal func gather() -> Void {
         var dictOfPrimaryKeys: [String: [Comparisons]] = [:]
         for entity in self.items.filter({ $0.comparion2model == model }) {
@@ -48,7 +63,7 @@ public class ComparisonsModel: Model<Comparisons> {
             }}
         reportingSummaries = dictOfPrimaryKeys.map( { ComparisonsModel.ComparisonSummaryEntry(model: self.model, primaryKeyValue: $0.key, items: $0.value)})
         reportingDetails = reportingSummaries.map( { $0.comparisonsDetails })
-        guard let observations = (self.model.model2observations?.allObjects as? [Observations])?.filter({ $0.observation2timeslicefrom!.value > model.model2lastlearningtimeslice!.value}) else {
+        guard let observations = (self.model.model2observations?.allObjects as? [Observations])?.filter({ $0.observation2timeslicefrom!.value >= model.model2observationtimeslicefrom!.value && $0.observation2timesliceto!.value >= model.model2observationtimesliceto!.value}) else {
             return
         }
         votings = Winners(reportingDetails: reportingDetails).votings
@@ -72,6 +87,9 @@ public class ComparisonsModel: Model<Comparisons> {
         var contribution: String!
         var uniqueContributions: String!
         var mixedContributions: String!
+        var precision: String!
+        var recall: String!
+        var f1Score: String!
         init() {
             
         }
@@ -80,26 +98,50 @@ public class ComparisonsModel: Model<Comparisons> {
         let churnHistory: [Int: [Int]]
         let churnCountByYear: [Int: (churned: Int, notChurned: Int)]
     }
-
+    class ChurnStatistics: Identifiable, Hashable {
+        internal var id = UUID()
+        static func == (lhs: ComparisonsModel.ChurnStatistics, rhs: ComparisonsModel.ChurnStatistics) -> Bool {
+            lhs.id == rhs.id
+        }
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
+        
+        var timeBase: Int
+        var targetCount: Int
+        var nonTargetCount: Int
+        var lblTimebase: String {
+            get {
+                return String(timeBase)
+            }
+        }
+        var lblTargetCount: String {
+            get {
+                return String(targetCount)
+            }
+        }
+        var lblNonTargetCount: String {
+            get {
+                return String(nonTargetCount)
+            }
+        }
+        init(i_TimeBase: Int, targetCount: Int, nonTargetCount: Int) {
+            self.timeBase = i_TimeBase
+            self.targetCount = targetCount
+            self.nonTargetCount = nonTargetCount
+        }
+    }
     struct Winners {
         typealias bs = BaseServices
         var votings: [Voting] = []
         var result: [[ComparisonDetailEntry]]
-        var historicalData: HistoricalData!
+        
         init(reportingDetails: [[ComparisonDetailEntry]]) {
             self.result = reportingDetails
             var distinctDictOfObservations = Set<String>()
             guard let model = self.result.first?.first?.observation.observation2model else {
                 return
             }
-            let historicalData = HistoricalData(model: model)
-            Task {
-                await historicalData.fillHistory(model: model) { ChurnDataResults in
-                    print(ChurnDataResults.churnCountByYear)
-                }
-            }
-        
-
             for outer in result {
                 for inner in outer {
                     /// Observation
@@ -120,6 +162,9 @@ public class ComparisonsModel: Model<Comparisons> {
                     voting.timeSlices = String(Int((inner.observation.observation2prediction?.seriesdepth)!))
                     let comparisons = inner.observation.observation2comparisons!.allObjects as! [Comparisons]
                     voting.entriesCount = String(countPrimaryKeys(comparions: comparisons))
+                    voting.precision = observationStatistic.lblPrecision
+                    voting.recall = observationStatistic.lblRcall
+                    voting.f1Score = observationStatistic.lblf1Score
                     if votings.first(where: { $0.primaryKey == voting.primaryKey }) == nil {
                         votings.append(voting)
                     }
@@ -136,24 +181,52 @@ public class ComparisonsModel: Model<Comparisons> {
         struct ObservationStatistics {
             var observation: Observations
             var comparisonDetailEntries: [[ComparisonDetailEntry]]
+            var lblPrecision:String {
+                get {
+                    return bs.doubleFormatter.string(from: NSNumber(value: precision))!
+                }
+            }
+            var lblRcall: String {
+                get {
+                    return bs.doubleFormatter.string(from: NSNumber(value: recall))!
+                }
+            }
+            var lblf1Score: String {
+                get {
+                    return bs.doubleFormatter.string(from: NSNumber(value: f1Score))!
+                }
+            }
+            var precision: Double {
+                get {
+                    return observation.precision
+                }
+            }
+            var recall: Double {
+                get {
+                    return observation.recall
+                }
+            }
+            var f1Score: Double {
+                get {
+                    return observation.f1score
+                }
+            }
             struct References {
                 var primaryKey: String!
                 var observation: Observations!
-                var lookAhead: Lookaheads { get {
-                    guard let result = observation.observation2lookahead else {
+                var lookAhead: Lookaheads { 
+                    get {
+                        guard let result = observation.observation2lookahead else {
                         fatalError()
                     }
-                    return result
-                }
-                    
+                    return result }
                 }
             }
             var references: References { get {
                 var result = References()
                 result.observation = observation
                 result.primaryKey = observation.objectID.uriRepresentation().lastPathComponent
-                return result
-            }
+                return result }
             }
             var contributions: Contributions {
                 get {
@@ -164,7 +237,7 @@ public class ComparisonsModel: Model<Comparisons> {
                 self.observation = observation
                 self.comparisonDetailEntries = comparisonDetailEntries
             }
-
+            
             struct Contributions {
                 var lblOwnPrimaryKeysCount: String {
                     bs.convertToString(ownDistinctPrimaryKeys.count)
@@ -267,19 +340,19 @@ public class ComparisonsModel: Model<Comparisons> {
                 TextViewCell(textValue: "\(row.primaryKeyColumnName!)")
             }
         }
-        var timeBaseCountStringValue: String {
+        var lblTimeBaseCount: String {
             return String(timeBaseCount)
         }
-        var targetPredictedStringValue: String {
+        var lblTargetPredicted: String {
             return BaseServices.doubleFormatter.string(from: NSNumber(value: targetsPredicted))!
         }
-        var targetReportedStringValue: String {
+        var lblTargetReported: String {
             return BaseServices.doubleFormatter.string(from: NSNumber(value: targetsReported))!
         }
-        var lookAheadStringValue: String {
+        var lblLookAhead: String {
             return String((observation?.observation2lookahead!.lookahead)!)
         }
-        var timeSlicesStringValue: String {
+        var lblTimeSlices: String {
             return String((observation?.observation2prediction?.seriesdepth)!)
         }
         var threshold: Double!
