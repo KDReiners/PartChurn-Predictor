@@ -24,6 +24,8 @@
 		0A1A2AC729805DB80078AA11 /* PerformanceDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A2AC529805DB80078AA11 /* PerformanceDataProvider.swift */; };
 		0A1EA8842A35CFAC006ABB00 /* SQLHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EA8832A35CFAC006ABB00 /* SQLHelper.swift */; };
 		0A1EA8852A35CFAC006ABB00 /* SQLHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1EA8832A35CFAC006ABB00 /* SQLHelper.swift */; };
+		0A331FB32AD2F91400378602 /* Smote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A331FB22AD2F91400378602 /* Smote.swift */; };
+		0A331FB42AD2F91400378602 /* Smote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A331FB22AD2F91400378602 /* Smote.swift */; };
 		0A49CE6D2A9BC582006C1BD5 /* ChurnPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A49CE6C2A9BC582006C1BD5 /* ChurnPublisher.swift */; };
 		0A49CE6E2A9BC582006C1BD5 /* ChurnPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A49CE6C2A9BC582006C1BD5 /* ChurnPublisher.swift */; };
 		0A49CE702AA72A16006C1BD5 /* ObservationsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A49CE6F2AA72A16006C1BD5 /* ObservationsModel.swift */; };
@@ -175,6 +177,7 @@
 		0A190C4F29B5093600A54734 /* PythonInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PythonInteractor.swift; sourceTree = "<group>"; };
 		0A1A2AC529805DB80078AA11 /* PerformanceDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceDataProvider.swift; sourceTree = "<group>"; };
 		0A1EA8832A35CFAC006ABB00 /* SQLHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLHelper.swift; sourceTree = "<group>"; };
+		0A331FB22AD2F91400378602 /* Smote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Smote.swift; sourceTree = "<group>"; };
 		0A49CE6C2A9BC582006C1BD5 /* ChurnPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChurnPublisher.swift; sourceTree = "<group>"; };
 		0A49CE6F2AA72A16006C1BD5 /* ObservationsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationsModel.swift; sourceTree = "<group>"; };
 		0A4C56542869750900961D1D /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
@@ -336,6 +339,7 @@
 			children = (
 				2D288AC02829793B0078647E /* Trainer.swift */,
 				0A190C4F29B5093600A54734 /* PythonInteractor.swift */,
+				0A331FB22AD2F91400378602 /* Smote.swift */,
 			);
 			path = MLModels;
 			sourceTree = "<group>";
@@ -625,6 +629,7 @@
 				2D0139612878692500AC8EBF /* ScenarioView.swift in Sources */,
 				0A589C13286614A000D1239B /* ManagerModels.swift in Sources */,
 				0A7F4E4E2917FE7B00015DB3 /* SimulatorView.swift in Sources */,
+				0A331FB32AD2F91400378602 /* Smote.swift in Sources */,
 				2D481BA528356EA4003EBCF2 /* AlgorithmsModel.swift in Sources */,
 				2D6B0E59289EC8680016E57F /* MlDataTableProvider.swift in Sources */,
 				0A13FA5F2A5C87DE005CD3DE /* PartChurn_Predictor.xcdatamodeld in Sources */,
@@ -708,6 +713,7 @@
 				2D0139622878692500AC8EBF /* ScenarioView.swift in Sources */,
 				0A589C14286614A000D1239B /* ManagerModels.swift in Sources */,
 				0A7F4E4F2917FE7B00015DB3 /* SimulatorView.swift in Sources */,
+				0A331FB42AD2F91400378602 /* Smote.swift in Sources */,
 				2D481BA628356EA4003EBCF2 /* AlgorithmsModel.swift in Sources */,
 				2D6B0E5A289EC8680016E57F /* MlDataTableProvider.swift in Sources */,
 				0A13FA602A5C87DE005CD3DE /* PartChurn_Predictor.xcdatamodeld in Sources */,

@@ -126,7 +126,7 @@ class ChurnPublisher: Identifiable {
             print("\(#function) no Observation is passed.")
             return
         }
-        let oberallPredictionKPI = PredictionKPI(targetStatistic: baseTargetStatistics)
+        let overallPredictionKPI = PredictionKPI(targetStatistic: baseTargetStatistics)
         let observationsPredictionKPI = PredictionKPI(targetStatistic: targetStatistics)
         
 //        if Double(oberallPredictionKPI.predictionValueAtOptimum) == 0.00 {
@@ -154,7 +154,7 @@ class ChurnPublisher: Identifiable {
         let privateContext = PersistenceController.shared.container.newBackgroundContext()
         privateContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         privateContext.perform {
-            let mask = dataContext.mlDataTableProvider.mlDataTable[predictedColumnName] <= Double(oberallPredictionKPI.predictionValueAtThreshold)!
+            let mask = dataContext.mlDataTableProvider.mlDataTable[predictedColumnName] <= Double(overallPredictionKPI.predictionValueAtThreshold)!
             let observationInPrivateContext = privateContext.object(with: observationID) as? Observations
             observationInPrivateContext?.f1score = observationsPredictionKPI.f1Score
             observationInPrivateContext?.precision = observationsPredictionKPI.precision

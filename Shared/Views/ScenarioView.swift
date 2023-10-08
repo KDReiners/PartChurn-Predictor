@@ -23,6 +23,7 @@ struct ScenarioView: View {
     init(model: Models, modelSelect: NSManagedObject?) {
         self.model = model
         if modelSelect != nil {
+            SimulationController.providerContexts.removeAll()
             self.mlDataTableProviderContext = SimulationController.returnFittingProviderContext(model: model, lookAhead: 0)
             self.composer = mlDataTableProviderContext.composer
             self.combinator = mlDataTableProviderContext.combinator

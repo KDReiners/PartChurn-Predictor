@@ -88,7 +88,7 @@ public class PredictionsModel: Model<Predictions> {
         guard let observationmetricvalues = prediction.prediction2predictionmetricvalues?.allObjects as? [Predictionmetricvalues] else {
             return result
         }
-        let concretePredictionMetricValues = observationmetricvalues.filter( { $0.predictionmetricvalue2algorithm == algorithm && $0.predictionmetricvalue2lookahead == observation.observation2lookahead  })
+        let concretePredictionMetricValues = observationmetricvalues.filter( { $0.predictionmetricvalue2algorithm == algorithm && $0.predictionmetricvalue2lookahead == observation.observation2lookahead  && observation.simulation == false  && $0.predictionmetricvalue2prediction == observation.observation2prediction})
         if concretePredictionMetricValues.count > 0 {
             for label in result.propertyNames() {
                 result.setValue(concretePredictionMetricValues.first(where: { $0.predictionmetricvalue2predictionmetric?.name == label })!.value, forKey: label)

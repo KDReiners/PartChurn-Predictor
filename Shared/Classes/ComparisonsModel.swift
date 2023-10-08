@@ -87,6 +87,8 @@ public class ComparisonsModel: Model<Comparisons> {
         var contribution: String!
         var uniqueContributions: String!
         var mixedContributions: String!
+        var foundTargets: String!
+        var proposedTargets: String!
         var precision: String!
         var recall: String!
         var f1Score: String!
@@ -135,20 +137,16 @@ public class ComparisonsModel: Model<Comparisons> {
         typealias bs = BaseServices
         var votings: [Voting] = []
         var result: [[ComparisonDetailEntry]]
+        var comparisons: [Comparisons]!
         
         init(reportingDetails: [[ComparisonDetailEntry]]) {
             self.result = reportingDetails
-            var distinctDictOfObservations = Set<String>()
-            guard let model = self.result.first?.first?.observation.observation2model else {
-                return
-            }
             for outer in result {
                 for inner in outer {
                     /// Observation
                     /// Get the distinct observation key
-                    let key = inner.observation.objectID.uriRepresentation().lastPathComponent
-                    distinctDictOfObservations.insert(key)
                     /// Init the statisc struct for the current observation
+                    comparisons = inner.observation.observation2comparisons!.allObjects as? [Comparisons]
                     let observationStatistic = ObservationStatistics(observation: inner.observation, comparisonDetailEntries: result)
                     /// set the vote of the observation
                     var voting = Voting()
@@ -160,18 +158,19 @@ public class ComparisonsModel: Model<Comparisons> {
                     voting.lookAhead = String(Int(exactly: inner.observation.observation2lookahead!.lookahead)!)
                     voting.algorithm = (inner.observation.observation2algorithm?.name)!
                     voting.timeSlices = String(Int((inner.observation.observation2prediction?.seriesdepth)!))
-                    let comparisons = inner.observation.observation2comparisons!.allObjects as! [Comparisons]
-                    voting.entriesCount = String(countPrimaryKeys(comparions: comparisons))
+                    voting.entriesCount = String(Winners.countPrimaryKeys(comparions: comparisons))
                     voting.precision = observationStatistic.lblPrecision
                     voting.recall = observationStatistic.lblRcall
                     voting.f1Score = observationStatistic.lblf1Score
+                    voting.foundTargets = observationStatistic.lblFoundTargets
+                    voting.proposedTargets = observationStatistic.lblProposedTargets
                     if votings.first(where: { $0.primaryKey == voting.primaryKey }) == nil {
                         votings.append(voting)
                     }
                 }
             }
         }
-        internal func countPrimaryKeys(comparions: [Comparisons]) -> Int {
+        internal static func countPrimaryKeys(comparions: [Comparisons]) -> Int {
             var distinctPrimaryKeys = Set<String>()
             for comparison in comparions {
                 distinctPrimaryKeys.insert(comparison.primarykey!)
@@ -181,6 +180,7 @@ public class ComparisonsModel: Model<Comparisons> {
         struct ObservationStatistics {
             var observation: Observations
             var comparisonDetailEntries: [[ComparisonDetailEntry]]
+            var comparisons: [Comparisons]
             var lblPrecision:String {
                 get {
                     return bs.doubleFormatter.string(from: NSNumber(value: precision))!
@@ -196,6 +196,16 @@ public class ComparisonsModel: Model<Comparisons> {
                     return bs.doubleFormatter.string(from: NSNumber(value: f1Score))!
                 }
             }
+            var lblFoundTargets: String {
+                get {
+                    return String(foundTargets)
+                }
+            }
+            var lblProposedTargets: String {
+                get {
+                    return String(proposedTargets)
+                }
+            }
             var precision: Double {
                 get {
                     return observation.precision
@@ -209,6 +219,16 @@ public class ComparisonsModel: Model<Comparisons> {
             var f1Score: Double {
                 get {
                     return observation.f1score
+                }
+            }
+            var foundTargets: Int {
+                get {
+                    return countPrimaryKeys(comparions: comparisons.filter { $0.targetreported == 0 && $0.comparison2observation == observation })
+                }
+            }
+            var proposedTargets: Int {
+                get {
+                    return countPrimaryKeys(comparions: comparisons.filter { $0.targetreported != 0 && $0.comparison2observation == observation })
                 }
             }
             struct References {
@@ -236,6 +256,10 @@ public class ComparisonsModel: Model<Comparisons> {
             init(observation: Observations, comparisonDetailEntries: [[ComparisonDetailEntry]]) {
                 self.observation = observation
                 self.comparisonDetailEntries = comparisonDetailEntries
+                self.comparisons = comparisonDetailEntries.flatMap { outer in
+                    outer.map { comparisonDetailEntries in
+                        comparisonDetailEntries.comparison}
+                }
             }
             
             struct Contributions {

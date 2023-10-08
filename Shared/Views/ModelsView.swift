@@ -203,17 +203,23 @@ struct ReportingView: View {
             }
             if votings.count > 0 {
                 Table(votings) {
-                    TableColumn("PRIMARY KEY", value: \.primaryKey)
-                    TableColumn("ALGORITHM", value: \.algorithm)
-                    TableColumn("ENTRIES", value: \.entriesCount)
-                    TableColumn("OWNVOTINGS", value: \.uniqueContributions)
-                    TableColumn("COMMONVOTINGS", value: \.mixedContributions)
-                    TableColumn("LOOKAHEAD", value: \.lookAhead)
-                    TableColumn("TIMESLICES", value: \.timeSlices)
-                    TableColumn("PRECISION", value: \.precision)
-                    TableColumn("RECALL", value: \.recall)
-                    TableColumn("F1-SCORE", value: \.f1Score)
-                    
+                    Group {
+                        TableColumn("PrimaryKey", value: \ComparisonsModel.Voting.primaryKey)
+                        TableColumn("ALGORITHM", value: \ComparisonsModel.Voting.algorithm)
+                        TableColumn("ENTRIES", value: \.entriesCount)
+                        TableColumn("FOUND TARGETS", value: \.foundTargets)
+                        TableColumn("PROPOSED TARGETS", value: \.proposedTargets)
+                        TableColumn("OWNVOTINGS", value: \.uniqueContributions)
+                        TableColumn("COMMONVOTINGS", value: \.mixedContributions)
+                        TableColumn("LOOKAHEAD", value: \.lookAhead)
+                        TableColumn("TIMESLICES", value: \.timeSlices)
+                        TableColumn("PRECISION", value: \.precision)
+                        
+                    }
+                    Group {
+                        TableColumn("RECALL", value: \ComparisonsModel.Voting.recall)
+                        TableColumn("F1-SCORE", value: \.f1Score)
+                    }
                 }
             }
             if selectedSummaryItem?.comparisonsDetails != nil {
