@@ -25,6 +25,7 @@ public class Trainer {
     var pythonInteractor: PythonInteractor!
     var modelContextPath: URL!
     var mlDataTableProviderContext: SimulationController.MlDataTableProviderContext
+    var smote: Smote!
     init(mlDataProviderContext: SimulationController.MlDataTableProviderContext) {
         self.mlDataTableProviderContext = mlDataProviderContext
         self.model = mlDataProviderContext.model
@@ -34,17 +35,10 @@ public class Trainer {
         let predictedColumnName = "Predicted: " + (targetColumn?.name)!
         self.mlDataTableProvider = mlDataProviderContext.mlDataTableProvider
         self.regressorTable = self.mlDataTableProvider.mlDataTable
-//        let minorityColumn = regressorTable![targetColumn!.name!]
-//        let minorityMask = minorityColumn == 0
-//        let minorityTable = self.regressorTable![minorityMask]
-//        let debit = (self.regressorTable!.rows.count - minorityTable.rows.count) / minorityTable.rows.count
-//        REPLACE WITH SMOTE
-//        for _ in 0..<debit {
-//            self.regressorTable!.append(contentsOf: minorityTable)
-//            print(regressorTable!.rows.count)
-//        }
         self.regressorTable!.removeColumn(named: predictedColumnName)
         self.regressorTable!.removeColumn(named: columnDataModel.primaryKeyColumn!.name!)
+        self.smote = Smote(mlDataTable: self.regressorTable!, model: self.model)
+        let test = smote.createSyntheticSamples()
         self.targetColumnName = self.mlDataTableProvider.orderedColumns.first(where: { $0.istarget == 1})?.name!
         self.timeSeriesColumnName = self.mlDataTableProvider.orderedColumns.first(where: { $0.istimeseries == 1})?.name
         if self.timeSeriesColumnName != nil {
