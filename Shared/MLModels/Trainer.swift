@@ -37,8 +37,6 @@ public class Trainer {
         self.regressorTable = self.mlDataTableProvider.mlDataTable
         self.regressorTable!.removeColumn(named: predictedColumnName)
         self.regressorTable!.removeColumn(named: columnDataModel.primaryKeyColumn!.name!)
-        self.smote = Smote(mlDataTable: self.regressorTable!, model: self.model)
-        let test = smote.createSyntheticSamples()
         self.targetColumnName = self.mlDataTableProvider.orderedColumns.first(where: { $0.istarget == 1})?.name!
         self.timeSeriesColumnName = self.mlDataTableProvider.orderedColumns.first(where: { $0.istimeseries == 1})?.name
         if self.timeSeriesColumnName != nil {
@@ -51,8 +49,12 @@ public class Trainer {
         if columnDataModel.timeStampColumn?.isincluded == 0 {
             self.regressorTable!.removeColumn(named: columnDataModel.timeStampColumn!.name!)
         }
-        
+        self.smote = Smote(mlDataTable: self.regressorTable!, model: self.model)
+        self.regressorTable?.append(contentsOf: smote.createSyntheticSamples())
+        print("ready")
     }
+        
+    
     public func createModel(algorithmName: String, completion: @escaping () -> Void) -> Void {
         let columnDataModel = ColumnsModel(model: self.model )
         let targetColumn = columnDataModel.timedependantTargetColums.first

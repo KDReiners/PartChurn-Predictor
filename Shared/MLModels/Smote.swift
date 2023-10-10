@@ -72,7 +72,7 @@ class Smote {
     func createSyntheticSamples() -> MLDataTable {
         // Generate synthetic samples using SMOTE
             var syntheticSamples: [[String: MLDataValue]] = []
-            for _ in 1...1000 {
+            for _ in 1...1 {
                 // Create a synthetic sample by interpolating between the selected sample and the neighbor
                 var syntheticSample: [String: MLDataValue] = [:]
                 // Randomly select a minority class sample
@@ -151,8 +151,7 @@ class Smote {
             syntheticDataTable = try! MLDataTable(dictionary: newEntries)
 
             // Combine original data with synthetic data
-            mlDataTable.append(contentsOf: syntheticDataTable)
-            return mlDataTable
+            return syntheticDataTable
         }
 
     
