@@ -10,7 +10,7 @@ import SwiftUI
 import CreateML
 public class ComparisonsModel: Model<Comparisons> {
     @Published var reportingSummaries: [ComparisonSummaryEntry] = []
-    @Published var historyCalulated = false
+    @Published var historyCalculated = false
     var reportingDetails:  [[ComparisonDetailEntry]]!
     var churnStatistics: [ChurnStatistics] = []
     var votings: [Voting] = []
@@ -46,8 +46,10 @@ public class ComparisonsModel: Model<Comparisons> {
                 self.churnStatistics = result.churnCountByYear.map({ (year, churnCounts) in
                     ChurnStatistics(i_TimeBase: year, targetCount: churnCounts.churned, nonTargetCount: churnCounts.notChurned)
                 }).sorted { $0.timeBase < $1.timeBase}
-                
-                self.historyCalulated = true
+                DispatchQueue.main.sync {
+                    self.historyCalculated = true
+                }
+              
             }
         }
     }
@@ -353,7 +355,7 @@ public class ComparisonsModel: Model<Comparisons> {
                 return getComparisonDetails()
             }
         }
-        internal var timeBaseCount: Int = 0
+        internal var votersCount: Int = 0
         internal var targetsReported : Double! = 0.0
         internal var targetsPredicted: Double! = 0.0
         internal var primaryKeyValue: String = ""
@@ -364,8 +366,8 @@ public class ComparisonsModel: Model<Comparisons> {
                 TextViewCell(textValue: "\(row.primaryKeyColumnName!)")
             }
         }
-        var lblTimeBaseCount: String {
-            return String(timeBaseCount)
+        var lblVotersCount: String {
+            return String(votersCount)
         }
         var lblTargetPredicted: String {
             return BaseServices.doubleFormatter.string(from: NSNumber(value: targetsPredicted))!
@@ -389,7 +391,7 @@ public class ComparisonsModel: Model<Comparisons> {
             }
             self.primaryKeyValue = primaryKeyValue
             self.subEntriesCount = items.count
-            self.timeBaseCount = Set(items.map { $0.comparison2observation }).count
+            self.votersCount = Set(items.map { $0.comparison2observation }).count
             self.targetsPredicted = items.reduce(0) { $0 + $1.targetpredicted } / Double(items.count)
             self.targetsReported = Double(items.reduce(0) { $0 + $1.targetreported }) / Double(items.count)
             reportingDateStringValue = BaseServices.standardDateFormatterWithoutTime.string(from: Date.now)

@@ -113,24 +113,23 @@ class MlDataTableProvider: ObservableObject {
     }
     internal func syncUpdateTableProvider(callingFunction: String, className: String, lookAhead: Int) {
         print("updateTableProvider called from \(callingFunction) in \(className)")
-        syncTableProvider(mlDataTable: mlDataTableRaw, orderedColums: mlColumns!, selectedColumns: mergedColumns, prediction: prediction, regressorName: regressorName, lookAhead: self.lookAhead) { provider in
-
-                self.valuesTableProvider = provider
-                self.tableStatistics?.absolutRowCount = provider.mlDataTable.rows.count
-                self.tableStatistics?.filteredRowCount = provider.mlDataTable.rows.count
-                self.mlDataTableRaw = provider.mlDataTable
-                self.mlDataTable = self.mlDataTableRaw
-                if provider.targetValues.count > 0 {
-                    self.syncUpdateStatisticsProvider(targetValues: provider.targetValues, predictedColumnName: provider.predictedColumnName)
-                }
-                self.mlColumns = provider.orderedColNames
-                if self.filterViewProvider == nil {
-                    self.filterViewProvider = FilterViewProvider(mlDataTableProvider: self)
-                }
-                self.loaded = true
-                self.delegate?.asyncOperationDidFinish(withResult: self)
-            
+        let provider = syncTableProvider(mlDataTable: mlDataTableRaw, orderedColumns: mlColumns!, selectedColumns: mergedColumns, prediction: prediction, regressorName: regressorName, lookAhead: self.lookAhead)
+        self.valuesTableProvider = provider
+        self.tableStatistics?.absolutRowCount = provider.mlDataTable.rows.count
+        self.tableStatistics?.filteredRowCount = provider.mlDataTable.rows.count
+        self.mlDataTableRaw = provider.mlDataTable
+        self.mlDataTable = self.mlDataTableRaw
+        if provider.targetValues.count > 0 {
+            self.syncUpdateStatisticsProvider(targetValues: provider.targetValues, predictedColumnName: provider.predictedColumnName)
         }
+        self.mlColumns = provider.orderedColNames
+        if self.filterViewProvider == nil {
+            self.filterViewProvider = FilterViewProvider(mlDataTableProvider: self)
+        }
+        self.loaded = true
+        self.delegate?.asyncOperationDidFinish(withResult: self)
+            
+    
     }
     func syncUpdateStatisticsProvider(targetValues: [String : Int], predictedColumnName: String) {
         if self.regressorName != nil && self.mlDataTable.columnNames.contains(predictedColumnName) {
@@ -180,16 +179,16 @@ class MlDataTableProvider: ObservableObject {
             }
         }
     }
-    func syncTableProvider(mlDataTable: MLDataTable, orderedColums: [String], selectedColumns: [Columns]?, prediction: Predictions? = nil, regressorName: String? = nil, filter: Bool? = false, lookAhead: Int? , returnCompletion: @escaping (ValuesTableProvider) -> () ) {
-        var result: ValuesTableProvider!
-        result =  ValuesTableProvider(mlDataTable: mlDataTable, orderedColNames: orderedColums, selectedColumns: selectedColumns,  prediction: prediction, regressorName: regressorName, filter: filter, lookAhead: lookAhead)
+    func syncTableProvider(mlDataTable: MLDataTable, orderedColumns: [String], selectedColumns: [Columns]?, prediction: Predictions? = nil, regressorName: String? = nil, filter: Bool? = false, lookAhead: Int?) -> ValuesTableProvider {
+        let result = ValuesTableProvider(mlDataTable: mlDataTable, orderedColNames: orderedColumns, selectedColumns: selectedColumns, prediction: prediction, regressorName: regressorName, filter: filter, lookAhead: lookAhead)
+        
         self.gridItems = result.gridItems
         self.customColumns = result.customColumns
-        self.numRows = self.customColumns.count > 0 ? self.customColumns[0].rows.count:0
-        returnCompletion(result as ValuesTableProvider)
-            
-            
+        self.numRows = self.customColumns.count > 0 ? self.customColumns[0].rows.count : 0
+        
+        return result
     }
+
     // MARK: - Async call for file inspection
     func updateTableProvider(file: Files) {
         let columns = file.file2columns

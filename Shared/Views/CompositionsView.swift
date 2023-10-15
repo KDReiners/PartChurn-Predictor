@@ -301,7 +301,7 @@ struct CompositionsView: View {
     }
     private func train(regressorName: String?, mlDataTableProviderContext: SimulationController.MlDataTableProviderContext) {
         self.dataContext.mlDataTableProviderContext = mlDataTableProviderContext
-        var trainer = Trainer(mlDataProviderContext: self.dataContext.mlDataTableProviderContext)
+        var trainer =  Trainer(mlDataProviderContext: self.dataContext.mlDataTableProviderContext)
         trainer.model = self.model
         let group = DispatchGroup()
         group.enter()

@@ -68,7 +68,7 @@ public struct SourcesView: View {
             let fileToLoad = filesDataModel.items.filter { $0.files2model == selectedModel && $0.name == filename}.first
             let sqlHelper = SQLHelper()
             
-            let (result, keys)  = sqlHelper.runSQLCommand(model: selectedModel, transferFileName: (fileToLoad?.name)!, sqlCommand: (fileToLoad?.sqlCommand)!)
+            let (result, keys)  = sqlHelper.runSQLSelect(model: selectedModel, transferFileName: (fileToLoad?.name)!, sqlCommand: (fileToLoad?.sqlCommand)!)
             guard let result = result, let keys = keys else {
                 return
             }

@@ -55,6 +55,7 @@ public struct BaseServices
     }()
     public static let standardDateFormatterWithoutTime: DateFormatter = {
         let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
         formatter.dateStyle = .short
         return formatter
     }()

@@ -55,7 +55,7 @@ class ChurnPublisher: Identifiable {
         comparisonsDataModel.reportingDetails.removeAll()
         comparisonsDataModel.votings.removeAll()
     }
-    func calculate(comparisonsDataModel: ComparisonsModel) async {
+    func calculate(comparisonsDataModel: ComparisonsModel) {
         let predictionsDataModel = PredictionsModel(model: self.model)
         self.timeSliceFrom = model.model2observationtimeslicefrom
         self.timeSliceTo = model.model2observationtimesliceto

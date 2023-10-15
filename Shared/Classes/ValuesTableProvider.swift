@@ -186,6 +186,9 @@ class ValuesTableProvider: ObservableObject {
         for column in self.coreDataML.orderedColumns {
             if column.isshown! == 1 {
                 var newCustomColumn = CustomColumn(title: column.name ?? "Unbekannt", alignment: .trailing)
+                if newCustomColumn.title == "Unbekannt" {
+                    print("error")
+                }
                 var newGridItem: GridItem?
                 let valueType = mlDataTable[column.name!].type
                 let mlDataValueFormatter = NumberFormatter()

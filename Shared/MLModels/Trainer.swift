@@ -25,8 +25,9 @@ public class Trainer {
     var pythonInteractor: PythonInteractor!
     var modelContextPath: URL!
     var mlDataTableProviderContext: SimulationController.MlDataTableProviderContext
+    var calcSmote = false
     var smote: Smote!
-    init(mlDataProviderContext: SimulationController.MlDataTableProviderContext) {
+    init(mlDataProviderContext: SimulationController.MlDataTableProviderContext)  {
         self.mlDataTableProviderContext = mlDataProviderContext
         self.model = mlDataProviderContext.model
         self.prediction = mlDataProviderContext.mlDataTableProvider.prediction
@@ -49,11 +50,32 @@ public class Trainer {
         if columnDataModel.timeStampColumn?.isincluded == 0 {
             self.regressorTable!.removeColumn(named: columnDataModel.timeStampColumn!.name!)
         }
-        self.smote = Smote(mlDataTable: self.regressorTable!, model: self.model)
-        self.regressorTable?.append(contentsOf: smote.createSyntheticSamples())
-        print("ready")
+        // Disabling SMOTE
+        if calcSmote {
+            self.smote = Smote(mlDataTable: self.regressorTable!, model: self.model)
+            let concurrentTaskCount = 5 // Adjust this to control the number of concurrent tasks
+            
+            let semaphore = DispatchSemaphore(value: concurrentTaskCount)
+            
+            for i in 0...199 {
+                print("started: \(i)")
+                Task {
+                    print("Hi")
+                    let syntheticDataTable = await smote.createSyntheticSamplesAsync()
+                    self.regressorTable?.append(contentsOf: syntheticDataTable)
+                    semaphore.signal()
+                }
+            }
+            
+            // Wait for all tasks to complete
+            for _ in 0...199 {
+                semaphore.wait()
+            }
+            print("ready semiphore")
+        }
     }
-        
+    
+    
     
     public func createModel(algorithmName: String, completion: @escaping () -> Void) -> Void {
         let columnDataModel = ColumnsModel(model: self.model )
@@ -181,12 +203,12 @@ public class Trainer {
         let regressorEvalutation = regressor.evaluation(on: regressorTable!)
         regressorKPI.dictOfMetrics["evaluationMetrics.maximumError"]? = regressorEvalutation.maximumError
         regressorKPI.dictOfMetrics["evaluationMetrics.rootMeanSquaredError"]? = regressorEvalutation.rootMeanSquaredError
-
+        
         regressorKPI.postMetric(prediction: self.mlDataTableProvider.prediction!, algorithmName: self.mlDataTableProvider.regressorName!, lookAhead: self.mlDataTableProviderContext.lookAhead)
         let regressorMetadata = MLModelMetadata(author: "Steps.IT",
                                                 shortDescription: "Vorhersage des Kündigungsverhaltens von Kunden",
                                                 version: "1.0")
-
+        
         do {
             try regressor.write(to: mlDataTableProviderContext.lookAheadPath!,
                                 metadata: regressorMetadata)

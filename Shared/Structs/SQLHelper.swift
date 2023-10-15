@@ -9,7 +9,33 @@ import Foundation
 import SwiftUI
 import CreateML
 struct SQLHelper {
-    func runSQLCommand(model: Models, transferFileName: String = "MSNonsense.json", sqlCommand: String) -> ([String: MLDataValueConvertible]?, [String]?) {
+    func runSQLCommand(model: Models, sqlCommand: String) ->Void {
+        let odbcPath = "/opt/homebrew/Cellar/mssql-tools18/18.2.1.1/bin/sqlcmd"
+        // Construct the output file path in the current working directory
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: odbcPath)
+        process.arguments = [
+            "-S",
+            "10.49.6.37", // The name of your SQL Server
+            "-d",
+            "WAC",
+            "-U",
+            "sa", // Your username for the SQL Server
+            "-P",
+            "!SqL!2015&T@@&", // Your password for the SQL Server
+            "-N",
+            "-C",
+            "-Q",
+            "\(sqlCommand)"
+        ]
+        do {
+            try process.run()
+            process.waitUntilExit()
+        } catch {
+            print("Error executing SQL command: \(error)")
+        }
+    }
+    func runSQLSelect(model: Models, transferFileName: String = "MSNonsense.json", sqlCommand: String) -> ([String: MLDataValueConvertible]?, [String]?) {
         var jsonArray: [[String: Any]]?
         var keys: [String] = []
         var tableData: [String: MLDataValueConvertible] = [:]

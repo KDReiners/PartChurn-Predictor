@@ -51,34 +51,28 @@ class PredictionsProvider {
     }
     private func getModel(url: URL, completion: @escaping (MLModel?) -> Void) {
         var result: MLModel?
-        DispatchQueue.main.async { [self] in
+        
+        DispatchQueue.global(qos: .background).async { [self] in
             if let loadedModel = loadedModels.first(where: { $0.url == url })?.model {
                 // If the model is already loaded, return it immediately
                 result = loadedModel
-                } else {
-                    let compiledUrl:URL = {
-                        do {
-                            return try MLModel.compileModel(at: url)
-                        } catch {
-                            fatalError(error.localizedDescription)
-                        }
-                    }()
-                    result = {
-                        do {
-                            return try MLModel(contentsOf: compiledUrl)
-                        } catch {
-                            fatalError(error.localizedDescription)
-                        }
-                    }()
-                    
+            } else {
+                do {
+                    let compiledUrl: URL = try MLModel.compileModel(at: url)
+                    result = try MLModel(contentsOf: compiledUrl)
+                    let newModel = loadedModel(model: result!, url: url)
+                    loadedModels.append(newModel)
+                } catch {
+                    // Handle the error
+                    fatalError(error.localizedDescription)
                 }
-                let newModel = loadedModel(model: result!, url: url)
-                loadedModels.append(newModel)
             }
-        DispatchQueue.main.async {
-                    completion(result)
-                }
+            DispatchQueue.global(qos: .background).sync {
+                completion(result)
+            }
+        }
     }
+
     private func incorporatedPrediction(selectedColumns: [Columns], isClassifier: Bool) {
         let tableDictionary = convertDataTableToDictionary()
         let provider = try! MLArrayBatchProvider(dictionary: tableDictionary)

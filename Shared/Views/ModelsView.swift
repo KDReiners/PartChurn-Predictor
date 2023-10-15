@@ -7,6 +7,8 @@
 import Foundation
 import SwiftUI
 import CoreData
+import UniformTypeIdentifiers
+
 
 
 struct ModelsView: View {
@@ -28,7 +30,7 @@ struct ModelsView: View {
     @State private var observationIndexTo: Int
     
     let periodLabels = ["Year", "Half Year", "Quarter", "Month"]
-   
+    
     
     init(model: Models) {
         self.model = model
@@ -36,14 +38,14 @@ struct ModelsView: View {
         timeSlices.sort(by: { $0.value < $1.value })
         self.comparisonsDataModel  = ComparisonsModel(model: self.model)
         self.selectedPeriodIndex = Int(model.periodtype)
-//                comparisonDataModel.deleteAllRecords(predicate: nil)
+        //                comparisonDataModel.deleteAllRecords(predicate: nil)
         if !timeSlices.isEmpty {
             observation = (model.model2observations?.allObjects as? [Observations])?.first
-//            if observation == nil {
-//                observation = ObservationsModel().insertRecord()
-//                observation?.observation2model = model
-//                
-//            }
+            //            if observation == nil {
+            //                observation = ObservationsModel().insertRecord()
+            //                observation?.observation2model = model
+            //
+            //            }
             if model.model2lastlearningtimeslice == nil {
                 model.model2lastlearningtimeslice = timeSlices.first
             }
@@ -81,60 +83,60 @@ struct ModelsView: View {
     }
     var body: some View {
         VStack(alignment: .leading){
-                    HStack {
-                        GroupBox(label: Text("Model").font(.title)) {
-                                Picker("Type of Period:", selection: $selectedPeriodIndex) {
-                                    ForEach(0..<periodLabels.count, id: \.self) { index in
-                                        Text(periodLabels[index])
-                                    }
-                                }
-                                .onChange(of: selectedPeriodIndex) { newValue in
-                                    self.model.periodtype = Int16(newValue)
-                                    BaseServices.save()
-                                }
-                                Picker("Learn until:", selection: $selectedTimeSliceIndex) {
-                                    ForEach(timeSlices.indices, id: \.self) { index in
-                                        Text("\(timeSlices[index].value)")
-                                    }
-                                }
-                                .onChange(of: selectedTimeSliceIndex) { newValue in
-                                    self.selectedTimeSlice = timeSlices[newValue]
-                                    self.model.model2lastlearningtimeslice = selectedTimeSlice
-                                    BaseServices.save()
-                                }
-                            }
-                        
-                        GroupBox(label: Text("Learning").font(.title)) {
-                            Picker("Observation from:", selection: $observationIndexFrom) {
-                                ForEach(timeSlices.indices, id: \.self) { index in
-                                    Text("\(timeSlices[index].value)")
-                                }
-                            }
-                            .onChange(of: observationIndexFrom) { newValue in
-                                self.observationTimeSliceFrom = timeSlices[newValue]
-                                self.model.model2observationtimeslicefrom = self.observationTimeSliceFrom
-                                self.churnPublisher.timeSliceFrom = self.observationTimeSliceFrom
-                                BaseServices.save()
-                            }
-                            Picker("Observation to:", selection: $observationIndexTo) {
-                                ForEach(timeSlices.indices, id: \.self) { index in
-                                    Text("\(timeSlices[index].value)")
-                                }
-                            }
-                            .onChange(of: observationIndexTo) { newValue in
-                                self.observationTimeSliceTo = timeSlices[newValue]
-                                self.model.model2observationtimesliceto = self.observationTimeSliceTo
-                                self.churnPublisher.timeSliceTo = self.observationTimeSliceTo
-                                BaseServices.save()
-                            }
+            HStack {
+                GroupBox(label: Text("Model").font(.title)) {
+                    Picker("Type of Period:", selection: $selectedPeriodIndex) {
+                        ForEach(0..<periodLabels.count, id: \.self) { index in
+                            Text(periodLabels[index])
                         }
                     }
+                    .onChange(of: selectedPeriodIndex) { newValue in
+                        self.model.periodtype = Int16(newValue)
+                        BaseServices.save()
+                    }
+                    Picker("Learn until:", selection: $selectedTimeSliceIndex) {
+                        ForEach(timeSlices.indices, id: \.self) { index in
+                            Text("\(timeSlices[index].value)")
+                        }
+                    }
+                    .onChange(of: selectedTimeSliceIndex) { newValue in
+                        self.selectedTimeSlice = timeSlices[newValue]
+                        self.model.model2lastlearningtimeslice = selectedTimeSlice
+                        BaseServices.save()
+                    }
+                }
+                
+                GroupBox(label: Text("Learning").font(.title)) {
+                    Picker("Observation from:", selection: $observationIndexFrom) {
+                        ForEach(timeSlices.indices, id: \.self) { index in
+                            Text("\(timeSlices[index].value)")
+                        }
+                    }
+                    .onChange(of: observationIndexFrom) { newValue in
+                        self.observationTimeSliceFrom = timeSlices[newValue]
+                        self.model.model2observationtimeslicefrom = self.observationTimeSliceFrom
+                        self.churnPublisher.timeSliceFrom = self.observationTimeSliceFrom
+                        BaseServices.save()
+                    }
+                    Picker("Observation to:", selection: $observationIndexTo) {
+                        ForEach(timeSlices.indices, id: \.self) { index in
+                            Text("\(timeSlices[index].value)")
+                        }
+                    }
+                    .onChange(of: observationIndexTo) { newValue in
+                        self.observationTimeSliceTo = timeSlices[newValue]
+                        self.model.model2observationtimesliceto = self.observationTimeSliceTo
+                        self.churnPublisher.timeSliceTo = self.observationTimeSliceTo
+                        BaseServices.save()
+                    }
+                }
+            }
             HStack {
                 Button("Get Best of") {
                     let publisher =  ChurnPublisher(model: self.model)
                     publisher.cleanUp(comparisonsDataModel: comparisonsDataModel)
                     Task {
-                        await publisher.calculate(comparisonsDataModel: comparisonsDataModel ) 
+                        await publisher.calculate(comparisonsDataModel: comparisonsDataModel )
                     }
                 }
                 Button("delete Comparisons") {
@@ -144,9 +146,9 @@ struct ModelsView: View {
         }.padding()
         Spacer()
         ReportingView(model: self.model, comparisonsDataModel: self.comparisonsDataModel)
-        .frame(alignment: .topLeading)
-        .padding()
-//        .background(Color.white)
+            .frame(alignment: .topLeading)
+            .padding()
+        //        .background(Color.white)
     }
 }
 struct ReportingView: View {
@@ -172,7 +174,7 @@ struct ReportingView: View {
         let voters = comparisonsDataModel.voters
         let history = comparisonsDataModel.churnStatistics
         let votersCount = summaryItems.reduce(0) { (result, summaryItem) in
-            return result + summaryItem.timeBaseCount
+            return result + summaryItem.votersCount
             
         }
         VStack {
@@ -194,13 +196,16 @@ struct ReportingView: View {
             Table(summaryItems, selection: $id) {
                 TableColumn("DATE", value: \.reportingDateStringValue)
                 TableColumn(modelColumnsMap["primaryKeyValue"]!, value: \.primaryKeyValue)
-                TableColumn(modelColumnsMap["timeBase"]!, value: \.lblTimeBaseCount)
+                TableColumn("VOTERSCOUNT", value: \.lblVotersCount)
                 TableColumn(modelColumnsMap[ "targetReported"]!, value: \.lblTargetReported)
                 TableColumn(modelColumnsMap[ "targetPredicted"]!, value: \.lblTargetPredicted)
             }
             .onChange(of: id) { newValue in
                 selectedSummaryItem = summaryItems.first(where: { $0.id == newValue})
             }
+            Button("TRANSFER TO SQLSERVER") {
+                transferToSQLSERVER()
+            }.frame(alignment: .trailing)
             if votings.count > 0 {
                 Table(votings) {
                     Group {
@@ -233,12 +238,49 @@ struct ReportingView: View {
                     TableColumn(modelColumnsMap[ "targetPredicted"]!, value: \.targetpredicted)
                 }
             }
+            Button("Export to Excel") {
+                
+            }
         }
         .onAppear {
             comparisonsDataModel.retrieveHistory()
             comparisonsDataModel.gather()
         }
+        
     }
+    func transferToSQLSERVER() {
+        let summaryItems = comparisonsDataModel.reportingSummaries.sorted(by: { $0.primaryKeyValue < $1.primaryKeyValue})
+        let sqlHelper = SQLHelper()
+        let sqlDate = BaseServices.standardDateFormatterWithoutTime.string(from: Date.now)
+        let deleteCommand = """
+                            DELETE FROM  [sao].[CHURN_PREDICTIONS2SF] WHERE REPORTDATE = '\(sqlDate)'
+                            """
+        sqlHelper.runSQLCommand(model: self.model, sqlCommand: deleteCommand)
+        let summaryScope =  summaryItems.filter( { $0.targetsReported == 1 }).sorted(by: { $0.primaryKeyValue < $1.primaryKeyValue})
+        var i = 1
+        for summaryItem in summaryScope {
+            print("bearbeite Zeile: \(i)")
+            let custno = summaryItem.primaryKeyValue
+            let voters = summaryItem.votersCount
+            let salesForceExport = SalesForceExport(reportDate: sqlDate, s_custno: custno, voters: voters)
+            sqlHelper.runSQLCommand(model: self.model, sqlCommand: salesForceExport.sqlCommand)
+            i += 1
+        }
+    }
+    struct SalesForceExport {
+        var reportDate: String
+        var s_custno: String
+        var voters: Int
+        var sqlCommand: String {
+            get {
+                return """
+                    INSERT INTO [sao].[CHURN_PREDICTIONS2SF] ([REPORTDATE], [S_CUSTNO], VOTERSCOUNT)
+                    VALUES ('\(reportDate)', '\(s_custno)',\(voters) );
+                """
+            }
+        }
+    }
+    
 }
 struct ModelsView_Previews: PreviewProvider {
     static var previews: some View {
