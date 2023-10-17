@@ -34,7 +34,6 @@ class Smote {
         let (majorityTable, _ ) =  mlDataTable[majorityMask].randomSplit(by: 0.2)
         self.majorityTable = majorityTable
         // Set the desired number of synthetic samples to generate
-        let numSyntheticSamples = 100
     }
     
     

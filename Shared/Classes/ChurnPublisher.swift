@@ -133,7 +133,6 @@ class ChurnPublisher: Identifiable {
 //            return
 //        }
         let modelID = self.model.objectID
-        let metricValues = observation?.observation2predictionmetricvalues?.allObjects as! [Predictionmetricvalues]
         guard let primaryKeyColumn = self.columnsDataModel.primaryKeyColumn else {
             print("\(#function) needs a primary key columns")
             return

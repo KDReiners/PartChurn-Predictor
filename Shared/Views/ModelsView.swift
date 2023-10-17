@@ -136,7 +136,7 @@ struct ModelsView: View {
                     let publisher =  ChurnPublisher(model: self.model)
                     publisher.cleanUp(comparisonsDataModel: comparisonsDataModel)
                     Task {
-                        await publisher.calculate(comparisonsDataModel: comparisonsDataModel )
+                        publisher.calculate(comparisonsDataModel: comparisonsDataModel )
                     }
                 }
                 Button("delete Comparisons") {
@@ -173,10 +173,6 @@ struct ReportingView: View {
         let votings = comparisonsDataModel.votings
         let voters = comparisonsDataModel.voters
         let history = comparisonsDataModel.churnStatistics
-        let votersCount = summaryItems.reduce(0) { (result, summaryItem) in
-            return result + summaryItem.votersCount
-            
-        }
         VStack {
             HStack {
                 HStack {

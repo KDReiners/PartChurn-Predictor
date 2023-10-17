@@ -40,11 +40,14 @@ class PredictionsProvider {
             let urlToPredictionModel = BaseServices.sandBoxDataPath.appendingPathComponent((prediction.prediction2model?.name)!).appendingPathComponent(prediction.objectID.uriRepresentation().lastPathComponent).appendingPathComponent(PredictionsModel().returnLookAhead(prediction: prediction, lookAhead: lookAhead).objectID.uriRepresentation().lastPathComponent).appendingPathComponent(regressorName.replacingOccurrences(of: "ML", with: "") + ".mlmodel")
             let fileManager = FileManager.default
             if fileManager.fileExists(atPath: urlToPredictionModel.path) {
-                Task {
-                    getModel(url: urlToPredictionModel) { [self] completion in
-                        predictionModel = completion
-                    }
+                let group = DispatchGroup()
+                group.enter()
+                getModel(url: urlToPredictionModel) { [self] completion in
+                    predictionModel = completion
+                    group.leave()
+
                 }
+                group.wait()
                 incorporatedPrediction(selectedColumns: selectedColumns, isClassifier: isClassifier)
             }
         }
@@ -52,7 +55,7 @@ class PredictionsProvider {
     private func getModel(url: URL, completion: @escaping (MLModel?) -> Void) {
         var result: MLModel?
         
-        DispatchQueue.global(qos: .background).async { [self] in
+        DispatchQueue.global(qos: .userInteractive).async { [self] in
             if let loadedModel = loadedModels.first(where: { $0.url == url })?.model {
                 // If the model is already loaded, return it immediately
                 result = loadedModel
@@ -62,13 +65,11 @@ class PredictionsProvider {
                     result = try MLModel(contentsOf: compiledUrl)
                     let newModel = loadedModel(model: result!, url: url)
                     loadedModels.append(newModel)
+                    completion(result)
                 } catch {
                     // Handle the error
                     fatalError(error.localizedDescription)
                 }
-            }
-            DispatchQueue.global(qos: .background).sync {
-                completion(result)
             }
         }
     }
