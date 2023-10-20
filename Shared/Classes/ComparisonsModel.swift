@@ -11,10 +11,11 @@ import CreateML
 public class ComparisonsModel: Model<Comparisons> {
     @Published var reportingSummaries: [ComparisonSummaryEntry] = []
     @Published var historyCalculated = false
+    
+    var voters: String!
     var reportingDetails:  [[ComparisonDetailEntry]]!
     var churnStatistics: [ChurnStatistics] = []
     var votings: [Voting] = []
-    var voters: String!
     var result: [Comparisons]!
     var primaryKeys: Array<String>!
     var allItems: [Comparisons]!

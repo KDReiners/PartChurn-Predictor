@@ -54,13 +54,16 @@ class ChurnPublisher: Identifiable {
         comparisonsDataModel.reportingSummaries.removeAll()
         comparisonsDataModel.reportingDetails.removeAll()
         comparisonsDataModel.votings.removeAll()
+        comparisonsDataModel.voters = "0"
     }
-    func calculate(comparisonsDataModel: ComparisonsModel) {
+    func calculate(comparisonsDataModel: ComparisonsModel) async {
+        var processedObservationsCount = 0
         let predictionsDataModel = PredictionsModel(model: self.model)
         self.timeSliceFrom = model.model2observationtimeslicefrom
         self.timeSliceTo = model.model2observationtimesliceto
         let observations = ObservationsModel().items.filter( { $0.observation2model == self.model && $0.observation2timeslicefrom!.value <= self.model.model2lastlearningtimeslice!.value && $0.simulation == false })
         observations.forEach { observation in
+            
             guard let prediction = observation.observation2prediction else {
                 print("\(#function) cannot create prediction.")
                 return
@@ -115,6 +118,7 @@ class ChurnPublisher: Identifiable {
                     let newObservation = dataContext?.mlDataTableProvider.observations.first(where: { $0.observation2timeslicefrom == self.timeSliceFrom && $0.observation2timesliceto == self.timeSliceTo && $0.observation2lookahead == lookAheadItem && $0.observation2prediction == prediction})
                     newObservation?.simulation = true
                     store2Comparisons(dataContext: dataContext, observation: newObservation, targetStatistics: targetStatistics, baseTargetStatistics: baseTargetStatistics)
+                    processedObservationsCount += 1
                 }
                 break
             }

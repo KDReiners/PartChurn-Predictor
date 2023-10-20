@@ -136,7 +136,7 @@ struct ModelsView: View {
                     let publisher =  ChurnPublisher(model: self.model)
                     publisher.cleanUp(comparisonsDataModel: comparisonsDataModel)
                     Task {
-                        publisher.calculate(comparisonsDataModel: comparisonsDataModel )
+                        await publisher.calculate(comparisonsDataModel: comparisonsDataModel )
                     }
                 }
                 Button("delete Comparisons") {
@@ -171,7 +171,7 @@ struct ReportingView: View {
     var body: some View {
         let summaryItems = comparisonsDataModel.reportingSummaries.sorted(by: { $0.primaryKeyValue < $1.primaryKeyValue})
         let votings = comparisonsDataModel.votings
-        let voters = comparisonsDataModel.voters
+        let voters = String(Set(comparisonsDataModel.items.map({ $0.comparison2observation })).count)
         let history = comparisonsDataModel.churnStatistics
         VStack {
             HStack {
@@ -179,7 +179,7 @@ struct ReportingView: View {
                     Text("Rows count")
                     Text("\(summaryItems.count)")
                     Text("Voters count")
-                    Text(voters ?? "")
+                    Text(voters)
                 }
                 Spacer()
                 
